@@ -6,11 +6,14 @@ import { useEffect } from "react";
 
 const Home = () => {
   // Temporary backend test
-  useEffect(() => {
-    api.getTest().then((response) => {
-      console.log(response);
-    });
-  }, []);
+  // useEffect(() => {
+  //   api.getTest().then((response) => {
+  //     console.log(response);
+  //   });
+  //   api.postTest().then((response) => {
+  //     console.log(response);
+  //   });
+  // }, []);
 
   return (
     <div>

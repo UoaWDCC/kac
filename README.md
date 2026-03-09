@@ -1,9 +1,7 @@
 # Kiwi Asian Club Website
 
-<div style="display: flex; align-items: center; gap: 1.5rem;">
-    <img src="images/kac_logo.png" width="65px" alt="KAC Logo"/>
-    <img src="images/wdcc_logo.png" width="90px" alt="WDCC Logo"/>
-</div>
+
+<img src="images/kac_logo.png" width="65px" alt="KAC Logo"/> &nbsp; &nbsp; <img src="images/wdcc_logo.png" width="90px" alt="WDCC Logo"/>
 
 <br/>
 

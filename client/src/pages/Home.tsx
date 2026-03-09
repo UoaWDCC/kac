@@ -1,16 +1,19 @@
 import "../style/common.css";
 import placeholder from "../images/placeholder.jpg";
 import { Link } from "react-router-dom";
-import api from "../util/api";
-import { useEffect } from "react";
+// import api from "../util/api";
+// import { useEffect } from "react";
 
 const Home = () => {
   // Temporary backend test
-  useEffect(() => {
-    api.getTest().then((response) => {
-      console.log(response);
-    });
-  }, []);
+  // useEffect(() => {
+  //   api.getTest().then((response) => {
+  //     console.log(response);
+  //   });
+  //   api.postTest().then((response) => {
+  //     console.log(response);
+  //   });
+  // }, []);
 
   return (
     <div>

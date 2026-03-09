@@ -1,8 +1,8 @@
 import "../style/common.css";
 import placeholder from "../images/placeholder.jpg";
 import { Link } from "react-router-dom";
-import api from "../util/api";
-import { useEffect } from "react";
+// import api from "../util/api";
+// import { useEffect } from "react";
 
 const Home = () => {
   // Temporary backend test

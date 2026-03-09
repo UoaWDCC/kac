@@ -5,7 +5,7 @@ import { Testing } from "./model/testing";
 
 dotenv.config({ quiet: true });
 
-const port: number = 3000;
+const port: number = Number(process.env.PORT) || 3000;
 const app: express.Application = express();
 const mongoUrl: string = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@kac-prod.cf1fyh5.mongodb.net/`;
 
@@ -29,7 +29,7 @@ mongoose
   .connect(mongoUrl)
   .then(() => {
     console.log("Connected to MongoDB");
-    app.listen(port, () => {
+    app.listen(port, "0.0.0.0", () => {
       console.log(`Server application listening on port ${port}`);
     });
   })

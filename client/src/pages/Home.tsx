@@ -20,13 +20,21 @@ const Home = () => {
       {/** TITLE */}
       <section
         className="section yellow-bg"
-        style={{ width: "100%", letterSpacing: "5px", textAlign: "center" }}
+        style={{
+          width: "100%",
+          letterSpacing: "5px",
+          textAlign: "center",
+        }}
       >
         <h1>KIWI ASIAN CLUB</h1>
         <img
           src={placeholder}
           alt="Kiwi Asian Club group photo"
-          style={{ maxWidth: "1000px", width: "100%", height: "auto" }}
+          style={{
+            maxWidth: "1000px",
+            width: "100%",
+            height: "auto",
+          }}
         ></img>
       </section>
 

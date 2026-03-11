@@ -1,34 +1,36 @@
-body, header, footer {
-    margin: 0rem;
-    font-family: Arial, sans-serif;
+body,
+header,
+footer {
+  margin: 0rem;
+  font-family: Arial, sans-serif;
 }
 
 p {
-    font-size: large;
+  font-size: large;
 }
 
 .section {
-    padding: 2rem;
-    box-sizing: border-box;
+  padding: 2rem;
+  box-sizing: border-box;
 }
 
 .narrow-content {
-    max-width: 48rem;
-    margin: auto;
+  max-width: 48rem;
+  margin: auto;
 }
 
 .yellow-bg {
-    background-color: #faf3d1;
+  background-color: #faf3d1;
 }
 
 .wide-button {
-    text-decoration: none;
-    color: black;
-    background-color: transparent;
-    border: 1px solid black;
-    padding: 0.5rem;
-    width: 100%;
-    display: block;
-    text-align: center;
-    box-sizing: border-box;
+  text-decoration: none;
+  color: black;
+  background-color: transparent;
+  border: 1px solid black;
+  padding: 0.5rem;
+  width: 100%;
+  display: block;
+  text-align: center;
+  box-sizing: border-box;
 }

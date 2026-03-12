@@ -45,7 +45,7 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/deployments \
             -d '{
               "ref": "${{ github.sha }}",
-              "environment": "Fly Production",
+              "environment": "Fly Deployment",
               "required_contexts": [],
               "auto_merge": false,
               "description": "Deploying frontend and backend"

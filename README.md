@@ -1,6 +1,5 @@
 # Kiwi Asian Club Website
 
-
 <img src="images/kac_logo.png" width="65px" alt="KAC Logo"/> &nbsp; &nbsp; <img src="images/wdcc_logo.png" width="90px" alt="WDCC Logo"/>
 
 <br/>
@@ -18,17 +17,13 @@ A membership registration and event management website created by the University
 ### Installation
 
 1. Clone the repository
-2. Open a terminal and navigate into the KAC project <b>client</b> directory
-3. Run `npm install`
-4. Open a terminal and navigate into the KAC project <b>server</b> directory
-5. Run `npm install`
+2. Open a terminal and navigate into the KAC project root directory
+3. Run `npm run setup`
 
 ### Running the Project
 
-1. Open a terminal and navigate into the KAC project <b>client</b> directory
+1. Open a terminal and navigate into the KAC project root directory
 2. Run `npm run dev`
-3. Open a terminal and navigate into the KAC project <b>server</b> directory
-4. Run `npm run dev`
 
 ## Documentation
 

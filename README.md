@@ -27,7 +27,7 @@ A membership registration and event management website created by the University
 
 ## Documentation
 
-TBD
+TBD 
 
 ## Contributors
 

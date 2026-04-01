@@ -43,6 +43,10 @@ TBD
           <a href="https://github.com/rlee64"><img src="https://avatars.githubusercontent.com/u/159082701?v=4?s=100" width="100px" alt="Rayen Lee"/><br /><sub><b>Rayen Lee</b></sub></a><br />
           Technical Lead
         </td>
+        <td>
+          <a href="https://github.com/anqilique"><img src="https://avatars.githubusercontent.com/u/107088774?v=4s=100" width="100px" alt="Angelique Hulot"/><br /><sub><b>Angelique Hulot</b></sub></a><br />
+          Developer
+        </td>
     </tr>
   </tbody>
 </table>

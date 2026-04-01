@@ -43,6 +43,11 @@ TBD
           <a href="https://github.com/rlee64"><img src="https://avatars.githubusercontent.com/u/159082701?v=4?s=100" width="100px" alt="Rayen Lee"/><br /><sub><b>Rayen Lee</b></sub></a><br />
           Technical Lead
         </td>
+        <td>
+          <a href="https://github.com/Embers2512"><img src="https://avatars.githubusercontent.com/u/127377697?v=4?s=100" width="100px" alt="Muhammad Mohamad Hanafiah"/><br /><sub><b>Muhammad Mohamad Hanafiah"</b></sub></a>
+          <br />
+          Member
+        </td>
     </tr>
   </tbody>
 </table>

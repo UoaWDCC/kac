@@ -47,6 +47,10 @@ TBD
           <a href="https://github.com/anqilique"><img src="https://avatars.githubusercontent.com/u/107088774?v=4s=100" width="100px" alt="Angelique Hulot"/><br /><sub><b>Angelique Hulot</b></sub></a><br />
           Developer
         </td>
+        <td>
+          <a href="https://github.com/vincenttao04"><img src="https://avatars.githubusercontent.com/u/189966234?v=4&s=100" width="100px" alt="Vincent Tao"/><br /><sub><b>Vincent Tao</b></sub></a><br />
+          Developer
+        </td>
     </tr>
   </tbody>
 </table>

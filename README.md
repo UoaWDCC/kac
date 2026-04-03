@@ -35,8 +35,7 @@ TBD
   <tbody>
     <tr>
         <td>
-          <a href="https://github.com/omarscoding"><img src="https://avatars.githubusercontent.com/u/131607561?v=4?s=100" width="100px" alt="Omar Youssef"/><br /><sub><b>Omar Youssef</b></sub></a>
-          <br />
+          <a href="https://github.com/omarscoding"><img src="https://avatars.githubusercontent.com/u/131607561?v=4?s=100" width="100px" alt="Omar Youssef"/><br /><sub><b>Omar Youssef</b></sub></a><br />
           Project Manager
         </td>
         <td>
@@ -45,6 +44,18 @@ TBD
         </td>
         <td>
           <a href="https://github.com/anqilique"><img src="https://avatars.githubusercontent.com/u/107088774?v=4s=100" width="100px" alt="Angelique Hulot"/><br /><sub><b>Angelique Hulot</b></sub></a><br />
+          Developer
+        </td>
+        <td>
+          <a href="https://github.com/Embers2512"><img src="https://avatars.githubusercontent.com/u/127377697?v=4?s=100" width="100px" alt="Muhammad Mohamad Hanafiah"/><br /><sub><b>Muhammad Mohamad Hanafiah</b></sub></a><br />
+          Developer
+        </td>
+        <td>
+          <a href="https://github.com/vincenttao04"><img src="https://avatars.githubusercontent.com/u/189966234?v=4&s=100" width="100px" alt="Vincent Tao"/><br /><sub><b>Vincent Tao</b></sub></a><br />
+          Developer
+        </td>
+        <td>
+          <a href="https://github.com/conradangwz"><img src="https://avatars.githubusercontent.com/u/161260708?s=96&v=4" width="100px" alt="Conrad Ang"/><br /><sub><b>Conrad Ang</b></sub></a><br />
           Developer
         </td>
         <td>

@@ -2,7 +2,13 @@ body,
 header,
 footer {
   margin: 0rem;
-  font-family: Arial, sans-serif;
+  font-family: "Barlow", Arial, sans-serif;
+}
+
+h1 {
+  font-size: 3.3rem;
+  margin-top: 1rem;
+  margin-bottom: 6rem;
 }
 
 p {

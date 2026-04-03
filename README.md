@@ -54,6 +54,10 @@ TBD
           <a href="https://github.com/vincenttao04"><img src="https://avatars.githubusercontent.com/u/189966234?v=4&s=100" width="100px" alt="Vincent Tao"/><br /><sub><b>Vincent Tao</b></sub></a><br />
           Developer
         </td>
+        <td>
+          <a href="https://github.com/conradangwz"><img src="https://avatars.githubusercontent.com/u/161260708?s=96&v=4" width="100px" alt="Conrad Ang"/><br /><sub><b>Conrad Ang</b></sub></a><br />
+          Developer
+        </td>
     </tr>
   </tbody>
 </table>

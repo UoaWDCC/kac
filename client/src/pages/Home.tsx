@@ -1,20 +1,8 @@
 import "../style/common.css";
-import placeholder from "../images/placeholder.jpg";
+import placeholder from "../images/placeholder.png";
 import { Link } from "react-router-dom";
-// import testApi from "../api/testing";
-// import { useEffect } from "react";
 
 const Home = () => {
-  // Temporary backend test
-  // useEffect(() => {
-  //   testApi.getTest().then((response) => {
-  //     console.log(response);
-  //   });
-  //   testApi.postTest().then((response) => {
-  //     console.log(response);
-  //   });
-  // }, []);
-
   return (
     <div>
       {/** TITLE */}
@@ -22,16 +10,15 @@ const Home = () => {
         className="section yellow-bg"
         style={{
           width: "100%",
-          letterSpacing: "5px",
           textAlign: "center",
         }}
       >
-        <h1>KIWI ASIAN CLUB</h1>
+        <h1>K I W I &nbsp; A S I A N &nbsp; C L U B</h1>
         <img
           src={placeholder}
           alt="Kiwi Asian Club group photo"
           style={{
-            maxWidth: "1000px",
+            maxWidth: "1100px",
             width: "100%",
             height: "auto",
           }}
@@ -55,8 +42,17 @@ const Home = () => {
       {/** EVENTS */}
       <section className="section yellow-bg">
         <div className="narrow-content">
-          <h2>CHECK OUT OUR EVENTS</h2>
-          <p>image gallery here</p>
+          <h2>CHECK OUT OUR UPCOMING EVENTS</h2>
+          <img
+            src={placeholder}
+            alt="Kiwi Asian Club group photo"
+            style={{
+              maxWidth: "1100px",
+              width: "100%",
+              height: "auto",
+              marginBottom: "1.5em",
+            }}
+          ></img>
           <Link to="/Events" className="wide-button">
             SEE MORE {">>"}
           </Link>

@@ -47,6 +47,11 @@ TBD
           <a href="https://github.com/anqilique"><img src="https://avatars.githubusercontent.com/u/107088774?v=4s=100" width="100px" alt="Angelique Hulot"/><br /><sub><b>Angelique Hulot</b></sub></a><br />
           Developer
         </td>
+        <td>
+          <a href="https://github.com/Embers2512"><img src="https://avatars.githubusercontent.com/u/127377697?v=4?s=100" width="100px" alt="Muhammad Mohamad Hanafiah"/><br /><sub><b>Muhammad Mohamad Hanafiah"</b></sub></a>
+          <br />
+          Developer
+        </td>
     </tr>
   </tbody>
 </table>

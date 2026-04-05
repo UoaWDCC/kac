@@ -63,7 +63,7 @@ TBD
           Developer
         </td>
         <td>
-          <a href="https://github.com/harrywu23"><img src="https://avatars.githubusercontent.com/u/198931059?v=4" width="100px" alt="James Swasbrook"/><br /><sub><b>Harry Wu</b></sub></a><br />
+          <a href="https://github.com/harrywu23"><img src="https://avatars.githubusercontent.com/u/198931059?v=4" width="100px" alt="Harry Wu"/><br /><sub><b>Harry Wu</b></sub></a><br />
           Developer
         </td>
     </tr>

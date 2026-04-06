@@ -33,86 +33,88 @@ TBD
 
 <table>
   <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/omarscoding"><img src="https://avatars.githubusercontent.com/u/131607561?v=4?s=100" width="100px" alt="Omar Youssef"/></a>
+    <tr width="100%">
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/omarscoding"><img src="https://avatars.githubusercontent.com/u/131607561?v=4?s=100" width="75px" alt="Omar Youssef"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/omarscoding"><b>Omar Youssef</b></a><br />
         Project Manager
       </td>
-    </tr>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/rlee64"><img src="https://avatars.githubusercontent.com/u/159082701?v=4?s=100" width="100px" alt="Rayen Lee"/></a>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/rlee64"><img src="https://avatars.githubusercontent.com/u/159082701?v=4?s=100" width="75px" alt="Rayen Lee"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/rlee64"><b>Rayen Lee</b></a><br />
         Technical Lead
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/anqilique"><img src="https://avatars.githubusercontent.com/u/107088774?v=4s=100" width="100px" alt="Angelique Hulot"/></a>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/anqilique"><img src="https://avatars.githubusercontent.com/u/107088774?v=4s=100" width="75px" alt="Angelique Hulot"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/anqilique"><b>Angelique Hulot</b></a><br />
         Developer
       </td>
-    </tr>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/Embers2512"><img src="https://avatars.githubusercontent.com/u/127377697?v=4?s=100" width="100px" alt="Muhammad Mohamad Hanafiah"/></a>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/Embers2512"><img src="https://avatars.githubusercontent.com/u/127377697?v=4?s=100" width="75px" alt="Muhammad Mohamad Hanafiah"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/Embers2512"><b>Muhammad Mohamad Hanafiah</b></a><br />
         Developer
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/vincenttao04"><img src="https://avatars.githubusercontent.com/u/189966234?v=4&s=100" width="100px" alt="Vincent Tao"/></a>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/vincenttao04"><img src="https://avatars.githubusercontent.com/u/189966234?v=4&s=100" width="75px" alt="Vincent Tao"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/vincenttao04"><b>Vincent Tao</b></a><br />
         Developer
       </td>
-    </tr>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/conradangwz"><img src="https://avatars.githubusercontent.com/u/161260708?s=96&v=4" width="100px" alt="Conrad Ang"/></a>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/conradangwz"><img src="https://avatars.githubusercontent.com/u/161260708?s=96&v=4" width="75px" alt="Conrad Ang"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/conradangwz"><b>Conrad Ang</b></a><br />
         Developer
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/pxstachio"><img src="https://avatars.githubusercontent.com/u/203092370?v=4?s=100" width="100px" alt="James Swasbrook"/></a>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/pxstachio"><img src="https://avatars.githubusercontent.com/u/203092370?v=4?s=100" width="75px" alt="James Swasbrook"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/pxstachio"><b>James Swasbrook</b></a><br />
         Developer
       </td>
-    </tr>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/harrywu23"><img src="https://avatars.githubusercontent.com/u/198931059?v=4" width="100px" alt="Harry Wu"/></a>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/harrywu23"><img src="https://avatars.githubusercontent.com/u/198931059?v=4" width="75px" alt="Harry Wu"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/harrywu23"><b>Harry Wu</b></a><br />
         Developer
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
-      <td align="center" valign="middle">
-        <a href="https://github.com/willjinjin"><img src="https://avatars.githubusercontent.com/u/85489257?v=4?s=100" width="100px" alt="Will Jin"/></a>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/willjinjin"><img src="https://avatars.githubusercontent.com/u/85489257?v=4?s=100" width="75px" alt="Will Jin"/></a>
       </td>
-      <td align="left" valign="middle">
+      <td align="left" valign="middle" width="35%" style="font-size: 75%;">
         <a href="https://github.com/willjinjin"><b>Will Jin</b></a><br />
         Developer
       </td>
+      <td width="15%"></td>
+      <td width="35%"></td>
     </tr>
   </tbody>
 </table>

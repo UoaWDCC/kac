@@ -62,6 +62,10 @@ TBD
           <a href="https://github.com/pxstachio"><img src="https://avatars.githubusercontent.com/u/203092370?v=4?s=100" width="100px" alt="James Swasbrook"/><br /><sub><b>James Swasbrook</b></sub></a><br />
           Developer
         </td>
+        <td>
+          <a href="https://github.com/willjinjin"><img src="https://avatars.githubusercontent.com/u/85489257?v=4?s=100" width="100px" alt="Will Jin"/><br /><sub><b>Will Jin</b></sub></a><br />
+          Developer
+        </td>
     </tr>
   </tbody>
 </table>

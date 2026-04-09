@@ -113,8 +113,13 @@ TBD
         <a href="https://github.com/willjinjin"><b>Will Jin</b></a><br />
         Developer
       </td>
-      <td width="15%"></td>
-      <td width="35%"></td>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/ameliayamaguchi"><img src="https://avatars.githubusercontent.com/u/274707711?s=400&u=80f394997c385a3366a34f101430399e2181fc49&v=4" valign="middle" width="150px" alt="Amelia Yamaguchi"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/ameliayamaguchi"><b>Amelia Yamaguchi</b></a><br />
+        Designer
+      </td>
     </tr>
   </tbody>
 </table>

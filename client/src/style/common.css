@@ -1,6 +1,7 @@
 body,
 header,
-footer {
+footer,
+button {
   margin: 0rem;
   font-family: "Barlow", Arial, sans-serif;
 }
@@ -25,6 +26,11 @@ p {
   margin: auto;
 }
 
+.medium-content {
+  max-width: 60rem;
+  margin: auto;
+}
+
 .yellow-bg {
   background-color: #faf3d1;
 }
@@ -39,4 +45,9 @@ p {
   display: block;
   text-align: center;
   box-sizing: border-box;
+}
+
+.dynamic-size-icon {
+  width: 1.4em;
+  height: 1.4em;
 }

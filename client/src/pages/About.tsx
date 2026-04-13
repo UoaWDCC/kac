@@ -1,4 +1,5 @@
 import Collapsible from "../components/Collapsible";
+import Executives from "../components/Executives";
 
 import "../style/common.css";
 import "../style/about.css";
@@ -51,7 +52,8 @@ const About = () => {
     </section>
 
     {/** Executive Cards */}
-    <p style={{ textAlign: "center" }}>pretend fancy exec cards are here (they will be eventually).</p>
+    <Executives cards="placeholder!"></Executives>
+
   </div>;
 };
 

@@ -1,0 +1,41 @@
+button {
+    width: 100%;
+    background: none;
+    border: none;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+}
+
+.title-text {
+    font-size: 46px;
+}
+
+.header-body {
+    font-size: 26px;
+}
+
+.collapsible-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 22px;
+    border-bottom: 1px solid;
+}
+
+.collapsible-title {
+    font-style: normal;
+}
+
+.collapsible-children {
+    text-align: left;
+}
+
+.dynamic-size-icon {
+    width: 1.4em;
+    height: 1.4em;
+}
+

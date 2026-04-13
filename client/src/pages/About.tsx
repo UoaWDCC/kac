@@ -1,5 +1,5 @@
 import Collapsible from "../components/Collapsible";
-import Executives from "../components/Executives";
+import Executives from "../components/Executives.tsx";
 
 import "../style/common.css";
 import "../style/about.css";
@@ -52,7 +52,9 @@ const About = () => {
     </section>
 
     {/** Executive Cards */}
-    <Executives cards="placeholder!"></Executives>
+    <section>
+      <Executives/>
+    </section>
 
   </div>;
 };

@@ -39,3 +39,10 @@ button {
     height: 1.4em;
 }
 
+.executives-container {
+    justify-content: center;
+    display: grid;
+    margin-top: 24px;
+    grid-template-columns: auto auto auto;
+}
+

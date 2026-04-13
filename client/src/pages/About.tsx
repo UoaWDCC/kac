@@ -1,43 +1,8 @@
-import React, { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import Collapsible from "../components/Collapsible";
 
 import "../style/common.css";
 import "../style/about.css";
 import exec_team from "../images/exec_team.png";
-
-/** 
-  Collapsible Component
-  --> Maybe move this elsewhere?
-*/
-interface CollapsibleProps {
-  title: string;
-  children: React.ReactNode;
-}
-
-const Collapsible: React.FC<CollapsibleProps> = ({ title, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div>
-      {/* Click to toggle the collapsible */}
-      <button onClick={ () => setIsOpen(!isOpen) }>
-        <div className="collapsible-content">
-          <h2 className="collapsible-title">{title}</h2>
-          <span>
-            {isOpen ? <ChevronUp className="dynamic-size-icon" /> : <ChevronDown className="dynamic-size-icon" />}
-          </span>
-        </div>
-      </button>
-
-      {/* Render when opening the section */}
-      {isOpen && (
-        <div className="collapsible-children">
-          {children}
-        </div>
-      )}
-    </div>
-  );
-};
 
 
 /**
@@ -47,7 +12,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({ title, children }) => {
 const About = () => {
   return <div>
     <title>Kiwi Asian Club - About Us</title>
-    {/** Overview */}
+    {/** Title + Photo */}
     <section className="section yellow-bg title">
       <h1 className="title-text">
         A B O U T &nbsp; U S
@@ -57,6 +22,8 @@ const About = () => {
         alt="Kiwi Asian Club Executive Team"
         className="medium-content"
       />
+
+      <br/><br/>
 
       {/** What We Do */}
       <div className="medium-content">

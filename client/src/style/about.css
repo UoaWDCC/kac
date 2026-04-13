@@ -28,6 +28,7 @@ button {
 
 .collapsible-title {
     font-style: normal;
+    font-weight: 500;
 }
 
 .collapsible-children {
@@ -44,5 +45,37 @@ button {
     display: grid;
     margin-top: 24px;
     grid-template-columns: auto auto auto;
+}
+
+.executive-card {
+    display: block;
+    margin: 18px;
+}
+
+.executive-card h2 {
+    text-align: center;
+    font-weight: 400;
+}
+
+.executive-card p, li {
+    font-size: 12px;
+    font-family: Arial;
+    line-height: 2;
+}
+
+.executive-card ul {
+    list-style-type: square;
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+}
+
+.card-body {
+    width: 360px;
+    align-items: left;
+}
+
+.exec-desc {
+    max-width: inherit;
 }
 

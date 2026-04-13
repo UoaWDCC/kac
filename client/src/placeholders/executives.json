@@ -32,7 +32,7 @@
     {
         "imageURL": "https://lh3.googleusercontent.com/sitesv/APaQ0ST1912aJ6x5apb7t5a4BmKmYTRAr_sfhk0ZLwkhz8tEqcjrSjDtWEMlin0Bgd5xiVo0-u5V5xopL6X30Ld-KEPtMpZdYasIducWIZfTQ7xPUatyw9z7JuNYQh0ylYfhTxhJykq3MhOyJlDUG8U_1Fx3wfyE5hJV8KRytp-laJ3Ktigq0A29VovecvLQbCQDcbvxnzHrmaB4HBL8HiAN20F7G1AfHQI3o_l6=w1280",
         "displayName": "Kaco",
-        "role": "Mascot",
+        "role": "Mascot, with a brand new look",
         "description": "Kaco is back! With a brand new look to start the year, he’s the heart of our team ❤️‍🔥 You’ll catch him in basically all our marketing - always modelling for shoots, always camera-ready, and never missing his moment 📸✨ Kaco stays locked in for the team, holding it down behind the scenes and showing up whenever we need him 🫡 A certified big back who’s always down for a munch, so don’t be surprised if your food mysteriously goes missing 🍱😆",
         "fullName": "Kaco Big-Backo",
         "ethnicity": "",
@@ -58,5 +58,35 @@
         "greenFlag": "CRACKED at roblox gaming (is this even a green flag)",
         "redFlag": "Indecisive eater",
         "emojis": "🦭"
+    },
+    {
+        "imageURL": "https://lh3.googleusercontent.com/sitesv/APaQ0SQ_Mnnos0f5tNfSGQUhPg5fsnybGqbDjgTt-nqCuLF-NigPhXtzyySMiqJhKS13vS2TyF0_QzOUecPy1H5J2MAC3SMWMdK9lvR5-nadd_IMoIGpH5c1Ov99q6X4q6Zj88E_-3iDgZgptntpyGymzVPZpCdXEOgrUZ1tdalHVi2LscqwFw47L4r-RKpEnxHC75VDixZWK21CLwMpDNdt-12JC9BpsOs3xEWNKK4=w1280",
+        "displayName": "Ella",
+        "role": "Secretary/AESIR Executive",
+        "description": "One of the many cat lovers of KAC, Ella is our admin hero and AESIR rep ❤️‍🔥! She keeps everything organised and makes sure no one forgets what’s happening 🫡 If you’re wandering around the School of Music, you might hear Ella going crazy on the violin 😮‍💨",
+        "fullName": "Ella Chen",
+        "ethnicity": "Chinese 🇨🇳",
+        "degree": "Medicinal Chemistry",
+        "mbti": "ISTJ",
+        "fact": "Allergic to stone fruits",
+        "sponsor": "PANDA",
+        "greenFlag": "I can make a banging tiramisu",
+        "redFlag": "I randomly stop talking when I’m socially drained",
+        "emojis": "😦"
+    },
+    {
+        "imageURL": "https://lh3.googleusercontent.com/sitesv/APaQ0SQWc6Pmk6-ksnwC4MQ058dCnYve2wb1MjHqxAi01b32lsLYG4u5FpC6jQTV_zO2qRYCeKFNvBkWQvIBltzJ7ZzOZ6dV-IQ3P9t4mwKSNKBiqLJuI22riuGGzrVVa0UIbth2gnceagD4VwNREH1Js0b-8LLqkPWHXnHjeRzybyxyia0KXtrCYkQDTNpAgxb9NPpRFpQtmjR95sEQTr-dY1p_S8UAWyjnzVv46vc=w1280",
+        "displayName": "Ava",
+        "role": "AESIR Executive",
+        "description": "THE extrovert herself is our AESIR Rep this year! Helping out with all the behind-the-scenes work for AESIR and making sure we have some fire events this year 🎉 If you find her on campus, chances are she’s yapping away or munching on snacks 😋",
+        "fullName": "Ava Huo",
+        "ethnicity": "Chinese 🇨🇳",
+        "degree": "Global and Health Science Conjoint",
+        "mbti": "ENFP",
+        "fact": "I love napping under the sun",
+        "sponsor": "Chubby Boy",
+        "greenFlag": "Very social #extrovert",
+        "redFlag": "Yaps too much",
+        "emojis": "🤓"
     }
 ]

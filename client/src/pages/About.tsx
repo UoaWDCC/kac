@@ -54,6 +54,7 @@ const About = () => {
     {/** Executive Cards */}
     <section>
       <Executives/>
+      <p style={{textAlign: "center"}}>More executives can go here when the backend is done! -A</p>
     </section>
 
   </div>;

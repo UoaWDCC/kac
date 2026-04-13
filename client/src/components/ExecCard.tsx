@@ -27,9 +27,27 @@ const ExecCard: React.FC<ExecProps> = ({
     sponsor, greenFlag, redFlag, emojis
 }) => {
     return (
-        <div>
+        <div className="executive-card">
             <img src={EXEC_IMG} alt={displayName}/>
-            <h1>{displayName}</h1>
+            <h2>{displayName}</h2>
+
+            <div className="card-body">
+                <p>Meet our {role}, {displayName}!</p>
+                <p className="exec-desc">
+                    {description}
+                </p>
+                <ul>
+                    <li>Full Name: {fullName}</li>
+                    <li>Ethnicity: {ethnicity}</li>
+                    <li>Degree: {degree}</li>
+                    <li>MBTI: {mbti}</li>
+                    <li>Fun Fact: {fact}</li>
+                    <li>Favourite KAC Sponsor: {sponsor}</li>
+                    <li>Green Flag ✅: {greenFlag}</li>
+                    <li>Red Flag 🚩: {redFlag}</li>
+                    <li>Fav Emojis: {emojis}</li>
+                </ul>
+            </div>
         </div>
     );
 };

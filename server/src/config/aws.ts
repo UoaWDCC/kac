@@ -26,3 +26,5 @@ export const s3BucketName = process.env.S3_BUCKET_NAME;
 if (!s3BucketName) {
   throw new Error("S3_BUCKET_NAME is required");
 }
+
+console.log(`S3 client connected — region: ${region}, bucket: ${s3BucketName}`);

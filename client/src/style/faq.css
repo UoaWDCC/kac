@@ -27,10 +27,16 @@
 }
 
 .faq-accordion-content {
-    overflow: hidden;
-    transition: max-height 300ms ease;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 300ms ease;
 }
 
-.faq-accordion-content-inner {
+.faq-accordion-content.open {
+    grid-template-rows: 1fr;
+}
 
+.faq-accordion-inner {
+    min-height: 0;
+    overflow: hidden;
 }

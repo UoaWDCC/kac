@@ -1,9 +1,8 @@
-import React, { useRef, useState} from "react";
+import React, {useState} from "react";
 import "../style/faq.css";
 
-function AccordionItem({title, children}) {
+function AccordionItem({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef(null);
 
   return (
     <div className = "faq-accordion-item">
@@ -17,15 +16,15 @@ function AccordionItem({title, children}) {
       </button>
 
       <div
-        ref ={ref}
         className = "faq-accordion-content"
-        style = {{
-          maxHeight: open && ref.current ? `${ref.current.scrollHeight}px` : "0px",
-        }}
         aria-hidden = {!open}
       >
-        <div className = "faq-accordion-inner">
-          {children}
+        <div
+          className = {`faq-accordion-content${open ? " open" : ""}`}
+        >
+          <div className="faq-accordion-inner">
+            {children}
+          </div>
         </div>
       </div>
     </div>

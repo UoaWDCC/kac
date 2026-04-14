@@ -10,6 +10,27 @@
     padding-bottom: 180px;
 }
 
-.faq-item {
+.faq-list {
+
+}
+
+.faq-accordion-item {
+
+}
+
+.faq-accordion-button {
+
+}
+
+.faq-accordion-button-text {
+
+}
+
+.faq-accordion-content {
+    overflow: hidden;
+    transition: max-height 300ms ease;
+}
+
+.faq-accordion-content-inner {
 
 }

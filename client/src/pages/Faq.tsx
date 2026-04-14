@@ -20,10 +20,13 @@ function AccordionItem({title, children}) {
         ref ={ref}
         className = "faq-accordion-content"
         style = {{
-          
+          maxHeight: open && ref.current ? `${ref.current.scrollHeight}px` : "0px",
         }}
+        aria-hidden = {!open}
       >
-
+        <div className = "faq-accordion-inner">
+          {children}
+        </div>
       </div>
     </div>
   )
@@ -41,8 +44,11 @@ const Faq = () => {
 
     {/** faq items */}
     <section
-    className = "faq-item"
+    className = "faq-list"
     >
+      <AccordionItem title = "question">
+        <p> hello </p>
+      </AccordionItem>
 
     </section>
   </div>

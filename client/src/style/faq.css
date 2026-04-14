@@ -1,10 +1,13 @@
 .faq-container {
-    padding-top: 1px;
+    padding-top: 45px;
     background-color: #FAF3D1;
 }
 
 .faq-title {
     text-align: center;
+    font-weight: bold;
+    font-size: 60px;
+    padding-bottom: 180px;
 }
 
 .faq-item {

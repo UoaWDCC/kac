@@ -1,5 +1,33 @@
-import React from "react";
+import React, { useRef, useState} from "react";
 import "../style/faq.css";
+
+function AccordionItem({title, children}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  return (
+    <div className = "faq-accordion-item">
+      <button 
+        className = "faq-accordion-button"
+        aria-expanded ={open}
+        onClick = {() => setOpen((v) => !v)}
+      >
+        {title}
+        <span className = "faq-accordion-button-text">{open ? "true": "false"}</span>
+      </button>
+
+      <div
+        ref ={ref}
+        className = "faq-accordion-content"
+        style = {{
+          
+        }}
+      >
+
+      </div>
+    </div>
+  )
+}
 
 const Faq = () => {
   return (
@@ -8,15 +36,13 @@ const Faq = () => {
     <section
       className="faq-title"
     >
-      <h1>F &nbsp; A &nbsp; Q &nbsp; S</h1>
+      F&nbsp;A&nbsp;Q&nbsp;s
     </section>
 
     {/** faq items */}
     <section
     className = "faq-item"
-    style={{
-      width: "100%"
-    }}>
+    >
 
     </section>
   </div>

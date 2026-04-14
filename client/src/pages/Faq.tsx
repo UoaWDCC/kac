@@ -12,7 +12,6 @@ function AccordionItem({ title, children }: { title: string; children: React.Rea
         onClick = {() => setOpen((v) => !v)}
       >
         {title}
-        <span className = "faq-accordion-button-text">{open ? "true": "false"}</span>
       </button>
 
       <div
@@ -46,7 +45,15 @@ const Faq = () => {
     className = "faq-list"
     >
       <AccordionItem title = "question">
-        <p> hello </p>
+         hello
+      </AccordionItem>
+
+      <AccordionItem title = "question">
+        hello
+      </AccordionItem>
+
+      <AccordionItem title = "question">
+        hello
       </AccordionItem>
 
     </section>

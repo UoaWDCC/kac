@@ -37,7 +37,7 @@
 .faq-accordion-button-state {
     display: inline-block;
     transition: transform 300ms ease;
-    font-size: 1.2rem;
+    font-size: 30px;
     align-items: right;
 }
 

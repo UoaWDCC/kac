@@ -13,7 +13,7 @@ function AccordionItem({ title, children }: { title: string; children: React.Rea
       >
         {title}
         <span className={`faq-accordion-button-state${open ? " open" : ""}`} aria-hidden="true">
-          &#8744;
+          ⌵
         </span>
       </button>
 

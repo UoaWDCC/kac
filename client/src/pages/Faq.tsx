@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import "../style/faq.css";
+import faqs from "../api/faqs.json";
 
 function AccordionItem({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -47,17 +48,11 @@ const Faq = () => {
     <section
     className = "faq-list"
     >
-      <AccordionItem title = "question">
-         hello
-      </AccordionItem>
-
-      <AccordionItem title = "question">
-        hello
-      </AccordionItem>
-
-      <AccordionItem title = "question">
-        hello
-      </AccordionItem>
+      {faqs.map((item, index) => (
+        <AccordionItem key = {index} title = {item.question}>
+          {item.answer}
+        </AccordionItem>
+      ))}
 
     </section>
   </div>

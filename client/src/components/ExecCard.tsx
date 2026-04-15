@@ -38,14 +38,14 @@ const ExecCard: React.FC<ExecProps> = ({
                 </p>
                 <ul>
                     <li>Full Name: {fullName}</li>
-                    <li>Ethnicity: {ethnicity}</li>
-                    <li>Degree: {degree}</li>
+                    { ethnicity !== ""  && <li>Ethnicity: {ethnicity}</li> }
+                    { degree !== "" && <li>Degree: {degree}</li> }
                     <li>MBTI: {mbti}</li>
                     <li>Fun Fact: {fact}</li>
                     <li>Favourite KAC Sponsor: {sponsor}</li>
                     <li>Green Flag ✅: {greenFlag}</li>
                     <li>Red Flag 🚩: {redFlag}</li>
-                    <li>Fav Emojis: {emojis}</li>
+                    { emojis !== "" && <li>Fav Emojis: {emojis}</li> }
                 </ul>
             </div>
         </div>

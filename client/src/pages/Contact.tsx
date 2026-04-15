@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../style/common.css"
 import "../style/contact.css";
 
 const Contact = () => {
@@ -35,17 +36,17 @@ const Contact = () => {
   };
 
   return (
-    <div>
-      <h1 style = {{ textAlign: "center" }}>CONTACT US</h1>
+    <div className = "contact-page">
+      <h1 className = "contact-title">CONTACT US</h1>
     
-      <p style = {{ textAlign: "center" }}>
-        intro blurb
+      <p className = "contact-intro">
+        Sign up using the form below or let us know any questions you have!
       </p>
 
       {submitted ? (
-        <h2 style = {{ textAlign: "center", color: "gold" }}>Submitted!</h2>
+        <h2 className = "contact-submitted">Submitted!</h2>
       ) : (
-        <form onSubmit = {handleSubmit}>
+        <form className="contact-form" onSubmit={handleSubmit}>
           <div>
             <input
               type = "text"
@@ -65,15 +66,14 @@ const Contact = () => {
           </div>
 
           <div>
-            <input
-              type = "text"
+            <textarea
               value = {message}
               placeholder = "Write your message"
               onChange = {(e) => setMessage(e.target.value)}
             />
           </div>
 
-          <button type = "submit">Submit</button>
+          <button className = "contact-button" type = "submit">Send</button>
         </form>
       )}
     </div>

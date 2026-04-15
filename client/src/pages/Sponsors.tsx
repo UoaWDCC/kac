@@ -1,3 +1,5 @@
+import SponsorCard from "../components/SponsorCard";
+
 const Sponsors = () => {
   return (
     <div
@@ -32,16 +34,88 @@ const Sponsors = () => {
       {/* CBD SPONSOR SECTION */}
       <section id="CBD">
         <h2>CBD Sponsors</h2>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "2rem",
+          }}
+        >
+          <SponsorCard
+            name="Sponsor 1"
+            description="Description for Sponsor 1"
+            location="Location 1"
+          />
+          <SponsorCard
+            name="Sponsor 2"
+            description="Description for Sponsor 2"
+            location="Location 2"
+          />
+          <SponsorCard
+            name="Sponsor 3"
+            description="Description for Sponsor 3"
+            location="Location 3"
+          />
+        </div>
       </section>
 
       {/* NEWMARKET SPONSOR SECTION */}
       <section id="Newmarket">
         <h2>Newmarket Sponsors</h2>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "2rem",
+          }}
+        >
+          <SponsorCard
+            name="Sponsor 1"
+            description="Description for Sponsor 1"
+            location="Location 1"
+          />
+          <SponsorCard
+            name="Sponsor 2"
+            description="Description for Sponsor 2"
+            location="Location 2"
+          />
+          <SponsorCard
+            name="Sponsor 3"
+            description="Description for Sponsor 3"
+            location="Location 3"
+          />
+        </div>
       </section>
 
       {/* OTHER SPONSOR SECTION */}
       <section id="Other">
         <h2>Other Sponsors</h2>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "2rem",
+          }}
+        >
+          <SponsorCard
+            name="Sponsor 1"
+            description="Description for Sponsor 1"
+            location="Location 1"
+          />
+          <SponsorCard
+            name="Sponsor 2"
+            description="Description for Sponsor 2"
+            location="Location 2"
+          />
+          <SponsorCard
+            name="Sponsor 3"
+            description="Description for Sponsor 3"
+            location="Location 3"
+          />
+        </div>
       </section>
     </div>
   );

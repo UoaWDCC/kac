@@ -40,3 +40,7 @@ p {
   text-align: center;
   box-sizing: border-box;
 }
+
+.font-bold {
+  font-weight: bold;
+}

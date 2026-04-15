@@ -6,7 +6,8 @@ const SignUp = () => {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
-        const formJson = Object.fromEntries(formData.entries());
+        const formDataObj = Object.fromEntries(formData.entries());
+        const formJson = JSON.stringify(formDataObj);
         console.log(formJson);
     }
 

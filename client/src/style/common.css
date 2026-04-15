@@ -27,7 +27,9 @@ p {
 }
 
 .medium-content {
-  max-width: 60rem;
+  max-width: 100%;
+  width: 60rem;
+  height: auto;
   margin: auto;
 }
 

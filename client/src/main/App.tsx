@@ -14,6 +14,7 @@ import Contact from "../pages/Contact.tsx";
 import Sponsors from "../pages/Sponsors.tsx";
 import Events from "../pages/Events.tsx";
 import About from "../pages/About.tsx";
+import SignUp from "../pages/SignUp.tsx";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="Sponsors" element={<Sponsors />} />
           <Route path="Contact" element={<Contact />} />
           <Route path="Faq" element={<Faq />} />
+          <Route path="SignUp" element={<SignUp />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

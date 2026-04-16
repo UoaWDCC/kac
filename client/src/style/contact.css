@@ -1,71 +1,72 @@
 .contact-page {
-    background-color: #faf3d1;
-    padding-top: 45px;
-    padding-bottom: 45px;
-    min-height: 85vh;
+  background-color: #faf3d1;
+  padding-top: 45px;
+  padding-bottom: 45px;
+  min-height: 85vh;
 }
 
 .contact-title {
-    text-align: center;
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-    text-underline-offset: 10px;
-    color: black;
-    font-weight: bold;
-    font-size: 70px;
-    margin-bottom: 30px;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 10px;
+  color: black;
+  font-weight: bold;
+  font-size: 70px;
+  margin-bottom: 30px;
 }
 
 .contact-intro {
-    text-align: center;
-    color: black;
-    font-weight: bold;  
-    font-size: 20px;
-    margin-bottom: 80px;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 80px;
 }
 
 .contact-form {
-    text-align: center;
-    background-color: #faf3d1;
-    color: black;
-}   
+  text-align: center;
+  background-color: #faf3d1;
+  color: black;
+}
 
 .contact-form input {
-    background-color: #faf3d1;
-    width: 600px;
-    height: 50px;
-    text-align: left;
-    margin: 3px;
-    border: 2px solid grey;
-    border-radius: 12px;
-    color: black;
-    font-size: 20px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  background-color: #faf3d1;
+  width: 600px;
+  height: 50px;
+  text-align: left;
+  margin: 3px;
+  border: 2px solid grey;
+  border-radius: 12px;
+  color: black;
+  font-size: 20px;
+  font-family:
+    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .contact-form textarea {
-    background-color: #faf3d1;
-    width: 600px;
-    height: 150px;
-    text-align: left;
-    margin: 2px;
-    border: 2px solid grey;
-    border-radius: 12px;
-    color: black;
-    font-size: 20px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  background-color: #faf3d1;
+  width: 600px;
+  height: 150px;
+  text-align: left;
+  margin: 2px;
+  border: 2px solid grey;
+  border-radius: 12px;
+  color: black;
+  font-size: 20px;
+  font-family:
+    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .contact-button {
-    text-align: center;
-    background-color: #faf3d1;
-    margin-top: 20px;
-    width: 100px;
-    border-radius: 12px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-}
-
-.contact-submitted {
-    text-align: center;
-    color: #d5b92e;
+  text-align: center;
+  background-color: #faf3d1;
+  margin-top: 20px;
+  width: 100px;
+  border-radius: 12px;
+  font-family:
+    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }

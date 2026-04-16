@@ -19,15 +19,7 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
       : "";
     const s3Key = `images/${randomUUID()}${fileExtension ? `.${fileExtension}` : ""}`;
 
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: s3BucketName,
-        Key: s3Key,
-        Body: req.file.buffer,
-        ContentType: req.file.mimetype,
-      }),
-    );
-
+    // create mongo record
     const image = await Image.create({
       originalName: req.file.originalname,
       mimeType: req.file.mimetype,
@@ -35,6 +27,23 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
       s3Key,
       bucket: s3BucketName,
     });
+
+    // Upload to S3, roll back the Mongo record if it fails
+    try {
+      await s3Client.send(
+        new PutObjectCommand({
+          Bucket: s3BucketName,
+          Key: s3Key,
+          Body: req.file.buffer,
+          ContentType: req.file.mimetype,
+        }),
+      );
+    } catch (s3Error) {
+      console.error("S3 upload failed, rolling back Mongo record:", s3Error);
+      await image.deleteOne();
+      res.status(500).json({ message: "Failed to upload image to storage" });
+      return;
+    }
 
     const signedUrl = await getSignedUrl(
       s3Client,

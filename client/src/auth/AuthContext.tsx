@@ -1,11 +1,5 @@
 import { createContext } from "react";
-import type { GoogleUser } from "./AuthProvider";
-
-export interface AuthContextType {
-  user: GoogleUser | null;
-  loading: boolean;
-  logout: () => void;
-}
+import type { AuthContextType } from "./types";
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,

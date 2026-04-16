@@ -1,95 +1,95 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 button {
-    width: 100%;
-    background: none;
-    border: none;
+  width: 100%;
+  background: none;
+  border: none;
 }
 
 .title {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .title-text {
-    font-size: 46px;
+  font-size: 46px;
 }
 
 .header-body {
-    font-size: 26px;
-    line-height: 1.6;
+  font-size: 26px;
+  line-height: 1.6;
 }
 
 .collapsible-content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: center;
-    font-size: 22px;
-    border-bottom: 1px solid;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 22px;
+  border-bottom: 1px solid;
 }
 
 .collapsible-title {
-    font-style: normal;
-    font-weight: 500;
+  font-style: normal;
+  font-weight: 500;
 }
 
 .collapsible-children {
-    text-align: left;
+  text-align: left;
 }
 
 .dynamic-size-icon {
-    width: 1.4em;
-    height: 1.4em;
+  width: 1.4em;
+  height: 1.4em;
 }
 
 .executives-container {
-    display: grid;
-    margin-top: 24px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    padding: 0 20px;
-    gap: 40px;
+  display: grid;
+  margin-top: 24px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  padding: 0 20px;
+  gap: 40px;
 }
 
 .executive-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
 }
 
 .executive-card h2 {
-    font-weight: 400;
-    margin: 12px 0 10px 0;
+  font-weight: 400;
+  margin: 12px 0 10px 0;
 }
 
 .executive-card p,
 .executive-card li {
-    font-size: 12px;
-    font-family: Arial, sans-serif;
-    line-height: 2;
-    text-align: left;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  line-height: 2;
+  text-align: left;
 }
 
 .executive-card ul {
-    margin: 0;
-    padding: 0; 
-    list-style-type: square;
-    list-style-position: inside;
-    text-align: left;
-    width: fit-content;
+  margin: 0;
+  padding: 0;
+  list-style-type: square;
+  list-style-position: inside;
+  text-align: left;
+  width: fit-content;
 }
 
 .card-body {
-    width: 360px;
+  width: 360px;
 }
 
 .exec-desc {
-    max-width: inherit;
+  max-width: inherit;
 }

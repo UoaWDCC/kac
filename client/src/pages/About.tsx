@@ -3,7 +3,7 @@ import Executives from "../components/Executives.tsx";
 
 import "../style/common.css";
 import "../style/about.css";
-import exec_team from "../images/exec_team.png";
+import exec_team from "../images/exec-team.png";
 
 
 /**

@@ -3,7 +3,7 @@ import "../style/common.css";
 
 
 /** No access to images currently, use placeholder */
-const EXEC_IMG = "src/images/exec_placeholder.png";
+const EXEC_IMG = "src/images/exec-placeholder.png";
 
 interface ExecProps {
     imageURL: string,

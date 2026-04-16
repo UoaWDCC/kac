@@ -1,6 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import session from "express-session";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Testing } from "./model/testing";
 
 dotenv.config({ quiet: true });
@@ -36,3 +39,54 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to MongoDB:", err);
   });
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      callbackURL: "/auth/google/callback",
+    },
+    (_accessToken, _refreshToken, profile, done) => {
+      // For future DB storage of user info
+      return done(null, profile);
+    }
+  )
+);
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user: Express.User, done) => done(null, user));
+
+// Google login route
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Google redirects back here after login
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (_req, res) => {
+    res.redirect(process.env.CLIENT_URL!);
+  }
+);
+
+// Logout route
+app.get("/auth/logout", (req, res) => {
+  req.logout(() => {
+    res.redirect(process.env.CLIENT_URL!);
+  });
+});
+
+// Route to check if user is authenticated
+app.get("/auth/me", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user);
+  } else {
+    res.status(401).json(null);
+  }
+});

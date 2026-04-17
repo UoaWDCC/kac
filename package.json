@@ -1,9 +1,12 @@
 {
   "scripts": {
     "dev": "concurrently \"cd client && npm run dev\" \"cd server && yarn run dev\"",
-    "setup": "npm install && concurrently \"cd client && npm install\" \"cd server && npm install\""
+    "setup": "npm install && concurrently \"cd client && npm install\" \"cd server && npm install\"",
+    "style": "prettier --write client/src server/src",
+    "style:check": "prettier --check client/src server/src"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "prettier": "^3.8.3"
   }
 }

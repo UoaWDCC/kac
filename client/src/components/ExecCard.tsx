@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "../style/common.css";
 
 /** No access to images currently, use placeholder */
@@ -37,7 +36,7 @@ const ExecCard: React.FC<ExecProps> = ({
 }) => {
   return (
     <div className="executive-card">
-      <img src={EXEC_IMG} alt={displayName} />
+      <img src={EXEC_IMG || imageURL} alt={displayName} />
       <h2>{displayName}</h2>
 
       <div className="card-body">

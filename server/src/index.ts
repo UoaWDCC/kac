@@ -18,8 +18,6 @@ const mongoUrl: string = `mongodb+srv://${process.env.MONGODB_USER}:${process.en
 app.use(express.json());
 app.use("/api/images", imageRoutes);
 
-
-
 app.get("/api/test", (req, res) => {
   res.send("Hi :)");
 });
@@ -35,7 +33,6 @@ app.post("/api/test", (req, res) => {
       res.status(500).send("Error creating testing document");
     });
 });
-
 
 // Connect to MongoDB and start the server
 mongoose

@@ -36,7 +36,7 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
           Key: s3Key,
           Body: req.file.buffer,
           ContentType: req.file.mimetype,
-        }),
+        })
       );
     } catch (s3Error) {
       console.error("S3 upload failed, rolling back Mongo record:", s3Error);
@@ -51,7 +51,7 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
         Bucket: s3BucketName,
         Key: s3Key,
       }),
-      { expiresIn: signedUrlExpirySeconds },
+      { expiresIn: signedUrlExpirySeconds }
     );
 
     res.status(201).json({
@@ -84,7 +84,7 @@ export const getImageById: RequestHandler = async (req, res, next) => {
         Bucket: image.bucket,
         Key: image.s3Key,
       }),
-      { expiresIn: signedUrlExpirySeconds },
+      { expiresIn: signedUrlExpirySeconds }
     );
 
     res.json({

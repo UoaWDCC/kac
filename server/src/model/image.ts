@@ -12,7 +12,7 @@ const imageSchema = new Schema(
     bucket: { type: String, required: true },
     uploadedAt: { type: Date, default: Date.now },
   },
-  { versionKey: false },
+  { versionKey: false }
 );
 
 export const Image = model("Image", imageSchema);

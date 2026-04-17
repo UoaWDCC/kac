@@ -1,9 +1,12 @@
 {
   "scripts": {
-    "dev": "concurrently \"cd client && npm run dev\" \"cd server && yarn run dev\"",
+    "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
     "setup": "npm install && concurrently \"cd client && npm install\" \"cd server && npm install\"",
     "style": "prettier --write client/src server/src",
-    "style:check": "prettier --check client/src server/src"
+    "style:check": "prettier --check client/src server/src",
+    "typecheck": "npm run typecheck:client && npm run typecheck:server",
+    "typecheck:client": "cd client && npx tsc --noEmit",
+    "typecheck:server": "cd server && npx tsc --noEmit"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",

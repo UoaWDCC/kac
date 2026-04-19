@@ -46,7 +46,7 @@ const Header = () => {
               style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
             >
               <img
-                src={user.photos[0].value}
+                src={user.photos?.[0]?.value}
                 alt="profile"
                 style={{ width: "2rem", height: "2rem", borderRadius: "50%" }}
               />

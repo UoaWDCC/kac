@@ -1,11 +1,16 @@
+import dns from "dns";
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Testing } from "./model/testing";
+import imageRoutes from "./routes/imageRoutes";
 
+// app config
 dotenv.config({ quiet: true });
 
 const port: number = Number(process.env.PORT) || 3000;
@@ -70,6 +75,10 @@ app.get("/auth/me", (req, res) => {
   }
 });
 
+// middleware
+app.use(express.json());
+app.use("/api/images", imageRoutes);
+
 app.get("/api/test", (req, res) => {
   res.send("Hi :)");
 });
@@ -86,6 +95,7 @@ app.post("/api/test", (req, res) => {
     });
 });
 
+// Connect to MongoDB and start the server
 mongoose
   .connect(mongoUrl)
   .then(() => {

@@ -1,6 +1,7 @@
 body,
 header,
-footer {
+footer,
+button {
   margin: 0rem;
   font-family: "Barlow", Arial, sans-serif;
 }
@@ -22,6 +23,13 @@ p {
 
 .narrow-content {
   max-width: 48rem;
+  margin: auto;
+}
+
+.medium-content {
+  max-width: 100%;
+  width: 60rem;
+  height: auto;
   margin: auto;
 }
 

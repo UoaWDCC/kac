@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
-import type { GoogleUser } from "./types";
+
+export interface GoogleUser {
+  displayName: string;
+  emails: { value: string }[];
+  photos: { value: string }[];
+}
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<GoogleUser | null>(null);

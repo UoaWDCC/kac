@@ -42,13 +42,22 @@ const Header = () => {
 
         {!loading &&
           (user ? (
-            <div>
-              <img src={user.photos[0].value} alt="profile" />
-              <span>{user.displayName}</span>
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <img
+                src={user.photos[0].value}
+                alt="profile"
+                style={{ width: "2rem", height: "2rem", borderRadius: "50%" }}
+              />
+              <span style={{ whiteSpace: "nowrap" }}>{user.displayName}</span>
               <button
                 onClick={logout}
                 style={{
                   ...linkStyle,
+                  cursor: "pointer",
+                  padding: 0,
+                  font: "inherit",
                 }}
               >
                 Sign Out

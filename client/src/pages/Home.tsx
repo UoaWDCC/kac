@@ -1,6 +1,7 @@
 import "../style/common.css";
 import placeholder from "../images/placeholder.png";
 import { Link } from "react-router-dom";
+import { ImageBlock } from "../components/ImageBlock/ImageBlock";
 
 const Home = () => {
   return (
@@ -14,7 +15,8 @@ const Home = () => {
         }}
       >
         <h1>K I W I &nbsp; A S I A N &nbsp; C L U B</h1>
-        <img
+        <ImageBlock imageId="" role="admin" />
+        {/* <img
           src={placeholder}
           alt="Kiwi Asian Club group photo"
           style={{
@@ -22,7 +24,7 @@ const Home = () => {
             width: "100%",
             height: "auto",
           }}
-        ></img>
+        ></img> */}
       </section>
 
       {/** EXEC TEAM */}

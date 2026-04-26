@@ -11,6 +11,7 @@ const imageSchema = new Schema(
     s3Key: { type: String, required: true, unique: true },
     bucket: { type: String, required: true },
     uploadedAt: { type: Date, default: Date.now },
+    tag: { type: String, default: null }, // e.g. "hero", "events"
   },
   { versionKey: false }
 );

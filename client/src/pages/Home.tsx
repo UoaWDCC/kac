@@ -16,12 +16,9 @@ const Home = () => {
       >
         <h1>K I W I &nbsp; A S I A N &nbsp; C L U B</h1>
         <ImageBlock
+          pageKey="hero"
           role="admin"
-          style={{
-            maxWidth: "1100px",
-            width: "100%",
-            height: "auto",
-          }}
+          style={{ maxWidth: "1100px", width: "100%", height: "auto" }}
         />
       </section>
 

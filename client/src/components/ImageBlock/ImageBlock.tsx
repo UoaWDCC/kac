@@ -1,27 +1,48 @@
-import { useState } from "react";
-import { useImage } from "./useImage";
+import { useState, useEffect } from "react";
+import { fetchImageByTag } from "../../api/imageApi";
 import { UploadModal } from "./UploadModal";
 import placeholder from "../../images/placeholder.png";
 
+interface ImageData {
+    id: string | null;
+    signedUrl: string | null;
+    originalName?: string;
+}
+
 interface ImageBlockProps {
-    imageId?: string;
+    pageKey: string;
     role: "admin" | "user";
     style?: React.CSSProperties;
 }
 
-export function ImageBlock({ imageId: initialImageId, role, style }: ImageBlockProps) {
-    const [imageId, setImageId] = useState(initialImageId);
-    const { image, loading, error, refetch } = useImage(imageId ?? "");
+export function ImageBlock({ pageKey, role, style }: ImageBlockProps) {
+    const [imageData, setImageData] = useState<ImageData | null>(null);
+    const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
 
+    const loadImage = async () => {
+        try {
+            setLoading(true);
+            const data = await fetchImageByTag(pageKey);
+            setImageData(data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadImage();
+    }, [pageKey]);
+
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
 
     return (
         <div>
             <img
-                src={image?.signedUrl ?? placeholder}
-                alt={image?.originalName ?? "Placeholder image"}
+                src={imageData?.signedUrl ?? placeholder}
+                alt={imageData?.originalName ?? "Placeholder image"}
                 style={style}
             />
 
@@ -32,10 +53,11 @@ export function ImageBlock({ imageId: initialImageId, role, style }: ImageBlockP
             {showModal && (
                 <UploadModal
                     onClose={() => setShowModal(false)}
-                    onSuccess={(newImageId: string) => {
+                    onSuccess={() => {
                         setShowModal(false);
-                        setImageId(newImageId); // triggers useImage to fetch the new image
+                        loadImage();
                     }}
+                    tag={pageKey}
                 />
             )}
         </div>

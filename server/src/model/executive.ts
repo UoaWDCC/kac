@@ -18,7 +18,7 @@ const executiveSchema = new Schema(
     redFlag: { type: String, required: true },
     emojis: { type: String, required: false },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 export const Executive = model("Executive", executiveSchema);

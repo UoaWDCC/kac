@@ -15,16 +15,14 @@ const Home = () => {
         }}
       >
         <h1>K I W I &nbsp; A S I A N &nbsp; C L U B</h1>
-        <ImageBlock imageId="" role="admin" />
-        {/* <img
-          src={placeholder}
-          alt="Kiwi Asian Club group photo"
+        <ImageBlock
+          role="admin"
           style={{
             maxWidth: "1100px",
             width: "100%",
             height: "auto",
           }}
-        ></img> */}
+        />
       </section>
 
       {/** EXEC TEAM */}

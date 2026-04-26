@@ -3,7 +3,7 @@ import { uploadImage } from "../../api/imageApi";
 
 interface UploadModalProps {
     onClose: () => void;
-    onSuccess: () => void;
+    onSuccess: (imageId: string) => void; // now passes id back
 }
 
 export function UploadModal({ onClose, onSuccess }: UploadModalProps) {
@@ -31,15 +31,14 @@ export function UploadModal({ onClose, onSuccess }: UploadModalProps) {
         setUploading(true);
         setError(null);
         try {
-            await uploadImage(file);
-            onSuccess();
+            const data = await uploadImage(file);
+            onSuccess(data.id); // pass the new id up
         } catch (err) {
             setError(err instanceof Error ? err.message : "Upload failed");
         } finally {
             setUploading(false);
         }
     };
-
     return (
         <div>
             <h2>Upload Image</h2>

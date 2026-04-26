@@ -4,12 +4,14 @@ import { UploadModal } from "./UploadModal";
 import placeholder from "../../images/placeholder.png";
 
 interface ImageBlockProps {
-    imageId: string;
+    imageId?: string;
     role: "admin" | "user";
+    style?: React.CSSProperties;
 }
 
-export function ImageBlock({ imageId, role }: ImageBlockProps) {
-    const { image, loading, error, refetch } = useImage(imageId);
+export function ImageBlock({ imageId: initialImageId, role, style }: ImageBlockProps) {
+    const [imageId, setImageId] = useState(initialImageId);
+    const { image, loading, error, refetch } = useImage(imageId ?? "");
     const [showModal, setShowModal] = useState(false);
 
     if (loading) return <p>Loading...</p>;
@@ -20,6 +22,7 @@ export function ImageBlock({ imageId, role }: ImageBlockProps) {
             <img
                 src={image?.signedUrl ?? placeholder}
                 alt={image?.originalName ?? "Placeholder image"}
+                style={style}
             />
 
             {role === "admin" && (
@@ -29,9 +32,9 @@ export function ImageBlock({ imageId, role }: ImageBlockProps) {
             {showModal && (
                 <UploadModal
                     onClose={() => setShowModal(false)}
-                    onSuccess={() => {
+                    onSuccess={(newImageId: string) => {
                         setShowModal(false);
-                        refetch();
+                        setImageId(newImageId); // triggers useImage to fetch the new image
                     }}
                 />
             )}

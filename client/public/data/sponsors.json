@@ -1,0 +1,345 @@
+{
+  "cbd_sponsors": [
+    {
+      "name": "KOMPASS COFFEE",
+      "deal": "15% OFF",
+      "address": "2 Kitchener St, Auckland CBD"
+    },
+    {
+      "name": "ESCAPE MASTERS",
+      "deal": "$2 OFF STUDENT PRICE",
+      "address": "Level 11/300 Queen St, Auckland CBD"
+    },
+    {
+      "name": "FACE WASH BEAR",
+      "deal": "15% OFF",
+      "address": "430 Queen St, Auckland CBD"
+    },
+    {
+      "name": "VAGABOND",
+      "deal": "10% OFF",
+      "address": "40 Courthouse Ln, Auckland CBD"
+    },
+    {
+      "name": "YOSHIZAWA",
+      "deal": "10% OFF WEEKDAYS",
+      "address": "9C Victoria St East, Auckland CBD"
+    },
+    {
+      "name": "YUAN TASTE",
+      "deal": "10% OFF",
+      "address": "19/239 Queen St, Auckland CBD"
+    },
+    {
+      "name": "CHAHALO",
+      "deal": "10% OFF",
+      "address": "55B High St, Auckland CBD"
+    },
+    {
+      "name": "SIZE GIFT SHOP",
+      "deal": "SPEND $20, RECEIVE 10% OFF",
+      "address": "2K/239 Queen St, Auckland CBD"
+    },
+    {
+      "name": "STARRY TATTOO & PIERCING",
+      "deal": "20% OFF",
+      "address": "2 Lorne St, Auckland CBD"
+    },
+    {
+      "name": "TEA TALK",
+      "deal": "10% OFF",
+      "address": "G20/239 Queen St, Auckland CBD"
+    },
+    {
+      "name": "THE SHELF",
+      "deal": "10% OFF",
+      "address": "50 High St, Auckland CBD"
+    },
+    {
+      "name": "GAMEON ARCADE",
+      "deal": "STUDENT VIP",
+      "address": "291-297 Queen St, Auckland CBD"
+    },
+    {
+      "name": "WAFFLERS & MORE",
+      "deal": "10% OFF or FREE ICE CREAM TOP UP (with any croffle or waffle purchase)",
+      "address": "12 O'Connell St, Auckland CBD"
+    },
+    {
+      "name": "THE PROPER PIZZA COMPANY",
+      "deal": "30cm - one free coke; 40cm - one free garlic bread; 60cm - 5% OFF",
+      "address": "12 O'Connell St, Auckland CBD"
+    },
+    {
+      "name": "SEOUL NIGHT",
+      "deal": "10% OFF",
+      "address": "16/20 Fort St, Auckland CBD"
+    },
+    {
+      "name": "PATCH CAFE",
+      "deal": "10% OFF",
+      "address": "36 Lorne St, Auckland CBD"
+    },
+    {
+      "name": "THE DON",
+      "deal": "12% OFF",
+      "address": "47 High St, Auckland CBD"
+    },
+    {
+      "name": "OH MY CROFFLE",
+      "deal": "10% OFF",
+      "address": "6 Chancery St, Auckland CBD"
+    },
+    {
+      "name": "PASTKATSU",
+      "deal": "Free drink (worth $5)",
+      "address": "20 Lorne St, Auckland CBD"
+    },
+    {
+      "name": "CHUBBY BOY",
+      "deal": "10% OFF",
+      "address": "42c High St, Auckland CBD"
+    },
+    {
+      "name": "MEESO",
+      "deal": "10% OFF",
+      "address": "22 Kitchener St, Auckland CBD"
+    },
+    {
+      "name": "BANNSANG",
+      "deal": "$2 OFF full meals",
+      "address": "47 High St, Auckland CBD"
+    },
+    {
+      "name": "BBQ CHICKEN",
+      "deal": "10% OFF",
+      "address": "2/290 Queen St, Auckland CBD"
+    },
+    {
+      "name": "SSAMJANG",
+      "deal": "10% OFF",
+      "address": "26 Lorne St, Auckland CBD"
+    },
+    {
+      "name": "SAL'S PIZZA",
+      "deal": "10% OFF",
+      "address": "265 Queen St, Auckland CBD"
+    },
+    {
+      "name": "SUMTHIN DUMPLIN",
+      "deal": "10% OFF",
+      "address": "18/26 Wellesly St, Auckland CBD"
+    },
+    {
+      "name": "TSUJIRI",
+      "deal": "FREE UPSIZE (drinks) or FREE TOPPING (soft serve/float)",
+      "address": "10-14 Lorne St, Auckland CBD"
+    },
+    {
+      "name": "AFTERLIFE BILLIARDS",
+      "deal": "20% OFF",
+      "address": "Lobby/520 Queen St, Auckland CBD"
+    },
+    {
+      "name": "OBAR",
+      "deal": "10% OFF",
+      "address": "15 Chancery St, Auckland CBD"
+    },
+    {
+      "name": "DOSIROCK",
+      "deal": "$3 OFF BIBIMBAP or $3 OFF DOSIROCK",
+      "address": "30 Chancery St, Auckland CBD"
+    },
+    {
+      "name": "IPPONDO (CBD)",
+      "deal": "RED LABELS and MEMBERSHIP DISCOUNTS",
+      "address": "229 Queen St, Auckland CBD"
+    },
+    {
+      "name": "NENE CHICKEN",
+      "deal": "ADD ANY $2.50 COMBO TO ANY MAIN",
+      "address": "246 Queen St, Auckland CBD"
+    },
+    {
+      "name": "YOGO BAY",
+      "deal": "$5 OFF",
+      "address": "21 Shortland St, Auckland CBD"
+    },
+    {
+      "name": "MERMAID CAFE",
+      "deal": "10% OFF (over $15)",
+      "address": "60 High St, Auckland CBD"
+    },
+    {
+      "name": "THE COSMETIC STORE",
+      "deal": "5% OFF",
+      "address": "1/10 Victoria St E, Auckland CBD"
+    },
+    {
+      "name": "FIFI'S GELATO",
+      "deal": "5% OFF",
+      "address": "22 High St, Auckland CBD"
+    },
+    {
+      "name": "KUMI DESSERTS",
+      "deal": "10% OFF or ONE FREE BINGSU (EXAM SEASON ONLY)",
+      "address": "1 Courthouse Ln, Auckland CBD"
+    },
+    {
+      "name": "GREAT ESCAPE",
+      "deal": "15% OFF (must book)",
+      "address": "1/28 Lorne St, Auckland CBD"
+    },
+    {
+      "name": "NAHM",
+      "deal": "5% OFF",
+      "address": "39 Elliot St, Auckland CBD"
+    },
+    {
+      "name": "POCHA",
+      "deal": "10% OFF",
+      "address": "50 Kitchener St, Auckland CBD"
+    },
+    {
+      "name": "ANYTIME FITNESS",
+      "deal": "Discounted Membership Price",
+      "address": "14 Lorne St, Auckland CBD"
+    },
+    {
+      "name": "HAUS OF GELATO",
+      "deal": "15% OFF",
+      "address": "12/269-287 Queen St, Auckland CBD"
+    },
+    {
+      "name": "WUCHA",
+      "deal": "10% OFF",
+      "address": "22B Lorne St, Auckland CBD"
+    },
+    {
+      "name": "MOKKI",
+      "deal": "10% OFF",
+      "address": "L2 Commercial Bay, Auckland CBD"
+    }
+  ],
+  "newmarket_sponsors": [
+    {
+      "name": "PANDA",
+      "deal": "10% OFF",
+      "address": "11A Nuffield St, Newmarket"
+    },
+    {
+      "name": "WILD CHILD TATTOO",
+      "deal": "15% OFF JEWELLRY and $20 OFF TATTOOS (over $100)",
+      "address": "18 Remuera Rd, Newmarket"
+    },
+    {
+      "name": "FANKERY",
+      "deal": "10% OFF",
+      "address": "2B York St, Newmarket"
+    },
+    {
+      "name": "SUGAR BAE",
+      "deal": "20% OFF",
+      "address": "6 Broadway, Newmarket"
+    },
+    {
+      "name": "SIP'N CHILL",
+      "deal": "10% OFF",
+      "address": "432 Khyber Pass Rd, Newmarket"
+    },
+    {
+      "name": "40° FOOT MASSAGE",
+      "deal": "15% OFF",
+      "address": "222 Broadway, Newmarket"
+    },
+    {
+      "name": "THE COSMETIC STORE",
+      "deal": "5% OFF",
+      "address": "290B Broadway, Newmarket"
+    },
+    {
+      "name": "KKANG",
+      "deal": "5% OFF",
+      "address": "238 Broadway, Newmarket"
+    },
+    {
+      "name": "PARIS NAILS & BEAUTY",
+      "deal": "12% OFF",
+      "address": "8 Remuera Rd, Newmarket"
+    },
+    {
+      "name": "JOHN BARLEYCORN'S TAPHOUSE",
+      "deal": "15% OFF",
+      "address": "309 Broadway, Rooftop, Newmarket"
+    }
+  ],
+  "other_sponsors": [
+    {
+      "name": "GAO ASIAN FUSION",
+      "deal": "10% OFF (dine in only)",
+      "address": "4/200 Dairy Flat Highway, Albany"
+    },
+    {
+      "name": "CHEEKY CHIC",
+      "deal": "15% OFF",
+      "address": "115 Moore St, Hillcrest",
+      "code": "HAPPY_KAC_15%_OFF"
+    },
+    {
+      "name": "TEASER",
+      "deal": "10% OFF",
+      "address": "8/14 Corinthian Dr, Albany"
+    },
+    {
+      "name": "TWO GUYS CHICKEN",
+      "deal": "10% OFF",
+      "address": "691 Manukau Rd, Royal Oak"
+    },
+    {
+      "name": "MAI MATCHA",
+      "deal": "5% OFF",
+      "address": "Online",
+      "code": "KAC2026"
+    },
+    {
+      "name": "AMAI HOUSE",
+      "deal": "10% OFF",
+      "address": "Pop up stalls"
+    },
+    {
+      "name": "CROCHET N FLOWERS",
+      "deal": "10% OFF",
+      "address": "21 Mauranui Ave, Epsom"
+    },
+    {
+      "name": "RAIDED NZ",
+      "deal": "$30 OFF (orders over $100)",
+      "address": "Online"
+    },
+    {
+      "name": "RABTU'S FLORIST",
+      "deal": "10% OFF ($59 and $79)",
+      "address": "Online"
+    },
+    {
+      "name": "NORTHERN ROCKS",
+      "deal": "10% OFF",
+      "address": "17/101-111 Diana Dr, Wairau Valley"
+    },
+    {
+      "name": "BELLA BAKES",
+      "deal": "8% OFF",
+      "address": "43/11 Northside Dr, Westgate"
+    },
+    {
+      "name": "T-MARK",
+      "deal": "10% OFF",
+      "address": "Online"
+    },
+    {
+      "name": "THE TAKASHI JAPANESE KITCHEN",
+      "deal": "10% OFF",
+      "address": "774 Manukau Rd, Royal Oak"
+    }
+  ]
+}

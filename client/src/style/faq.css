@@ -1,16 +1,16 @@
 .faq-container {
-    padding-top: 45px;
-    padding-bottom: 45px;
+  padding-top: 45px;
+  padding-bottom: 45px;
 }
 
 .faq-title {
-    text-align: center;
-    font-weight: bold;
-    font-size: 60px;
-    padding-bottom: 160px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 60px;
+  padding-bottom: 160px;
 }
 
 .faq-list {
-    margin-left: 400px;
-    margin-right: 400px;
+  margin-left: 400px;
+  margin-right: 400px;
 }

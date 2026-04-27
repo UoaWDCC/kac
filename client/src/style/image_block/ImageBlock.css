@@ -1,7 +1,8 @@
 .image-block {
     position: relative;
-    display: inline-block;
-    width: 100%;
+    display: table;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 .image-block__edit-btn {
@@ -32,6 +33,7 @@
 .image-block img {
     display: block;
     width: 100%;
+    height: auto;
 }
 
 .image-block__edit-btn:hover title {

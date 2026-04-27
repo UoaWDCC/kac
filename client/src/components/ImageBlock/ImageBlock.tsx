@@ -42,11 +42,10 @@ export function ImageBlock({ pageKey, role, style }: ImageBlockProps) {
 
     return (
         <>
-            <div className="image-block">
+            <div className="image-block" style={style}>
                 <img
                     src={imageData?.signedUrl ?? placeholder}
                     alt={imageData?.originalName ?? "Placeholder image"}
-                    style={style}
                 />
 
                 {role === "admin" && (

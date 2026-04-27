@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { Testing } from "./model/testing";
 import imageRoutes from "./routes/imageRoutes";
+import faqRoutes from "./routes/faqRoutes";
 
 // app config
 dotenv.config({ quiet: true });
@@ -14,6 +15,7 @@ const mongoUrl: string = `mongodb+srv://${process.env.MONGODB_USER}:${process.en
 // middleware
 app.use(express.json());
 app.use("/api/images", imageRoutes);
+app.use("/api/faqs", faqRoutes)
 
 app.get("/api/test", (req, res) => {
   res.send("Hi :)");

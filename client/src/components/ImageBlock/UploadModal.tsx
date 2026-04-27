@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { uploadImage } from "../../api/imageApi";
+import "../../style/image_block/UploadModal.css";
+
 
 interface UploadModalProps {
     onClose: () => void;
@@ -42,19 +44,44 @@ export function UploadModal({ onClose, onSuccess, tag }: UploadModalProps) {
     };
 
     return (
-        <div>
-            <h2>Upload Image</h2>
-            <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                onChange={handleFileChange}
-            />
-            {preview && <img src={preview} alt="Preview" />}
-            {error && <p>{error}</p>}
-            <button onClick={handleUpload} disabled={!file || uploading}>
-                {uploading ? "Uploading..." : "Upload"}
-            </button>
-            <button onClick={onClose} disabled={uploading}>Cancel</button>
+        <div className="upload-modal__overlay" onClick={onClose}>
+            <div className="upload-modal" onClick={(e) => e.stopPropagation()}>
+                <h2>UPLOAD IMAGE</h2>
+
+                <label className={`upload-modal__dropzone${preview ? " upload-modal__dropzone--has-preview" : ""}`}>
+                    {preview ? (
+                        <img src={preview} alt="Preview" className="upload-modal__preview" />
+                    ) : (
+                        <span>Click to choose a file</span>
+                    )}
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        onChange={handleFileChange}
+                        style={{ display: "none" }}
+                    />
+                </label>
+
+                {file && <p className="upload-modal__filename">{file.name}</p>}
+                {error && <p className="upload-modal__error">{error}</p>}
+
+                <div className="upload-modal__actions">
+                    <button
+                        className="upload-modal__btn-upload"
+                        onClick={handleUpload}
+                        disabled={!file || uploading}
+                    >
+                        {uploading ? "UPLOADING..." : "UPLOAD"}
+                    </button>
+                    <button
+                        className="upload-modal__btn-cancel"
+                        onClick={onClose}
+                        disabled={uploading}
+                    >
+                        CANCEL
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

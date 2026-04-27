@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { fetchImageByTag } from "../../api/imageApi";
 import { UploadModal } from "./UploadModal";
 import placeholder from "../../images/placeholder.png";
+import "../../style/image_block/ImageBlock.css";
+import { Pencil } from "lucide-react";
 
 interface ImageData {
     id: string | null;
@@ -39,16 +41,24 @@ export function ImageBlock({ pageKey, role, style }: ImageBlockProps) {
     if (loading) return <p>Loading...</p>;
 
     return (
-        <div>
-            <img
-                src={imageData?.signedUrl ?? placeholder}
-                alt={imageData?.originalName ?? "Placeholder image"}
-                style={style}
-            />
+        <>
+            <div className="image-block">
+                <img
+                    src={imageData?.signedUrl ?? placeholder}
+                    alt={imageData?.originalName ?? "Placeholder image"}
+                    style={style}
+                />
 
-            {role === "admin" && (
-                <button onClick={() => setShowModal(true)}>Edit Image</button>
-            )}
+                {role === "admin" && (
+                    <button
+                        className="image-block__edit-btn"
+                        onClick={() => setShowModal(true)}
+                        title="Edit image"
+                    >
+                        <Pencil size={17} />
+                    </button>
+                )}
+            </div>
 
             {showModal && (
                 <UploadModal
@@ -60,6 +70,6 @@ export function ImageBlock({ pageKey, role, style }: ImageBlockProps) {
                     tag={pageKey}
                 />
             )}
-        </div>
+        </>
     );
 }

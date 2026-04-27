@@ -1,0 +1,115 @@
+.upload-modal__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.upload-modal {
+    background: #faf3d1;
+    border: 1px solid black;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+}
+
+.upload-modal h2 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.5rem;
+}
+
+.upload-modal__dropzone {
+    display: block;
+    border: 1px dashed black;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    background: white;
+    transition: transform 0.25s ease-in-out;
+}
+
+
+.upload-modal__dropzone:not(.upload-modal__dropzone--has-preview):hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.03);
+}
+
+.upload-modal__dropzone span {
+    display: inline-block;
+    transform: scale(calc(1 / 1.03));
+}
+
+.upload-modal__dropzone--has-preview {
+    background: transparent;
+}
+
+.upload-modal__preview {
+    max-width: 100%;
+    max-height: 240px;
+    display: block;
+    margin: 0 auto;
+}
+
+.upload-modal__filename {
+    font-size: 0.85rem;
+    margin: 0 0 1rem 0;
+}
+
+.upload-modal__error {
+    color: red;
+    font-size: 0.85rem;
+    margin: 0 0 1rem 0;
+}
+
+.upload-modal__actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.upload-modal__btn-upload {
+    flex: 1;
+    padding: 0.5rem;
+    background: black;
+    color: #faf3d1;
+    border: 1px solid black;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.25s ease-in-out;
+}
+
+.upload-modal__btn-upload:not(:disabled):hover {
+    background: rgba(2, 105, 0, 0.79);
+    border: none;
+    transform: translateY(-2px);
+}
+
+.upload-modal__btn-upload:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.upload-modal__btn-cancel {
+    flex: 1;
+    padding: 0.5rem;
+    background: transparent;
+    border: 1px solid black;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.25s ease-in-out;
+
+}
+
+.upload-modal__btn-cancel:hover {
+    background: rgba(255, 0, 0, 0.75);
+    color: #faf3d1;
+    border: none;
+    transform: translateY(-2px);
+}
+
+.upload-modal__btn-cancel:disabled {
+    cursor: not-allowed;
+}

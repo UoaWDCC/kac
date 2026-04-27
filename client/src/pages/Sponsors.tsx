@@ -1,15 +1,51 @@
+import { useEffect, useState } from "react";
 import SponsorCard from "../components/SponsorCard";
 
+// 1. Define the shape of a single sponsor
+interface Sponsor {
+  name: string;
+  deal: string;
+  address: string;
+  code?: string;
+}
+
+// 2. Define the shape of the whole JSON file
+interface SponsorsData {
+  cbd_sponsors: Sponsor[];
+  newmarket_sponsors: Sponsor[];
+  other_sponsors: Sponsor[];
+}
+
 const Sponsors = () => {
+  const [sponsors, setSponsors] = useState<SponsorsData | null>(null);
+
+  useEffect(() => {
+    fetch("/data/sponsors.json")
+      .then((res) => res.json())
+      .then((data: SponsorsData) => setSponsors(data))
+      .catch((err) => console.error("Error loading sponsors:", err));
+  }, []);
+
+  if (!sponsors) {
+    return (
+      <div style={{ textAlign: "center", padding: "2rem" }}>
+        Loading Sponsors...
+      </div>
+    );
+  }
+
+  const gridStyle = {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: "2rem",
+    padding: "2rem",
+  } as const;
+
   return (
-    <div
-      style={{
-        textAlign: "center",
-        backgroundColor: "#faf3d1",
-      }}
-    >
+    <div style={{ textAlign: "center", backgroundColor: "#faf3d1" }}>
       {/* HERO SECTION */}
-      <section>
+      <section style={{ padding: "2rem 0" }}>
         <h1>Sponsors</h1>
         <div style={{ display: "flex", justifyContent: "center", gap: "2rem" }}>
           <a href="#CBD">CBD Sponsors</a>
@@ -19,12 +55,12 @@ const Sponsors = () => {
       </section>
 
       {/* MEMBERSHIP BLURB */}
-      <section
-        style={{
-          backgroundColor: "#ffffff",
-        }}
-      >
-        <img src="/path/to/membership-card.jpg" alt="Membership Card" />
+      <section style={{ backgroundColor: "#ffffff", padding: "2rem" }}>
+        <img
+          src="/path/to/membership-card.jpg"
+          alt="Membership Card"
+          style={{ maxWidth: "300px" }}
+        />
         <h2>
           Present your 2026 KAC membership card to our sponsors and receive
           these amazing deals!
@@ -33,88 +69,46 @@ const Sponsors = () => {
 
       {/* CBD SPONSOR SECTION */}
       <section id="CBD">
-        <h2>CBD Sponsors</h2>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: "2rem",
-          }}
-        >
-          <SponsorCard
-            name="Sponsor 1"
-            description="Description for Sponsor 1"
-            location="Location 1"
-          />
-          <SponsorCard
-            name="Sponsor 2"
-            description="Description for Sponsor 2"
-            location="Location 2"
-          />
-          <SponsorCard
-            name="Sponsor 3"
-            description="Description for Sponsor 3"
-            location="Location 3"
-          />
+        <h2 style={{ marginTop: "2rem" }}>CBD Sponsors</h2>
+        <div style={gridStyle}>
+          {sponsors.cbd_sponsors.map((s, index) => (
+            <SponsorCard
+              key={index}
+              name={s.name}
+              description={s.deal} // Mapping 'deal' from JSON to 'description' prop
+              location={s.address} // Mapping 'address' from JSON to 'location' prop
+            />
+          ))}
         </div>
       </section>
 
       {/* NEWMARKET SPONSOR SECTION */}
       <section id="Newmarket">
-        <h2>Newmarket Sponsors</h2>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: "2rem",
-          }}
-        >
-          <SponsorCard
-            name="Sponsor 1"
-            description="Description for Sponsor 1"
-            location="Location 1"
-          />
-          <SponsorCard
-            name="Sponsor 2"
-            description="Description for Sponsor 2"
-            location="Location 2"
-          />
-          <SponsorCard
-            name="Sponsor 3"
-            description="Description for Sponsor 3"
-            location="Location 3"
-          />
+        <h2 style={{ marginTop: "2rem" }}>Newmarket Sponsors</h2>
+        <div style={gridStyle}>
+          {sponsors.newmarket_sponsors.map((s, index) => (
+            <SponsorCard
+              key={index}
+              name={s.name}
+              description={s.deal}
+              location={s.address}
+            />
+          ))}
         </div>
       </section>
 
       {/* OTHER SPONSOR SECTION */}
       <section id="Other">
-        <h2>Other Sponsors</h2>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: "2rem",
-          }}
-        >
-          <SponsorCard
-            name="Sponsor 1"
-            description="Description for Sponsor 1"
-            location="Location 1"
-          />
-          <SponsorCard
-            name="Sponsor 2"
-            description="Description for Sponsor 2"
-            location="Location 2"
-          />
-          <SponsorCard
-            name="Sponsor 3"
-            description="Description for Sponsor 3"
-            location="Location 3"
-          />
+        <h2 style={{ marginTop: "2rem" }}>Other Sponsors</h2>
+        <div style={gridStyle}>
+          {sponsors.other_sponsors.map((s, index) => (
+            <SponsorCard
+              key={index}
+              name={s.name}
+              description={s.deal + (s.code ? ` (Code: ${s.code})` : "")}
+              location={s.address}
+            />
+          ))}
         </div>
       </section>
     </div>

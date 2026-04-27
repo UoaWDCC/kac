@@ -1,4 +1,8 @@
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { RequestHandler } from "express";
 import { randomUUID } from "crypto";
@@ -123,7 +127,9 @@ export const getImageById: RequestHandler = async (req, res, next) => {
 
 export const getImageByTag: RequestHandler = async (req, res) => {
   try {
-    const image = await Image.findOne({ tag: req.params.tag }).sort({ uploadedAt: -1 });
+    const image = await Image.findOne({ tag: req.params.tag }).sort({
+      uploadedAt: -1,
+    });
 
     if (!image) {
       res.json({ signedUrl: null });

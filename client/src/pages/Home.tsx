@@ -1,5 +1,4 @@
 import "../style/common.css";
-import placeholder from "../images/placeholder.png";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/ImageBlock/ImageBlock";
 
@@ -18,6 +17,7 @@ const Home = () => {
         <ImageBlock
           pageKey="hero"
           role="admin"
+          alt="Hero Page"
           style={{ maxWidth: "1100px", width: "100%", height: "auto" }}
         />
       </section>
@@ -40,8 +40,9 @@ const Home = () => {
       <section className="section yellow-bg">
         <div className="narrow-content">
           <h2>CHECK OUT OUR UPCOMING EVENTS</h2>
-          <img
-            src={placeholder}
+          <ImageBlock
+            pageKey="events"
+            role="admin"
             alt="Kiwi Asian Club group photo"
             style={{
               maxWidth: "1100px",
@@ -49,7 +50,7 @@ const Home = () => {
               height: "auto",
               marginBottom: "1.5em",
             }}
-          ></img>
+          />
           <Link to="/Events" className="wide-button">
             SEE MORE {">>"}
           </Link>

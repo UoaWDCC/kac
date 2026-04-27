@@ -15,9 +15,10 @@ interface ImageBlockProps {
     pageKey: string;
     role: "admin" | "user";
     style?: React.CSSProperties;
+    alt: string;
 }
 
-export function ImageBlock({ pageKey, role, style }: ImageBlockProps) {
+export function ImageBlock({ pageKey, role, style, alt }: ImageBlockProps) {
     const [imageData, setImageData] = useState<ImageData | null>(null);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -45,7 +46,7 @@ export function ImageBlock({ pageKey, role, style }: ImageBlockProps) {
             <div className="image-block" style={style}>
                 <img
                     src={imageData?.signedUrl ?? placeholder}
-                    alt={imageData?.originalName ?? "Placeholder image"}
+                    alt={alt}
                 />
 
                 {role === "admin" && (

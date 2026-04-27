@@ -21,7 +21,7 @@ export const editExec: RequestHandler = async (req, res, next) => {
       req.params.id,
       req.body,
       { returnDocument: "after" }
-    );
+    ).lean();
 
     if (!updatedExec) {
       return res.status(404).json({ message: "Executive not found." });
@@ -55,7 +55,7 @@ export const deleteExec: RequestHandler = async (req, res, next) => {
 
 export const getAllExecs: RequestHandler = async (req, res, next) => {
   try {
-    const executives = await Executive.find();
+    const executives = await Executive.find().lean();
     res.status(200).json(executives);
   } catch (err) {
     console.error("[!] Error fetching executives: ", err);

@@ -14,14 +14,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     axios
-      .get("/auth/me")
+      .get("/api/auth/me")
       .then((res) => setUser(res.data))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
   }, []);
 
   const logout = () => {
-    window.location.href = "/auth/logout";
+    window.location.href = "/api/auth/logout";
   };
 
   return (

@@ -4,8 +4,8 @@ import mongoose from "mongoose";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { Testing } from "./model/testing";
 import imageRoutes from "./routes/imageRoutes";
+import authRoutes from "./routes/authRoutes";
 
 // app config
 dotenv.config({ quiet: true });
@@ -29,7 +29,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "/api/auth/google/callback",
     },
     (_accessToken, _refreshToken, profile, done) => {
       // For future DB storage of user info
@@ -41,56 +41,10 @@ passport.use(
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user: Express.User, done) => done(null, user));
 
-// Google login route
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-// Google redirects back here after login
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (_req, res) => {
-    res.redirect(process.env.CLIENT_URL!);
-  }
-);
-
-// Logout route
-app.get("/auth/logout", (req, res) => {
-  req.logout(() => {
-    res.redirect(process.env.CLIENT_URL!);
-  });
-});
-
-// Route to check if user is authenticated
-app.get("/auth/me", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.json(req.user);
-  } else {
-    res.status(401).json(null);
-  }
-});
-
 // middleware
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
-
-app.get("/api/test", (req, res) => {
-  res.send("Hi :)");
-});
-
-app.post("/api/test", (req, res) => {
-  const testing = { name: "Default Name", value: 0 };
-  Testing.create(testing)
-    .then(() => {
-      res.send("Test successful!");
-    })
-    .catch((err) => {
-      console.error("Error creating testing document:", err);
-      res.status(500).send("Error creating testing document");
-    });
-});
 
 // Connect to MongoDB and start the server
 mongoose

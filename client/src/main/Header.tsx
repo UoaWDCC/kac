@@ -64,7 +64,7 @@ const Header = () => {
               </button>
             </div>
           ) : (
-            <a href="/auth/google" style={linkStyle}>
+            <a href="/api/auth/google" style={linkStyle}>
               Sign In
             </a>
           ))}

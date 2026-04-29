@@ -5,6 +5,7 @@ import {
   Navigate,
   Outlet,
 } from "react-router-dom";
+import { AuthProvider } from "../auth/AuthProvider.tsx";
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
 
@@ -17,19 +18,21 @@ import About from "../pages/About.tsx";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="" element={<Home />} />
-          <Route path="About" element={<About />} />
-          <Route path="Events" element={<Events />} />
-          <Route path="Sponsors" element={<Sponsors />} />
-          <Route path="Contact" element={<Contact />} />
-          <Route path="Faq" element={<Faq />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="" element={<Home />} />
+            <Route path="About" element={<About />} />
+            <Route path="Events" element={<Events />} />
+            <Route path="Sponsors" element={<Sponsors />} />
+            <Route path="Contact" element={<Contact />} />
+            <Route path="Faq" element={<Faq />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 

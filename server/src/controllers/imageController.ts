@@ -1,4 +1,8 @@
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { RequestHandler } from "express";
 import { randomUUID } from "crypto";
@@ -14,21 +18,40 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
       return;
     }
 
+    const tag = req.body.tag ?? null;
+
+    // If a tag was provided, delete the existing image for that tag
+    if (tag) {
+      const existing = await Image.findOne({ tag });
+      if (existing) {
+        try {
+          await s3Client.send(
+            new DeleteObjectCommand({
+              Bucket: existing.bucket,
+              Key: existing.s3Key,
+            })
+          );
+        } catch (s3Error) {
+          console.error("Failed to delete old S3 object:", s3Error);
+        }
+        await existing.deleteOne();
+      }
+    }
+
     const fileExtension = req.file.originalname.includes(".")
       ? req.file.originalname.split(".").pop()
       : "";
     const s3Key = `images/${randomUUID()}${fileExtension ? `.${fileExtension}` : ""}`;
 
-    // create mongo record
     const image = await Image.create({
       originalName: req.file.originalname,
       mimeType: req.file.mimetype,
       size: req.file.size,
       s3Key,
       bucket: s3BucketName,
+      tag,
     });
 
-    // Upload to S3, roll back the Mongo record if it fails
     try {
       await s3Client.send(
         new PutObjectCommand({
@@ -102,10 +125,36 @@ export const getImageById: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const getImageByTag: RequestHandler = async (req, res) => {
+  try {
+    const image = await Image.findOne({ tag: req.params.tag }).sort({
+      uploadedAt: -1,
+    });
+
+    if (!image) {
+      res.json({ signedUrl: null });
+      return;
+    }
+
+    const signedUrl = await getSignedUrl(
+      s3Client,
+      new GetObjectCommand({ Bucket: image.bucket, Key: image.s3Key }),
+      { expiresIn: signedUrlExpirySeconds }
+    );
+
+    res.json({
+      id: image._id,
+      originalName: image.originalName,
+      signedUrl,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch image" });
+  }
+};
+
 export const listImages: RequestHandler = async (req, res, next) => {
   try {
     const images = await Image.find().sort({ uploadedAt: -1 }).lean();
-
     res.json(images);
   } catch (error) {
     console.error("Error listing images:", error);

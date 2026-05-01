@@ -7,6 +7,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import authRoutes from "./routes/authRoutes";
 import imageRoutes from "./routes/imageRoutes";
 import executivesRoutes from "./routes/executivesRoutes";
+import contactRoutes from "./routes/contactRoutes";
 
 // app config
 dotenv.config({ quiet: true });
@@ -47,6 +48,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/executives", executivesRoutes);
+app.use("/api/contacts", contactRoutes);
 
 // Connect to MongoDB and start the server
 mongoose

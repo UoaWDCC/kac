@@ -22,19 +22,43 @@ interface Executive {
 }
 
 const Executives = () => {
-  const [execs, setExecs] = useState<Executive[]>([]);
+  const [execs, setExecs] = useState<Executive[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadExecs = async () => {
+    try {
+      setLoading(true);
+      const data = await fetch("/api/executives");
+      setExecs(await data.json());
+    } catch (error) {
+      console.error("Error fetching executives data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchExecutives = async () => {
-      try {
-        const response = await fetch("/api/executives");
-        setExecs(await response.json());
-      } catch (error) {
-        console.error("Error fetching executives data:", error);
-      }
-    };
-    fetchExecutives();
+    loadExecs();
   }, []);
+
+  if (loading) {
+    return (
+      <div
+        className="loading"
+        style={{ textAlign: "center", marginTop: "2rem" }}
+      >
+        Loading executives...
+      </div>
+    );
+  }
+
+  if (!execs) {
+    return (
+      <div className="error" style={{ textAlign: "center", marginTop: "2rem" }}>
+        Failed to load executives.
+      </div>
+    );
+  }
 
   return (
     <div className="executives-container">

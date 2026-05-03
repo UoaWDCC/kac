@@ -47,6 +47,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/executives", executivesRoutes);
+app.use("/api/faqs", faqRoutes);
 
 // Connect to MongoDB and start the server
 mongoose

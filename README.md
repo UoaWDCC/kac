@@ -60,10 +60,10 @@ TBD
         Developer
       </td>
       <td align="center" valign="middle" width="15%">
-        <a href="https://github.com/Embers2512"><img src="https://avatars.githubusercontent.com/u/127377697?v=4?s=100" valign="middle" width="150px" alt="Muhammad Mohamad Hanafiah"/></a>
+        <a href="https://github.com/varsh42"><img src="https://avatars.githubusercontent.com/u/126519121?v=4" valign="middle" width="150px" alt="Varsh Patel"/></a>
       </td>
       <td align="left" valign="middle" width="35%">
-        <a href="https://github.com/Embers2512"><b>Muhammad Mohamad Hanafiah</b></a><br />
+        <a href="https://github.com/varsh42"><b>Varsh Patel</b></a><br />
         Developer
       </td>
     </tr>

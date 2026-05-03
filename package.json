@@ -11,8 +11,5 @@
   "devDependencies": {
     "concurrently": "^9.2.1",
     "prettier": "^3.8.3"
-  },
-  "dependencies": {
-    "lucide-react": "^1.11.0"
   }
 }

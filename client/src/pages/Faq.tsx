@@ -14,10 +14,10 @@ const Faq = () => {
 
   useEffect(() => {
     fetch("/api/faqs")
-    .then((res) => res.json())
-    .then((data) => setFaqs(data))
-    .catch((err) => console.error("Failed to fetch faqs:", err));
-  }, [])
+      .then((res) => res.json())
+      .then((data) => setFaqs(data))
+      .catch((err) => console.error("Failed to fetch faqs:", err));
+  }, []);
 
   return (
     <div className="faq-container yellow-bg">

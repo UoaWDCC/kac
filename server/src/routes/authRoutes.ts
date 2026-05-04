@@ -1,5 +1,6 @@
 import express from "express";
 import passport from "passport";
+import { User } from "../model/user";
 
 const router = express.Router();
 
@@ -30,13 +31,20 @@ router.get("/logout", (req, res) => {
   });
 });
 
-// Route to check if user is authenticated
-router.get("/me", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.json(req.user);
-  } else {
+// Route to check if user is authenticated.
+// Does a live DB lookup so hasAccount is always accurate —
+// prevents the back-button bug where a mid-signup user appears logged in.
+router.get("/me", async (req, res) => {
+  if (!req.isAuthenticated()) {
     res.status(401).json(null);
+    return;
   }
+
+  const profile = req.user as any;
+  const existingUser = await User.findOne({ googleUid: profile.id });
+  profile.hasAccount = !!existingUser;
+
+  res.json(profile);
 });
 
 export default router;

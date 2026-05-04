@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../auth/useAuth";
+import "../style/common.css";
+import "../style/signup.css";
 
 const FACULTIES = [
     "Arts",
@@ -14,7 +16,7 @@ const FACULTIES = [
     "Science",
 ];
 
-const Signup = () => {
+const SignUp = () => {
     const { user, hasAccount, loading } = useAuth();
     const navigate = useNavigate();
 
@@ -33,14 +35,10 @@ const Signup = () => {
     const [error, setError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
 
-    // Redirect away if not signed in or already has an account
     useEffect(() => {
         if (!loading) {
-            if (!user) {
-                navigate("/");
-            } else if (hasAccount) {
-                navigate("/");
-            }
+            if (!user) navigate("/");
+            else if (hasAccount) navigate("/");
         }
     }, [user, hasAccount, loading, navigate]);
 
@@ -75,9 +73,7 @@ const Signup = () => {
             });
             navigate("/");
         } catch (err: any) {
-            setError(
-                err.response?.data?.message ?? "Something went wrong. Please try again."
-            );
+            setError(err.response?.data?.message ?? "Something went wrong. Please try again.");
         } finally {
             setSubmitting(false);
         }
@@ -88,127 +84,94 @@ const Signup = () => {
     const email = user?.emails?.[0]?.value ?? "";
 
     return (
-        <div style={{ maxWidth: "600px", margin: "2rem auto", padding: "0 1rem" }}>
-            <h1>Complete Your Registration</h1>
-            <p style={{ color: "#555", marginBottom: "1.5rem" }}>
-                Welcome! Please fill in a few details to finish creating your account.
+        <div className="signup-page">
+            <h1 className="signup-title">SIGN UP</h1>
+            <p className="signup-intro">
+                Complete your registration to become a Kiwi Asian Club member.
             </p>
 
-            {error && (
-                <p style={{ color: "red", marginBottom: "1rem" }}>{error}</p>
-            )}
+            <div className="signup-form">
+                {error && <p className="signup-error">{error}</p>}
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                {/* Email — read-only, sourced from Google */}
-                <Field label="Email Address">
-                    <input
-                        type="email"
-                        value={email}
-                        readOnly
-                        style={{ ...inputStyle, background: "#f5f5f5", cursor: "not-allowed" }}
-                    />
-                </Field>
-
-                <div style={{ display: "flex", gap: "1rem" }}>
-                    <Field label="First Name" style={{ flex: 1 }}>
-                        <input
-                            name="firstName"
-                            value={form.firstName}
-                            onChange={handleChange}
-                            required
-                            style={inputStyle}
-                        />
-                    </Field>
-                    <Field label="Last Name" style={{ flex: 1 }}>
-                        <input
-                            name="lastName"
-                            value={form.lastName}
-                            onChange={handleChange}
-                            required
-                            style={inputStyle}
-                        />
-                    </Field>
+                {/* Email — read-only from Google */}
+                <div className="signup-field">
+                    <label>Email Address</label>
+                    <input type="email" value={email} readOnly />
                 </div>
 
-                <Field label="Mobile Number">
+                <div className="signup-row">
+                    <div className="signup-field half">
+                        <label>First Name</label>
+                        <input name="firstName" value={form.firstName} onChange={handleChange} />
+                    </div>
+                    <div className="signup-field half">
+                        <label>Last Name</label>
+                        <input name="lastName" value={form.lastName} onChange={handleChange} />
+                    </div>
+                </div>
+
+                <div className="signup-field">
+                    <label>Mobile Number</label>
                     <input
                         name="mobileNumber"
                         type="tel"
                         placeholder="+64 21 123 4567"
                         value={form.mobileNumber}
                         onChange={handleChange}
-                        required
-                        style={inputStyle}
                     />
-                </Field>
+                </div>
 
-                <Field label="Pronouns (optional)">
+                <div className="signup-field">
+                    <label>Pronouns (optional)</label>
                     <input
                         name="pronouns"
                         placeholder="e.g. she/her, he/him, they/them"
                         value={form.pronouns}
                         onChange={handleChange}
-                        style={inputStyle}
                     />
-                </Field>
+                </div>
 
-                <Field label="University">
+                <div className="signup-field">
+                    <label>University</label>
                     <input
                         name="university"
                         placeholder="e.g. University of Auckland"
                         value={form.university}
                         onChange={handleChange}
-                        required
-                        style={inputStyle}
                     />
-                </Field>
+                </div>
 
-                <div style={{ display: "flex", gap: "1rem" }}>
-                    <Field label="Student ID Number" style={{ flex: 1 }}>
-                        <input
-                            name="studentId"
-                            value={form.studentId}
-                            onChange={handleChange}
-                            required
-                            style={inputStyle}
-                        />
-                    </Field>
-                    <Field label="Student Username / UPI" style={{ flex: 1 }}>
+                <div className="signup-row">
+                    <div className="signup-field half">
+                        <label>Student ID Number</label>
+                        <input name="studentId" value={form.studentId} onChange={handleChange} />
+                    </div>
+                    <div className="signup-field half">
+                        <label>Student Username / UPI</label>
                         <input
                             name="upi"
                             placeholder="e.g. jdoe123"
                             value={form.upi}
                             onChange={handleChange}
-                            required
-                            style={inputStyle}
                         />
-                    </Field>
+                    </div>
                 </div>
 
-                <Field label="Year of Study">
-                    <select
-                        name="yearOfStudy"
-                        value={form.yearOfStudy}
-                        onChange={handleChange}
-                        required
-                        style={inputStyle}
-                    >
+                <div className="signup-field">
+                    <label>Year of Study</label>
+                    <select name="yearOfStudy" value={form.yearOfStudy} onChange={handleChange}>
                         <option value="">Select year</option>
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((y) => (
-                            <option key={y} value={y}>
-                                Year {y}
-                            </option>
+                            <option key={y} value={y}>Year {y}</option>
                         ))}
                     </select>
-                </Field>
+                </div>
 
-                <Field label="Faculty (select all that apply)">
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <div className="signup-field">
+                    <label>Faculty (select all that apply)</label>
+                    <div className="signup-faculties">
                         {FACULTIES.map((faculty) => (
-                            <label
-                                key={faculty}
-                                style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}
-                            >
+                            <label key={faculty}>
                                 <input
                                     type="checkbox"
                                     checked={form.faculties.includes(faculty)}
@@ -218,51 +181,18 @@ const Signup = () => {
                             </label>
                         ))}
                     </div>
-                </Field>
+                </div>
 
                 <button
+                    className="signup-submit"
                     onClick={handleSubmit}
                     disabled={submitting}
-                    style={{
-                        marginTop: "1rem",
-                        padding: "0.75rem 1.5rem",
-                        background: submitting ? "#ccc" : "#f5c518",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: submitting ? "not-allowed" : "pointer",
-                        fontWeight: "bold",
-                        fontSize: "1rem",
-                    }}
                 >
-                    {submitting ? "Creating Account..." : "Create Account"}
+                    {submitting ? "CREATING ACCOUNT..." : "CREATE ACCOUNT >>"}
                 </button>
             </div>
         </div>
     );
 };
 
-const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "0.5rem 0.75rem",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    fontSize: "1rem",
-    boxSizing: "border-box",
-};
-
-const Field = ({
-    label,
-    children,
-    style,
-}: {
-    label: string;
-    children: React.ReactNode;
-    style?: React.CSSProperties;
-}) => (
-    <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", ...style }}>
-        <label style={{ fontWeight: "500", fontSize: "0.9rem" }}>{label}</label>
-        {children}
-    </div>
-);
-
-export default Signup;
+export default SignUp;

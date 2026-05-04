@@ -13,7 +13,11 @@ const headerStyle = {
 };
 
 const Header = () => {
-  const { user, loading, logout } = useAuth();
+  const { user, hasAccount, loading, logout } = useAuth();
+
+  // User is only considered "signed in" to the club once they have a full account.
+  // A Google-authed user mid-signup should still see the Sign In button.
+  const isSignedIn = !!user && hasAccount;
 
   return (
     <header className="yellow-bg" style={headerStyle}>
@@ -21,30 +25,16 @@ const Header = () => {
         Kiwi Asian Club
       </Link>
       <div style={{ display: "flex", gap: "1rem" }}>
-        <Link to="/" style={linkStyle}>
-          Home
-        </Link>
-        <Link to="/About" style={linkStyle}>
-          About
-        </Link>
-        <Link to="/Events" style={linkStyle}>
-          Events
-        </Link>
-        <Link to="/Sponsors" style={linkStyle}>
-          Sponsors
-        </Link>
-        <Link to="/Contact" style={linkStyle}>
-          Contact
-        </Link>
-        <Link to="/Faq" style={linkStyle}>
-          Faq
-        </Link>
+        <Link to="/" style={linkStyle}>Home</Link>
+        <Link to="/About" style={linkStyle}>About</Link>
+        <Link to="/Events" style={linkStyle}>Events</Link>
+        <Link to="/Sponsors" style={linkStyle}>Sponsors</Link>
+        <Link to="/Contact" style={linkStyle}>Contact</Link>
+        <Link to="/Faq" style={linkStyle}>Faq</Link>
 
         {!loading &&
-          (user ? (
-            <div
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
+          (isSignedIn ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <img
                 src={user.photos?.[0]?.value}
                 alt="profile"

@@ -102,11 +102,11 @@ const SignUp = () => {
                 <div className="signup-row">
                     <div className="signup-field half">
                         <label>First Name</label>
-                        <input name="firstName" value={form.firstName} onChange={handleChange} />
+                        <input name="firstName" placeholder="e.g. Jonah" value={form.firstName} onChange={handleChange} />
                     </div>
                     <div className="signup-field half">
                         <label>Last Name</label>
-                        <input name="lastName" value={form.lastName} onChange={handleChange} />
+                        <input name="lastName" placeholder="e.g. Dao" value={form.lastName} onChange={handleChange} />
                     </div>
                 </div>
 
@@ -144,7 +144,7 @@ const SignUp = () => {
                 <div className="signup-row">
                     <div className="signup-field half">
                         <label>Student ID Number</label>
-                        <input name="studentId" value={form.studentId} onChange={handleChange} />
+                        <input name="studentId" placeholder="e.g. 4206769173" value={form.studentId} onChange={handleChange} />
                     </div>
                     <div className="signup-field half">
                         <label>Student Username / UPI</label>
@@ -161,7 +161,8 @@ const SignUp = () => {
                     <label>Year of Study</label>
                     <select name="yearOfStudy" value={form.yearOfStudy} onChange={handleChange}>
                         <option value="">Select year</option>
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((y) => (
+                        {/* Will need to change this to cater for Postgrads and Alumni currently set up as a number*/}
+                        {[1, 2, 3, 4, 5, 6].map((y) => (
                             <option key={y} value={y}>Year {y}</option>
                         ))}
                     </select>

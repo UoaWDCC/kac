@@ -25,16 +25,30 @@ const Header = () => {
         Kiwi Asian Club
       </Link>
       <div style={{ display: "flex", gap: "1rem" }}>
-        <Link to="/" style={linkStyle}>Home</Link>
-        <Link to="/About" style={linkStyle}>About</Link>
-        <Link to="/Events" style={linkStyle}>Events</Link>
-        <Link to="/Sponsors" style={linkStyle}>Sponsors</Link>
-        <Link to="/Contact" style={linkStyle}>Contact</Link>
-        <Link to="/Faq" style={linkStyle}>Faq</Link>
+        <Link to="/" style={linkStyle}>
+          Home
+        </Link>
+        <Link to="/About" style={linkStyle}>
+          About
+        </Link>
+        <Link to="/Events" style={linkStyle}>
+          Events
+        </Link>
+        <Link to="/Sponsors" style={linkStyle}>
+          Sponsors
+        </Link>
+        <Link to="/Contact" style={linkStyle}>
+          Contact
+        </Link>
+        <Link to="/Faq" style={linkStyle}>
+          Faq
+        </Link>
 
         {!loading &&
           (isSignedIn ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
               <img
                 src={user.photos?.[0]?.value}
                 alt="profile"

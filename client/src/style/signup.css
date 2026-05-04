@@ -1,140 +1,140 @@
 .signup-page {
-    background-color: #faf3d1;
-    min-height: 100vh;
-    padding: 45px 1rem;
-    box-sizing: border-box;
+  background-color: #faf3d1;
+  min-height: 100vh;
+  padding: 45px 1rem;
+  box-sizing: border-box;
 }
 
 .signup-title {
-    text-align: center;
-    text-decoration: none;
-    text-decoration-thickness: 3px;
-    text-underline-offset: 10px;
-    color: black;
-    font-weight: bold;
-    font-size: 70px;
-    margin-bottom: 30px;
+  text-align: center;
+  text-decoration: none;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 10px;
+  color: black;
+  font-weight: bold;
+  font-size: 70px;
+  margin-bottom: 30px;
 }
 
 .signup-intro {
-    text-align: center;
-    color: black;
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 50px;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 50px;
 }
 
 .signup-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
 }
 
 .signup-row {
-    display: flex;
-    gap: 1rem;
-    width: 600px;
+  display: flex;
+  gap: 1rem;
+  width: 600px;
 }
 
 .signup-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 600px;
 }
 
 .signup-field.half {
-    flex: 1;
-    width: auto;
+  flex: 1;
+  width: auto;
 }
 
 .signup-field label {
-    font-size: 15px;
-    font-weight: 600;
-    color: black;
+  font-size: 15px;
+  font-weight: 600;
+  color: black;
 }
 
 .signup-field input,
 .signup-field select {
-    background-color: rgba(255, 255, 255, 0.8);
-    height: 50px;
-    border: 2px solid grey;
-    border-radius: 12px;
-    color: black;
-    font-size: 18px;
-    font-family: "Barlow", Arial, sans-serif;
-    padding: 0 0.75rem;
-    width: 100%;
-    box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.8);
+  height: 50px;
+  border: 2px solid grey;
+  border-radius: 12px;
+  color: black;
+  font-size: 18px;
+  font-family: "Barlow", Arial, sans-serif;
+  padding: 0 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .signup-field input:read-only {
-    cursor: not-allowed;
-    opacity: 0.6;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .signup-field input:focus,
 .signup-field select:focus {
-    outline: none;
-    border-color: black;
+  outline: none;
+  border-color: black;
 }
 
 .signup-faculties {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .signup-faculties label {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 18px;
-    cursor: pointer;
-    font-weight: normal;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: normal;
 }
 
 .signup-faculties input[type="checkbox"] {
-    width: 1.1rem;
-    height: 1.1rem;
-    cursor: pointer;
-    accent-color: black;
-    flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+  accent-color: black;
+  flex-shrink: 0;
 }
 
 .signup-error {
-    color: red;
-    font-size: 16px;
-    text-align: center;
-    width: 600px;
+  color: red;
+  font-size: 16px;
+  text-align: center;
+  width: 600px;
 }
 
 .signup-submit {
-    margin-top: 1rem;
-    width: 600px;
-    height: 50px;
-    background-color: transparent;
-    border-radius: 12px;
-    background-color: black;
-    color: #faf3d1;
-    font-size: 18px;
-    font-family: "Barlow", Arial, sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.05em;
-    transition: transform 0.25s ease-in-out;
+  margin-top: 1rem;
+  width: 600px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 12px;
+  background-color: black;
+  color: #faf3d1;
+  font-size: 18px;
+  font-family: "Barlow", Arial, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: transform 0.25s ease-in-out;
 }
 
 .signup-submit:hover:not(:disabled) {
-    background-color: rgba(2, 105, 0, 0.79);
-    color: #faf3d1;
-    transform: translateY(-2px);
+  background-color: rgba(2, 105, 0, 0.79);
+  color: #faf3d1;
+  transform: translateY(-2px);
 }
 
 .signup-submit:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }

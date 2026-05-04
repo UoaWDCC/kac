@@ -57,9 +57,9 @@ const Sponsors = () => {
       {/* MEMBERSHIP BLURB */}
       <section style={{ backgroundColor: "#ffffff", padding: "2rem" }}>
         <img
-          src="/path/to/membership-card.jpg"
+          src="public/membership_card.png"
           alt="Membership Card"
-          style={{ maxWidth: "300px" }}
+          style={{ maxWidth: "150px" }}
         />
         <h2>
           Present your 2026 KAC membership card to our sponsors and receive

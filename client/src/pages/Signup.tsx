@@ -17,7 +17,7 @@ const FACULTIES = [
 ];
 
 const SignUp = () => {
-    const { user, hasAccount, loading } = useAuth();
+    const { user, hasAccount, loading, refresh } = useAuth();
     const navigate = useNavigate();
 
     const [form, setForm] = useState({
@@ -71,6 +71,7 @@ const SignUp = () => {
                 ...form,
                 yearOfStudy: Number(form.yearOfStudy),
             });
+            await refresh();
             navigate("/");
         } catch (err: any) {
             setError(err.response?.data?.message ?? "Something went wrong. Please try again.");

@@ -14,13 +14,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<GoogleUser | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get("/api/auth/me");
+      setUser(res.data);
+    } catch {
+      setUser(null);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("/api/auth/me")
-      .then((res) => setUser(res.data))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+    fetchUser().finally(() => setLoading(false));
   }, []);
+
+  const refresh = async () => {
+    await fetchUser();
+  };
 
   const logout = () => {
     window.location.href = "/api/auth/logout";
@@ -33,6 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         hasAccount: user?.hasAccount ?? false,
         loading,
         logout,
+        refresh,
       }}
     >
       {children}

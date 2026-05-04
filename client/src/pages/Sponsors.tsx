@@ -57,7 +57,7 @@ const Sponsors = () => {
       {/* MEMBERSHIP BLURB */}
       <section style={{ backgroundColor: "#ffffff", padding: "2rem" }}>
         <img
-          src="public/membership_card.png"
+          src="src/images/membership_card.png"
           alt="Membership Card"
           style={{ maxWidth: "150px" }}
         />

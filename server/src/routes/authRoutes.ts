@@ -13,8 +13,13 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
-  (_req, res) => {
-    res.redirect(process.env.CLIENT_URL!);
+  (req, res) => {
+    const profile = req.user as any;
+    if (profile?.hasAccount) {
+      res.redirect(process.env.CLIENT_URL!);
+    } else {
+      res.redirect(`${process.env.CLIENT_URL!}/signup`);
+    }
   }
 );
 

@@ -3,9 +3,11 @@ import axios from "axios";
 import { AuthContext } from "./AuthContext";
 
 export interface GoogleUser {
+  id: string;
   displayName: string;
   emails: { value: string }[];
   photos: { value: string }[];
+  hasAccount: boolean;
 }
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -25,7 +27,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        hasAccount: user?.hasAccount ?? false,
+        loading,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

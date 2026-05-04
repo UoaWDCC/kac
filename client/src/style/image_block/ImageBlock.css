@@ -1,0 +1,41 @@
+.image-block {
+  position: relative;
+  display: table;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.image-block__edit-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid white;
+  border-radius: 100%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  color: white;
+  transition: 0.25s;
+}
+
+.image-block__edit-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1.5px) scale(1.03);
+  border-color: black;
+  color: black;
+}
+
+.image-block img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.image-block__edit-btn:hover title {
+  opacity: 1;
+}

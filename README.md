@@ -33,39 +33,93 @@ TBD
 
 <table>
   <tbody>
+    <tr width="100%">
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/omarscoding"><img src="https://avatars.githubusercontent.com/u/131607561?v=4?s=100" valign="middle" width="150px"  alt="Omar Youssef"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/omarscoding"><b>Omar Youssef</b></a><br />
+        Project Manager
+      </td>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/rlee64"><img src="https://avatars.githubusercontent.com/u/159082701?v=4?s=100" valign="middle" width="150px" alt="Rayen Lee"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/rlee64"><b>Rayen Lee</b></a><br />
+        Technical Lead
+      </td>
+    </tr>
+  </tbody>
+  <tbody>
     <tr>
-        <td>
-          <a href="https://github.com/omarscoding"><img src="https://avatars.githubusercontent.com/u/131607561?v=4?s=100" width="100px" alt="Omar Youssef"/><br /><sub><b>Omar Youssef</b></sub></a><br />
-          Project Manager
-        </td>
-        <td>
-          <a href="https://github.com/rlee64"><img src="https://avatars.githubusercontent.com/u/159082701?v=4?s=100" width="100px" alt="Rayen Lee"/><br /><sub><b>Rayen Lee</b></sub></a><br />
-          Technical Lead
-        </td>
-        <td>
-          <a href="https://github.com/anqilique"><img src="https://avatars.githubusercontent.com/u/107088774?v=4s=100" width="100px" alt="Angelique Hulot"/><br /><sub><b>Angelique Hulot</b></sub></a><br />
-          Developer
-        </td>
-        <td>
-          <a href="https://github.com/Embers2512"><img src="https://avatars.githubusercontent.com/u/127377697?v=4?s=100" width="100px" alt="Muhammad Mohamad Hanafiah"/><br /><sub><b>Muhammad Mohamad Hanafiah</b></sub></a><br />
-          Developer
-        </td>
-        <td>
-          <a href="https://github.com/vincenttao04"><img src="https://avatars.githubusercontent.com/u/189966234?v=4&s=100" width="100px" alt="Vincent Tao"/><br /><sub><b>Vincent Tao</b></sub></a><br />
-          Developer
-        </td>
-        <td>
-          <a href="https://github.com/conradangwz"><img src="https://avatars.githubusercontent.com/u/161260708?s=96&v=4" width="100px" alt="Conrad Ang"/><br /><sub><b>Conrad Ang</b></sub></a><br />
-          Developer
-        </td>
-        <td>
-          <a href="https://github.com/pxstachio"><img src="https://avatars.githubusercontent.com/u/203092370?v=4?s=100" width="100px" alt="James Swasbrook"/><br /><sub><b>James Swasbrook</b></sub></a><br />
-          Developer
-        </td>
-        <td>
-          <a href="https://github.com/harrywu23"><img src="https://avatars.githubusercontent.com/u/198931059?v=4" width="100px" alt="Harry Wu"/><br /><sub><b>Harry Wu</b></sub></a><br />
-          Developer
-        </td>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/anqilique"><img src="https://avatars.githubusercontent.com/u/107088774?v=4s=100" valign="middle" width="150px" alt="Angelique Hulot"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/anqilique"><b>Angelique Hulot</b></a><br />
+        Developer
+      </td>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/varsh42"><img src="https://avatars.githubusercontent.com/u/126519121?v=4" valign="middle" width="150px" alt="Varsh Patel"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/varsh42"><b>Varsh Patel</b></a><br />
+        Developer
+      </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/vincenttao04"><img src="https://avatars.githubusercontent.com/u/189966234?v=4&s=100" valign="middle" width="150px" alt="Vincent Tao"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/vincenttao04"><b>Vincent Tao</b></a><br />
+        Developer
+      </td>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/conradangwz"><img src="https://avatars.githubusercontent.com/u/161260708?s=96&v=4" valign="middle" width="150px" alt="Conrad Ang"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/conradangwz"><b>Conrad Ang</b></a><br />
+        Developer
+      </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/pxstachio"><img src="https://avatars.githubusercontent.com/u/203092370?v=4?s=100" valign="middle" width="150px" alt="James Swasbrook"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/pxstachio"><b>James Swasbrook</b></a><br />
+        Developer
+      </td>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/harrywu23"><img src="https://avatars.githubusercontent.com/u/198931059?v=4" valign="middle" width="150px" alt="Harry Wu"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/harrywu23"><b>Harry Wu</b></a><br />
+        Developer
+      </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/willjinjin"><img src="https://avatars.githubusercontent.com/u/85489257?v=4?s=100" valign="middle" width="150px" alt="Will Jin"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/willjinjin"><b>Will Jin</b></a><br />
+        Developer
+      </td>
+      <td align="center" valign="middle" width="15%">
+        <a href="https://github.com/ameliayamaguchi"><img src="https://avatars.githubusercontent.com/u/274707711?s=400&u=80f394997c385a3366a34f101430399e2181fc49&v=4" valign="middle" width="150px" alt="Amelia Yamaguchi"/></a>
+      </td>
+      <td align="left" valign="middle" width="35%">
+        <a href="https://github.com/ameliayamaguchi"><b>Amelia Yamaguchi</b></a><br />
+        Designer
+      </td>
     </tr>
   </tbody>
 </table>

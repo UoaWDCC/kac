@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import SponsorCard from "../components/SponsorCard";
+import sponsorsJsonData from "../placeholders/sponsors.json";
 
 // 1. Define the shape of a single sponsor
 interface Sponsor {
@@ -20,9 +21,8 @@ const Sponsors = () => {
   const [sponsors, setSponsors] = useState<SponsorsData | null>(null);
 
   useEffect(() => {
-    fetch("/data/sponsors.json")
-      .then((res) => res.json())
-      .then((data: SponsorsData) => setSponsors(data))
+    Promise.resolve(sponsorsJsonData as SponsorsData)
+      .then((data) => setSponsors(data))
       .catch((err) => console.error("Error loading sponsors:", err));
   }, []);
 

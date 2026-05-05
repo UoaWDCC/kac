@@ -31,8 +31,8 @@ export async function uploadImage(file: File, tag: string) {
 
       throw new Error(
         error.response?.data?.message ||
-        error.message ||
-        "Upload failed at server"
+          error.message ||
+          "Upload failed at server"
       );
     }
 

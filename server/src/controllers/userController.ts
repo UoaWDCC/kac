@@ -78,7 +78,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     res.status(201).json(newUser);
   } catch (err: any) {
-    // Handle duplicate key violations (studentId or upi already taken)
+    // Handle duplicate key violations for fields that must be unique, such as email or googleUid
     if (err.code === 11000) {
       const duplicateField = Object.keys(err.keyPattern || {})[0];
       res.status(409).json({

@@ -11,8 +11,8 @@ const userSchema = new Schema(
     mobileNumber: { type: String, required: true },
     pronouns: { type: String, required: false },
     university: { type: String, required: true },
-    studentId: { type: String, required: true, unique: true },
-    upi: { type: String, required: true, unique: true },
+    studentId: { type: String, required: true },
+    upi: { type: String, required: true },
     yearOfStudy: { type: Number, required: true, min: 1 },
     faculties: {
       type: [String],

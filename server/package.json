@@ -24,7 +24,7 @@
     "multer": "^2.1.1",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "stripe": "^22.1.0"
+    "stripe": "^21.0.1"
   },
   "devDependencies": {
     "@types/express-session": "^1.18.2",

@@ -1,0 +1,141 @@
+.event-card {
+    display: flex;
+    background: white;
+    border-radius: 40px;
+    padding: 40px;
+    max-width: 1000px;
+    margin: 40px auto;
+    gap: 40px;
+    border: 1px solid;
+    position: relative;
+}
+
+.event-card__edit-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    border: 1px solid white;
+    border-radius: 100%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    color: white;
+    transition: 0.25s;
+    z-index: 10;
+}
+
+.event-card__edit-btn {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.event-card__edit-btn:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1.5px) scale(1.03);
+    border-color: black;
+    color: black;
+}
+
+.event-content {
+    flex: 1.2;
+}
+
+.event-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.event-title {
+    font-size: 2.8rem;
+    margin: 10px 0 20px;
+}
+
+.event-meta, .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.meta-item {
+    flex-direction: row;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.event-tags {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0 30px;
+}
+
+.event-tag {
+    background: black;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.event-divider {
+    border: 0;
+    border-top: 1px solid;
+    margin-bottom: 25px;
+}
+
+.event-description {
+    line-height: 1.6;
+    font-size: 1.15rem;
+    margin-bottom: 35px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.rsvp-button {
+    border: 1px solid;
+    padding: 14px 24px;
+    border-radius: 35px;
+    text-decoration: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    max-width: 400px;
+    transition: 0.2s;
+    text-transform: uppercase;
+}
+
+.rsvp-button:hover {
+    background: #faf3d1;
+    transform: translateY(-2px);
+}
+
+.event-image-container {
+    flex: 1;
+}
+
+.event-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    display: block;
+}
+
+@media (max-width: 900px) {
+    .event-card {
+        flex-direction: column-reverse;
+        padding: 30px;
+        border-radius: 30px;
+    }
+    .event-image-container { height: 300px; }
+    .event-title { font-size: 2.2rem; }
+    .rsvp-button { max-width: none; }
+}

@@ -5,17 +5,17 @@ const ICE_KACHANG_EVENT = {
   title: "Ice Kachang",
   time: new Date("2026-04-02T18:00:00"),
   location: "401-318 Engineering Atrium (Level 3)",
-  description: "Hot, stressed and over Uni already? Say less... we've got the perfect cooldown for you. Come chill with SSA at our Ice Kachang Night. Sweet, icy, colourful... but there's a twist 👀",
+  description:
+    "Hot, stressed and over Uni already? Say less... we've got the perfect cooldown for you. Come chill with SSA at our Ice Kachang Night. Sweet, icy, colourful... but there's a twist 👀",
   memberPrice: "$5",
   nonMemberPrice: "$11",
   rsvpUrl: "#",
-  imageUrl: ""
+  imageUrl: "",
 };
 
 const PAGE_TITLE = "Upcoming Events";
 
 const Events = () => {
-
   return (
     <div
       className="section yellow-bg"

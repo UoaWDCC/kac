@@ -1,5 +1,5 @@
-import "../style/common.css"
-import "../style/event.css"
+import "../style/common.css";
+import "../style/event.css";
 import { ImageBlock } from "./ImageBlock/ImageBlock";
 import { Clock, MapPin, ArrowRight, Pencil } from "lucide-react";
 
@@ -30,15 +30,15 @@ const EventCard: React.FC<EventProps> = ({
   memberPrice,
   nonMemberPrice,
   rsvpUrl,
-  role =  "user",
-  onEdit
+  role = "user",
+  onEdit,
 }) => {
   // Format date: "2nd April - 6PM"
   const formatDate = (date: Date) => {
     const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' });
+    const month = date.toLocaleString("default", { month: "long" });
     const hours = date.getHours();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const ampm = hours >= 12 ? "PM" : "AM";
     const hour12 = hours % 12 || 12;
 
     const getOrdinal = (n: number) => {
@@ -79,8 +79,12 @@ const EventCard: React.FC<EventProps> = ({
           </div>
 
           <div className="event-tags">
-            {memberPrice && <span className="event-tag">{memberPrice} Members</span>}
-            {nonMemberPrice && <span className="event-tag">{nonMemberPrice} Non-Members</span>}
+            {memberPrice && (
+              <span className="event-tag">{memberPrice} Members</span>
+            )}
+            {nonMemberPrice && (
+              <span className="event-tag">{nonMemberPrice} Non-Members</span>
+            )}
           </div>
 
           <hr className="event-divider" />
@@ -99,11 +103,16 @@ const EventCard: React.FC<EventProps> = ({
           pageKey={imageUrl || DEFAULT_EVENT_IMAGE}
           role={"user"}
           alt={title}
-          style={{ width: '100%', height: '100%', borderRadius: '20px', overflow: 'hidden' }}
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "20px",
+            overflow: "hidden",
+          }}
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default EventCard;

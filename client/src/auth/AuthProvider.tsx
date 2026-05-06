@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { AuthContext } from "./AuthContext";
+import { getCurrentUser } from "../api/authApi";
 
 export interface GoogleUser {
   id: string;
@@ -16,8 +17,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get("/api/auth/me");
-      setUser(res.data);
+      const res = await getCurrentUser();
+      setUser(res);
     } catch {
       setUser(null);
     }

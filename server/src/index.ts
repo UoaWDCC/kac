@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes";
 import imageRoutes from "./routes/imageRoutes";
 import executivesRoutes from "./routes/executivesRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
+import webhookRoutes from "./routes/webhookRoutes";
 
 // app config
 dotenv.config({ quiet: true });
@@ -44,6 +45,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user: Express.User, done) => done(null, user));
 
 // middleware
+app.use("/api/payments", webhookRoutes); // webhook route must be registered before express.json()
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);

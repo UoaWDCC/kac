@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import SponsorCard from "../components/SponsorCard";
+import { getSponsors } from "../api/sponsorsApi";
 
 interface Sponsor {
   name: string;
@@ -11,15 +12,16 @@ interface Sponsor {
 
 const Sponsors = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/sponsors")
-      .then((res) => res.json())
+    getSponsors()
       .then((data) => setSponsors(data))
-      .catch((err) => console.error("Error loading sponsors:", err));
+      .catch((err) => console.error("Error loading sponsors:", err))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (sponsors.length === 0) {
+  if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "2rem" }}>
         Loading Sponsors...

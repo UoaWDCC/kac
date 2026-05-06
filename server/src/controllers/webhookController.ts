@@ -63,5 +63,12 @@ async function handleMembershipPayment(
     { new: true }
   );
 
-  console.log(`Membership payment confirmed for member: ${member?.email}`);
+  if (!member) {
+    console.warn(
+      `Webhook: No member found for paymentIntentId ${paymentIntent.id}`
+    );
+    return;
+  }
+
+  console.log(`Membership payment confirmed for member: ${member.email}`);
 }

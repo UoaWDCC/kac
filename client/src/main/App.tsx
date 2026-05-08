@@ -18,7 +18,6 @@ import About from "../pages/About.tsx";
 import AdminEventEditor from "../pages/AdminEventEditor.tsx";
 import SignUp from "../pages/Signup.tsx";
 
-
 const App = () => {
   return (
     <AuthProvider>

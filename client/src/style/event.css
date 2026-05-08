@@ -7,36 +7,6 @@
   margin: 40px auto;
   gap: 40px;
   border: 1px solid;
-  position: relative;
-}
-
-.event-card__edit-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  border: 1px solid white;
-  border-radius: 100%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  color: white;
-  transition: 0.25s;
-  z-index: 10;
-}
-
-.event-card__edit-btn {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.event-card__edit-btn:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: translateY(-1.5px) scale(1.03);
-  border-color: black;
-  color: black;
 }
 
 .event-content {

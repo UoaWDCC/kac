@@ -1,6 +1,6 @@
 import EventCard from "../components/EventCard.tsx";
 
-// Event Data placeholder.
+// Event Data Constants
 const ICE_KACHANG_EVENT = {
   title: "Ice Kachang",
   time: new Date("2026-04-02T18:00:00"),
@@ -41,7 +41,6 @@ const Events = () => {
         memberPrice={ICE_KACHANG_EVENT.memberPrice}
         nonMemberPrice={ICE_KACHANG_EVENT.nonMemberPrice}
         rsvpUrl={ICE_KACHANG_EVENT.rsvpUrl}
-        role={"admin"} // Hardcoded for now.
       />
     </div>
   );

@@ -1,9 +1,9 @@
 import "../style/common.css";
 import "../style/event.css";
 import { ImageBlock } from "./ImageBlock/ImageBlock";
-import { Clock, MapPin, ArrowRight, Pencil } from "lucide-react";
+import { Clock, MapPin, ArrowRight } from "lucide-react";
 
-// Placeholders
+// Placeholder Constants
 export const DEFAULT_EVENT_IMAGE = "src/images/event-image.png";
 export const DEFAULT_EVENT_LABEL = "UPCOMING EVENT";
 export const DEFAULT_RSVP_TEXT = "RSVP";
@@ -17,8 +17,6 @@ interface EventProps {
   memberPrice?: string;
   nonMemberPrice?: string;
   rsvpUrl?: string;
-  role?: "admin" | "user";
-  onEdit?: () => void;
 }
 
 const EventCard: React.FC<EventProps> = ({
@@ -30,10 +28,8 @@ const EventCard: React.FC<EventProps> = ({
   memberPrice,
   nonMemberPrice,
   rsvpUrl,
-  role = "user",
-  onEdit,
 }) => {
-  // Format date: "2nd April - 6PM"
+  // Format date: e.g. "2nd April - 6PM"
   const formatDate = (date: Date) => {
     const day = date.getDate();
     const month = date.toLocaleString("default", { month: "long" });
@@ -52,16 +48,6 @@ const EventCard: React.FC<EventProps> = ({
 
   return (
     <div className="event-card">
-      {role === "admin" && (
-        <button
-          className="event-card__edit-btn"
-          onClick={onEdit}
-          title="Edit event details"
-        >
-          <Pencil size={17} />
-        </button>
-      )}
-
       <div className="event-content">
         <div className="event-info">
           <span className="event-label">{DEFAULT_EVENT_LABEL}</span>
@@ -101,7 +87,7 @@ const EventCard: React.FC<EventProps> = ({
       <div className="event-image-container">
         <ImageBlock
           pageKey={imageUrl || DEFAULT_EVENT_IMAGE}
-          role={"user"}
+          role="user"
           alt={title}
           style={{
             width: "100%",

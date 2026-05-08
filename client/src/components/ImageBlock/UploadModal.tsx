@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { uploadImage } from "../../api/imageApi";
+import { postImage } from "../../api/imageApi";
 import "../../style/image_block/UploadModal.css";
 
 interface UploadModalProps {
@@ -33,7 +33,7 @@ export function UploadModal({ onClose, onSuccess, tag }: UploadModalProps) {
     setUploading(true);
     setError(null);
     try {
-      await uploadImage(file, tag);
+      await postImage(file, tag);
       onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");

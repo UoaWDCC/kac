@@ -1,0 +1,233 @@
+.editor-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 40px;
+  background: white;
+  border-radius: 40px;
+  border: 1px solid;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.editor-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editor-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.editor-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+.form-group label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+/* Currency Input Prefix Styles */
+.currency-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 12px;
+  background: white;
+  overflow: hidden;
+}
+
+.currency-prefix {
+  padding: 0 12px;
+  background: #f0f0f0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  border-right: 1px solid #ddd;
+  user-select: none;
+}
+
+.currency-input-wrapper input {
+  border: none !important;
+  border-radius: 0 !important;
+  flex: 1;
+  padding-left: 8px !important;
+}
+
+.form-group textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+/* Tiptap Editor Styles */
+.tiptap-editor-container {
+  border: 1px solid black;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  margin-top: 5px;
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-direction: row; /* Force horizontal */
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px;
+  border-bottom: 1px solid black;
+  background: #fdfdfd;
+  align-items: center;
+}
+
+.editor-toolbar button {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #444;
+  width: auto; /* Override global button width: 100% */
+}
+
+.editor-toolbar button:hover {
+  background: #f0f0f0;
+  color: black;
+}
+
+.editor-toolbar button.is-active {
+  background: black;
+  color: white;
+}
+
+.editor-toolbar .divider {
+  width: 1px;
+  height: 24px;
+  background: #eee;
+  margin: 0 8px;
+}
+
+.tiptap-content {
+  padding: 16px;
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+.error-text {
+  color: #ff4d4f;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: -4px;
+}
+
+.preview-section {
+  grid-column: span 2;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 20px;
+  border: 1px dashed #ccc;
+}
+
+.editor-actions {
+  grid-column: span 2;
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-save {
+  background: black;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 30px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: 0.2s;
+}
+
+.btn-save:hover {
+  background: #333;
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1px solid;
+  padding: 15px 30px;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #eee;
+}
+
+@media (max-width: 768px) {
+  .editor-form {
+    grid-template-columns: 1fr;
+  }
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+  .editor-container {
+    padding: 20px;
+    border-radius: 20px;
+    margin: 20px;
+  }
+  .editor-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+}

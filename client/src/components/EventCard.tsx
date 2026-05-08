@@ -2,13 +2,16 @@ import "../style/common.css";
 import "../style/event.css";
 import { ImageBlock } from "./ImageBlock/ImageBlock";
 import { Clock, MapPin, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Placeholder Constants
 export const DEFAULT_EVENT_IMAGE = "src/images/event-image.png";
 export const DEFAULT_EVENT_LABEL = "UPCOMING EVENT";
-export const DEFAULT_RSVP_TEXT = "RSVP";
+export const DEFAULT_USER_ACTION = "SIGN UP";
+export const DEFAULT_ADMIN_ACTION = "EDIT EVENT";
 
 interface EventProps {
+  id: string; // Added id for routing to extended page
   imageUrl: string;
   title: string;
   time: Date;
@@ -16,10 +19,12 @@ interface EventProps {
   description: string;
   memberPrice?: string;
   nonMemberPrice?: string;
-  rsvpUrl?: string;
+  role?: "admin" | "user";
+  status: "open" | "waitlist" | "ended";
 }
 
 const EventCard: React.FC<EventProps> = ({
+  id,
   imageUrl,
   title,
   time,
@@ -27,8 +32,11 @@ const EventCard: React.FC<EventProps> = ({
   description,
   memberPrice,
   nonMemberPrice,
-  rsvpUrl,
+  role = "user",
+  status,
 }) => {
+  const navigate = useNavigate();
+
   // Format date: e.g. "2nd April - 6PM"
   const formatDate = (date: Date) => {
     const day = date.getDate();
@@ -46,11 +54,29 @@ const EventCard: React.FC<EventProps> = ({
     return `${getOrdinal(day)} ${month} - ${hour12}${ampm}`;
   };
 
+  const handleActionClick = () => {
+    // Eventually navigate to the extended page
+    // For now, we'll just log the intent
+    console.log(`Navigating to extended page for event: ${id} as ${role}`);
+    navigate(`/Events/${id}`);
+  };
+
   return (
     <div className="event-card">
       <div className="event-content">
         <div className="event-info">
-          <span className="event-label">{DEFAULT_EVENT_LABEL}</span>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span className="event-label">{DEFAULT_EVENT_LABEL}</span>
+            <span className={`event-status status-${status}`}>
+              {status.toUpperCase()}
+            </span>
+          </div>
           <h2 className="event-title">{title}</h2>
 
           <div className="event-meta">
@@ -75,13 +101,15 @@ const EventCard: React.FC<EventProps> = ({
 
           <hr className="event-divider" />
 
-          <p className="event-description">{description}</p>
+          <div
+            className="event-description"
+            dangerouslySetInnerHTML={{ __html: description }} // Need to make sure data is sanitised.
+          />
 
-          {rsvpUrl && (
-            <a href={rsvpUrl} className="rsvp-button">
-              {DEFAULT_RSVP_TEXT} <ArrowRight size={18} />
-            </a>
-          )}
+          <button className="rsvp-button" onClick={handleActionClick}>
+            {role === "admin" ? DEFAULT_ADMIN_ACTION : DEFAULT_USER_ACTION}
+            <ArrowRight size={18} />
+          </button>
         </div>
       </div>
       <div className="event-image-container">

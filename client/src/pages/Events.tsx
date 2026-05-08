@@ -1,17 +1,5 @@
 import EventCard from "../components/EventCard.tsx";
-
-// Event Data Constants
-const ICE_KACHANG_EVENT = {
-  title: "Ice Kachang",
-  time: new Date("2026-04-02T18:00:00"),
-  location: "401-318 Engineering Atrium (Level 3)",
-  description:
-    "Hot, stressed and over Uni already? Say less... we've got the perfect cooldown for you. Come chill with SSA at our Ice Kachang Night. Sweet, icy, colourful... but there's a twist 👀",
-  memberPrice: "$5",
-  nonMemberPrice: "$11",
-  rsvpUrl: "#",
-  imageUrl: "",
-};
+import eventsData from "../placeholders/events.json";
 
 const PAGE_TITLE = "Upcoming Events";
 
@@ -32,16 +20,21 @@ const Events = () => {
       >
         {PAGE_TITLE}
       </h1>
-      <EventCard
-        imageUrl={ICE_KACHANG_EVENT.imageUrl}
-        title={ICE_KACHANG_EVENT.title}
-        time={ICE_KACHANG_EVENT.time}
-        location={ICE_KACHANG_EVENT.location}
-        description={ICE_KACHANG_EVENT.description}
-        memberPrice={ICE_KACHANG_EVENT.memberPrice}
-        nonMemberPrice={ICE_KACHANG_EVENT.nonMemberPrice}
-        rsvpUrl={ICE_KACHANG_EVENT.rsvpUrl}
-      />
+      {eventsData.map((event) => (
+        <EventCard
+          key={event.id}
+          id={event.id}
+          imageUrl={event.imageUrl}
+          title={event.title}
+          time={new Date(event.time)}
+          location={event.location}
+          description={event.description}
+          memberPrice={event.memberPrice}
+          nonMemberPrice={event.nonMemberPrice}
+          role="admin" // Hardcoded for dev preview
+          status={event.status as "open" | "waitlist" | "ended"}
+        />
+      ))}
     </div>
   );
 };

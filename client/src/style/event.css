@@ -10,12 +10,39 @@
 }
 
 .event-content {
-  flex: 1.2;
+  flex: 1;
+  min-width: 0;
 }
 
 .event-label {
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+.event-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.status-open {
+  background-color: #e6f7ed;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.status-waitlist {
+  background-color: #fff9e6;
+  color: #f57c00;
+  border: 1px solid #ffe082;
+}
+
+.status-ended {
+  background-color: #f5f5f5;
+  color: #757575;
+  border: 1px solid #bdbdbd;
 }
 
 .event-title {
@@ -66,6 +93,14 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.event-description > * {
+  display: inline;
+  margin: 0;
 }
 
 .rsvp-button {
@@ -89,7 +124,8 @@
 }
 
 .event-image-container {
-  flex: 1;
+  flex: 0 0 40%;
+  min-width: 320px;
 }
 
 .event-image-container img {

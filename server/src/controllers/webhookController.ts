@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { RequestHandler } from "express";
-import { Member } from "../model/member";
+import { User } from "../model/user";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -54,7 +54,7 @@ export const handleWebhook: RequestHandler = async (req, res) => {
 async function handleMembershipPayment(
   paymentIntent: Stripe.PaymentIntent
 ): Promise<void> {
-  const member = await Member.findOneAndUpdate(
+  const user = await User.findOneAndUpdate(
     { stripePaymentIntentId: paymentIntent.id },
     {
       membershipPaid: true,
@@ -63,12 +63,12 @@ async function handleMembershipPayment(
     { new: true }
   );
 
-  if (!member) {
+  if (!user) {
     console.warn(
       `Webhook: No member found for paymentIntentId ${paymentIntent.id}`
     );
     return;
   }
 
-  console.log(`Membership payment confirmed for member: ${member.email}`);
+  console.log(`Membership payment confirmed for member: ${user.email}`);
 }

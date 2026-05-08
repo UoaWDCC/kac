@@ -7,13 +7,10 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import authRoutes from "./routes/authRoutes";
 import imageRoutes from "./routes/imageRoutes";
 import executivesRoutes from "./routes/executivesRoutes";
-<<<<<<< feat/stripe
 import paymentRoutes from "./routes/paymentRoutes";
 import webhookRoutes from "./routes/webhookRoutes";
-=======
 import userRoutes from "./routes/userRoutes";
 import { User } from "./model/user";
->>>>>>> main
 
 // app config
 dotenv.config({ quiet: true });
@@ -61,11 +58,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/executives", executivesRoutes);
-<<<<<<< feat/stripe
 app.use("/api/payments", paymentRoutes);
-=======
 app.use("/api/users", userRoutes);
->>>>>>> main
 
 // Connect to MongoDB and start the server
 mongoose

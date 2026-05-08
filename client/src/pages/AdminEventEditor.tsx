@@ -45,6 +45,8 @@ const AdminEventEditor = () => {
   const navigate = useNavigate();
   const [isPreview, setIsPreview] = useState(false);
 
+  const isEditMode = eventId && eventId !== "new";
+
   const {
     register,
     handleSubmit,
@@ -61,7 +63,7 @@ const AdminEventEditor = () => {
       memberPrice: "",
       nonMemberPrice: "",
       status: "open",
-      imageTag: eventId || "new-event",
+      imageTag: isEditMode ? eventId : "new-event",
     },
   });
 
@@ -73,14 +75,17 @@ const AdminEventEditor = () => {
       memberPrice: data.memberPrice ? `$${data.memberPrice}` : "",
       nonMemberPrice: data.nonMemberPrice ? `$${data.nonMemberPrice}` : "",
     };
-    console.log("Saving Event:", { id: eventId, ...finalData });
+    console.log(`${isEditMode ? "Updating" : "Creating"} Event:`, {
+      id: eventId,
+      ...finalData,
+    });
   };
 
   return (
     <div className="section yellow-bg" style={{ minHeight: "100vh" }}>
       <div className="editor-container">
         <div className="editor-header">
-          <h1>{eventId ? "Edit Event" : "Create Event"}</h1>
+          <h1>{isEditMode ? "Edit Event" : "Create Event"}</h1>
           <button
             type="button"
             className="btn-cancel"
@@ -188,7 +193,7 @@ const AdminEventEditor = () => {
               <ImageBlock
                 pageKey={formData.imageTag || "new-event"}
                 role="admin"
-                alt={formData.title || ""}
+                alt={formData.title || "Event Title"}
                 style={{
                   maxWidth: "300px",
                   margin: "0 auto",
@@ -199,7 +204,7 @@ const AdminEventEditor = () => {
 
             <div className="editor-actions">
               <button type="submit" className="btn-save">
-                Save Event
+                {isEditMode ? "Save Changes" : "Create Event"}
               </button>
               <button
                 type="button"

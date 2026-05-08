@@ -1,9 +1,12 @@
+import { Link } from "react-router-dom";
 import EventCard from "../components/EventCard.tsx";
 import eventsData from "../placeholders/events.json";
 
 const PAGE_TITLE = "Upcoming Events";
 
 const Events = () => {
+  const isAdmin = true; // Hardcoded for dev preview
+
   return (
     <div
       className="section yellow-bg"
@@ -20,6 +23,17 @@ const Events = () => {
       >
         {PAGE_TITLE}
       </h1>
+
+      {isAdmin && (
+        <Link
+          to="/Events/new"
+          className="btn-save"
+          style={{ textDecoration: "none", marginBottom: "40px" }}
+        >
+          + Create New Event
+        </Link>
+      )}
+
       {eventsData.map((event) => (
         <EventCard
           key={event.id}

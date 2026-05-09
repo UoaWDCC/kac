@@ -1,4 +1,5 @@
 import "../style/common.css";
+import { Pencil, Trash2 } from "lucide-react";
 
 /** No access to images currently, use placeholder */
 const EXEC_IMG = "src/images/exec-placeholder.png";
@@ -6,7 +7,7 @@ const EXEC_IMG = "src/images/exec-placeholder.png";
 interface ExecProps {
   imageURL: string;
   displayName: string;
-  role: string;
+  execRole: string;
   description: string;
   fullName: string;
   ethnicity: string;
@@ -19,10 +20,15 @@ interface ExecProps {
   emojis: string;
 }
 
-const ExecCard: React.FC<ExecProps> = ({
+interface ExecCardProps {
+  role: "admin" | "user";
+}
+
+const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
+  role,
   imageURL,
   displayName,
-  role,
+  execRole,
   description,
   fullName,
   ethnicity,
@@ -36,12 +42,33 @@ const ExecCard: React.FC<ExecProps> = ({
 }) => {
   return (
     <div className="executive-card">
-      <img src={EXEC_IMG || imageURL} alt={displayName} />
+      <div className="image-block">
+        <img src={EXEC_IMG || imageURL} alt={displayName} />
+        {role === "admin" && (
+          <button
+            className="image-block__edit-btn"
+            onClick={() => {}}
+            title="Edit Executive"
+          >
+            <Pencil size={17} />
+          </button>
+        )}
+
+        {role === "admin" && (
+          <button
+            className="image-block__delete-btn"
+            onClick={() => {}}
+            title="Delete Executive"
+          >
+            <Trash2 size={17} />
+          </button>
+        )}
+      </div>
       <h2>{displayName}</h2>
 
       <div className="card-body">
         <p>
-          Meet our {role}, {displayName}!
+          Meet our {execRole}, {displayName}!
         </p>
         <p className="exec-desc">{description}</p>
         <ul>

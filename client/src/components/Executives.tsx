@@ -10,7 +10,7 @@ interface Executive {
   id: string;
   imageURL: string;
   displayName: string;
-  role: string;
+  execRole: string;
   description: string;
   fullName: string;
   ethnicity: string;
@@ -67,10 +67,11 @@ const Executives = () => {
       {execs.map((exec) => {
         return (
           <ExecCard
+            role="admin"
             key={exec.id}
             imageURL={exec.imageURL}
             displayName={exec.displayName}
-            role={exec.role}
+            execRole={exec.execRole}
             description={exec.description}
             fullName={exec.fullName}
             ethnicity={exec.ethnicity}

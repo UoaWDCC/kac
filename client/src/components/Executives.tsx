@@ -2,7 +2,9 @@ import "../style/common.css";
 import "../style/about.css";
 
 import { useEffect, useState } from "react";
+
 import ExecCard from "./ExecCard";
+import api from "../api";
 
 interface Executive {
   id: string;
@@ -28,8 +30,8 @@ const Executives = () => {
   const loadExecs = async () => {
     try {
       setLoading(true);
-      const data = await fetch("/api/executives");
-      setExecs(await data.json());
+      const res = await api.get("/executives");
+      setExecs(res.data);
     } catch (error) {
       console.error("Error fetching executives data:", error);
     } finally {

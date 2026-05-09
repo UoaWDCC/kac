@@ -41,6 +41,11 @@ export const handleWebhook: RequestHandler = async (req, res) => {
         console.log(
           `Event ticket payment received: ${paymentIntent.id} (handler pending)`
         );
+      } else {
+        // Unrecognised payment type, log and ignore
+        console.warn(
+          `Webhook: Unrecognised payment type "${type}" for paymentIntentId ${paymentIntent.id}`
+        );
       }
     } catch (err) {
       // Error is on our side, return 200 so stripe doesn't retry

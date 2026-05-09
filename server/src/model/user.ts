@@ -22,8 +22,14 @@ const userSchema = new Schema(
         message: "At least one faculty is required",
       },
     },
+    membershipPaid: { type: Boolean, default: false },
+    stripePaymentIntentId: { type: String, default: null },
+    paidAt: { type: Date, default: null },
   },
-  { timestamps: true, versionKey: false }
+  {
+    timestamps: true,
+    versionKey: false,
+  }
 );
 
 export const User = model("User", userSchema);

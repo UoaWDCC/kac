@@ -93,37 +93,3 @@ button {
 .exec-desc {
   max-width: inherit;
 }
-
-.edit-exec-btn {
-  position: absolute;
-  top: 12px;
-  right: 10px;
-  background: black;
-  border: 1px solid white;
-  border-radius: 100%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  color: white;
-}
-
-.del-exec-btn {
-  position: absolute;
-  top: 12px;
-  right: 55px;
-  background: rgba(202, 0, 0, 0.732);
-  border: 1px solid white;
-  border-radius: 100%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  color: white;
-}

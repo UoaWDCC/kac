@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 // Placeholder Constants
 export const DEFAULT_EVENT_IMAGE = "src/images/event-image.png";
-export const DEFAULT_EVENT_LABEL = "UPCOMING EVENT";
 export const DEFAULT_USER_ACTION = "SIGN UP";
 export const DEFAULT_ADMIN_ACTION = "EDIT EVENT";
 
@@ -65,18 +64,6 @@ const EventCard: React.FC<EventProps> = ({
     <div className="event-card">
       <div className="event-content">
         <div className="event-info">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span className="event-label">{DEFAULT_EVENT_LABEL}</span>
-            <span className={`event-status status-${status}`}>
-              {status.toUpperCase()}
-            </span>
-          </div>
           <h2 className="event-title">{title}</h2>
 
           <div className="event-meta">
@@ -100,11 +87,6 @@ const EventCard: React.FC<EventProps> = ({
           </div>
 
           <hr className="event-divider" />
-
-          <div
-            className="event-description"
-            dangerouslySetInnerHTML={{ __html: description }} // Need to make sure data is sanitised.
-          />
 
           <button className="rsvp-button" onClick={handleActionClick}>
             {role === "admin" ? DEFAULT_ADMIN_ACTION : DEFAULT_USER_ACTION}

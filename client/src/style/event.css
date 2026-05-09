@@ -1,17 +1,36 @@
 .event-card {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "header image"
+    "content content";
+
+  width: 420px;
+  height: 320px;
   background: white;
-  border-radius: 40px;
-  padding: 40px;
-  max-width: 1000px;
+  border-radius: 50px;
+  padding: 20px;
+  max-width: 100%;
   margin: 40px auto;
-  gap: 40px;
+  gap: 20px;
   border: 1px solid;
+  box-sizing: border-box;
+}
+
+.event-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  max-width: 100%;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
 .event-content {
-  flex: 1;
+  grid-area: content;
   min-width: 0;
+  grid-row: 1 / -1;
 }
 
 .event-label {
@@ -46,8 +65,9 @@
 }
 
 .event-title {
-  font-size: 2.8rem;
-  margin: 10px 0 20px;
+  grid-area: title;
+  font-size: 2rem;
+  margin: 32px 0 54px;
 }
 
 .event-meta,
@@ -60,7 +80,7 @@
 .meta-item {
   flex-direction: row;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 
@@ -73,33 +93,30 @@
 .event-tag {
   background: black;
   color: white;
-  padding: 8px 18px;
+  padding: 4px 10px;
   border-radius: 20px;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  margin-bottom: 0px;
 }
 
 .event-divider {
   border: 0;
   border-top: 1px solid;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
+  margin-top: -20px;
 }
 
 .event-description {
-  line-height: 1.6;
-  font-size: 1.15rem;
-  margin-bottom: 35px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
   word-break: break-word;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .event-description > * {
-  display: inline;
   margin: 0;
 }
 
@@ -124,8 +141,8 @@
 }
 
 .event-image-container {
-  flex: 0 0 40%;
-  min-width: 320px;
+  grid-area: image;
+  height: 140px;
 }
 
 .event-image-container img {
@@ -143,12 +160,19 @@
     border-radius: 30px;
   }
   .event-image-container {
-    height: 300px;
+    height: 100px;
   }
   .event-title {
-    font-size: 2.2rem;
+    font-size: 1.1rem;
   }
   .rsvp-button {
     max-width: none;
   }
+}
+
+.add-event-card {
+  text-align: center;
+  font-size: 1.2rem;
+  color: black;
+  border: 1.5px dashed;
 }

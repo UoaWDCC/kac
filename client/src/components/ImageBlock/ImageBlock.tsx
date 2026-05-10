@@ -13,7 +13,7 @@ interface ImageData {
 
 interface ImageBlockProps {
   pageKey: string;
-  role: "admin" | "user";
+  role: string;
   style?: React.CSSProperties;
   alt: string;
 }

@@ -1,8 +1,10 @@
 import "../style/common.css";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/ImageBlock/ImageBlock";
+import { useAuth } from "../auth/useAuth";
 
 const Home = () => {
+  const { user } = useAuth();
   return (
     <div>
       {/** TITLE */}
@@ -16,7 +18,7 @@ const Home = () => {
         <h1>K I W I &nbsp; A S I A N &nbsp; C L U B</h1>
         <ImageBlock
           pageKey="hero"
-          role="admin"
+          role={user?.admin ? "admin" : "user"}
           alt="Hero Page"
           style={{ maxWidth: "1100px", width: "100%", height: "auto" }}
         />
@@ -42,7 +44,7 @@ const Home = () => {
           <h2>CHECK OUT OUR UPCOMING EVENTS</h2>
           <ImageBlock
             pageKey="events"
-            role="admin"
+            role={user?.admin ? "admin" : "user"}
             alt="Kiwi Asian Club group photo"
             style={{
               maxWidth: "1100px",

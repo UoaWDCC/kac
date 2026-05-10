@@ -43,6 +43,7 @@ router.get("/me", async (req, res) => {
   const profile = req.user as any;
   const existingUser = await User.findOne({ googleUid: profile.id });
   profile.hasAccount = !!existingUser;
+  profile.admin = existingUser?.admin ?? "user";
 
   res.json(profile);
 });

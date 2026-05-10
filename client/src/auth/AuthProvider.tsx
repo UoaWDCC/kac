@@ -9,6 +9,7 @@ export interface GoogleUser {
   emails: { value: string }[];
   photos: { value: string }[];
   hasAccount: boolean;
+  admin: "admin" | "user";
 }
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -44,6 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         loading,
         logout,
         refresh,
+        admin: user?.admin ?? "user",
       }}
     >
       {children}

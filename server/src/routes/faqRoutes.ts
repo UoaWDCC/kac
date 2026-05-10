@@ -1,7 +1,7 @@
 import express from "express";
-import { listFaqs } from "../controllers/faqController";
+import { getFaqs } from "../controllers/faqController";
 
 const router = express.Router();
-router.get("/", listFaqs);
+router.get("/", getFaqs);
 
 export default router;

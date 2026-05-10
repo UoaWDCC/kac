@@ -5,7 +5,7 @@ const CACHE_TTL_MS = 60 * 60 * 1000
 
 let faqCache: { data: unknown[]; expiresAt: number} | null = null
 
-export const listFaqs: RequestHandler = async (req, res) => {
+export const getFaqs: RequestHandler = async (req, res) => {
   try {
     if (faqCache && Date.now() < faqCache.expiresAt) {
       res.json(faqCache.data);

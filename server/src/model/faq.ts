@@ -3,10 +3,9 @@ const { Schema, model } = mongoose;
 
 const faqSchema = new Schema(
   {
-    question: { type: String, required: true },
-    answer: { type: String, required: true },
+    content: { type: String, required: true },
   },
-  { versionKey: false }
+  { versionKey: false , timestamps: true}
 );
 
 export const Faq = model("Faq", faqSchema);

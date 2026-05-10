@@ -45,3 +45,18 @@ export const updateFaq: RequestHandler = async (req, res) => {
     res.status(500).json({message: "Failed to update FAQ"});
   }
 };
+
+export const deleteFaq: RequestHandler = async (req, res) => {
+  try {
+    const deleted = await Faq.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      res.status(404).json({message: "FAQ not found"});
+      return;
+    }
+    res.json({message: "FAQ deleted successfully"});
+  } catch (error) {
+    console.error("Error deleting FAQ: ", error);
+    res.status(500).json({message: "Failed to delete FAQ"});
+  }
+};
+

@@ -19,3 +19,13 @@ export const getFaqs: RequestHandler = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch FAQs" });
   }
 };
+
+export const createFaq: RequestHandler = async (req, res) => {
+  try{
+    const faq = await Faq.create(req.body);
+    res.status(201).json(faq);
+  } catch (error) {
+    console.error("Error creating FAQ:", error);
+    res.status(500).json({ message: "Failed to create FAQ"});
+  }
+};

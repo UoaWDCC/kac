@@ -15,12 +15,16 @@ import Contact from "../pages/Contact.tsx";
 import Sponsors from "../pages/Sponsors.tsx";
 import Events from "../pages/Events.tsx";
 import About from "../pages/About.tsx";
+import SignUp from "../pages/Signup.tsx";
 
 const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Sign-up sits outside the main layout — no header/footer chrome */}
+          <Route path="/signup" element={<SignUp />} />
+
           <Route path="/" element={<Layout />}>
             <Route path="" element={<Home />} />
             <Route path="About" element={<About />} />

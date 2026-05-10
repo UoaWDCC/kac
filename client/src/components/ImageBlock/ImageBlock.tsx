@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchImageByTag } from "../../api/imageApi";
+import { getImageByTag } from "../../api/imageApi";
 import { UploadModal } from "./UploadModal";
 import placeholder from "../../images/placeholder.png";
 import "../../style/image_block/ImageBlock.css";
@@ -26,7 +26,7 @@ export function ImageBlock({ pageKey, role, style, alt }: ImageBlockProps) {
   const loadImage = async () => {
     try {
       setLoading(true);
-      const data = await fetchImageByTag(pageKey);
+      const data = await getImageByTag(pageKey);
       setImageData(data);
     } catch (err) {
       console.error(err);

@@ -3,8 +3,8 @@ import { getFaqs, createFaq, updateFaq, deleteFaq} from "../controllers/faqContr
 
 const router = express.Router();
 router.get("/", getFaqs);
-router.get("/", createFaq);
-router.get("/", updateFaq);
-router.get("/", deleteFaq);
+router.post("/", createFaq);
+router.put("/", updateFaq);
+router.delete("/", deleteFaq);
 
 export default router;

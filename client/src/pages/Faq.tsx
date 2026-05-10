@@ -9,13 +9,33 @@ interface Faq {
   answer: string;
 }
 
+function parseFaq(content: string): Faq[] {
+  const lines = content.split("\n");
+  const faqs: Faq[] = [];
+  let current: Faq | null = null;
+
+  for (const line of lines) {
+    if (line.startsWith("#")) {
+      if (current) faqs.push(current);
+      current = { question: line.slice(1).trim(), answer: "" };
+    } else if (current) {
+      current.answer += (current.answer ? "\n" : "") + line;
+    }
+  }
+
+  if (current) faqs.push(current);
+  return faqs;
+}
+
 const Faq = () => {
   const [faqs, setFaqs] = useState<Faq[]>([]);
 
   useEffect(() => {
     fetch("/api/faqs")
       .then((res) => res.json())
-      .then((data) => setFaqs(data))
+      .then((data: { content: string }[]) =>
+        setFaqs(data.flatMap((faq) => parseFaq(faq.content)))
+      )
       .catch((err) => console.error("Failed to fetch faqs:", err));
   }, []);
 

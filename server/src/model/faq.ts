@@ -5,7 +5,7 @@ const faqSchema = new Schema(
   {
     content: { type: String, required: true },
   },
-  { versionKey: false , timestamps: true}
+  { versionKey: false, timestamps: true }
 );
 
 export const Faq = model("Faq", faqSchema);

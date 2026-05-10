@@ -4,6 +4,7 @@ import { UploadModal } from "./UploadModal";
 import placeholder from "../../images/placeholder.png";
 import "../../style/image_block/ImageBlock.css";
 import { Pencil } from "lucide-react";
+import { useAuth } from "../../auth/useAuth";
 
 interface ImageData {
   id: string | null;
@@ -13,12 +14,12 @@ interface ImageData {
 
 interface ImageBlockProps {
   pageKey: string;
-  role: string;
   style?: React.CSSProperties;
   alt: string;
 }
 
-export function ImageBlock({ pageKey, role, style, alt }: ImageBlockProps) {
+export function ImageBlock({ pageKey, style, alt }: ImageBlockProps) {
+  const { admin } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -46,7 +47,7 @@ export function ImageBlock({ pageKey, role, style, alt }: ImageBlockProps) {
       <div className="image-block" style={style}>
         <img src={imageData?.signedUrl ?? placeholder} alt={alt} />
 
-        {role === "admin" && (
+        {admin === "admin" && (
           <button
             className="image-block__edit-btn"
             onClick={() => setShowModal(true)}

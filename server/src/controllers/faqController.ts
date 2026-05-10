@@ -29,3 +29,19 @@ export const createFaq: RequestHandler = async (req, res) => {
     res.status(500).json({ message: "Failed to create FAQ"});
   }
 };
+
+export const updateFaq: RequestHandler = async (req, res) => {
+  try {
+    const updated = await Faq.findByIdAndUpdate(req.params.id, req.body, {
+      returnDocument: "after",
+    }).lean();
+    if (!updated) {
+      res.status(404).json({ message: "FAQ not found"});
+      return;
+    }
+    res.json(updated);
+  } catch (error) {
+    console.error("Error updating FAQ: ", error);
+    res.status(500).json({message: "Failed to update FAQ"});
+  }
+};

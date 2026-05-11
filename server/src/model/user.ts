@@ -23,7 +23,12 @@ const userSchema = new Schema(
       },
     },
     membershipPaid: { type: Boolean, default: false },
-    stripePaymentIntentId: { type: String, default: null },
+    stripePaymentIntentId: {
+      type: String,
+      default: null,
+      unique: true,
+      sparse: true,
+    },
     paidAt: { type: Date, default: null },
   },
   {

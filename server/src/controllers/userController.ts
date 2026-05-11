@@ -38,6 +38,7 @@ export const createUser = async (req: Request, res: Response) => {
     upi,
     yearOfStudy,
     faculties,
+    paymentIntentId,
   } = req.body;
 
   const missingFields = [];
@@ -51,6 +52,7 @@ export const createUser = async (req: Request, res: Response) => {
   if (!faculties || !Array.isArray(faculties) || faculties.length === 0) {
     missingFields.push("faculties");
   }
+  if (!paymentIntentId) missingFields.push("paymentIntentId");
 
   if (missingFields.length > 0) {
     res.status(400).json({
@@ -73,6 +75,7 @@ export const createUser = async (req: Request, res: Response) => {
       upi,
       yearOfStudy: Number(yearOfStudy),
       faculties,
+      stripePaymentIntentId: paymentIntentId,
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
 

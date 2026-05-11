@@ -1,9 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
 import "../style/common.css";
 import "../style/signup.css";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const FACULTIES = [
   "Arts",
@@ -16,9 +25,11 @@ const FACULTIES = [
   "Science",
 ];
 
-const SignUp = () => {
+const SignUpForm = () => {
   const { user, hasAccount, loading, refresh } = useAuth();
   const navigate = useNavigate();
+  const stripe = useStripe();
+  const elements = useElements();
 
   const [form, setForm] = useState({
     firstName: "",
@@ -65,14 +76,42 @@ const SignUp = () => {
       return;
     }
 
+    if (!stripe || !elements) {
+      setError("Payment is not ready yet. Please try again.");
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
 
     try {
+      // Step 1: Create a payment intent on the server ($5 membership fee)
+      const { data } = await axios.post("/api/payments/create-payment-intent", {
+        amount: 500,
+        type: "membership",
+      });
+
+      // Step 2: Confirm the card payment with Stripe
+      const cardElement = elements.getElement(CardElement);
+      if (!cardElement) throw new Error("Card element not found");
+
+      const { error: stripeError, paymentIntent } =
+        await stripe.confirmCardPayment(data.clientSecret, {
+          payment_method: { card: cardElement },
+        });
+
+      if (stripeError) {
+        setError(stripeError.message ?? "Payment failed. Please try again.");
+        return;
+      }
+
+      // Step 3: Payment succeeded, create the user account
       await axios.post("/api/users/signup", {
         ...form,
         yearOfStudy: Number(form.yearOfStudy),
+        paymentIntentId: paymentIntent?.id,
       });
+
       await refresh();
       navigate("/");
     } catch (err: any) {
@@ -210,16 +249,32 @@ const SignUp = () => {
           </div>
         </div>
 
+        <div className="signup-field">
+          <label>Payment Details</label>
+          <div className="signup-card-element">
+            <CardElement />
+          </div>
+          <p className="signup-card-note">
+            A one-time $5 NZD membership fee will be charged.
+          </p>
+        </div>
+
         <button
           className="signup-submit"
           onClick={handleSubmit}
           disabled={submitting}
         >
-          {submitting ? "CREATING ACCOUNT..." : "CREATE ACCOUNT >>"}
+          {submitting ? "PROCESSING PAYMENT..." : "CREATE ACCOUNT >>"}
         </button>
       </div>
     </div>
   );
 };
+
+const SignUp = () => (
+  <Elements stripe={stripePromise}>
+    <SignUpForm />
+  </Elements>
+);
 
 export default SignUp;

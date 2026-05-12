@@ -1,6 +1,5 @@
 import Stripe from "stripe";
 import { RequestHandler } from "express";
-import { User } from "../model/user";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -33,47 +32,22 @@ export const handleWebhook: RequestHandler = async (req, res) => {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
     const { type } = paymentIntent.metadata;
 
-    try {
-      if (type === "membership") {
-        await handleMembershipPayment(paymentIntent);
-      } else if (type === "event_ticket") {
-        // TODO: Ticket handling for when event/ticket model exists
-        console.log(
-          `Event ticket payment received: ${paymentIntent.id} (handler pending)`
-        );
-      } else {
-        // Unrecognised payment type, log and ignore
-        console.warn(
-          `Webhook: Unrecognised payment type "${type}" for paymentIntentId ${paymentIntent.id}`
-        );
-      }
-    } catch (err) {
-      // Error is on our side, return 200 so stripe doesn't retry
-      console.error("Error processing webhook event:", err);
+    if (type === "membership") {
+      // User.membershipPaid is set directly in userController on signup.
+      console.log(
+        `Membership payment succeeded for paymentIntentId ${paymentIntent.id}`
+      );
+    } else if (type === "event_ticket") {
+      // TODO: Ticket handling for when event/ticket model exists
+      console.log(
+        `Event ticket payment received: ${paymentIntent.id} (handler pending)`
+      );
+    } else {
+      console.warn(
+        `Webhook: Unrecognised payment type "${type}" for paymentIntentId ${paymentIntent.id}`
+      );
     }
   }
 
   res.status(200).json({ received: true });
 };
-
-async function handleMembershipPayment(
-  paymentIntent: Stripe.PaymentIntent
-): Promise<void> {
-  const user = await User.findOneAndUpdate(
-    { stripePaymentIntentId: paymentIntent.id },
-    {
-      membershipPaid: true,
-      paidAt: new Date(),
-    },
-    { new: true }
-  );
-
-  if (!user) {
-    console.warn(
-      `Webhook: No member found for paymentIntentId ${paymentIntent.id}`
-    );
-    return;
-  }
-
-  console.log(`Membership payment confirmed for member: ${user.email}`);
-}

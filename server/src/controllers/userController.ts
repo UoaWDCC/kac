@@ -52,7 +52,8 @@ export const createUser = async (req: Request, res: Response) => {
   if (!faculties || !Array.isArray(faculties) || faculties.length === 0) {
     missingFields.push("faculties");
   }
-  if (!paymentIntentId) missingFields.push("paymentIntentId");
+  if (!paymentIntentId || typeof paymentIntentId !== "string")
+    missingFields.push("paymentIntentId");
 
   if (missingFields.length > 0) {
     res.status(400).json({
@@ -76,6 +77,8 @@ export const createUser = async (req: Request, res: Response) => {
       yearOfStudy: Number(yearOfStudy),
       faculties,
       stripePaymentIntentId: paymentIntentId,
+      membershipPaid: true,
+      paidAt: new Date(),
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
 

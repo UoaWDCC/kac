@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { AuthContext } from "./AuthContext";
+import type { Role } from "./AuthContext";
 import { getCurrentUser } from "../api/authApi";
 
 export interface GoogleUser {
@@ -9,7 +10,7 @@ export interface GoogleUser {
   emails: { value: string }[];
   photos: { value: string }[];
   hasAccount: boolean;
-  admin: "admin" | "user";
+  role: Role;
 }
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         loading,
         logout,
         refresh,
-        admin: user?.admin ?? "user",
+        role: user?.role ?? "guest",
       }}
     >
       {children}

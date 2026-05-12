@@ -14,7 +14,7 @@ export const adminGuard = async (
   const profile = req.user as any;
   const user = await User.findOne({ googleUid: profile.id });
 
-  if (user?.admin !== "admin") {
+  if (!user?.isAdmin) {
     res.status(403).json({ message: "Forbidden" });
     return;
   }

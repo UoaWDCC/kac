@@ -4,6 +4,14 @@ import { User } from "../model/user";
 
 const router = express.Router();
 
+type Role = "guest" | "legacy" | "member" | "admin";
+
+const deriveRole = (isAdmin: boolean, hasPaid: boolean): Role => {
+  if (isAdmin) return "admin";
+  if (hasPaid) return "member";
+  return "legacy";
+};
+
 // Google login route
 router.get(
   "/google",
@@ -32,18 +40,21 @@ router.get("/logout", (req, res) => {
 });
 
 // Route to check if user is authenticated.
-// Does a live DB lookup so hasAccount is always accurate —
+// Does a live DB lookup so hasAccount and role are always accurate —
 // prevents the back-button bug where a mid-signup user appears logged in.
 router.get("/me", async (req, res) => {
   if (!req.isAuthenticated()) {
-    res.status(401).json(null);
+    res.json({ role: "guest" });
     return;
   }
 
   const profile = req.user as any;
   const existingUser = await User.findOne({ googleUid: profile.id });
+
   profile.hasAccount = !!existingUser;
-  profile.admin = existingUser?.admin ?? "user";
+  profile.role = existingUser
+    ? deriveRole(existingUser.isAdmin, existingUser.hasPaid ?? false)
+    : "guest";
 
   res.json(profile);
 });

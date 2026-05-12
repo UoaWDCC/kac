@@ -5,7 +5,8 @@ const { Schema, model } = mongoose;
 const userSchema = new Schema(
   {
     googleUid: { type: String, required: true, unique: true },
-    admin: { type: String, default: "user" },
+    isAdmin: { type: Boolean, default: false },
+    hasPaid: { type: Boolean, default: false },
     email: { type: String, required: true, unique: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },

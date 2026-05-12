@@ -19,7 +19,7 @@ interface ImageBlockProps {
 }
 
 export function ImageBlock({ pageKey, style, alt }: ImageBlockProps) {
-  const { admin } = useAuth();
+  const { role } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -47,7 +47,7 @@ export function ImageBlock({ pageKey, style, alt }: ImageBlockProps) {
       <div className="image-block" style={style}>
         <img src={imageData?.signedUrl ?? placeholder} alt={alt} />
 
-        {admin === "admin" && (
+        {role === "admin" && (
           <button
             className="image-block__edit-btn"
             onClick={() => setShowModal(true)}

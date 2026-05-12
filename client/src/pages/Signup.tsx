@@ -87,7 +87,6 @@ const SignUpForm = () => {
     try {
       // Step 1: Create a payment intent on the server ($5 membership fee)
       const { data } = await axios.post("/api/payments/create-payment-intent", {
-        amount: 500,
         type: "membership",
       });
 

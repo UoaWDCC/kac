@@ -113,10 +113,17 @@ const SignUpForm = () => {
 
       await refresh();
       navigate("/");
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ?? "Something went wrong. Please try again."
-      );
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ??
+            "Something went wrong. Please try again."
+        );
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     } finally {
       setSubmitting(false);
     }

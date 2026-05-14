@@ -1,13 +1,14 @@
 import { useState } from "react";
 import "../style/common.css";
 import "../style/contact.css";
+import { sendContact } from "../api/contactApi";
 
 const Contact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const contactData = {
@@ -16,11 +17,16 @@ const Contact = () => {
       message,
     };
 
-    console.log("Saved: ", contactData);
+    try {
+      await sendContact(contactData);
+      console.log("Saved: ", contactData);
 
-    setName("");
-    setEmail("");
-    setMessage("");
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

@@ -66,7 +66,7 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  // Verify payment intent with Stripe
+  // Verify payment intent status with Stripe
   let paymentVerified = false;
   try {
     const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
@@ -95,7 +95,7 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  // Prevent reuse of an already used payment intent
+  // Prevent reuse of an already successful payment intent
   const reusedPayment = await User.findOne({
     stripePaymentIntentId: paymentIntentId,
   });

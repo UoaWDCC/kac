@@ -71,8 +71,21 @@ const SignUpForm = () => {
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (form.faculties.length === 0) {
-      setError("Please select at least one faculty.");
+    // Validate all form fields before Stripe
+    const missingFields = [];
+    if (!form.firstName.trim()) missingFields.push("First Name");
+    if (!form.lastName.trim()) missingFields.push("Last Name");
+    if (!form.mobileNumber.trim()) missingFields.push("Mobile Number");
+    if (!form.university.trim()) missingFields.push("University");
+    if (!form.studentId.trim()) missingFields.push("Student ID");
+    if (!form.upi.trim()) missingFields.push("Student Username / UPI");
+    if (!form.yearOfStudy) missingFields.push("Year of Study");
+    if (form.faculties.length === 0) missingFields.push("Faculty");
+
+    if (missingFields.length > 0) {
+      setError(
+        `Please fill in the following fields: ${missingFields.join(", ")}.`
+      );
       return;
     }
 
@@ -81,19 +94,22 @@ const SignUpForm = () => {
       return;
     }
 
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      setError("Payment form failed to load. Please refresh and try again.");
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
 
     try {
-      // Step 1: Create a payment intent on the server ($5 membership fee)
+      // Step 1: Create a payment intent on the server ($5 membership fee set on server side)
       const { data } = await axios.post("/api/payments/create-payment-intent", {
         type: "membership",
       });
 
       // Step 2: Confirm the card payment with Stripe
-      const cardElement = elements.getElement(CardElement);
-      if (!cardElement) throw new Error("Card element not found");
-
       const { error: stripeError, paymentIntent } =
         await stripe.confirmCardPayment(data.clientSecret, {
           payment_method: { card: cardElement },

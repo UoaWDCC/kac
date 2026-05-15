@@ -275,7 +275,16 @@ const SignUpForm = () => {
         <div className="signup-field">
           <label>Payment Details</label>
           <div className="signup-card-element">
-            <CardElement />
+            <CardElement
+              options={{
+                hidePostalCode: true,
+                style: {
+                  base: {
+                    fontSize: "18px",
+                  },
+                },
+              }}
+            />
           </div>
           <p className="signup-card-note">
             A one-time $5 NZD membership fee will be charged.

@@ -11,6 +11,7 @@ import {
 import { useAuth } from "../auth/useAuth";
 import "../style/common.css";
 import "../style/signup.css";
+import api from "../api/index";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -106,7 +107,7 @@ const SignUpForm = () => {
 
     try {
       // Step 1: Create a payment intent on the server ($5 membership fee set on server side)
-      const { data } = await axios.post("/api/payments/create-payment-intent", {
+      const { data } = await api.post("/payments/create-payment-intent", {
         type: "membership",
       });
 
@@ -122,7 +123,7 @@ const SignUpForm = () => {
       }
 
       // Step 3: Payment succeeded, create the user account
-      await axios.post("/api/users/signup", {
+      await api.post("/users/signup", {
         ...form,
         yearOfStudy: Number(form.yearOfStudy),
         paymentIntentId: paymentIntent?.id,

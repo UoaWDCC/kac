@@ -94,6 +94,7 @@ const SignUpForm = () => {
       return;
     }
 
+    // Check Stripe's card element's mounting status before attempting payment
     const cardElement = elements.getElement(CardElement);
     if (!cardElement) {
       setError("Payment form failed to load. Please refresh and try again.");
@@ -284,7 +285,7 @@ const SignUpForm = () => {
         <button
           className="signup-submit"
           onClick={handleSubmit}
-          disabled={submitting}
+          disabled={submitting || !stripe}
         >
           {submitting ? "PROCESSING PAYMENT..." : "CREATE ACCOUNT >>"}
         </button>

@@ -1,10 +1,12 @@
 import "../style/common.css";
 import { Pencil, Trash2 } from "lucide-react";
+import api from "../api";
 
 /** No access to images currently, use placeholder */
 const EXEC_IMG = "src/images/exec-placeholder.png";
 
 interface ExecProps {
+  id: string;
   imageURL: string;
   displayName: string;
   execRole: string;
@@ -22,10 +24,13 @@ interface ExecProps {
 
 interface ExecCardProps {
   role: "admin" | "user";
+  onDelete: () => void;
 }
 
 const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
   role,
+  onDelete,
+  id,
   imageURL,
   displayName,
   execRole,
@@ -47,7 +52,9 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
         {role === "admin" && (
           <button
             className="image-block__edit-btn"
-            onClick={() => {}}
+            onClick={async () => {
+              // Implementation for edit functionality
+            }}
             title="Edit Executive"
           >
             <Pencil size={17} />
@@ -57,7 +64,10 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
         {role === "admin" && (
           <button
             className="image-block__delete-btn"
-            onClick={() => {}}
+            onClick={async () => {
+              await api.delete(`/executives/${id}`);
+              onDelete();
+            }}
             title="Delete Executive"
           >
             <Trash2 size={17} />
@@ -65,7 +75,6 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
         )}
       </div>
       <h2>{displayName}</h2>
-
       <div className="card-body">
         <p>
           Meet our {execRole}, {displayName}!

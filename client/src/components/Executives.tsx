@@ -69,6 +69,7 @@ const Executives = () => {
           <ExecCard
             role="admin"
             key={exec.id}
+            id={exec.id}
             imageURL={exec.imageURL}
             displayName={exec.displayName}
             execRole={exec.execRole}
@@ -82,6 +83,7 @@ const Executives = () => {
             greenFlag={exec.greenFlag}
             redFlag={exec.redFlag}
             emojis={exec.emojis}
+            onDelete={loadExecs}
           />
         );
       })}

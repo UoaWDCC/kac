@@ -8,7 +8,7 @@ interface UploadModalProps {
   tag: string;
 }
 
-export function UploadModal({ onClose, onSuccess, tag }: UploadModalProps) {
+export function UploadModal({ onClose, onSuccess, tag }: Readonly<UploadModalProps>) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);

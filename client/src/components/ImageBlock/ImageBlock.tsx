@@ -18,7 +18,7 @@ interface ImageBlockProps {
   alt: string;
 }
 
-export function ImageBlock({ pageKey, style, alt }: ImageBlockProps) {
+export function ImageBlock({ pageKey, style, alt }: Readonly<ImageBlockProps>) {
   const { role } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
   const [loading, setLoading] = useState(true);

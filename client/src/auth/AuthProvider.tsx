@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    window.location.href = "/api/auth/logout";
+    globalThis.location.href = "/api/auth/logout";
   };
 
   return (

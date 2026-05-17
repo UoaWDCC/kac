@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Collapsible from "../components/Collapsible";
+import api from "../api";
 
 import "../style/faq.css";
 import "../style/common.css";
@@ -31,11 +32,9 @@ const Faq = () => {
   const [faqs, setFaqs] = useState<Faq[]>([]);
 
   useEffect(() => {
-    fetch("/api/faqs")
-      .then((res) => res.json())
-      .then((data: { content: string }[]) =>
-        setFaqs(data.flatMap((faq) => parseFaq(faq.content)))
-      )
+    api
+      .get<{ content: string }[]>("/faqs")
+      .then((res) => setFaqs(res.data.flatMap((faq) => parseFaq(faq.content))))
       .catch((err) => console.error("Failed to fetch faqs:", err));
   }, []);
 

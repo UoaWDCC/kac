@@ -1,27 +1,32 @@
 import { useEffect, useState } from "react";
 import SponsorCard from "../components/SponsorCard";
-import { getSponsors } from "../api/sponsorsApi";
+import sponsorsJsonData from "../placeholders/sponsors.json";
 
+// 1. Define the shape of a single sponsor
 interface Sponsor {
   name: string;
   deal: string;
   address: string;
-  category: "cbd" | "newmarket" | "other";
   code?: string;
 }
 
+// 2. Define the shape of the whole JSON file
+interface SponsorsData {
+  cbd_sponsors: Sponsor[];
+  newmarket_sponsors: Sponsor[];
+  other_sponsors: Sponsor[];
+}
+
 const Sponsors = () => {
-  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [sponsors, setSponsors] = useState<SponsorsData | null>(null);
 
   useEffect(() => {
-    getSponsors()
+    Promise.resolve(sponsorsJsonData as SponsorsData)
       .then((data) => setSponsors(data))
-      .catch((err) => console.error("Error loading sponsors:", err))
-      .finally(() => setLoading(false));
+      .catch((err) => console.error("Error loading sponsors:", err));
   }, []);
 
-  if (loading) {
+  if (!sponsors) {
     return (
       <div style={{ textAlign: "center", padding: "2rem" }}>
         Loading Sponsors...
@@ -36,10 +41,6 @@ const Sponsors = () => {
     gap: "2rem",
     padding: "2rem",
   } as const;
-
-  const cbd = sponsors.filter((s) => s.category === "cbd");
-  const newmarket = sponsors.filter((s) => s.category === "newmarket");
-  const other = sponsors.filter((s) => s.category === "other");
 
   return (
     <div style={{ textAlign: "center", backgroundColor: "#faf3d1" }}>
@@ -70,12 +71,12 @@ const Sponsors = () => {
       <section id="CBD">
         <h2 style={{ marginTop: "2rem" }}>CBD Sponsors</h2>
         <div style={gridStyle}>
-          {cbd.map((s, index) => (
+          {sponsors.cbd_sponsors.map((s, index) => (
             <SponsorCard
               key={index}
               name={s.name}
-              description={s.deal}
-              location={s.address}
+              description={s.deal} // Mapping 'deal' from JSON to 'description' prop
+              location={s.address} // Mapping 'address' from JSON to 'location' prop
             />
           ))}
         </div>
@@ -85,7 +86,7 @@ const Sponsors = () => {
       <section id="Newmarket">
         <h2 style={{ marginTop: "2rem" }}>Newmarket Sponsors</h2>
         <div style={gridStyle}>
-          {newmarket.map((s, index) => (
+          {sponsors.newmarket_sponsors.map((s, index) => (
             <SponsorCard
               key={index}
               name={s.name}
@@ -100,7 +101,7 @@ const Sponsors = () => {
       <section id="Other">
         <h2 style={{ marginTop: "2rem" }}>Other Sponsors</h2>
         <div style={gridStyle}>
-          {other.map((s, index) => (
+          {sponsors.other_sponsors.map((s, index) => (
             <SponsorCard
               key={index}
               name={s.name}

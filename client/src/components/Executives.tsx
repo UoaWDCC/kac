@@ -2,6 +2,9 @@ import "../style/common.css";
 import "../style/about.css";
 
 import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+
+import NewExecModal from "./NewExecModal";
 
 import ExecCard from "./ExecCard";
 import api from "../api";
@@ -87,6 +90,7 @@ const Executives = () => {
           />
         );
       })}
+      <NewExecModal />
     </div>
   );
 };

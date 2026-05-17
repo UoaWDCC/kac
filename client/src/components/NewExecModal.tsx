@@ -9,7 +9,7 @@ interface ModalProps {}
 export default function Modal({}: ModalProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const openModal = (): void => setIsOpen(true);
+  // const openModal = (): void => setIsOpen(true);
   const closeModal = (): void => setIsOpen(false);
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -20,7 +20,7 @@ export default function Modal({}: ModalProps) {
 
   return (
     <div style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
-      <button className="add-exec-button" onClick={openModal}>
+      <button className="add-exec-button">
         <Plus className="dynamic-size-icon" />
         <p>New Executive</p>
       </button>
@@ -82,7 +82,7 @@ export default function Modal({}: ModalProps) {
 
               <div>
                 <label>Red Flag 🚩</label>
-                <input type="text" placeholder="" />
+                <input type="text" placeholder="e" />
               </div>
 
               <div>

@@ -9,13 +9,14 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const sponsors = await Sponsor.find();
+  const sponsors = await Sponsor.find().lean();
   res.json(sponsors);
 });
 
 router.put("/:id", async (req, res) => {
   const updated = await Sponsor.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
+    lean: true,
   });
   res.json(updated);
 });

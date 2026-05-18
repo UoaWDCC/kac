@@ -1,3 +1,5 @@
+// This controller is specifically for handling Stripe webhook events.
+// It is not a general-purpose webhook controller.
 import Stripe from "stripe";
 import { RequestHandler } from "express";
 

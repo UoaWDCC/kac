@@ -1,6 +1,6 @@
 import "../style/common.css";
 import { Link } from "react-router-dom";
-import { ImageBlock } from "../components/ImageBlock/ImageBlock";
+import { ImageBlock } from "../components/image_block/ImageBlock";
 
 const Home = () => {
   return (

@@ -45,12 +45,16 @@ const EventDetail = () => {
                 <div>
                   <div className="event-detail-label">EVENT DATE</div>
                   <div className="event-detail-value">{event.date}</div>
-                    <div className="event-detail-subvalue">{event.time}</div>
+                  <div className="event-detail-subvalue">{event.time}</div>
                 </div>
               </div>
             </div>
 
-            <div className="event-description">{event.description /* TODO: This should render RichText in the future. */}</div>
+            <div className="event-description">
+              {
+                event.description /* TODO: This should render RichText in the future. */
+              }
+            </div>
           </div>
         </div>
 
@@ -58,7 +62,11 @@ const EventDetail = () => {
           <div className="event-card">
             <button
               className="wide-button event-signup-button"
-              onClick={() => {console.log("CLICK")} /* TODO: Create sign up form page. */}
+              onClick={
+                () => {
+                  console.log("CLICK");
+                } /* TODO: Create sign up form page. */
+              }
             >
               Sign Up!
             </button>

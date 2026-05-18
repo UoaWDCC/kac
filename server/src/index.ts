@@ -9,6 +9,7 @@ import imageRoutes from "./routes/imageRoutes";
 import executivesRoutes from "./routes/executivesRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
 import webhookRoutes from "./routes/webhookRoutes";
+import contactRoutes from "./routes/contactRoutes";
 import userRoutes from "./routes/userRoutes";
 import { User } from "./model/user";
 
@@ -59,6 +60,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/executives", executivesRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/contacts", contactRoutes);
 app.use("/api/users", userRoutes);
 
 // Connect to MongoDB and start the server

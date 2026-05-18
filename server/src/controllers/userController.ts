@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
+import Stripe from "stripe";
 import { User } from "../model/user";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export const createUser = async (req: Request, res: Response) => {
   // Must be signed in via Google to create an account
@@ -38,6 +41,7 @@ export const createUser = async (req: Request, res: Response) => {
     upi,
     yearOfStudy,
     faculties,
+    paymentIntentId,
   } = req.body;
 
   const missingFields = [];
@@ -51,11 +55,53 @@ export const createUser = async (req: Request, res: Response) => {
   if (!faculties || !Array.isArray(faculties) || faculties.length === 0) {
     missingFields.push("faculties");
   }
+  if (!paymentIntentId || typeof paymentIntentId !== "string")
+    missingFields.push("paymentIntentId");
 
   if (missingFields.length > 0) {
     res.status(400).json({
       message: "Missing required fields",
       fields: missingFields,
+    });
+    return;
+  }
+
+  // Verify payment intent status with Stripe
+  let paymentVerified = false;
+  try {
+    const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    if (intent.status !== "succeeded") {
+      res.status(402).json({ message: "Payment has not been completed." });
+      return;
+    }
+
+    if (intent.metadata?.type !== "membership") {
+      res.status(400).json({ message: "Invalid payment type for membership." });
+      return;
+    }
+
+    paymentVerified = true;
+  } catch (err) {
+    console.error("Error verifying payment intent:", err);
+    res
+      .status(400)
+      .json({ message: "Could not verify payment. Please contact support." });
+    return;
+  }
+
+  if (!paymentVerified) {
+    res.status(402).json({ message: "Payment verification failed." });
+    return;
+  }
+
+  // Prevent reuse of an already successful payment intent
+  const reusedPayment = await User.findOne({
+    stripePaymentIntentId: paymentIntentId,
+  });
+  if (reusedPayment) {
+    res.status(409).json({
+      message: "This payment has already been used to create an account.",
     });
     return;
   }
@@ -73,6 +119,9 @@ export const createUser = async (req: Request, res: Response) => {
       upi,
       yearOfStudy: Number(yearOfStudy),
       faculties,
+      stripePaymentIntentId: paymentIntentId,
+      membershipPaid: true,
+      paidAt: new Date(),
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
 

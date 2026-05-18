@@ -3,16 +3,21 @@ import { RequestHandler } from "express";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-// Body: { amount: number, type: "membership" | "event_ticket" }
+// Body: { type: "membership" | "event_ticket" }
 export const createPaymentIntent: RequestHandler = async (req, res) => {
-  const { amount, type } = req.body;
+  const { type } = req.body;
 
-  if (!amount || !type) {
-    res.status(400).json({ message: "amount and type are required." });
+  if (!type) {
+    res.status(400).json({ message: "type is required." });
     return;
   }
 
-  if (type !== "membership" && type !== "event_ticket") {
+  const PRICES: Record<string, number> = {
+    membership: 500, // hardcoded
+  };
+  const amount = PRICES[type];
+
+  if (!amount) {
     res
       .status(400)
       .json({ message: 'type must be "membership" or "event_ticket".' });

@@ -6,7 +6,7 @@ import faqs from "../placeholders/faqs.json";
 
 const Faq = () => {
   return (
-    <div className="faq-container yellow-bg">
+    <div className="faq-container bg-yellow-light">
       {/** title */}
       <section className="faq-title">F&nbsp;A&nbsp;Q&nbsp;s</section>
 

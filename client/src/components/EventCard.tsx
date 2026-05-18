@@ -62,10 +62,22 @@ const EventCard: React.FC<EventProps> = ({
 
   return (
     <div className="event-card">
+      <h2 className="event-title">{title}</h2>
+      <div className="event-image-container">
+        <ImageBlock
+          pageKey={imageUrl || DEFAULT_EVENT_IMAGE}
+          role="user"
+          alt={title}
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "20px",
+            overflow: "hidden",
+          }}
+        />
+      </div>
       <div className="event-content">
         <div className="event-info">
-          <h2 className="event-title">{title}</h2>
-
           <div className="event-meta">
             <div className="meta-item">
               <Clock size={16} className="meta-icon" />
@@ -93,19 +105,6 @@ const EventCard: React.FC<EventProps> = ({
             <ArrowRight size={18} />
           </button>
         </div>
-      </div>
-      <div className="event-image-container">
-        <ImageBlock
-          pageKey={imageUrl || DEFAULT_EVENT_IMAGE}
-          role="user"
-          alt={title}
-          style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: "20px",
-            overflow: "hidden",
-          }}
-        />
       </div>
     </div>
   );

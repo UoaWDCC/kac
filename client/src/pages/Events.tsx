@@ -5,12 +5,16 @@ import eventsData from "../placeholders/events.json";
 const PAGE_TITLE_1 = "Upcoming Events";
 const PAGE_TITLE_2 = "Past Events";
 
-const now = new Date();
-
-const upcomingEvents = eventsData.filter(
-  (event) => new Date(event.time) >= now
+const getTime = (t: string) => new Date(t).getTime();
+const now = Date.now();
+const sortedEvents = [...eventsData].sort(
+  (a, b) => getTime(b.time) - getTime(a.time)
 );
-const pastEvents = eventsData.filter((event) => new Date(event.time) < now);
+
+const upcomingEvents = sortedEvents.filter(
+  (event) => getTime(event.time) >= now
+);
+const pastEvents = sortedEvents.filter((event) => getTime(event.time) < now);
 
 const Events = () => {
   const isAdmin = true; // Hardcoded for dev preview

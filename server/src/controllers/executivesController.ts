@@ -56,7 +56,11 @@ export const deleteExec: RequestHandler = async (req, res, next) => {
 export const getAllExecs: RequestHandler = async (req, res, next) => {
   try {
     const executives = await Executive.find().lean();
-    res.status(200).json(executives);
+    const mappedExecs = executives.map((exec) => ({
+      ...exec,
+      id: exec._id,
+    }));
+    res.status(200).json(mappedExecs);
   } catch (err) {
     console.error("[!] Error fetching executives: ", err);
     res.status(500).json({

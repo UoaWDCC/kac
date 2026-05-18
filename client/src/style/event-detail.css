@@ -1,0 +1,94 @@
+.event-detail-page {
+  padding: 2rem 1rem;
+}
+
+.event-detail-layout {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.event-main-content {
+  flex: 2;
+  min-width: 300px;
+}
+
+.event-sidebar {
+  flex: 1;
+  min-width: 250px;
+}
+
+.event-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.event-details-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1.5rem;
+}
+
+.event-detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+.event-icon-container {
+  background-color: #faf3d1;
+  padding: 0.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-detail-label {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: bold;
+}
+
+.event-detail-value {
+  font-weight: 500;
+}
+
+.event-detail-subvalue {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.event-description {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.event-signup-button {
+  background-color: black !important;
+  color: #faf3d1 !important;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.event-thumbnail {
+  margin-bottom: 2rem;
+}
+
+.event-thumbnail .image-block {
+  border-radius: 12px;
+  width: 100%;
+}
+
+.event-thumbnail img {
+  border-radius: 12px;
+}

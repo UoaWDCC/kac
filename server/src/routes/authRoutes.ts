@@ -40,7 +40,7 @@ router.get("/logout", (req, res) => {
 });
 
 // Route to check if user is authenticated.
-// Does a live DB lookup so hasAccount and role are always accurate —
+// Does a live DB lookup so hasAccount and role are always accurate -
 // prevents the back-button bug where a mid-signup user appears logged in.
 router.get("/me", async (req, res) => {
   if (!req.isAuthenticated()) {
@@ -54,7 +54,7 @@ router.get("/me", async (req, res) => {
   profile.hasAccount = !!existingUser;
   profile.role = existingUser
     ? deriveRole(existingUser.isAdmin, existingUser.hasPaid ?? false)
-    : "guest";
+    : "legacy";
 
   res.json(profile);
 });

@@ -2,7 +2,6 @@ import "../style/common.css";
 import "../style/about.css";
 
 import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
 
 import NewExecModal from "./NewExecModal";
 

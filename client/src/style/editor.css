@@ -6,30 +6,30 @@
 }
 
 .editor-toolbar {
-  display: flex ;
-  flex-direction: row ;
-  flex-wrap: wrap ;
-  gap: 8px ;
-  padding: 8px ;
-  border-bottom: 1px solid #ddd ;
-  background: #f9f9f9 ;
-  align-items: center ;
-  justify-content: flex-start ;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  background: #f9f9f9;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .editor-toolbar button {
-  padding: 6px ;
-  border: 1px solid transparent ;
-  background: none ;
-  border-radius: 4px ;
-  cursor: pointer ;
-  display: flex ;
-  align-items: center ;
-  justify-content: center ;
-  color: #333 ;
-  flex: 0 0 auto ;
-  width: auto ;
-  height: auto ;
+  padding: 6px;
+  border: 1px solid transparent;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
 }
 
 .editor-toolbar button:hover:not(:disabled) {

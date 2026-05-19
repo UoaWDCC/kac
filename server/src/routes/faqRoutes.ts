@@ -4,6 +4,7 @@ import {
   createFaq,
   updateFaq,
   deleteFaq,
+  deleteAllFaqs,
 } from "../controllers/faqController";
 
 const router = express.Router();
@@ -11,5 +12,6 @@ router.get("/", getFaqs);
 router.post("/", createFaq);
 router.put("/:id", updateFaq);
 router.delete("/:id", deleteFaq);
+router.delete("/", deleteAllFaqs);
 
 export default router;

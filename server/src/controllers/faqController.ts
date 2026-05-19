@@ -59,3 +59,13 @@ export const deleteFaq: RequestHandler = async (req, res) => {
     res.status(500).json({ message: "Failed to delete FAQ" });
   }
 };
+
+export const deleteAllFaqs: RequestHandler = async(req, res) => {
+  try {
+    const result = await Faq.deleteMany({});
+    res.json({message: "All FAQs deleted successfully", deletedCount: result.deletedCount });
+  } catch (error) {
+    console.error("Error deleting all FAQs: ", error);
+    res.status(500).json({message: "Failed to delete all FAQs"});
+  }
+};

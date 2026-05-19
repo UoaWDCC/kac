@@ -22,14 +22,6 @@ const userSchema = new Schema(
         message: "At least one faculty is required",
       },
     },
-    membershipPaid: { type: Boolean, default: false },
-    stripePaymentIntentId: {
-      type: String,
-      default: null,
-      unique: true,
-      sparse: true,
-    },
-    paidAt: { type: Date, default: null },
   },
   {
     timestamps: true,

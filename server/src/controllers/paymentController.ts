@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { RequestHandler } from "express";
+import { Payment } from "../model/payment";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -38,6 +39,18 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
       currency: "nzd",
       metadata: { type, googleUid },
     });
+
+    const temp = await Payment.create({
+      stripePaymentIntentId: paymentIntent.id,
+      googleUid,
+      userId: null,
+      type,
+      amount,
+      status: "pending",
+      paidAt: null,
+    });
+
+    console.log(temp); // temp
 
     res.status(201).json({ clientSecret: paymentIntent.client_secret });
   } catch (err) {

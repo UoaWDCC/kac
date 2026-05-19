@@ -67,6 +67,7 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
+  // 1. Payment Intent Verification Steps:
   // Verify Payment Intent with Stripe
   let intent: Stripe.PaymentIntent;
   try {
@@ -79,13 +80,11 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  // Verify payment status
   if (intent.status !== "succeeded") {
     res.status(402).json({ message: "Payment has not been completed." });
     return;
   }
 
-  // Verify payment was for a membership
   if (intent.metadata?.type !== "membership") {
     res.status(400).json({ message: "Invalid payment type for membership." });
     return;
@@ -99,13 +98,43 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  // Prevent reuse of a Payment Intent that has already been used —
-  const reusedPayment = await Payment.findOne({
+  // 2. Existing Payment Record Verification Steps:
+  const payment = await Payment.findOne({
     stripePaymentIntentId: paymentIntentId,
   });
-  if (reusedPayment) {
+
+  if (!payment) {
+    res.status(404).json({
+      message: "Payment record not found. Please contact support.",
+    });
+    return;
+  }
+
+  // Verify the payment record belongs to the user
+  if (payment.googleUid !== googleUid) {
+    res.status(403).json({
+      message: "Payment record does not belong to this user.",
+    });
+    return;
+  }
+
+  if (payment.amount !== intent.amount) {
+    res.status(400).json({
+      message: "Payment amount mismatch.",
+    });
+    return;
+  }
+
+  if (payment.status === "succeeded" || payment.userId) {
     res.status(409).json({
       message: "This payment has already been used to create an account.",
+    });
+    return;
+  }
+
+  if (payment.type !== "membership") {
+    res.status(400).json({
+      message: "Existing payment record is not for a membership.",
     });
     return;
   }
@@ -126,15 +155,10 @@ export const createUser = async (req: Request, res: Response) => {
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
 
-    const newPayment = await Payment.create({
-      stripePaymentIntentId: paymentIntentId,
-      googleUid,
+    await Payment.findByIdAndUpdate(payment._id, {
       userId: newUser._id,
-      type: "membership",
-      amount: intent.amount,
       status: "succeeded",
       paidAt: new Date(),
-      // eventId: null,
     });
 
     res.status(201).json(newUser);

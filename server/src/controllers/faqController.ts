@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { Faq } from "../model/faq";
 
-const CACHE_TTL_MS = 60 * 60 * 1000;
+const CACHE_TTL_MS = 10;
 
 let faqCache: { data: unknown[]; expiresAt: number } | null = null;
 

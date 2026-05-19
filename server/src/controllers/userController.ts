@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Stripe from "stripe";
 import { User } from "../model/user";
+import { Payment } from "../model/payment";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -66,22 +67,10 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  // Verify payment intent status with Stripe
-  let paymentVerified = false;
+  // Verify Payment Intent with Stripe
+  let intent: Stripe.PaymentIntent;
   try {
-    const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
-
-    if (intent.status !== "succeeded") {
-      res.status(402).json({ message: "Payment has not been completed." });
-      return;
-    }
-
-    if (intent.metadata?.type !== "membership") {
-      res.status(400).json({ message: "Invalid payment type for membership." });
-      return;
-    }
-
-    paymentVerified = true;
+    intent = await stripe.paymentIntents.retrieve(paymentIntentId);
   } catch (err) {
     console.error("Error verifying payment intent:", err);
     res
@@ -90,13 +79,28 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  if (!paymentVerified) {
-    res.status(402).json({ message: "Payment verification failed." });
+  // Verify payment status
+  if (intent.status !== "succeeded") {
+    res.status(402).json({ message: "Payment has not been completed." });
     return;
   }
 
-  // Prevent reuse of an already successful payment intent
-  const reusedPayment = await User.findOne({
+  // Verify payment was for a membership
+  if (intent.metadata?.type !== "membership") {
+    res.status(400).json({ message: "Invalid payment type for membership." });
+    return;
+  }
+
+  // Verify Payment Intent belongs to the authenticated user
+  if (intent.metadata?.googleUid !== googleUid) {
+    res
+      .status(403)
+      .json({ message: "Payment Intent does not belong to this user." });
+    return;
+  }
+
+  // Prevent reuse of a Payment Intent that has already been used —
+  const reusedPayment = await Payment.findOne({
     stripePaymentIntentId: paymentIntentId,
   });
   if (reusedPayment) {
@@ -119,10 +123,18 @@ export const createUser = async (req: Request, res: Response) => {
       upi,
       yearOfStudy: Number(yearOfStudy),
       faculties,
-      stripePaymentIntentId: paymentIntentId,
-      membershipPaid: true,
-      paidAt: new Date(),
       // createdAt / updatedAt handled automatically by { timestamps: true }
+    });
+
+    const newPayment = await Payment.create({
+      stripePaymentIntentId: paymentIntentId,
+      googleUid,
+      userId: newUser._id,
+      type: "membership",
+      amount: intent.amount,
+      status: "succeeded",
+      paidAt: new Date(),
+      // eventId: null,
     });
 
     res.status(201).json(newUser);

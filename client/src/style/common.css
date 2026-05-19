@@ -1,9 +1,27 @@
+@import url("https://fonts.bunny.net/css?family=amaranth:400,400i,700,700i");
+@import url("https://fonts.bunny.net/css?family=bitcount-single:100,200,300,400,500,600,700,800,900");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Amaranth", sans-serif;
+  --font-monospace: "Bitcount Single", monospace;
+  --color-yellow-light: #faf3d1;
+  --color-yellow-medium: #f5df86;
+  --color-yellow-dark: #f2b719;
+  --color-blue-medium: #0b2d4a;
+  --color-blue-light: #14385e;
+}
+
+body {
+  color: var(--color-blue-medium);
+  font-family: var(--font-sans);
+}
+
 body,
 header,
 footer,
 button {
   margin: 0rem;
-  font-family: "Barlow", Arial, sans-serif;
 }
 
 h1 {
@@ -33,13 +51,8 @@ p {
   margin: auto;
 }
 
-.yellow-bg {
-  background-color: #faf3d1;
-}
-
 .wide-button {
   text-decoration: none;
-  color: black;
   background-color: transparent;
   border: 1px solid black;
   padding: 0.5rem;

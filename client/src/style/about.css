@@ -93,3 +93,44 @@ button {
 .exec-desc {
   max-width: inherit;
 }
+
+.add-exec-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 360px;
+  height: 460px;
+  border: 4px dashed rgb(255, 187, 0);
+  border-radius: 10px;
+  font-size: 40px;
+  opacity: 70%;
+  transition: 0.5s;
+}
+
+.add-exec-button:hover {
+  opacity: 100%;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #faf3d1;
+  align-content: center;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+  position: relative;
+  box-sizing: border-box;
+}

@@ -20,7 +20,7 @@ const Header = () => {
   const isSignedIn = !!user && hasAccount;
 
   return (
-    <header className="yellow-bg" style={headerStyle}>
+    <header className="bg-yellow-light" style={headerStyle}>
       <Link to="/" style={linkStyle}>
         Kiwi Asian Club
       </Link>

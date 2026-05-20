@@ -7,7 +7,7 @@ const Home = () => {
     <div>
       {/** TITLE */}
       <section
-        className="section yellow-bg"
+        className="section bg-yellow-light"
         style={{
           width: "100%",
           textAlign: "center",
@@ -36,7 +36,7 @@ const Home = () => {
       </section>
 
       {/** EVENTS */}
-      <section className="section yellow-bg">
+      <section className="section bg-yellow-light">
         <div className="narrow-content">
           <h2>CHECK OUT OUR UPCOMING EVENTS</h2>
           <ImageBlock
@@ -56,7 +56,7 @@ const Home = () => {
       </section>
 
       {/** SPONSORS */}
-      <section className="section">
+      <section className="section bg-yellow-light">
         <div className="narrow-content">
           <h2>OUR SPONSORS</h2>
           <Link to="/Sponsors" className="wide-button">

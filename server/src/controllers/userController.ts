@@ -155,11 +155,22 @@ export const createUser = async (req: Request, res: Response) => {
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
 
-    await Payment.findByIdAndUpdate(payment._id, {
-      userId: newUser._id,
-      status: "succeeded",
-      paidAt: new Date(),
-    });
+    // Update the Payment record with userId.
+    try {
+      await Payment.findByIdAndUpdate(payment._id, {
+        userId: newUser._id,
+        status: "succeeded",
+        paidAt: new Date(),
+      });
+    } catch (paymentUpdateErr) {
+      // Payment Intent was successful and user account created, but failed to link the Payment record to the user.
+      // The orphaned Payment record (succeeded status, no userId) will require admin reconciliation.
+      console.error(
+        `Failed to update Payment record ${payment._id} for user ${newUser._id}. ` +
+          `Payment succeeded but userId not linked, requires admin reconciliation.`,
+        paymentUpdateErr
+      );
+    }
 
     res.status(201).json(newUser);
   } catch (err: any) {

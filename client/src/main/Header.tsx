@@ -43,6 +43,9 @@ const Header = () => {
         <Link to="/Faq" style={linkStyle}>
           Faq
         </Link>
+        <Link to="/Admin" style={linkStyle}>
+          Admin Dashboard
+        </Link>
 
         {!loading &&
           (isSignedIn ? (

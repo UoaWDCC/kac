@@ -1,18 +1,19 @@
-import { Link } from "react-router-dom";
+import { motion } from "motion/react";
+
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/useAuth.ts";
+
+import "../style/common.css";
+
+const tabs = ["Home", "About", "Events", "Sponsors", "Contact", "Faq"];
 
 const linkStyle = {
   textDecoration: "none",
   color: "black",
 };
 
-const headerStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "1rem",
-};
-
 const Header = () => {
+  const location = useLocation();
   const { user, hasAccount, loading, logout } = useAuth();
 
   // User is only considered "signed in" to the club once they have a full account.
@@ -20,30 +21,35 @@ const Header = () => {
   const isSignedIn = !!user && hasAccount;
 
   return (
-    <header className="bg-yellow-light" style={headerStyle}>
-      <Link to="/" style={linkStyle}>
-        Kiwi Asian Club
-      </Link>
-      <div style={{ display: "flex", gap: "1rem" }}>
-        <Link to="/" style={linkStyle}>
-          Home
-        </Link>
-        <Link to="/About" style={linkStyle}>
-          About
-        </Link>
-        <Link to="/Events" style={linkStyle}>
-          Events
-        </Link>
-        <Link to="/Sponsors" style={linkStyle}>
-          Sponsors
-        </Link>
-        <Link to="/Contact" style={linkStyle}>
-          Contact
-        </Link>
-        <Link to="/Faq" style={linkStyle}>
-          Faq
-        </Link>
+    <div className="header flex items-center p-6 bg-yellow-light w-full">
+      <div className="pl-2 flex-1">Fancy Logo 😱</div>
 
+      <div className="flex flex-1 justify-center gap-2 w-fit rounded-full bg-yellow-medium">
+        {tabs.map((tab) => {
+          const route = `/${tab.toLowerCase()}`;
+          const actualRoute = route === "/home" ? "/" : route;
+          const isSelected = location.pathname === actualRoute;
+
+          return (
+            <Link
+              key={tab}
+              to={actualRoute}
+              className="px-8 py-2 rounded-full relative text-decoration-none w-0.6 col-blue-medium w-0.8"
+            >
+              <span className="relative z-10 uppercase text-sm">{tab}</span>
+              {isSelected && (
+                <motion.span
+                  layoutId="pill-tab"
+                  transition={{ type: "spring", duration: 0.5 }}
+                  className="absolute inset-0 z-0 rounded-full bg-yellow-dark"
+                ></motion.span>
+              )}
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className="flex-1 flex pr-2 justify-end">
         {!loading &&
           (isSignedIn ? (
             <div
@@ -57,23 +63,21 @@ const Header = () => {
               <span style={{ whiteSpace: "nowrap" }}>{user.displayName}</span>
               <button
                 onClick={logout}
-                style={{
-                  ...linkStyle,
-                  cursor: "pointer",
-                  padding: 0,
-                  font: "inherit",
-                }}
+                className="cursor-pointer text-decoration-none col-blue-medium font-inherit"
               >
                 Sign Out
               </button>
             </div>
           ) : (
-            <a href="/api/auth/google" style={linkStyle}>
-              Sign In
+            <a
+              href="/api/auth/google"
+              className="text-decoration-none col-blue-medium uppercase rounded-full bg-yellow-dark px-8 py-2"
+            >
+              Join KAC!
             </a>
           ))}
       </div>
-    </header>
+    </div>
   );
 };
 

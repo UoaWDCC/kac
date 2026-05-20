@@ -17,6 +17,10 @@ body {
   font-family: var(--font-sans);
 }
 
+header {
+  background-color: var(--color-yellow-light);
+}
+
 body,
 header,
 footer,

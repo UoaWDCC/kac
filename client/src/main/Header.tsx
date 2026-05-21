@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/useAuth.ts";
@@ -34,16 +34,18 @@ const Header = () => {
             <Link
               key={tab}
               to={actualRoute}
-              className="px-8 py-2 rounded-full relative text-decoration-none w-0.6 col-blue-medium w-0.8"
+              className="px-8 py-2 rounded-full relative text-decoration-none col-blue-medium w-0.8"
             >
               <span className="relative z-10 uppercase text-sm">{tab}</span>
-              {isSelected && (
-                <motion.span
-                  layoutId="pill-tab"
-                  transition={{ type: "spring", duration: 0.5 }}
-                  className="absolute inset-0 z-0 rounded-full bg-yellow-dark"
-                ></motion.span>
-              )}
+              <AnimatePresence key={tab}>
+                {isSelected && (
+                  <motion.span
+                    layoutId="pill-tab"
+                    transition={{ type: "spring", duration: 0.5 }}
+                    className="absolute inset-0 z-0 rounded-full bg-yellow-dark"
+                  ></motion.span>
+                )}
+              </AnimatePresence>
             </Link>
           );
         })}

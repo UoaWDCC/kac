@@ -2,6 +2,7 @@
 // It is not a general-purpose webhook controller.
 import Stripe from "stripe";
 import { RequestHandler } from "express";
+import { Payment } from "../model/payment";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -29,26 +30,58 @@ export const handleWebhook: RequestHandler = async (req, res) => {
     return;
   }
 
-  // Handle relevant stripe events
-  if (event.type === "payment_intent.succeeded") {
-    const paymentIntent = event.data.object as Stripe.PaymentIntent;
-    const { type } = paymentIntent.metadata;
+  const paymentIntent = event.data.object as Stripe.PaymentIntent;
 
-    if (type === "membership") {
-      // User.membershipPaid is set directly in userController on signup.
-      console.log(
-        `Membership payment succeeded for paymentIntentId ${paymentIntent.id}`
-      );
-    } else if (type === "event_ticket") {
-      // TODO: Ticket handling for when event/ticket model exists
-      console.log(
-        `Event ticket payment received: ${paymentIntent.id} (handler pending)`
-      );
-    } else {
-      console.warn(
-        `Webhook: Unrecognised payment type "${type}" for paymentIntentId ${paymentIntent.id}`
-      );
+  // Only updates Payment record if status is "pending",
+  // to avoid overwriting a succeeded status from userController's update.
+  switch (event.type) {
+    case "payment_intent.succeeded": {
+      const { type } = paymentIntent.metadata;
+
+      if (type === "membership") {
+        await Payment.findOneAndUpdate(
+          { stripePaymentIntentId: paymentIntent.id, status: "pending" },
+          { status: "succeeded" }
+        );
+        console.log(
+          `Membership payment succeeded for paymentIntentId ${paymentIntent.id}`
+        );
+      } else if (type === "event_ticket") {
+        // TODO: event ticket handling when Event/Ticket model exists
+        console.log(
+          `Event ticket payment received: ${paymentIntent.id} (handler pending)`
+        );
+      } else {
+        console.warn(
+          `Webhook: Unrecognised payment type "${type}" for paymentIntentId ${paymentIntent.id}`
+        );
+      }
+      break;
     }
+
+    case "payment_intent.payment_failed": {
+      await Payment.findOneAndUpdate(
+        { stripePaymentIntentId: paymentIntent.id, status: "pending" },
+        { status: "failed" }
+      );
+      console.log(`Payment failed for paymentIntentId ${paymentIntent.id}`);
+      break;
+    }
+
+    case "payment_intent.canceled": {
+      await Payment.findOneAndUpdate(
+        { stripePaymentIntentId: paymentIntent.id, status: "pending" },
+        { status: "failed" }
+      );
+      console.log(
+        `Payment Intent cancelled/expired for paymentIntentId ${paymentIntent.id}`
+      );
+      break;
+    }
+
+    default:
+      // All other Stripe events are acknowledged but not acted on
+      break;
   }
 
   res.status(200).json({ received: true });

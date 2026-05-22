@@ -23,6 +23,7 @@ const paymentSchema = new Schema(
     //   default: null,
     // },
     amount: { type: Number, required: true }, // in cents
+    currency: { type: String, required: true, default: "nzd" },
     status: {
       type: String,
       required: true,

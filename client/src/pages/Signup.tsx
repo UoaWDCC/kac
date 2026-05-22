@@ -122,11 +122,16 @@ const SignUpForm = () => {
         return;
       }
 
+      if (!paymentIntent || paymentIntent.status !== "succeeded") {
+        setError("Payment has not been completed yet.");
+        return;
+      }
+
       // Step 3: Payment succeeded, create the user account
       await api.post("/users/signup", {
         ...form,
         yearOfStudy: Number(form.yearOfStudy),
-        paymentIntentId: paymentIntent?.id,
+        paymentIntentId: paymentIntent.id,
       });
 
       await refresh();

@@ -125,7 +125,14 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  if (payment.status === "succeeded" || payment.userId) {
+  if (payment.status === "failed") {
+    res.status(402).json({
+      message: "Payment failed. Please try again.",
+    });
+    return;
+  }
+
+  if (payment.userId) {
     res.status(409).json({
       message: "This payment has already been used to create an account.",
     });
@@ -155,7 +162,7 @@ export const createUser = async (req: Request, res: Response) => {
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
 
-    // Update the Payment record with userId.
+    // Verify the local payment record belongs to the authenticated Google user
     try {
       await Payment.findByIdAndUpdate(payment._id, {
         userId: newUser._id,

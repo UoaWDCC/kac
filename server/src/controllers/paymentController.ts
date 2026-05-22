@@ -47,26 +47,26 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
         userId: null,
         type,
         amount,
+        currency: paymentIntent.currency,
         status: "pending",
         paidAt: null,
       });
-    } catch (dbErr) {
-      // Payment Intent was created on Stripe but failed to record it locally.
-      // The Payment Intent will expire on Stripe after 24hrs.
+    } catch (dbError) {
+      // PaymentIntent was created on Stripe but failed to record locally.
+      // Since clientSecret is not returned, FE cannot complete payment through normal flow.
       console.error(
         `Failed to create Payment record for paymentIntentId ${paymentIntent.id}:`,
-        dbErr
+        dbError
       );
       res.status(500).json({
         message: "Failed to initialise payment record. Please try again.",
-        dbErr,
       });
       return;
     }
 
     res.status(201).json({ clientSecret: paymentIntent.client_secret });
-  } catch (err) {
-    console.error("Error creating payment intent:", err);
-    res.status(500).json({ message: "Failed to create payment intent. ", err });
+  } catch (error) {
+    console.error("Error creating payment intent:", error);
+    res.status(500).json({ message: "Failed to create payment intent." });
   }
 };

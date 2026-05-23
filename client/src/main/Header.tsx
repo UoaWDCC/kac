@@ -40,30 +40,30 @@ const Header = () => {
       </div>
 
       <div className="flex flex-1 justify-center gap-2 w-fit rounded-full bg-yellow-medium">
-        {tabs.map((tab) => {
-          const route = `/${tab.toLowerCase()}`;
-          const actualRoute = route === "/home" ? "/" : route;
-          const isSelected = location.pathname === actualRoute;
+        <AnimatePresence>
+          {tabs.map((tab) => {
+            const route = `/${tab.toLowerCase()}`;
+            const actualRoute = route === "/home" ? "/" : route;
+            const isSelected = location.pathname === actualRoute;
 
-          return (
-            <Link
-              key={tab}
-              to={actualRoute}
-              className="px-8 py-3 rounded-full relative text-decoration-none col-blue-medium w-0.8"
-            >
-              <span className="relative z-10 uppercase text-base">{tab}</span>
-              <AnimatePresence key={tab}>
+            return (
+              <Link
+                key={tab}
+                to={actualRoute}
+                className="px-8 py-3 rounded-full relative text-decoration-none col-blue-medium w-0.8"
+              >
+                <span className="relative z-10 uppercase text-base">{tab}</span>
                 {isSelected && (
                   <motion.span
                     layoutId="pill-tab"
                     transition={{ type: "spring", duration: 0.5 }}
                     className="absolute inset-0 z-0 rounded-full bg-yellow-dark"
-                  ></motion.span>
+                  />
                 )}
-              </AnimatePresence>
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          })}
+        </AnimatePresence>
       </div>
 
       <div className="flex-1 flex pr-2 justify-end">

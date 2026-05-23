@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/useAuth.ts";
+import { ImageBlock } from "../components/ImageBlock/ImageBlock";
 
 import "../style/common.css";
 
@@ -22,7 +23,21 @@ const Header = () => {
 
   return (
     <div className="header flex items-center p-6 bg-yellow-light w-full">
-      <div className="pl-2 flex-1">Fancy Logo 😱</div>
+      <div className="pl-2 flex-1">
+        <div className="flex items-center w-fit">
+          <ImageBlock
+            pageKey="logo"
+            role="user" // change to admin for swappable logo
+            alt="KAC Logo"
+            style={{ width: "64px", height: "64px" }}
+          />
+          <div className="flex-col font-sans! uppercase font-bold whitespace-nowrap m-0">
+            <p className="text-base! leading-none!">Kiwi</p>
+            <p className="text-base! leading-none!">Asian</p>
+            <p className="text-base! leading-none!">Club</p>
+          </div>
+        </div>
+      </div>
 
       <div className="flex flex-1 justify-center gap-2 w-fit rounded-full bg-yellow-medium">
         {tabs.map((tab) => {
@@ -34,9 +49,9 @@ const Header = () => {
             <Link
               key={tab}
               to={actualRoute}
-              className="px-8 py-2 rounded-full relative text-decoration-none col-blue-medium w-0.8"
+              className="px-8 py-3 rounded-full relative text-decoration-none col-blue-medium w-0.8"
             >
-              <span className="relative z-10 uppercase text-sm">{tab}</span>
+              <span className="relative z-10 uppercase text-base">{tab}</span>
               <AnimatePresence key={tab}>
                 {isSelected && (
                   <motion.span
@@ -60,15 +75,12 @@ const Header = () => {
               <img
                 src={user.photos?.[0]?.value}
                 alt="profile"
-                style={{ width: "2rem", height: "2rem", borderRadius: "50%" }}
+                style={{
+                  width: "2.6rem",
+                  height: "2.6rem",
+                  borderRadius: "50%",
+                }}
               />
-              <span style={{ whiteSpace: "nowrap" }}>{user.displayName}</span>
-              <button
-                onClick={logout}
-                className="cursor-pointer text-decoration-none col-blue-medium font-inherit"
-              >
-                Sign Out
-              </button>
             </div>
           ) : (
             <a

@@ -80,7 +80,7 @@ const Header = () => {
           ) : (
             <a
               href="/api/auth/google"
-              className="text-decoration-none col-blue-medium uppercase rounded-full bg-yellow-dark px-8 py-2"
+              className="text-decoration-none text--blue-medium uppercase rounded-full bg-yellow-dark hover:bg-blue-medium hover:text-yellow-light duration-0.3 transition px-8! py-2!"
             >
               Join KAC!
             </a>

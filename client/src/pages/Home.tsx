@@ -6,20 +6,57 @@ const Home = () => {
   return (
     <div>
       {/** TITLE */}
-      <section
-        className="section bg-yellow-light"
-        style={{
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        <h1>K I W I &nbsp; A S I A N &nbsp; C L U B</h1>
-        <ImageBlock
-          pageKey="hero"
-          role="admin"
-          alt="Hero Page"
-          style={{ maxWidth: "1100px", width: "100%", height: "auto" }}
-        />
+      <section className="section bg-yellow-light flex items-center justify-center">
+        <div className="flex items-end justify-center gap-8 2xl:gap-16">
+          <div>
+            <h2 className="px-[2.4rem] 2xl:px-16 pb-12 2xl:pb-0 font-monospace text-[2.6rem] 2xl:text-[2.8rem] font-medium">
+              Welcome to
+            </h2>
+            <div>
+              <div className="flex uppercase">
+                <h1 className="text-[10rem]! 2xl:text-[12rem]! leading-[10%] 2xl:leading-[60%] pl-8 2xl:pl-12 font-bold text-blue-medium">
+                  K
+                </h1>
+                <h1 className="text-[10rem]! 2xl:text-[12rem]! leading-[10%] 2xl:leading-[60%] font-bold text-blue-light">
+                  iwi
+                </h1>
+              </div>
+              <div className="flex uppercase">
+                <h1 className="text-[10rem]! 2xl:text-[12rem]! leading-[10%] 2xl:leading-[60%] pl-8 2xl:pl-12 font-bold text-blue-medium">
+                  A
+                </h1>
+                <h1 className="text-[10rem]! 2xl:text-[12rem]! leading-[10%] 2xl:leading-[60%] font-bold text-blue-light">
+                  sian
+                </h1>
+              </div>
+              <div className="flex uppercase -mb-8 2xl:-mb-16">
+                <h1 className="text-[10rem]! 2xl:text-[12rem]! leading-[10%] 2xl:leading-[60%] pl-8 2xl:pl-12 font-bold text-blue-medium">
+                  C
+                </h1>
+                <h1 className="text-[10rem]! 2xl:text-[12rem]! leading-[10%] 2xl:leading-[60%] font-bold text-blue-light">
+                  lub
+                </h1>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row items-end">
+            <div className="shrink-0">
+              <ImageBlock
+                pageKey="home-mascot"
+                role="admin"
+                alt="Club Mascot"
+                style={{
+                  width: "40vw",
+                }}
+              />
+            </div>
+            <div className="text-xl ml-[-8vw] w-fit">
+              <a href="/api/auth/google" className="button">
+                Join Us!
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/** WHAT WE DO */}

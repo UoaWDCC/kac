@@ -68,3 +68,21 @@ p {
   text-align: center;
   box-sizing: border-box;
 }
+
+.button {
+  padding: 0.5rem 2rem;
+  border-radius: 1.2rem;
+  position: relative;
+  text-decoration: none;
+  color: var(--color-blue-medium);
+  background-color: var(--color-yellow-dark);
+  box-shadow: 0.2rem 0.2rem var(--color-yellow-medium);
+  width: 80%;
+  transition: 0.3s;
+}
+
+.button:hover {
+  background-color: var(--color-blue-medium);
+  box-shadow: 0.2rem 0.2rem var(--color-grey-medium);
+  color: var(--color-yellow-light);
+}

@@ -7,7 +7,7 @@ const Home = () => {
     <div>
       {/** HERO */}
       <section className="section bg-yellow-light flex items-center justify-center">
-        <div className="flex items-end justify-center gap-8 2xl:gap-16">
+        <div className="flex items-end justify-center gap-8 2xl:gap-16 py-4">
           <div>
             <h2 className="px-[2.4rem] 2xl:px-16 pb-12 2xl:pb-0 font-monospace text-[2.6rem] 2xl:text-[2.8rem] font-medium">
               Welcome to
@@ -50,7 +50,7 @@ const Home = () => {
                 }}
               />
             </div>
-            <div className="text-xl ml-[-8vw] w-fit">
+            <div className="text-2xl ml-[-8vw] w-fit">
               <a href="/api/auth/google" className="button">
                 Join Us!
               </a>
@@ -134,11 +134,53 @@ const Home = () => {
 
       {/** SPONSORS */}
       <section className="section bg-yellow-light">
-        <div className="narrow-content">
-          <h2>OUR SPONSORS</h2>
-          <Link to="/sponsors" className="wide-button">
-            SEE MORE {">>"}
-          </Link>
+        <div className="justify-self-center">
+          <h2 className="-mt-8! pl-4 font-monospace text-[2.6rem] font-medium">
+            Our Sponsors:
+          </h2>
+          {/** ROW ONE */}
+          <div className="pl-16 py-8 flex flex-row gap-12">
+            <div
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+            ></div>
+            <div
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+            ></div>
+            <div
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+            ></div>
+            <div
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+            ></div>
+          </div>
+          {/** ROW TWO */}
+          <div className="pl-32 py-8 flex flex-row gap-12">
+            <div
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+            ></div>
+            <div
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+            ></div>
+            <div
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+            ></div>
+            <div
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+            ></div>
+          </div>
+        </div>
+        <div className="text-2xl py-8 w-fit justify-self-center">
+          <a href="/api/auth/google" className="button">
+            Discover More
+          </a>
         </div>
       </section>
     </div>

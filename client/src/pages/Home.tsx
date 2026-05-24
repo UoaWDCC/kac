@@ -122,7 +122,7 @@ const Home = () => {
 
       {/** EVENTS */}
       <section className="section relative h-80vh w-full overflow-hidden bg-yellow-light pr-0!">
-        <div className="justify-self-end absolute inset-0 py-12">
+        <div className="justify-self-end absolute inset-0 h-fit">
           {/** add absolute inset-0 -z-10 once events carousel exists*/}
           <ImageBlock
             pageKey="mascot-bg"
@@ -131,7 +131,7 @@ const Home = () => {
             style={{ width: "90vw" }}
           />
         </div>
-        <div className="pt-[-8] pb-20">
+        <div className="-translate-y-20">
           <ImageSlider
             pageKeys={["event-2", "event-1", "event-3"]}
             role="admin"

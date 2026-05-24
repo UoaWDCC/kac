@@ -54,7 +54,7 @@ const ImageSlider = ({ pageKeys, role }: ImageSliderProps) => {
           </motion.div>
         );
       })}
-      <div className="flex flex-row gap-32 absolute z-20 bottom-16 2xl:bottom-24 left-1/2 -translate-x-1/2">
+      <div className="flex flex-row gap-32 absolute z-20 bottom-0 translate-y-8 2xl:bottom-8 left-1/2 -translate-x-1/2">
         <button className="button" onClick={handleBack}>
           Back
         </button>

@@ -7,7 +7,7 @@ const Home = () => {
     <div>
       {/** HERO */}
       <section className="section bg-yellow-light flex items-center justify-center">
-        <div className="flex items-end justify-center gap-8 2xl:gap-16 py-4">
+        <div className="flex items-end justify-center gap-8 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24">
           <div>
             <h2 className="px-[2.4rem] 2xl:px-16 pb-12 2xl:pb-0 font-monospace text-[2.6rem] 2xl:text-[2.8rem] font-medium">
               Welcome to
@@ -62,7 +62,7 @@ const Home = () => {
       {/** WHAT WE DO */}
       <section className="section bg-yellow-light h-200 flex flex-col items-center justify-center gap-12">
         <div
-          className="bg-yellow-dark w-9/10 2xl:w-8/10 justify-self-center rounded-lg h-auto py-12 px-8"
+          className="bg-yellow-dark w-9/10 2xl:w-8/10 justify-self-center rounded-4xl h-auto pt-14 pb-12 px-8"
           style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
         >
           <div className="flex items-start gap-8">
@@ -74,7 +74,7 @@ const Home = () => {
                 style={{
                   width: "100%",
                   height: "auto",
-                  borderRadius: "0.5em",
+                  borderRadius: "1.6rem",
                 }}
               />
             </div>
@@ -141,40 +141,112 @@ const Home = () => {
           {/** ROW ONE */}
           <div className="pl-16 py-8 flex flex-row gap-12">
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
               style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            ></div>
+            >
+              <div className="w-fit aspect-square">
+                <ImageBlock
+                  pageKey="sponsor-1"
+                  role="admin"
+                  alt="Sponsor 1"
+                  style={{ borderRadius: "1.6rem" }}
+                />
+              </div>
+            </div>
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
               style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            ></div>
+            >
+              <div className="w-fit aspect-square">
+                <ImageBlock
+                  pageKey="sponsor-2"
+                  role="admin"
+                  alt="Sponsor 2"
+                  style={{ borderRadius: "1.6rem" }}
+                />
+              </div>
+            </div>
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
               style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            ></div>
+            >
+              <div className="w-fit aspect-square">
+                <ImageBlock
+                  pageKey="sponsor-3"
+                  role="admin"
+                  alt="Sponsor 3"
+                  style={{ borderRadius: "1.6rem" }}
+                />
+              </div>
+            </div>
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
               style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            ></div>
+            >
+              <div className="w-fit aspect-square">
+                <ImageBlock
+                  pageKey="sponsor-4"
+                  role="admin"
+                  alt="Sponsor 4"
+                  style={{ borderRadius: "1.6rem" }}
+                />
+              </div>
+            </div>
           </div>
           {/** ROW TWO */}
           <div className="pl-32 py-8 flex flex-row gap-12">
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
               style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            ></div>
+            >
+              <div className="w-fit aspect-square">
+                <ImageBlock
+                  pageKey="sponsor-5"
+                  role="admin"
+                  alt="Sponsor 5"
+                  style={{ borderRadius: "1.6rem" }}
+                />
+              </div>
+            </div>
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
               style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            ></div>
+            >
+              <div className="w-fit aspect-square">
+                <ImageBlock
+                  pageKey="sponsor-6"
+                  role="admin"
+                  alt="Sponsor 6"
+                  style={{ borderRadius: "1.6rem" }}
+                />
+              </div>
+            </div>
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
               style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            ></div>
+            >
+              <div className="w-fit aspect-square">
+                <ImageBlock
+                  pageKey="sponsor-7"
+                  role="admin"
+                  alt="Sponsor 7"
+                  style={{ borderRadius: "1.6rem" }}
+                />
+              </div>
+            </div>
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl py-12 px-8"
+              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
               style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            ></div>
+            >
+              <div className="w-fit aspect-square">
+                <ImageBlock
+                  pageKey="sponsor-8"
+                  role="admin"
+                  alt="Sponsor 8"
+                  style={{ borderRadius: "1.6rem" }}
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className="text-2xl py-8 w-fit justify-self-center">

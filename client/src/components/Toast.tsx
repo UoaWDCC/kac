@@ -6,21 +6,21 @@ export default function Toast() {
       position="bottom-right"
       toastOptions={{
         style: {
-          background: "#0b2d4a",
+          background: "var(--color-blue-medium)",
           color: "#ffffff",
-          fontFamily: "Amaranth, sans-serif",
-          borderRadius: "8px",
+          fontFamily: "var(--font-sans)",
+          borderRadius: "var(--radius-lg)",
         },
         success: {
           iconTheme: {
-            primary: "#f2b719",
-            secondary: "#0b2d4a",
+            primary: "var(--color-yellow-dark)",
+            secondary: "var(--color-blue-medium)",
           },
         },
         error: {
           iconTheme: {
-            primary: "#f2b719",
-            secondary: "#0b2d4a",
+            primary: "var(--color-yellow-dark)",
+            secondary: "var(--color-blue-medium)",
           },
         },
       }}

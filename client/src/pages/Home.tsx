@@ -123,10 +123,10 @@ const Home = () => {
       {/** EVENTS */}
       <section className="section relative h-80vh w-full overflow-hidden bg-yellow-light pr-0!">
         <div className="justify-self-end absolute inset-0 h-fit">
-          {/** add absolute inset-0 -z-10 once events carousel exists*/}
+          {/** cannot click edit for some reason, so hid it */}
           <ImageBlock
             pageKey="mascot-bg"
-            role="admin"
+            role="user"
             alt="Events"
             style={{ width: "90vw" }}
           />

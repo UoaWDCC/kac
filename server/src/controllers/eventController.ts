@@ -16,7 +16,7 @@ export const addEvent: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteEvent: RequestHandler = async (req, res, _next) => {
-  try{
+  try {
     const deletedEvent = await Event.findByIdAndDelete(req.params.id);
     if (!deletedEvent) {
       return res.status(404).json({ message: "Event not found." });
@@ -50,7 +50,7 @@ export const getAllEvents: RequestHandler = async (req, res, _next) => {
         }
 
         return acc;
-    },
+      },
       { upcoming: [], past: [] }
     );
 
@@ -62,4 +62,4 @@ export const getAllEvents: RequestHandler = async (req, res, _next) => {
       error: err,
     });
   }
-}
+};

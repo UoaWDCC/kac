@@ -5,7 +5,7 @@ import { ImageBlock } from "../components/ImageBlock/ImageBlock";
 const Home = () => {
   return (
     <div>
-      {/** TITLE */}
+      {/** HERO */}
       <section className="section bg-yellow-light flex items-center justify-center">
         <div className="flex items-end justify-center gap-8 2xl:gap-16">
           <div>
@@ -120,23 +120,15 @@ const Home = () => {
       </section>
 
       {/** EVENTS */}
-      <section className="section bg-yellow-light">
-        <div className="narrow-content">
-          <h2>CHECK OUT OUR UPCOMING EVENTS</h2>
+      <section className="section relative h-80vh w-full overflow-hidden bg-yellow-light pr-0!">
+        <div className="justify-self-end">
+          {/** add absolute inset-0 -z-10 once events carousel exists*/}
           <ImageBlock
-            pageKey="events"
+            pageKey="mascot-bg"
             role="admin"
-            alt="Kiwi Asian Club group photo"
-            style={{
-              maxWidth: "1100px",
-              width: "100%",
-              height: "auto",
-              marginBottom: "1.5em",
-            }}
+            alt="Events"
+            style={{ width: "90vw" }}
           />
-          <Link to="/events" className="wide-button">
-            SEE MORE {">>"}
-          </Link>
         </div>
       </section>
 

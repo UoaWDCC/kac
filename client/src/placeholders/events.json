@@ -1,11 +1,37 @@
 [
   {
-    "id": "placeholder",
-    "title": "Placeholder Event",
+    "id": "placeholder1",
+    "title": "Placeholder Event1",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "imageUrl": "src/images/event-image.png",
     "location": "Kate Edger",
-    "date": "4 May 2026",
-    "time": "9:00 AM — 5:00 PM NZT",
-    "state": "open"
+    "time": "2026-05-04T09:00:00",
+    "status": "open",
+    "memberPrice": "$10",
+    "nonMemberPrice": "14"
+  },
+
+  {
+    "id": "placeholder2",
+    "title": "Placeholder Event2",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "imageUrl": "src/images/event-image.png",
+    "location": "Kate Edger",
+    "time": "2026-05-04T09:00:00",
+    "status": "open",
+    "memberPrice": "$10",
+    "nonMemberPrice": "14"
+  },
+
+  {
+    "id": "placeholder3",
+    "title": "Placeholder Event3",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "imageUrl": "src/images/event-image.png",
+    "location": "Kate Edger",
+    "time": "2026-05-04T09:00:00",
+    "status": "open",
+    "memberPrice": "$10",
+    "nonMemberPrice": "14"
   }
 ]

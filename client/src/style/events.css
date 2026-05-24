@@ -1,0 +1,131 @@
+.event-card {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  grid-template-rows: 110px 1fr;
+  grid-template-areas:
+    "title image"
+    "content content";
+
+  width: 420px;
+  height: 320px;
+  background: white;
+  border-radius: 40px;
+  padding: 20px;
+  max-width: 100%;
+  margin: 40px auto;
+  gap: 20px;
+  border: 1px solid;
+  box-sizing: border-box;
+}
+
+.event-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+  max-width: 100%;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+.event-title {
+  grid-area: title;
+  font-size: 2rem;
+  margin-top: -10px;
+  line-height: 1;
+  display: flex;
+  text-align: left;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.event-content {
+  grid-area: content;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: -30px;
+}
+
+.event-image-container {
+  grid-area: image;
+  height: 140px;
+}
+
+.event-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  display: block;
+}
+
+.event-meta,
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.meta-item {
+  flex-direction: row;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.event-tags {
+  display: flex;
+  gap: 12px;
+  margin: 22px 0 30px;
+}
+
+.event-tag {
+  background: var(--color-blue-medium);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+
+.event-divider {
+  border: 0;
+  border-top: 1px solid;
+  margin-bottom: 10px;
+  margin-top: -20px;
+}
+
+.rsvp-button {
+  border: 1px solid;
+  padding: 14px 24px;
+  border-radius: 35px;
+  text-decoration: none;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 400px;
+  transition: 0.2s;
+  text-transform: uppercase;
+}
+
+.rsvp-button:hover {
+  background: #faf3d1;
+  transform: translateY(-2px);
+}
+
+.add-event-card {
+  text-align: center;
+  font-size: 1.2rem;
+  color: black;
+  border: 1.5px dashed;
+}
+
+.event-page {
+  background-color: var(--color-yellow-light);
+  color: var(--color-blue-medium);
+}

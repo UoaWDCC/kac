@@ -6,9 +6,10 @@ const router = express.Router();
 
 type Role = "guest" | "legacy" | "member" | "admin";
 
-const deriveRole = (isAdmin: boolean, hasPaid: boolean): Role => {
-  if (isAdmin) return "admin";
-  if (hasPaid) return "member";
+const deriveRole = (existingUser: any): Role => {
+  if (!existingUser) return "legacy";
+  if (existingUser.isAdmin) return "admin";
+  if (existingUser.hasPaid) return "member";
   return "legacy";
 };
 
@@ -52,9 +53,7 @@ router.get("/me", async (req, res) => {
   const existingUser = await User.findOne({ googleUid: profile.id });
 
   profile.hasAccount = !!existingUser;
-  profile.role = existingUser
-    ? deriveRole(existingUser.isAdmin, existingUser.hasPaid ?? false)
-    : "legacy";
+  profile.role = deriveRole(existingUser);
 
   res.json(profile);
 });

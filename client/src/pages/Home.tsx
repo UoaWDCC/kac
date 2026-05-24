@@ -16,7 +16,6 @@ const Home = () => {
         <h1>K I W I &nbsp; A S I A N &nbsp; C L U B</h1>
         <ImageBlock
           pageKey="hero"
-          role="admin"
           alt="Hero Page"
           style={{ maxWidth: "1100px", width: "100%", height: "auto" }}
         />
@@ -42,7 +41,6 @@ const Home = () => {
           <h2>CHECK OUT OUR UPCOMING EVENTS</h2>
           <ImageBlock
             pageKey="events"
-            role="admin"
             alt="Kiwi Asian Club group photo"
             style={{
               maxWidth: "1100px",

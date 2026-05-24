@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { AuthContext } from "./AuthContext";
+import type { Role } from "./AuthContext";
 import { getCurrentUser } from "../api/authApi";
 
 export interface GoogleUser {
@@ -9,6 +10,7 @@ export interface GoogleUser {
   emails: { value: string }[];
   photos: { value: string }[];
   hasAccount: boolean;
+  role: Role;
 }
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -33,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    window.location.href = "/api/auth/logout";
+    globalThis.location.href = "/api/auth/logout";
   };
 
   return (
@@ -44,6 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         loading,
         logout,
         refresh,
+        role: user?.role ?? "guest",
       }}
     >
       {children}

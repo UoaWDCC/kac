@@ -1,7 +1,7 @@
 import "../style/common.css";
 import "../style/about.css";
 
-import { useEffect, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 import NewExecModal from "./NewExecModal";
 
@@ -45,6 +45,20 @@ const Executives = () => {
     loadExecs();
   }, []);
 
+  const groupExecs = useMemo(() => {
+    const group = new Map<string, Executive[]>();
+
+    if (!execs) return group;
+
+    for (const exec of execs) {
+      const role = exec.execRole?.trim();
+      if (!group.has(role)) group.set(role, []);
+      group.get(role)!.push(exec);
+    }
+
+    return group;
+  }, [execs]);
+
   if (loading) {
     return (
       <div
@@ -64,34 +78,41 @@ const Executives = () => {
     );
   }
 
-  return (
-    <div className="executives-container">
-      {execs.map((exec) => {
-        return (
-          <ExecCard
-            role="admin"
-            key={exec.id}
-            id={exec.id}
-            imageURL={exec.imageURL}
-            displayName={exec.displayName}
-            execRole={exec.execRole}
-            description={exec.description}
-            fullName={exec.fullName}
-            ethnicity={exec.ethnicity}
-            degree={exec.degree}
-            mbti={exec.mbti}
-            fact={exec.fact}
-            sponsor={exec.sponsor}
-            greenFlag={exec.greenFlag}
-            redFlag={exec.redFlag}
-            emojis={exec.emojis}
-            onDelete={loadExecs}
-          />
-        );
-      })}
-      <NewExecModal />
-    </div>
-  );
+return (
+  <div className="executives-container">
+    {Array.from(groupExecs.entries()).map(([role, roleExecs]) => (
+      <section key={role} className="exec-role-section">
+        <h2 className="exec-role-title">{role}</h2>
+
+        <div className="exec-role-grid">
+          {roleExecs.map((exec) => (
+            <ExecCard
+              role="admin"
+              key={exec.id}
+              id={exec.id}
+              imageURL={exec.imageURL}
+              displayName={exec.displayName}
+              execRole={exec.execRole}
+              description={exec.description}
+              fullName={exec.fullName}
+              ethnicity={exec.ethnicity}
+              degree={exec.degree}
+              mbti={exec.mbti}
+              fact={exec.fact}
+              sponsor={exec.sponsor}
+              greenFlag={exec.greenFlag}
+              redFlag={exec.redFlag}
+              emojis={exec.emojis}
+              onDelete={loadExecs}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <NewExecModal />
+  </div>
+);
 };
 
 export default Executives;

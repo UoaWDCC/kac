@@ -7,6 +7,8 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import authRoutes from "./routes/authRoutes";
 import imageRoutes from "./routes/imageRoutes";
 import executivesRoutes from "./routes/executivesRoutes";
+import sponsorRoutes from "./routes/sponsorRoutes";
+import contactRoutes from "./routes/contactRoutes";
 import userRoutes from "./routes/userRoutes";
 import { User } from "./model/user";
 
@@ -15,7 +17,15 @@ dotenv.config({ quiet: true });
 
 const port: number = Number(process.env.PORT) || 3000;
 const app: express.Application = express();
-const mongoUrl: string = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@kac-prod.cf1fyh5.mongodb.net/`;
+
+let mongoUrl: string;
+if (process.env.MONGODB_STD_CONNECT === "true") {
+  // Optional for developmental usage where DNS resolution of SRV records fail.
+  mongoUrl = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@ac-pcfgzmm-shard-00-00.cf1fyh5.mongodb.net:27017,ac-pcfgzmm-shard-00-01.cf1fyh5.mongodb.net:27017,ac-pcfgzmm-shard-00-02.cf1fyh5.mongodb.net:27017/?ssl=true&replicaSet=atlas-b12118-shard-0&authSource=admin&appName=kac-prod`;
+} else {
+  // Default SRV connection string for production usage.
+  mongoUrl = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@kac-prod.cf1fyh5.mongodb.net/`;
+}
 
 app.use(
   session({
@@ -55,6 +65,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/executives", executivesRoutes);
+app.use("/api/sponsors", sponsorRoutes);
+app.use("/api/contacts", contactRoutes);
 app.use("/api/users", userRoutes);
 
 // Connect to MongoDB and start the server

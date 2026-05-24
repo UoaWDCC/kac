@@ -2,13 +2,17 @@ import "../style/common.css";
 import "../style/about.css";
 
 import { useEffect, useState } from "react";
+
+import NewExecModal from "./NewExecModal";
+
 import ExecCard from "./ExecCard";
+import api from "../api";
 
 interface Executive {
   id: string;
   imageURL: string;
   displayName: string;
-  role: string;
+  execRole: string;
   description: string;
   fullName: string;
   ethnicity: string;
@@ -28,8 +32,8 @@ const Executives = () => {
   const loadExecs = async () => {
     try {
       setLoading(true);
-      const data = await fetch("/api/executives");
-      setExecs(await data.json());
+      const res = await api.get("/executives");
+      setExecs(res.data);
     } catch (error) {
       console.error("Error fetching executives data:", error);
     } finally {
@@ -65,10 +69,12 @@ const Executives = () => {
       {execs.map((exec) => {
         return (
           <ExecCard
+            role="admin"
             key={exec.id}
+            id={exec.id}
             imageURL={exec.imageURL}
             displayName={exec.displayName}
-            role={exec.role}
+            execRole={exec.execRole}
             description={exec.description}
             fullName={exec.fullName}
             ethnicity={exec.ethnicity}
@@ -79,9 +85,11 @@ const Executives = () => {
             greenFlag={exec.greenFlag}
             redFlag={exec.redFlag}
             emojis={exec.emojis}
+            onDelete={loadExecs}
           />
         );
       })}
+      <NewExecModal />
     </div>
   );
 };

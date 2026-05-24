@@ -14,7 +14,7 @@ const About = () => {
     <div>
       <title>Kiwi Asian Club - About Us</title>
       {/** Title + Photo */}
-      <section className="section yellow-bg title">
+      <section className="section title bg-yellow-light">
         <h1 className="title-text">A B O U T &nbsp; U S</h1>
         <img
           src={exec_team}

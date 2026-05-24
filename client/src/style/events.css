@@ -1,4 +1,4 @@
-.event-card {
+.events-card {
   display: grid;
   grid-template-columns: 1fr 160px;
   grid-template-rows: 110px 1fr;

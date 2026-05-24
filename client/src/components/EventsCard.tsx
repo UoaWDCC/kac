@@ -58,7 +58,7 @@ const EventsCard: React.FC<EventProps> = ({
   };
 
   return (
-    <div className="event-card">
+    <div className="events-card">
       <h2 className="event-title">{title}</h2>
       <div className="event-image-container">
         <ImageBlock

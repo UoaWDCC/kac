@@ -42,7 +42,7 @@ const Events = () => {
         {isAdmin && (
           <Link
             to="/Events/new"
-            className="event-card add-event-card"
+            className="events-card add-event-card"
             style={{ textDecoration: "none" }}
           >
             + Add Event

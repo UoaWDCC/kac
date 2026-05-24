@@ -41,7 +41,7 @@ const Events = () => {
       <div className="event-dashboard">
         {isAdmin && (
           <Link
-            to="/Events/new"
+            to="/Events" //add editing at some point
             className="events-card add-event-card"
             style={{ textDecoration: "none" }}
           >

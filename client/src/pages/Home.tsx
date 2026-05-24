@@ -257,7 +257,7 @@ const Home = () => {
           </div>
         </div>
         <div className="text-2xl py-8 w-fit justify-self-center">
-          <a href="/api/auth/google" className="button">
+          <a href="/sponsors" className="button">
             Discover More
           </a>
         </div>

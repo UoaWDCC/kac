@@ -1,6 +1,7 @@
 import "../style/common.css";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/ImageBlock/ImageBlock";
+import ImageSlider from "../components/ImageSlider";
 
 const Home = () => {
   return (
@@ -121,13 +122,19 @@ const Home = () => {
 
       {/** EVENTS */}
       <section className="section relative h-80vh w-full overflow-hidden bg-yellow-light pr-0!">
-        <div className="justify-self-end">
+        <div className="justify-self-end absolute inset-0 py-12">
           {/** add absolute inset-0 -z-10 once events carousel exists*/}
           <ImageBlock
             pageKey="mascot-bg"
             role="admin"
             alt="Events"
             style={{ width: "90vw" }}
+          />
+        </div>
+        <div className="pt-[-8] pb-20">
+          <ImageSlider
+            pageKeys={["event-2", "event-1", "event-3"]}
+            role="admin"
           />
         </div>
       </section>

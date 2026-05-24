@@ -27,11 +27,9 @@ const EventsCard: React.FC<EventProps> = ({
   title,
   time,
   location,
-  description,
   memberPrice,
   nonMemberPrice,
   role = "user",
-  status,
 }) => {
   const navigate = useNavigate();
 

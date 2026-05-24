@@ -47,7 +47,7 @@ const Header = () => {
                 to={actualRoute}
                 className="px-8 py-3 rounded-full relative text-decoration-none col-blue-medium w-0.8"
               >
-                <span className="relative z-10 uppercase text-base">{tab}</span>
+                <span className="relative z-10 uppercase text-xl">{tab}</span>
                 {isSelected && (
                   <motion.span
                     layoutId="pill-tab"
@@ -80,7 +80,7 @@ const Header = () => {
           ) : (
             <a
               href="/api/auth/google"
-              className="text-decoration-none text--blue-medium uppercase rounded-full bg-yellow-dark hover:bg-blue-medium hover:text-yellow-light duration-0.3 transition px-8! py-2!"
+              className="text-decoration-none text-xl text--blue-medium uppercase rounded-full bg-yellow-dark hover:bg-blue-medium hover:text-yellow-light duration-0.3 transition px-8! py-2!"
             >
               Join KAC!
             </a>

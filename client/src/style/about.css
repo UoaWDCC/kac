@@ -94,6 +94,7 @@ button {
   grid-template-columns: repeat(2, 533px);
   column-gap: 78.75px;
   row-gap: 64px;
+  overflow: visible;
 }
 
 .executive-card {
@@ -103,6 +104,8 @@ button {
   max-width: 533px;
   margin: 0;
   gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .executive-card__top {
@@ -114,7 +117,21 @@ button {
   border-radius: 26px;
   overflow: hidden;
   box-shadow: 10px 10px 0 var(--color-yellow-medium);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  transform-origin: top left;
+  will-change: transform;
 }
+
+.executive-card:hover .executive-card__top {
+  transform: scale(1.03, 1.05);
+  box-shadow: 14px 14px 0 var(--color-yellow-medium);
+}
+
+.executive-card:hover {
+  z-index: 5;
+}
+
+
 
 .executive-card__media {
   background-color: var(--color-blue-medium);

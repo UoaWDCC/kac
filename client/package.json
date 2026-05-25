@@ -11,12 +11,13 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",
-    "axios": "^1.15.0",
     "framer-motion": "^12.39.0",
+    "axios": "^1.16.0",
     "lucide-react": "^1.11.0",
     "motion": "^12.39.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.13.1",
     "tailwind": "^4.0.0",
     "tailwindcss": "^4.3.0"

@@ -6,12 +6,13 @@ import {
   deleteExec,
   getAllExecs,
 } from "../controllers/executivesController";
+import { adminGuard } from "../middlewares/adminGuard";
 
 const router = express.Router();
 
-router.get("/", getAllExecs);
-router.post("/", addExec);
-router.put("/:id", editExec);
-router.delete("/:id", deleteExec);
+router.get("/", adminGuard, getAllExecs);
+router.post("/", adminGuard, addExec);
+router.put("/:id", adminGuard, editExec);
+router.delete("/:id", adminGuard, deleteExec);
 
 export default router;

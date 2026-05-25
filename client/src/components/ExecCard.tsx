@@ -1,4 +1,5 @@
 import "../style/common.css";
+import "../style/image_block/ImageBlock.css";
 import { Pencil, Trash2 } from "lucide-react";
 import api from "../api";
 
@@ -47,38 +48,42 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
 }) => {
   return (
     <div className="executive-card">
-      <div className="image-block">
-        <img src={EXEC_IMG || imageURL} alt={displayName} />
-        {role === "admin" && (
-          <button
-            className="image-block__edit-btn"
-            onClick={async () => {
-              // Implementation for edit functionality
-            }}
-            title="Edit Executive"
-          >
-            <Pencil size={17} />
-          </button>
-        )}
+      <div className="executive-card__top">
+        <div className="executive-card__media image-block">
+          <img src={imageURL || EXEC_IMG} alt={displayName} />
+          {role === "admin" && (
+            <button
+              className="image-block__edit-btn"
+              onClick={async () => {
+                // Implementation for edit functionality
+              }}
+              title="Edit Executive"
+            >
+              <Pencil size={17} />
+            </button>
+          )}
 
-        {role === "admin" && (
-          <button
-            className="image-block__delete-btn"
-            onClick={async () => {
-              await api.delete(`/executives/${id}`);
-              onDelete();
-            }}
-            title="Delete Executive"
-          >
-            <Trash2 size={17} />
-          </button>
-        )}
+          {role === "admin" && (
+            <button
+              className="image-block__delete-btn"
+              onClick={async () => {
+                await api.delete(`/executives/${id}`);
+                onDelete();
+              }}
+              title="Delete Executive"
+            >
+              <Trash2 size={17} />
+            </button>
+          )}
+        </div>
+
+        <div className="executive-card__identity">
+          <p className="executive-card__role">{execRole}</p>
+          <h2 className="executive-card__name">{displayName}</h2>
+        </div>
       </div>
-      <h2>{displayName}</h2>
+
       <div className="card-body">
-        <p>
-          Meet our {execRole}, {displayName}!
-        </p>
         <p className="exec-desc">{description}</p>
         <ul>
           <li>Full Name: {fullName}</li>

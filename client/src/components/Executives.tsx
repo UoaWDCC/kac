@@ -13,6 +13,7 @@ interface Executive {
   imageURL: string;
   displayName: string;
   execRole: string;
+  roleGroup?: string;
   description: string;
   fullName: string;
   ethnicity: string;
@@ -24,6 +25,48 @@ interface Executive {
   redFlag: string;
   emojis: string;
 }
+
+interface RoleGroup {
+  id: string;
+  label: string;
+}
+
+const ROLE_GROUPS: RoleGroup[] = [
+  {
+    id: "president",
+    label: "PRESIDENTS:",
+  },
+  {
+    id: "admin",
+    label: "ADMIN:",
+  },
+  {
+    id: "events",
+    label: "EVENTS:",
+  },
+  {
+    id: "public relations",
+    label: "PUBLIC RELATIONS:",
+  },
+  {
+    id: "marketing",
+    label: "MARKETING:",
+  },
+  {
+    id: "aesir representative",
+    label: "AESIR REPRESENTATIVE:",
+  },
+  {
+    id: "past exec",
+    label: "OUR PAST EXECS:",
+  },
+];
+
+const normalizeRoleKey = (value?: string) =>
+  (value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, " ");
 
 const Executives = () => {
   const [execs, setExecs] = useState<Executive[] | null>(null);
@@ -45,25 +88,41 @@ const Executives = () => {
     loadExecs();
   }, []);
 
-  const groupExecs = useMemo(() => {
-    const group = new Map<string, Executive[]>();
+  const groupedExecs = useMemo(() => {
+    if (!execs) return [] as Array<[RoleGroup, Executive[]]>;
 
-    if (!execs) return [] as Array<[string, Executive[]]>;
+    const groupedMap = new Map<string, Executive[]>();
 
     for (const exec of execs) {
-      const role = exec.execRole?.trim() || "Unassigned";
-      if (!group.has(role)) group.set(role, []);
-      group.get(role)!.push(exec);
+      const normalizedRoleGroup = normalizeRoleKey(exec.roleGroup).replaceAll(" ", "-");
+      const groupId = normalizedRoleGroup || "other";
+
+      if (!groupedMap.has(groupId)) groupedMap.set(groupId, []);
+      groupedMap.get(groupId)!.push(exec);
     }
 
-    return Array.from(group.entries())
-      .sort(([aRole], [bRole]) => aRole.localeCompare(bRole))
-      .map(([role, roleExecs]): [string, Executive[]] => [
-        role,
-        [...roleExecs].sort((a, b) =>
+    const predefined = ROLE_GROUPS.map(
+      (group): [RoleGroup, Executive[]] => [
+        group,
+        [...(groupedMap.get(group.id) || [])].sort((a, b) =>
           a.displayName.localeCompare(b.displayName)
         ),
+      ]
+    ).filter(([, roleExecs]) => roleExecs.length > 0);
+
+    const knownGroupIds = new Set(ROLE_GROUPS.map((group) => group.id));
+    const customGroups = Array.from(groupedMap.entries())
+      .filter(([groupId, roleExecs]) => !knownGroupIds.has(groupId) && roleExecs.length)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([groupId, roleExecs]): [RoleGroup, Executive[]] => [
+        {
+          id: groupId,
+          label: groupId.replace(/[-_]/g, " ").toUpperCase(),
+        },
+        [...roleExecs].sort((a, b) => a.displayName.localeCompare(b.displayName)),
       ]);
+
+    return [...predefined, ...customGroups];
   }, [execs]);
 
   if (loading) {
@@ -87,9 +146,9 @@ const Executives = () => {
 
   return (
     <div className="executives-container">
-      {groupExecs.map(([role, roleExecs]) => (
-        <section key={role} className="exec-role-section">
-          <h2 className="exec-role-title">{role}</h2>
+      {groupedExecs.map(([group, roleExecs]) => (
+        <section key={group.id} className="exec-role-section">
+          <h2 className="exec-role-title font-monospace">{group.label}</h2>
 
           <div className="exec-role-grid">
             {roleExecs.map((exec) => (

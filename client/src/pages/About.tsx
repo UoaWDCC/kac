@@ -13,7 +13,7 @@ const About = () => {
       <title>Kiwi Asian Club - About Us</title>
       {/** Title **/}
       <section className="section h1">
-        <h1 className="title-text">MEET &nbsp;THE &nbsp;EXECS</h1>
+        <h1 className="title-text font-sans">MEET &nbsp;THE &nbsp;EXECS</h1>
       </section>
 
       {/** Executive Cards */}

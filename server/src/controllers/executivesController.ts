@@ -1,8 +1,15 @@
 import { Executive } from "../model/executive";
 import { RequestHandler } from "express";
 
+const normaliseRoleGroup = (value?: string) =>
+  (value || "other")
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "-");
+
 export const addExec: RequestHandler = async (req, res, next) => {
   try {
+    req.body.roleGroup = normaliseRoleGroup(req.body.roleGroup);
     const newExec = new Executive(req.body);
     const savedExec = await newExec.save();
     res.status(201).json(savedExec);
@@ -17,6 +24,10 @@ export const addExec: RequestHandler = async (req, res, next) => {
 
 export const editExec: RequestHandler = async (req, res, next) => {
   try {
+    if ("roleGroup" in req.body) {
+      req.body.roleGroup = normaliseRoleGroup(req.body.roleGroup);
+    }
+
     const updatedExec = await Executive.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -59,6 +70,7 @@ export const getAllExecs: RequestHandler = async (req, res, next) => {
     const mappedExecs = executives.map((exec) => ({
       ...exec,
       id: exec._id,
+      roleGroup: normaliseRoleGroup(exec.roleGroup),
     }));
     res.status(200).json(mappedExecs);
   } catch (err) {

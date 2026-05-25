@@ -22,7 +22,6 @@ const Header = () => {
         <div className="flex items-center w-fit">
           <ImageBlock
             pageKey="logo"
-            role="user" // change to admin for swappable logo
             alt="KAC Logo"
             style={{ width: "64px", height: "64px" }}
           />

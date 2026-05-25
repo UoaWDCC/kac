@@ -1,4 +1,3 @@
-import Collapsible from "../components/Collapsible";
 import Executives from "../components/Executives.tsx";
 
 import "../style/common.css";
@@ -10,10 +9,10 @@ import "../style/about.css";
 
 const About = () => {
   return (
-    <div>
+    <div className="about-page">
       <title>Kiwi Asian Club - About Us</title>
       {/** Title **/}
-      <section className="section h1 bg-yellow-light">
+      <section className="section h1">
         <h1 className="title-text">MEET &nbsp;THE &nbsp;EXECS</h1>
       </section>
 

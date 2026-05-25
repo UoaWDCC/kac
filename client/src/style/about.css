@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+.about-page {
+  background-color: var(--color-yellow-light);
+  min-height: 100vh;
+}
+
 button {
   width: 100%;
   background: none;
@@ -14,30 +19,13 @@ button {
 }
 
 .title-text {
-  font-size: 46px;
+  font-size: 100px;
+  font-weight: 700;
 }
 
 .header-body {
   font-size: 26px;
   line-height: 1.6;
-}
-
-.collapsible-content {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  align-items: center;
-  font-size: 22px;
-  border-bottom: 1px solid;
-}
-
-.collapsible-title {
-  font-style: normal;
-  font-weight: 500;
-}
-
-.collapsible-children {
-  text-align: left;
 }
 
 .dynamic-size-icon {
@@ -46,13 +34,29 @@ button {
 }
 
 .executives-container {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   margin-top: 24px;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   padding: 0 20px;
+  gap: 64px;
+}
+
+.exec-role-section {
+  width: 100%;
+}
+
+.exec-role-title {
+  font-size: 2rem;
+  margin: 0 0 1.5rem;
+  text-align: left;
+}
+
+.exec-role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 40px;
 }
 

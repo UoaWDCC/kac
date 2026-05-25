@@ -324,7 +324,7 @@ button {
 .exec-preview-copy-section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .exec-preview-close {
@@ -361,7 +361,6 @@ button {
 
 .exec-preview-description {
   margin: 0 0 12px;
-  color: #1f1f1f;
   line-height: 1.5;
   font-size: 20px;
   font-family: var(--font-sans);

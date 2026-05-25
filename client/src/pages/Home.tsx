@@ -2,8 +2,12 @@ import "../style/common.css";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/ImageBlock/ImageBlock";
 import ImageSlider from "../components/ImageSlider";
+import { useAuth } from "../auth/useAuth.ts";
 
 const Home = () => {
+  const { user, hasAccount, loading } = useAuth();
+  const isSignedIn = !!user && hasAccount;
+
   return (
     <div>
       {/** HERO */}
@@ -50,10 +54,15 @@ const Home = () => {
                 }}
               />
             </div>
-            <div className="text-2xl ml-[-8vw] w-fit">
-              <a href="/api/auth/google" className="button">
-                Join Us!
-              </a>
+            <div className="text-2xl ml-[-8vw] w-f  it">
+              {!loading &&
+                (isSignedIn ? (
+                  <div className="w-fit px-6"></div>
+                ) : (
+                  <a href="/api/auth/google" className="button">
+                    Join Us!
+                  </a>
+                ))}
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ export default function Modal({}: ModalProps) {
   };
 
   return (
-    <div style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+    <div className="add-exec-container">
       <button className="add-exec-button">
         <Plus className="dynamic-size-icon" />
         <p>New Executive</p>

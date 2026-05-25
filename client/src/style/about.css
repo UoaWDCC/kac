@@ -210,6 +210,14 @@ button {
   transition: 0.5s;
 }
 
+.add-exec-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .add-exec-button:hover {
   opacity: 100%;
   cursor: pointer;

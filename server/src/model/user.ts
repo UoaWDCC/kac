@@ -6,7 +6,7 @@ const userSchema = new Schema(
   {
     googleUid: { type: String, required: true, unique: true },
     isAdmin: { type: Boolean, default: false },
-    hasPaid: { type: Boolean, default: false },
+    latestMembershipYear: { type: Number, default: null },
     email: { type: String, required: true, unique: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },

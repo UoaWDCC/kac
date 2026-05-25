@@ -5,6 +5,14 @@ import { Payment } from "../model/payment";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
+// December payments are counted to the next year since nothing happens in December.
+const getMembershipYear = (): number => {
+  const now = new Date();
+  const month = now.getMonth(); // 0-indexed, 11 = December
+  const year = now.getFullYear();
+  return month === 11 ? year + 1 : year;
+};
+
 export const createUser = async (req: Request, res: Response) => {
   // Must be signed in via Google to create an account
   if (!req.isAuthenticated()) {
@@ -159,6 +167,7 @@ export const createUser = async (req: Request, res: Response) => {
       upi,
       yearOfStudy: Number(yearOfStudy),
       faculties,
+      latestMembershipYear: getMembershipYear(),
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
 

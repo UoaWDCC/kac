@@ -21,17 +21,36 @@ button {
 .title-text {
   font-size: 100px;
   font-weight: 700;
-  margin-left: 160px;
+  margin-left: 60px;
 }
 
 .about-title-section {
   padding-top: 1rem;
   padding-bottom: 0.5rem;
+  overflow: visible;
+}
+
+.about-title-group {
+  position: relative;
+  width: fit-content;
+  margin-left: 190px;
 }
 
 .about-page .title-text {
+  position: relative;
+  z-index: 1;
   margin-top: 0;
   margin-bottom: 1rem;
+}
+
+.about-title-kaco {
+  position: absolute;
+  left: -31px;
+  top: -7px;
+  width: 150px;
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
 }
 
 .header-body {

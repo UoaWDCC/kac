@@ -4,10 +4,9 @@ import { ImageBlock } from "./ImageBlock/ImageBlock";
 
 interface ImageSliderProps {
   pageKeys: string[];
-  role: "admin" | "user";
 }
 
-const ImageSlider = ({ pageKeys, role }: ImageSliderProps) => {
+const ImageSlider = ({ pageKeys }: ImageSliderProps) => {
   const [positionIndexes, setPositionIndexes] = useState<number[]>(
     pageKeys.map((_, i) => i)
   );
@@ -50,7 +49,7 @@ const ImageSlider = ({ pageKeys, role }: ImageSliderProps) => {
             style={{ width: "40%", position: "absolute" }}
             className="rounded-xl overflow-hidden"
           >
-            <ImageBlock pageKey={pageKey} role={role} alt={pageKey} />
+            <ImageBlock pageKey={pageKey} alt={pageKey} />
           </motion.div>
         );
       })}

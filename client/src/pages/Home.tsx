@@ -44,7 +44,6 @@ const Home = () => {
             <div className="shrink-0">
               <ImageBlock
                 pageKey="home-mascot"
-                role="admin"
                 alt="Club Mascot"
                 style={{
                   width: "40vw",
@@ -70,7 +69,6 @@ const Home = () => {
             <div className="w-6/10 shrink-0 self-center">
               <ImageBlock
                 pageKey="what-we-do"
-                role="admin"
                 alt="What We Do"
                 style={{
                   width: "100%",
@@ -126,16 +124,12 @@ const Home = () => {
           {/** cannot click edit for some reason, so hid it */}
           <ImageBlock
             pageKey="mascot-bg"
-            role="user"
             alt="Events"
             style={{ width: "90vw" }}
           />
         </div>
         <div className="-translate-y-20">
-          <ImageSlider
-            pageKeys={["event-2", "event-1", "event-3"]}
-            role="admin"
-          />
+          <ImageSlider pageKeys={["event-2", "event-1", "event-3"]} />
         </div>
       </section>
 
@@ -154,7 +148,6 @@ const Home = () => {
               <div className="w-fit aspect-square">
                 <ImageBlock
                   pageKey="sponsor-1"
-                  role="admin"
                   alt="Sponsor 1"
                   style={{ borderRadius: "1.6rem" }}
                 />
@@ -167,7 +160,6 @@ const Home = () => {
               <div className="w-fit aspect-square">
                 <ImageBlock
                   pageKey="sponsor-2"
-                  role="admin"
                   alt="Sponsor 2"
                   style={{ borderRadius: "1.6rem" }}
                 />
@@ -180,7 +172,6 @@ const Home = () => {
               <div className="w-fit aspect-square">
                 <ImageBlock
                   pageKey="sponsor-3"
-                  role="admin"
                   alt="Sponsor 3"
                   style={{ borderRadius: "1.6rem" }}
                 />
@@ -193,7 +184,6 @@ const Home = () => {
               <div className="w-fit aspect-square">
                 <ImageBlock
                   pageKey="sponsor-4"
-                  role="admin"
                   alt="Sponsor 4"
                   style={{ borderRadius: "1.6rem" }}
                 />
@@ -209,7 +199,6 @@ const Home = () => {
               <div className="w-fit aspect-square">
                 <ImageBlock
                   pageKey="sponsor-5"
-                  role="admin"
                   alt="Sponsor 5"
                   style={{ borderRadius: "1.6rem" }}
                 />
@@ -222,7 +211,6 @@ const Home = () => {
               <div className="w-fit aspect-square">
                 <ImageBlock
                   pageKey="sponsor-6"
-                  role="admin"
                   alt="Sponsor 6"
                   style={{ borderRadius: "1.6rem" }}
                 />
@@ -235,7 +223,6 @@ const Home = () => {
               <div className="w-fit aspect-square">
                 <ImageBlock
                   pageKey="sponsor-7"
-                  role="admin"
                   alt="Sponsor 7"
                   style={{ borderRadius: "1.6rem" }}
                 />
@@ -248,7 +235,6 @@ const Home = () => {
               <div className="w-fit aspect-square">
                 <ImageBlock
                   pageKey="sponsor-8"
-                  role="admin"
                   alt="Sponsor 8"
                   style={{ borderRadius: "1.6rem" }}
                 />

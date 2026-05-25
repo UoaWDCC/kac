@@ -45,7 +45,7 @@ const ROLE_GROUPS: RoleGroup[] = [
     label: "EVENTS:",
   },
   {
-    id: "public relations",
+    id: "public-relations",
     label: "PUBLIC RELATIONS:",
   },
   {
@@ -53,11 +53,11 @@ const ROLE_GROUPS: RoleGroup[] = [
     label: "MARKETING:",
   },
   {
-    id: "aesir representative",
+    id: "aesir-representative",
     label: "AESIR REPRESENTATIVE:",
   },
   {
-    id: "past exec",
+    id: "past-exec",
     label: "OUR PAST EXECS:",
   },
 ];
@@ -104,9 +104,7 @@ const Executives = () => {
     const predefined = ROLE_GROUPS.map(
       (group): [RoleGroup, Executive[]] => [
         group,
-        [...(groupedMap.get(group.id) || [])].sort((a, b) =>
-          a.displayName.localeCompare(b.displayName)
-        ),
+        [...(groupedMap.get(group.id) || [])],
       ]
     ).filter(([, roleExecs]) => roleExecs.length > 0);
 
@@ -119,7 +117,7 @@ const Executives = () => {
           id: groupId,
           label: groupId.replace(/[-_]/g, " ").toUpperCase(),
         },
-        [...roleExecs].sort((a, b) => a.displayName.localeCompare(b.displayName)),
+        [...roleExecs],
       ]);
 
     return [...predefined, ...customGroups];

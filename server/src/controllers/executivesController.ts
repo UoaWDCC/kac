@@ -66,7 +66,7 @@ export const deleteExec: RequestHandler = async (req, res, next) => {
 
 export const getAllExecs: RequestHandler = async (req, res, next) => {
   try {
-    const executives = await Executive.find().lean();
+    const executives = await Executive.find().sort({ createdAt: 1 }).lean();
     const mappedExecs = executives.map((exec) => ({
       ...exec,
       id: exec._id,

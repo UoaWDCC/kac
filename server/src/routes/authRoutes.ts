@@ -1,18 +1,11 @@
 import express from "express";
 import passport from "passport";
 import { User } from "../model/user";
+import { getMembershipYear } from "../util/date";
 
 const router = express.Router();
 
 type Role = "guest" | "legacy" | "member" | "admin";
-
-// December payments are counted to the next year since nothing happens in December.
-const getMembershipYear = (): number => {
-  const now = new Date();
-  const month = now.getMonth(); // 0-indexed, 11 = December
-  const year = now.getFullYear();
-  return month === 11 ? year + 1 : year;
-};
 
 const deriveRole = (existingUser: any): Role => {
   if (!existingUser) return "legacy";

@@ -21,6 +21,17 @@ button {
 .title-text {
   font-size: 100px;
   font-weight: 700;
+  margin-left: 160px;
+}
+
+.about-title-section {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.about-page .title-text {
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 .header-body {
@@ -36,28 +47,34 @@ button {
 .executives-container {
   display: flex;
   flex-direction: column;
-  margin-top: 24px;
-  max-width: 1200px;
+  margin-top: 0;
+  width: 100%;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 20px;
+  padding: 0;
+  box-sizing: border-box;
   gap: 64px;
 }
 
 .exec-role-section {
   width: 100%;
+  max-width: 1144.75px;
+  margin: 0 auto;
 }
 
 .exec-role-title {
-  font-size: 2rem;
-  margin: 0 0 1.5rem;
+  font-size: 44px;
+  font-weight: 500;
+  margin: 0 0 1.5rem -45px;
   text-align: left;
 }
 
 .exec-role-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
+  grid-template-columns: repeat(2, 533px);
+  column-gap: 78.75px;
+  row-gap: 64px;
 }
 
 .executive-card {
@@ -65,7 +82,7 @@ button {
   flex-direction: column;
   width: 533px;
   max-width: 533px;
-  margin: 0 auto;
+  margin: 0;
   gap: 1rem;
 }
 
@@ -107,16 +124,17 @@ button {
 
 .executive-card__role {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 20px;
   font-family: var(--font-monospace);
+  font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
 .executive-card__name {
   margin: 0.4rem 0 0;
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 700;
+  font-size: 50px;
+  font-weight: 400;
   line-height: 0.95;
   text-transform: uppercase;
 }
@@ -144,6 +162,19 @@ button {
 .exec-desc {
   max-width: 62ch;
   margin: 0;
+}
+
+@media (max-width: 1400px) {
+  .exec-role-section {
+    max-width: 533px;
+    padding: 0 24px;
+    box-sizing: content-box;
+  }
+
+  .exec-role-grid {
+    grid-template-columns: 533px;
+    row-gap: 48px;
+  }
 }
 
 .add-exec-button {

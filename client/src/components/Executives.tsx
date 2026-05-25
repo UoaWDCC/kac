@@ -62,7 +62,7 @@ const ROLE_GROUPS: RoleGroup[] = [
   },
 ];
 
-const normalizeRoleKey = (value?: string) =>
+const normaliseRoleKey = (value?: string) =>
   (value || "")
     .trim()
     .toLowerCase()
@@ -94,8 +94,8 @@ const Executives = () => {
     const groupedMap = new Map<string, Executive[]>();
 
     for (const exec of execs) {
-      const normalizedRoleGroup = normalizeRoleKey(exec.roleGroup).replaceAll(" ", "-");
-      const groupId = normalizedRoleGroup || "other";
+      const normalisedRoleGroup = normaliseRoleKey(exec.roleGroup).replaceAll(" ", "-");
+      const groupId = normalisedRoleGroup || "other";
 
       if (!groupedMap.has(groupId)) groupedMap.set(groupId, []);
       groupedMap.get(groupId)!.push(exec);

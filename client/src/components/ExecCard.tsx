@@ -35,16 +35,6 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
   imageURL,
   displayName,
   execRole,
-  description,
-  fullName,
-  ethnicity,
-  degree,
-  mbti,
-  fact,
-  sponsor,
-  greenFlag,
-  redFlag,
-  emojis,
 }) => {
   return (
     <div className="executive-card">
@@ -83,20 +73,6 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
         </div>
       </div>
 
-      <div className="card-body">
-        <p className="exec-desc">{description}</p>
-        <ul>
-          <li>Full Name: {fullName}</li>
-          {ethnicity !== "" && <li>Ethnicity: {ethnicity}</li>}
-          {degree !== "" && <li>Degree: {degree}</li>}
-          <li>MBTI: {mbti}</li>
-          <li>Fun Fact: {fact}</li>
-          <li>Favourite KAC Sponsor: {sponsor}</li>
-          <li>Green Flag ✅: {greenFlag}</li>
-          <li>Red Flag 🚩: {redFlag}</li>
-          {emojis !== "" && <li>Fav Emojis: {emojis}</li>}
-        </ul>
-      </div>
     </div>
   );
 };

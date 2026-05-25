@@ -68,9 +68,12 @@ const normaliseRoleKey = (value?: string) =>
     .toLowerCase()
     .replace(/[\s_-]+/g, " ");
 
+const EXEC_IMG = "src/images/exec-placeholder.png";
+
 const Executives = () => {
   const [execs, setExecs] = useState<Executive[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedExec, setSelectedExec] = useState<Executive | null>(null);
 
   const loadExecs = async () => {
     try {
@@ -168,11 +171,50 @@ const Executives = () => {
                 redFlag={exec.redFlag}
                 emojis={exec.emojis}
                 onDelete={loadExecs}
+                onOpen={() => setSelectedExec(exec)}
               />
             ))}
           </div>
         </section>
       ))}
+
+      {selectedExec && (
+        <div className="modal-overlay exec-preview-overlay">
+          <button
+            type="button"
+            className="exec-preview-dismiss"
+            onClick={() => setSelectedExec(null)}
+            aria-label="Close executive preview"
+          />
+
+          <div className="exec-preview-modal">
+            <button
+              type="button"
+              className="exec-preview-close"
+              onClick={() => setSelectedExec(null)}
+              aria-label="Close executive preview"
+            >
+              ×
+            </button>
+
+            <div className="exec-preview-layout">
+              <section className="exec-preview-image-section">
+                <img
+                  className="exec-preview-image"
+                  src={selectedExec.imageURL || EXEC_IMG}
+                  alt={selectedExec.displayName}
+                />
+              </section>
+
+              <section className="exec-preview-copy-section">
+                <p className="exec-preview-role">{selectedExec.execRole}</p>
+                <h3 className="exec-preview-name">{selectedExec.displayName}</h3>
+                <p className="exec-preview-description">{selectedExec.description}</p>
+              </section>
+            </div>
+          </div>
+        </div>
+      )}
 
       <NewExecModal />
     </div>

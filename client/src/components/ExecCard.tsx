@@ -26,11 +26,13 @@ interface ExecProps {
 interface ExecCardProps {
   role: "admin" | "user";
   onDelete: () => void;
+  onOpen: () => void;
 }
 
 const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
   role,
   onDelete,
+  onOpen,
   id,
   imageURL,
   displayName,
@@ -38,6 +40,13 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
 }) => {
   return (
     <div className="executive-card">
+      <button
+        type="button"
+        className="executive-card__click-target"
+        onClick={onOpen}
+        aria-label={`Open ${displayName} preview`}
+      />
+
       <div className="executive-card__top">
         <div className="executive-card__media image-block">
           <img src={imageURL || EXEC_IMG} alt={displayName} />

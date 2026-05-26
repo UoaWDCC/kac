@@ -7,8 +7,6 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import authRoutes from "./routes/authRoutes";
 import imageRoutes from "./routes/imageRoutes";
 import executivesRoutes from "./routes/executivesRoutes";
-import paymentRoutes from "./routes/paymentRoutes";
-import webhookRoutes from "./routes/webhookRoutes";
 import sponsorRoutes from "./routes/sponsorRoutes";
 import contactRoutes from "./routes/contactRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -63,12 +61,10 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user: Express.User, done) => done(null, user));
 
 // middleware
-app.use("/api/payments", webhookRoutes); // webhook route must be registered before express.json()
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/executives", executivesRoutes);
-app.use("/api/payments", paymentRoutes);
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/users", userRoutes);

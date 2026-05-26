@@ -6,6 +6,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import authRoutes from "./routes/authRoutes";
 import imageRoutes from "./routes/imageRoutes";
+import eventRoutes from "./routes/eventRoutes";
 import executivesRoutes from "./routes/executivesRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
 import webhookRoutes from "./routes/webhookRoutes";
@@ -67,6 +68,7 @@ app.use("/api/payments", webhookRoutes); // webhook route must be registered bef
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
+app.use("/api/events", eventRoutes);
 app.use("/api/executives", executivesRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/sponsors", sponsorRoutes);

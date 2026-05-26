@@ -128,23 +128,31 @@ const Home = () => {
       </section>
 
       {/** EVENTS */}
-      <section className="section relative h-80vh w-full overflow-hidden bg-yellow-light pr-0!">
-        <div className="justify-self-end absolute inset-0 h-fit">
-          {/** cannot click edit for some reason, so hid it */}
+      <section className="section relative w-full overflow-hidden bg-yellow-light pr-0! p-0!">
+        <div className="justify-self-end relative">
           <ImageBlock
             pageKey="mascot-bg"
             alt="Events"
             style={{ width: "90vw" }}
           />
         </div>
-        <div className="-translate-y-20">
-          <ImageSlider pageKeys={["event-2", "event-1", "event-3"]} />
+        <h2 className="font-monospace text-[2.6rem] font-medium absolute inset-0 justify-self-center top-[20vh] 2xl:top-[22vh]">
+          Our Recent Events:
+        </h2>
+        <div className="absolute inset-0 top-[4vh]">
+          <ImageSlider
+            pageKeys={[
+              "A Night Out in Hongdae",
+              "A Few Days Away",
+              "Sunset and Chill",
+            ]}
+          />
         </div>
       </section>
 
       {/** SPONSORS */}
       <section className="section bg-yellow-light">
-        <div className="justify-self-center">
+        <div className="justify-self-center mt-8">
           <h2 className="-mt-8! pl-4 font-monospace text-[2.6rem] font-medium">
             Our Sponsors:
           </h2>

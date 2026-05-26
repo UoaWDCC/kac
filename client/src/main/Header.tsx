@@ -50,7 +50,7 @@ const Header = () => {
                 {isSelected && (
                   <motion.span
                     layoutId="pill-tab"
-                    transition={{ type: "spring", duration: 0.5 }}
+                    transition={{ type: "tween", duration: 0.14 }}
                     className="absolute inset-0 z-0 rounded-full bg-yellow-dark"
                   />
                 )}

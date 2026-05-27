@@ -292,7 +292,7 @@ button {
   --exec-preview-padding-x: 100px;
   --exec-preview-padding-y: 125px;
   position: relative;
-  width: 870px;
+  width: 900px;
   min-height: 520px;
   padding: var(--exec-preview-padding-y) var(--exec-preview-padding-x);
   border-radius: 14px;
@@ -313,13 +313,17 @@ button {
   overflow: hidden;
   background: #f2f2f2;
   align-self: start;
+  width: 300px;
+  height: 300px;
+  flex-shrink: 0;
 }
 
 .exec-preview-image {
   display: block;
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border: 10px solid white;
 }
 
 .exec-preview-copy-section {

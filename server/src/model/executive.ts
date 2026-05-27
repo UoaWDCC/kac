@@ -7,6 +7,7 @@ const executiveSchema = new Schema(
     imageURL: { type: String, required: true },
     displayName: { type: String, required: true },
     execRole: { type: String, required: true },
+    roleGroup: { type: String, required: true },
     description: { type: String, required: true },
     fullName: { type: String, required: true },
     ethnicity: { type: String, required: false },

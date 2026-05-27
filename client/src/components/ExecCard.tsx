@@ -81,7 +81,6 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
           <h2 className="executive-card__name">{displayName}</h2>
         </div>
       </div>
-
     </div>
   );
 };

@@ -97,23 +97,27 @@ const Executives = () => {
     const groupedMap = new Map<string, Executive[]>();
 
     for (const exec of execs) {
-      const normalisedRoleGroup = normaliseRoleKey(exec.roleGroup).replaceAll(" ", "-");
+      const normalisedRoleGroup = normaliseRoleKey(exec.roleGroup).replaceAll(
+        " ",
+        "-"
+      );
       const groupId = normalisedRoleGroup || "other";
 
       if (!groupedMap.has(groupId)) groupedMap.set(groupId, []);
       groupedMap.get(groupId)!.push(exec);
     }
 
-    const predefined = ROLE_GROUPS.map(
-      (group): [RoleGroup, Executive[]] => [
-        group,
-        [...(groupedMap.get(group.id) || [])],
-      ]
-    ).filter(([, roleExecs]) => roleExecs.length > 0);
+    const predefined = ROLE_GROUPS.map((group): [RoleGroup, Executive[]] => [
+      group,
+      [...(groupedMap.get(group.id) || [])],
+    ]).filter(([, roleExecs]) => roleExecs.length > 0);
 
     const knownGroupIds = new Set(ROLE_GROUPS.map((group) => group.id));
     const customGroups = Array.from(groupedMap.entries())
-      .filter(([groupId, roleExecs]) => !knownGroupIds.has(groupId) && roleExecs.length)
+      .filter(
+        ([groupId, roleExecs]) =>
+          !knownGroupIds.has(groupId) && roleExecs.length
+      )
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([groupId, roleExecs]): [RoleGroup, Executive[]] => [
         {
@@ -208,8 +212,12 @@ const Executives = () => {
 
               <section className="exec-preview-copy-section">
                 <p className="exec-preview-role">{selectedExec.execRole}</p>
-                <h3 className="exec-preview-name">{selectedExec.displayName}</h3>
-                <p className="exec-preview-description">{selectedExec.description}</p>
+                <h3 className="exec-preview-name">
+                  {selectedExec.displayName}
+                </h3>
+                <p className="exec-preview-description">
+                  {selectedExec.description}
+                </p>
               </section>
             </div>
           </div>

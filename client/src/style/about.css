@@ -129,7 +129,9 @@ button {
   border-radius: 26px;
   overflow: hidden;
   box-shadow: 10px 10px 0 var(--color-yellow-medium);
-  transition: transform 220ms ease, box-shadow 220ms ease;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease;
   transform-origin: top left;
   will-change: transform;
 }
@@ -142,8 +144,6 @@ button {
 .executive-card:hover {
   z-index: 5;
 }
-
-
 
 .executive-card__media {
   background-color: var(--color-blue-medium);
@@ -330,6 +330,8 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  max-height: 300px;
+  overflow: hidden;
 }
 
 .exec-preview-close {
@@ -370,4 +372,7 @@ button {
   font-size: 20px;
   font-family: var(--font-sans);
   color: var(--color-blue-medium);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }

@@ -50,46 +50,6 @@ export default function Modal({}: ModalProps) {
                 <textarea placeholder="Brief description of the executive" />
               </div>
 
-              <div>
-                <label>Ethnicity</label>
-                <input type="text" placeholder="Optional" />
-              </div>
-
-              <div>
-                <label>Degree</label>
-                <input type="text" placeholder="Optional" />
-              </div>
-
-              <div>
-                <label>MBTI</label>
-                <input type="text" placeholder="e.g., ENFP" />
-              </div>
-
-              <div>
-                <label>Fun Fact</label>
-                <input type="text" placeholder="Something fun!" />
-              </div>
-
-              <div>
-                <label>Favourite KAC Sponsor</label>
-                <input type="text" placeholder="Optional" />
-              </div>
-
-              <div>
-                <label>Green Flag ✅</label>
-                <input type="text" placeholder="" />
-              </div>
-
-              <div>
-                <label>Red Flag 🚩</label>
-                <input type="text" placeholder="e" />
-              </div>
-
-              <div>
-                <label>Favourite Emojis</label>
-                <input type="text" placeholder="e.g., 🎉 🚀 ⭐" />
-              </div>
-
               <button className="contact-button" type="submit">
                 Create Executive
               </button>

@@ -19,11 +19,7 @@ const EventDetail = () => {
       <div className="event-detail-layout">
         <div className="event-main-content">
           <div className="event-thumbnail">
-            <ImageBlock
-              pageKey={`event-${event.id}`}
-              role="user"
-              alt={event.title}
-            />
+            <ImageBlock pageKey={`event-${event.id}`} alt={event.title} />
           </div>
 
           <div className="event-card">

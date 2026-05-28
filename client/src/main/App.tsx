@@ -18,10 +18,12 @@ import EventDetail from "../pages/EventDetail.tsx";
 import About from "../pages/About.tsx";
 import SignUp from "../pages/Signup.tsx";
 import Admin from "../pages/Admin.tsx";
+import Toast from "../components/Toast.tsx";
 
 const App = () => {
   return (
     <AuthProvider>
+      <Toast />
       <BrowserRouter>
         <Routes>
           {/* Sign-up sits outside the main layout — no header/footer chrome */}

@@ -37,19 +37,25 @@ export const getResponseColumns = (
   {
     accessorKey: "name",
     cell: ({ row }) => (
-      <div className="min-w-0">
-        <p className="font-semibold text-slate-950">{row.original.name}</p>
+      <div className="flex min-w-0 flex-col gap-2">
+        <span
+          className="truncate font-semibold text-slate-950"
+          title={row.original.name}
+        >
+          {row.original.name}
+        </span>
         <a
-          className="mt-1 inline-flex max-w-full items-center gap-2 text-sm text-blue-medium transition hover:text-black"
+          className="mt-1 inline-flex min-w-0 max-w-full items-center gap-2 text-sm text-blue-medium transition hover:text-black"
           href={`mailto:${row.original.email}`}
           title={`Email ${row.original.email}`}
         >
           <Mail aria-hidden="true" className="h-4 w-4 shrink-0" />
-          <span className="min-w-0 break-all">{row.original.email}</span>
+          <span className="min-w-0 truncate">{row.original.email}</span>
         </a>
       </div>
     ),
     header: "Sender",
+    size: 230,
   },
   {
     accessorKey: "message",
@@ -66,6 +72,7 @@ export const getResponseColumns = (
       </div>
     ),
     header: "Message",
+    size: 520,
   },
   {
     accessorFn: (response) =>
@@ -75,20 +82,22 @@ export const getResponseColumns = (
     ),
     header: "Received",
     id: "received",
+    size: 180,
   },
   {
     cell: ({ row }) => (
       <button
-        className="inline-flex h-9 items-center gap-2 rounded-md bg-blue-medium px-3 text-sm font-semibold text-white shadow-sm transition hover:bg-black"
+        className="inline-flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-md border border-blue-medium bg-white px-2 text-xs font-semibold leading-tight text-blue-medium shadow-sm transition hover:bg-blue-medium hover:text-white"
         onClick={() => onViewEdit(row.original)}
         type="button"
       >
-        <Pencil aria-hidden="true" className="h-4 w-4" />
-        View/Edit
+        <Pencil aria-hidden="true" className="h-4 w-4 shrink-0" />
+        <span>View/Edit</span>
       </button>
     ),
     enableSorting: false,
     header: "Actions",
     id: "actions",
+    size: 110,
   },
 ];

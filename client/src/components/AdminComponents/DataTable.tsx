@@ -74,6 +74,28 @@ export default function DataTable<TData extends object>({
     const header = cell.column.columnDef.header;
     return typeof header === "string" ? header : cell.column.id;
   };
+  const getColumnWidthClass = (columnId: string) => {
+    switch (columnId) {
+      case "name":
+        return "w-[17%]";
+      case "email":
+        return "w-[19%]";
+      case "studentStudy":
+        return "w-[24%]";
+      case "faculties":
+        return "w-[15%]";
+      case "latestMembershipYear":
+        return "w-[13%]";
+      case "actions":
+        return "w-[12%]";
+      case "message":
+        return "w-[50%]";
+      case "received":
+        return "w-[16%]";
+      default:
+        return "";
+    }
+  };
 
   return (
     <div className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -88,7 +110,7 @@ export default function DataTable<TData extends object>({
             className="h-10 w-full rounded-md border border-slate-300 bg-white pl-9 pr-10 text-sm text-slate-950 outline-none transition focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/40"
             onChange={(event) => setGlobalFilter(event.target.value)}
             placeholder={searchPlaceholder}
-            type="search"
+            type="text"
             value={globalFilter}
           />
           {globalFilter ? (
@@ -124,7 +146,7 @@ export default function DataTable<TData extends object>({
       </div>
 
       <div>
-        <table className="hidden w-full table-fixed border-collapse text-left text-sm md:table">
+        <table className="hidden w-full table-fixed border-collapse text-left text-sm lg:table">
           <thead className="bg-slate-50 text-xs uppercase tracking-normal text-slate-600">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -141,19 +163,23 @@ export default function DataTable<TData extends object>({
                             ? "descending"
                             : "none"
                       }
-                      className="border-b border-slate-200 px-3 py-3 font-semibold"
+                      className={`border-b border-slate-200 px-3 py-3 font-semibold ${header.column.id === "actions" ? "text-center" : ""} ${getColumnWidthClass(
+                        header.column.id
+                      )}`}
                       key={header.id}
                     >
                       {header.isPlaceholder ? null : canSort ? (
                         <button
-                          className="inline-flex items-center gap-2 rounded-md text-left transition hover:text-slate-950"
+                          className="inline-flex max-w-full items-center gap-2 whitespace-nowrap rounded-md text-left transition hover:text-slate-950"
                           onClick={header.column.getToggleSortingHandler()}
                           type="button"
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          <span className="whitespace-nowrap">
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                          </span>
                           {sorted === "asc" ? (
                             <ArrowUp aria-hidden="true" className="h-3.5 w-3.5" />
                           ) : sorted === "desc" ? (
@@ -169,10 +195,12 @@ export default function DataTable<TData extends object>({
                           )}
                         </button>
                       ) : (
-                        flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )
+                        <span className="whitespace-nowrap">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </span>
                       )}
                     </th>
                   );
@@ -186,7 +214,7 @@ export default function DataTable<TData extends object>({
                 <tr className="animate-pulse" key={index}>
                   {Array.from({ length: visibleColumnCount }).map(
                     (_cell, cellIndex) => (
-                      <td className="px-3 py-4" key={cellIndex}>
+                      <td className="px-4 py-4" key={cellIndex}>
                         <div className="h-4 rounded bg-slate-100" />
                       </td>
                     )
@@ -195,7 +223,7 @@ export default function DataTable<TData extends object>({
               ))
             ) : error ? (
               <tr>
-                <td className="px-3 py-12 text-center" colSpan={visibleColumnCount}>
+                <td className="px-4 py-12 text-center" colSpan={visibleColumnCount}>
                   <div className="mx-auto flex max-w-sm flex-col items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-4 py-5">
                     <p className="text-base font-semibold text-red-700">
                       Could not load records
@@ -206,9 +234,14 @@ export default function DataTable<TData extends object>({
               </tr>
             ) : rows.length ? (
               rows.map((row) => (
-                <tr className="align-top transition hover:bg-yellow-light/45" key={row.id}>
+                <tr className="align-middle transition hover:bg-yellow-light/45" key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <td className="min-w-0 break-words px-3 py-4 text-slate-800" key={cell.id}>
+                    <td
+                      className={`min-w-0 overflow-hidden px-3 py-4 text-slate-800 ${cell.column.id === "actions" ? "text-center" : ""} ${getColumnWidthClass(
+                        cell.column.id
+                      )}`}
+                      key={cell.id}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -216,7 +249,7 @@ export default function DataTable<TData extends object>({
               ))
             ) : (
               <tr>
-                <td className="px-3 py-12 text-center" colSpan={visibleColumnCount}>
+                <td className="px-4 py-12 text-center" colSpan={visibleColumnCount}>
                   <div className="mx-auto max-w-sm rounded-lg border border-slate-200 bg-slate-50 px-4 py-6">
                     <p className="text-base font-semibold text-slate-950">
                       {emptyTitle}
@@ -233,7 +266,7 @@ export default function DataTable<TData extends object>({
           </tbody>
         </table>
 
-        <div className="grid gap-3 p-3 md:hidden">
+        <div className="grid gap-3 p-3 lg:hidden">
           {isLoading ? (
             Array.from({ length: 4 }).map((_, index) => (
               <div

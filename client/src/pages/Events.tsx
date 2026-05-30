@@ -8,13 +8,15 @@ import { useAuth } from "../auth/useAuth";
 const getTime = (t: string) => new Date(t).getTime();
 const now = Date.now();
 const sortedEvents = [...eventsData].sort(
-  (a, b) => getTime(b.time) - getTime(a.time)
+  (a, b) => getTime(b.datetime) - getTime(a.datetime)
 );
 
 const upcomingEvents = sortedEvents.filter(
-  (event) => getTime(event.time) >= now
+  (event) => getTime(event.datetime) >= now
 );
-const pastEvents = sortedEvents.filter((event) => getTime(event.time) < now);
+const pastEvents = sortedEvents.filter(
+  (event) => getTime(event.datetime) < now
+);
 
 const Events = () => {
   const { role } = useAuth();
@@ -49,7 +51,7 @@ const Events = () => {
             description={event.description}
             imageUrl={event.imageUrl}
             location={event.location}
-            datetime={new Date(event.time)}
+            datetime={new Date(event.datetime)}
             status={event.status as "open" | "waitlist" | "ended"}
           />
         ))}
@@ -65,7 +67,7 @@ const Events = () => {
             description={event.description}
             imageUrl={event.imageUrl}
             location={event.location}
-            datetime={new Date(event.time)}
+            datetime={new Date(event.datetime)}
             status={event.status as "open" | "waitlist" | "ended"}
           />
         ))}

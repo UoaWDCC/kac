@@ -11,6 +11,7 @@ interface EventProps {
   title: string;
   description: string;
   imageUrl: string;
+  location: string;
   datetime: Date;
   status: "open" | "waitlist" | "ended";
 }

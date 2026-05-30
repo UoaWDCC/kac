@@ -1,11 +1,14 @@
 import "../style/common.css";
 import "../style/events.css";
 import { ImageBlock } from "./ImageBlock/ImageBlock";
-import { Clock, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 
 export const DEFAULT_IMAGE = "src/images/event-image.png";
+
+const SEM1_START = new Date("2026-03-02");
+const SEM2_START = new Date("2026-07-20");
 
 interface EventProps {
   title: string;
@@ -24,7 +27,18 @@ const EventsCard: React.FC<EventProps> = ({ title, imageUrl, datetime }) => {
     const day = datetime.getDate();
     const month = datetime.toLocaleString("default", { month: "long" });
 
-    return `${month} ${day}`;
+    const sem = datetime >= SEM2_START ? 2 : 1;
+
+    // rough calculation of week, maybe input instead
+    const diff =
+      Math.floor(
+        (datetime.getTime() - (sem === 1 ? SEM1_START : SEM2_START).getTime()) /
+          86400000 /
+          7
+      ) + 1;
+    const week = diff > 6 ? diff - 2 : diff;
+
+    return `Sem ${sem} Week ${week}: ${month} ${day}`;
   };
 
   const handleActionClick = () => {
@@ -36,34 +50,23 @@ const EventsCard: React.FC<EventProps> = ({ title, imageUrl, datetime }) => {
 
   return (
     <div className="events-card">
-      <h2 className="event-title">{title}</h2>
       <div className="event-image-container">
         <ImageBlock
           pageKey={imageUrl || DEFAULT_IMAGE}
           alt={title}
-          style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: "20px",
-            overflow: "hidden",
-          }}
+          style={{ height: "100%" }}
         />
       </div>
       <div className="event-content">
-        <div className="event-meta">
-          <div className="meta-item">
-            <Clock size={16} className="meta-icon" />
-            <span>{formatDate(datetime)}</span>
-          </div>
+        <div className="event-date">
+          <span>{formatDate(datetime)}</span>
         </div>
-
-        <hr className="event-divider" />
-
-        <button className="redirect-button" onClick={handleActionClick}>
-          {"SIGN UP"}
-          <ArrowRight size={18} />
-        </button>
+        <h2 className="event-title">{title}</h2>
       </div>
+      <button className="redirect-button" onClick={handleActionClick}>
+        {"SIGN UP"}
+        <ArrowRight size={18} />
+      </button>
     </div>
   );
 };

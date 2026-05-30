@@ -29,12 +29,7 @@ const Events = () => {
         alignItems: "center",
       }}
     >
-      <h1
-        className="title-text"
-        style={{ textAlign: "center", marginBottom: "40px" }}
-      >
-        {"Upcoming Events"}
-      </h1>
+      <h1 className="title-text">{"Upcoming Events"}</h1>
 
       <div className="event-dashboard">
         {role === "admin" && (
@@ -60,12 +55,7 @@ const Events = () => {
         ))}
       </div>
 
-      <h1
-        className="title-text"
-        style={{ textAlign: "center", marginBottom: "40px" }}
-      >
-        {"Past Events"}
-      </h1>
+      <h1 className="title-text">{"Past Events"}</h1>
 
       <div className="event-dashboard">
         {pastEvents.map((event) => (

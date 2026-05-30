@@ -195,7 +195,7 @@ p {
     color 150ms ease;
 }
 
-.admin-modal-delete-button:hover,
+.admin-modal-delete-button:not(:disabled):hover,
 .admin-modal-delete-button:focus-visible {
   background-color: rgba(220, 38, 38, 0.16);
   border-color: #dc2626;
@@ -227,7 +227,7 @@ p {
   grid-template-columns: minmax(0, 1fr) minmax(14rem, 1fr) 1.75rem;
 }
 
-.admin-delete-confirm > div {
+.admin-delete-confirm>div {
   display: grid;
   gap: 0.25rem;
 }

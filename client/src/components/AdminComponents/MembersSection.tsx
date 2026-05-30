@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BadgeCheck, ShieldCheck, UsersRound } from "lucide-react";
+import { useAuth } from "../../auth/useAuth";
 import { fetchMembers } from "../../api/usersApi";
 import DataTable from "./DataTable";
 import MemberDetailsModal from "./MemberDetailsModal";
@@ -16,6 +17,7 @@ const getErrorMessage = (error: unknown) => {
 };
 
 export default function MembersSection() {
+  const { user } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [members, setMembers] = useState<Member[]>([]);
@@ -44,6 +46,11 @@ export default function MembersSection() {
     void loadMembers();
   }, [loadMembers]);
 
+  const adminCount = useMemo(
+    () => members.filter((member) => member.isAdmin).length,
+    [members]
+  );
+
   const stats = useMemo(() => {
     const membershipYear = getCurrentMembershipYear();
 
@@ -63,10 +70,10 @@ export default function MembersSection() {
       {
         icon: ShieldCheck,
         label: "Admins",
-        value: members.filter((member) => member.isAdmin).length,
+        value: adminCount,
       },
     ];
-  }, [members]);
+  }, [adminCount, members]);
 
   return (
     <section className="flex min-w-0 flex-col gap-4">
@@ -108,6 +115,8 @@ export default function MembersSection() {
 
       {selectedMember ? (
         <MemberDetailsModal
+          adminCount={adminCount}
+          isCurrentUser={selectedMember.googleUid === user?.id}
           member={selectedMember}
           onClose={() => setSelectedMember(null)}
           onDelete={(id) =>

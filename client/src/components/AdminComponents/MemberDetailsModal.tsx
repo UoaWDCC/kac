@@ -4,6 +4,8 @@ import { deleteMember, updateMember } from "../../api/usersApi";
 import type { Member } from "./MemberColumns";
 
 type MemberDetailsModalProps = {
+  adminCount: number;
+  isCurrentUser: boolean;
   member: Member;
   onClose: () => void;
   onDelete: (id: string) => void;
@@ -33,6 +35,8 @@ const getErrorMessage = (error: unknown) => {
 };
 
 export default function MemberDetailsModal({
+  adminCount,
+  isCurrentUser,
   member,
   onClose,
   onDelete,
@@ -59,6 +63,17 @@ export default function MemberDetailsModal({
     upi: member.upi,
     yearOfStudy: String(member.yearOfStudy),
   });
+  const isOnlyAdmin = member.isAdmin && adminCount <= 1;
+  const adminChangeBlockedReason = isCurrentUser
+    ? "You cannot remove admin access from your own account."
+    : isOnlyAdmin
+      ? "At least one admin account must remain."
+      : null;
+  const deleteBlockedReason = isCurrentUser
+    ? "You cannot delete your own admin account."
+    : isOnlyAdmin
+      ? "At least one admin account must remain."
+      : null;
 
   const updateField = (field: keyof typeof form, value: string | boolean) => {
     setForm((current) => ({
@@ -79,6 +94,11 @@ export default function MemberDetailsModal({
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+
+    if (!form.isAdmin && adminChangeBlockedReason) {
+      setError(adminChangeBlockedReason);
+      return;
+    }
 
     if (form.faculties.length === 0) {
       setError("Select at least one faculty.");
@@ -106,6 +126,11 @@ export default function MemberDetailsModal({
   };
 
   const handleDelete = async () => {
+    if (deleteBlockedReason) {
+      setError(deleteBlockedReason);
+      return;
+    }
+
     if (deleteConfirmation !== "delete") return;
 
     setError(null);
@@ -130,6 +155,9 @@ export default function MemberDetailsModal({
     setDeleteConfirmation("");
     setShowDeleteConfirm(false);
   };
+  const isDeleteDisabled =
+    Boolean(deleteBlockedReason) ||
+    (showDeleteConfirm && (deleteConfirmation !== "delete" || isDeleting));
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4">
@@ -329,10 +357,17 @@ export default function MemberDetailsModal({
 
             <section className="grid gap-3 rounded-lg border border-slate-200 bg-white p-4">
               <h3 className="text-base font-bold text-slate-950">Access</h3>
-              <label className="flex items-center gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700">
+              <label
+                className={`flex items-center gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm font-semibold ${
+                  adminChangeBlockedReason
+                    ? "bg-slate-50 text-slate-500"
+                    : "text-slate-700"
+                }`}
+              >
                 <input
                   checked={form.isAdmin}
-                  className="h-4 w-4 accent-blue-medium"
+                  className="h-4 w-4 accent-blue-medium disabled:cursor-not-allowed"
+                  disabled={Boolean(adminChangeBlockedReason)}
                   onChange={(event) =>
                     updateField("isAdmin", event.target.checked)
                   }
@@ -340,6 +375,11 @@ export default function MemberDetailsModal({
                 />
                 Admin user
               </label>
+              {adminChangeBlockedReason ? (
+                <p className="!m-0 !text-sm text-slate-500">
+                  {adminChangeBlockedReason}
+                </p>
+              ) : null}
             </section>
           </div>
         </form>
@@ -378,34 +418,44 @@ export default function MemberDetailsModal({
           </div>
         ) : null}
 
-        <div className="flex shrink-0 flex-col gap-3 border-t border-slate-200 bg-white px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="grid shrink-0 grid-cols-1 gap-3 border-t border-slate-200 bg-white px-6 py-4 sm:grid-cols-2 sm:items-start">
           <button
-            className="admin-modal-save-button"
+            className="admin-modal-save-button w-full"
             disabled={isSaving}
             onClick={handleManualSave}
             type="button"
           >
             {isSaving ? "Saving..." : "Save changes"}
           </button>
-          <button
-            className="admin-modal-delete-button sm:ml-auto"
-            disabled={
-              showDeleteConfirm &&
-              (deleteConfirmation !== "delete" || isDeleting)
-            }
-            onClick={() => {
-              if (!showDeleteConfirm) {
-                setShowDeleteConfirm(true);
-                return;
-              }
+          <div className="grid gap-1">
+            <button
+              className="admin-modal-delete-button w-full"
+              disabled={isDeleteDisabled}
+              onClick={() => {
+                if (deleteBlockedReason) {
+                  setError(deleteBlockedReason);
+                  return;
+                }
 
-              void handleDelete();
-            }}
-            type="button"
-          >
-            <Trash2 aria-hidden="true" className="h-4 w-4" />
-            {isDeleting ? "Deleting..." : "Delete member"}
-          </button>
+                if (!showDeleteConfirm) {
+                  setShowDeleteConfirm(true);
+                  return;
+                }
+
+                void handleDelete();
+              }}
+              title={deleteBlockedReason ?? undefined}
+              type="button"
+            >
+              <Trash2 aria-hidden="true" className="h-4 w-4" />
+              {isDeleting ? "Deleting..." : "Delete member"}
+            </button>
+            {deleteBlockedReason ? (
+              <p className="!m-0 max-w-xs !text-xs text-slate-500">
+                {deleteBlockedReason}
+              </p>
+            ) : null}
+          </div>
         </div>
       </section>
     </div>

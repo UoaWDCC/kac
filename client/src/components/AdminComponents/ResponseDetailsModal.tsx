@@ -207,9 +207,9 @@ export default function ResponseDetailsModal({
           </div>
         ) : null}
 
-        <div className="flex shrink-0 flex-col gap-3 border-t border-slate-200 bg-white px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="grid shrink-0 grid-cols-1 gap-3 border-t border-slate-200 bg-white px-6 py-4 sm:grid-cols-2 sm:items-start">
           <button
-            className="admin-modal-save-button"
+            className="admin-modal-save-button w-full"
             disabled={isSaving}
             onClick={handleManualSave}
             type="button"
@@ -217,7 +217,7 @@ export default function ResponseDetailsModal({
             {isSaving ? "Saving..." : "Save changes"}
           </button>
           <button
-            className="admin-modal-delete-button sm:ml-auto"
+            className="admin-modal-delete-button w-full"
             disabled={
               showDeleteConfirm &&
               (deleteConfirmation !== "delete" || isDeleting)

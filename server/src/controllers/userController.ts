@@ -206,6 +206,14 @@ export const getUsers = async (_req: Request, res: Response) => {
   }
 };
 
+const getAuthenticatedUser = async (req: Request) => {
+  const profile = req.user as { id?: string } | undefined;
+
+  if (!profile?.id) return null;
+
+  return User.findOne({ googleUid: profile.id });
+};
+
 export const updateUser = async (req: Request, res: Response) => {
   const allowedFields = [
     "email",
@@ -234,6 +242,10 @@ export const updateUser = async (req: Request, res: Response) => {
     updates.yearOfStudy = Number(updates.yearOfStudy);
   }
 
+  if (updates.isAdmin !== undefined) {
+    updates.isAdmin = updates.isAdmin === true || updates.isAdmin === "true";
+  }
+
   if (updates.latestMembershipYear === "") {
     updates.latestMembershipYear = null;
   } else if (updates.latestMembershipYear !== undefined && updates.latestMembershipYear !== null) {
@@ -241,7 +253,39 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, updates, {
+    const targetUser = await User.findById(req.params.id);
+
+    if (!targetUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    if (updates.isAdmin === false && targetUser.isAdmin) {
+      const currentUser = await getAuthenticatedUser(req);
+
+      if (!currentUser) {
+        res.status(403).json({ message: "Forbidden" });
+        return;
+      }
+
+      if (String(currentUser._id) === String(targetUser._id)) {
+        res.status(400).json({
+          message: "You cannot remove admin access from your own account",
+        });
+        return;
+      }
+
+      const adminCount = await User.countDocuments({ isAdmin: true });
+
+      if (adminCount <= 1) {
+        res.status(400).json({
+          message: "At least one admin account must remain",
+        });
+        return;
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(targetUser._id, updates, {
       new: true,
       runValidators: true,
     });
@@ -268,12 +312,39 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const targetUser = await User.findById(req.params.id);
 
-    if (!user) {
+    if (!targetUser) {
       res.status(404).json({ message: "User not found" });
       return;
     }
+
+    const currentUser = await getAuthenticatedUser(req);
+
+    if (!currentUser) {
+      res.status(403).json({ message: "Forbidden" });
+      return;
+    }
+
+    if (String(currentUser._id) === String(targetUser._id)) {
+      res.status(400).json({
+        message: "You cannot delete your own admin account",
+      });
+      return;
+    }
+
+    if (targetUser.isAdmin) {
+      const adminCount = await User.countDocuments({ isAdmin: true });
+
+      if (adminCount <= 1) {
+        res.status(400).json({
+          message: "At least one admin account must remain",
+        });
+        return;
+      }
+    }
+
+    await targetUser.deleteOne();
 
     res.status(200).json({ message: "User deleted" });
   } catch (err) {

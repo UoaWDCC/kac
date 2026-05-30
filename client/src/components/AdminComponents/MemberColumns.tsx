@@ -3,6 +3,7 @@ import { Mail, Pencil, Phone, ShieldCheck } from "lucide-react";
 
 export interface Member {
   _id: string;
+  googleUid: string;
   isAdmin: boolean;
   latestMembershipYear: number | null;
   email: string;

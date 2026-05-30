@@ -13,7 +13,7 @@ const headerStyle = {
 };
 
 const Header = () => {
-  const { user, hasAccount, loading, logout } = useAuth();
+  const { user, role, hasAccount, loading, logout } = useAuth();
 
   // User is only considered "signed in" to the club once they have a full account.
   // A Google-authed user mid-signup should still see the Sign In button.
@@ -43,6 +43,11 @@ const Header = () => {
         <Link to="/Faq" style={linkStyle}>
           Faq
         </Link>
+        {role === "admin" ? (
+          <Link to="/Admin" style={linkStyle}>
+            Admin Dashboard
+          </Link>
+        ) : null}
 
         {!loading &&
           (isSignedIn ? (

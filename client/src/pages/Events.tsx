@@ -39,7 +39,7 @@ const Events = () => {
       <div className="event-dashboard">
         {role === "admin" && (
           <Link
-            to="/Events" //add editing at some point
+            to="/Events"
             className="events-card add-event-card"
             style={{ textDecoration: "none" }}
           >
@@ -53,7 +53,7 @@ const Events = () => {
             title={event.title}
             description={event.description}
             imageUrl={event.imageUrl}
-            time={new Date(event.time)}
+            datetime={new Date(event.time)}
             status={event.status as "open" | "waitlist" | "ended"}
           />
         ))}
@@ -73,7 +73,7 @@ const Events = () => {
             title={event.title}
             description={event.description}
             imageUrl={event.imageUrl}
-            time={new Date(event.time)}
+            datetime={new Date(event.time)}
             status={event.status as "open" | "waitlist" | "ended"}
           />
         ))}

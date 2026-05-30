@@ -4,9 +4,6 @@ import EventsCard from "../components/EventsCard.tsx";
 import eventsData from "../placeholders/events.json";
 import { Link } from "react-router-dom";
 
-const PAGE_TITLE_1 = "Upcoming Events";
-const PAGE_TITLE_2 = "Past Events";
-
 const getTime = (t: string) => new Date(t).getTime();
 const now = Date.now();
 const sortedEvents = [...eventsData].sort(
@@ -19,8 +16,6 @@ const upcomingEvents = sortedEvents.filter(
 const pastEvents = sortedEvents.filter((event) => getTime(event.time) < now);
 
 const Events = () => {
-  const isAdmin = true; // Hardcoded admin for now
-
   return (
     <div
       className="event-page"
@@ -35,7 +30,7 @@ const Events = () => {
         className="title-text"
         style={{ textAlign: "center", marginBottom: "40px" }}
       >
-        {PAGE_TITLE_1}
+        {"Upcoming Events"}
       </h1>
 
       <div className="event-dashboard">
@@ -70,7 +65,7 @@ const Events = () => {
         className="title-text"
         style={{ textAlign: "center", marginBottom: "40px" }}
       >
-        {PAGE_TITLE_2}
+        {"Past Events"}
       </h1>
 
       <div className="event-dashboard">

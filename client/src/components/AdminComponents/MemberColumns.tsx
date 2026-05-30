@@ -143,15 +143,17 @@ export const getMemberColumns = (
       const isCurrent = year === currentMembershipYear;
 
       return (
-        <span
-          className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${
-            isCurrent
-              ? "bg-emerald-50 text-emerald-700"
-              : "bg-amber-50 text-amber-700"
-          }`}
-        >
-          {year ?? "No year"}
-        </span>
+        <div className="flex justify-center">
+          <span
+            className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${
+              isCurrent
+                ? "bg-emerald-50 text-emerald-700"
+                : "bg-amber-50 text-amber-700"
+            }`}
+          >
+            {year ?? "No year"}
+          </span>
+        </div>
       );
     },
     header: "Membership",
@@ -160,7 +162,7 @@ export const getMemberColumns = (
   {
     cell: ({ row }) => (
       <button
-        className="inline-flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-md border border-blue-medium bg-white px-2 text-xs font-semibold leading-tight text-blue-medium shadow-sm transition hover:bg-blue-medium hover:text-white"
+        className="admin-action-button"
         onClick={() => onViewEdit(row.original)}
         type="button"
       >

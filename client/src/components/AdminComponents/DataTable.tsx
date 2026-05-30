@@ -13,6 +13,7 @@ import {
   ArrowUp,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   ChevronsUpDown,
   Search,
   X,
@@ -96,18 +97,20 @@ export default function DataTable<TData extends object>({
         return "";
     }
   };
+  const isCenteredColumn = (columnId: string) =>
+    columnId === "actions" || columnId === "latestMembershipYear";
 
   return (
     <div className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-col gap-3 border-b border-slate-200 bg-slate-50/80 p-3 sm:flex-row sm:items-center sm:justify-between">
-        <label className="relative flex w-full items-center sm:max-w-sm">
+        <label className="relative flex w-full items-center sm:max-w-md">
           <span className="sr-only">Search records</span>
           <Search
             aria-hidden="true"
             className="pointer-events-none absolute left-3 h-4 w-4 text-slate-500"
           />
           <input
-            className="h-10 w-full rounded-md border border-slate-300 bg-white pl-9 pr-10 text-sm text-slate-950 outline-none transition focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/40"
+            className="h-10 w-full rounded-md border border-slate-300 bg-white pl-9 pr-9 text-sm text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/35"
             onChange={(event) => setGlobalFilter(event.target.value)}
             placeholder={searchPlaceholder}
             type="text"
@@ -116,7 +119,7 @@ export default function DataTable<TData extends object>({
           {globalFilter ? (
             <button
               aria-label="Clear search"
-              className="absolute right-2 inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-950"
+              className="absolute right-1.5 inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-blue-medium"
               onClick={() => setGlobalFilter("")}
               title="Clear search"
               type="button"
@@ -130,18 +133,24 @@ export default function DataTable<TData extends object>({
           <span className="inline-flex h-10 items-center rounded-md border border-slate-200 bg-white px-3">
             {totalRows} {totalRows === 1 ? "record" : "records"}
           </span>
-          <select
-            aria-label="Rows per page"
-            className="h-10 rounded-md border border-slate-300 bg-white px-2 text-sm text-slate-950 outline-none focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/40"
-            onChange={(event) => table.setPageSize(Number(event.target.value))}
-            value={table.getState().pagination.pageSize}
-          >
-            {pageSizeOptions.map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                {pageSize} rows
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              aria-label="Rows per page"
+              className="h-10 appearance-none rounded-md border border-slate-300 bg-white pl-3 pr-10 text-sm text-slate-950 outline-none focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/40"
+              onChange={(event) => table.setPageSize(Number(event.target.value))}
+              value={table.getState().pagination.pageSize}
+            >
+              {pageSizeOptions.map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize} rows
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              aria-hidden="true"
+              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-950"
+            />
+          </div>
         </div>
       </div>
 
@@ -163,14 +172,14 @@ export default function DataTable<TData extends object>({
                             ? "descending"
                             : "none"
                       }
-                      className={`border-b border-slate-200 px-3 py-3 font-semibold ${header.column.id === "actions" ? "text-center" : ""} ${getColumnWidthClass(
+                      className={`border-b border-slate-200 px-3 py-3 font-semibold ${isCenteredColumn(header.column.id) ? "text-center" : ""} ${getColumnWidthClass(
                         header.column.id
                       )}`}
                       key={header.id}
                     >
                       {header.isPlaceholder ? null : canSort ? (
                         <button
-                          className="inline-flex max-w-full items-center gap-2 whitespace-nowrap rounded-md text-left transition hover:text-slate-950"
+                          className={`inline-flex max-w-full items-center gap-2 whitespace-nowrap rounded-md transition hover:text-slate-950 ${isCenteredColumn(header.column.id) ? "w-full justify-center text-center" : "text-left"}`}
                           onClick={header.column.getToggleSortingHandler()}
                           type="button"
                         >
@@ -237,7 +246,7 @@ export default function DataTable<TData extends object>({
                 <tr className="align-middle transition hover:bg-yellow-light/45" key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td
-                      className={`min-w-0 overflow-hidden px-3 py-4 text-slate-800 ${cell.column.id === "actions" ? "text-center" : ""} ${getColumnWidthClass(
+                      className={`min-w-0 overflow-hidden px-3 py-4 text-slate-800 ${isCenteredColumn(cell.column.id) ? "text-center" : ""} ${getColumnWidthClass(
                         cell.column.id
                       )}`}
                       key={cell.id}

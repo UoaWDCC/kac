@@ -41,13 +41,14 @@ const EventsCard: React.FC<EventProps> = ({ title, imageUrl }) => {
           }}
         />
       </div>
+      <div className="event-content">
+        <hr className="event-divider" />
 
-      <hr className="event-divider" />
-
-      <button className="redirect-button" onClick={handleActionClick}>
-        {"SIGN UP"}
-        <ArrowRight size={18} />
-      </button>
+        <button className="redirect-button" onClick={handleActionClick}>
+          {"SIGN UP"}
+          <ArrowRight size={18} />
+        </button>
+      </div>
     </div>
   );
 };

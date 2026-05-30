@@ -230,13 +230,16 @@ export const updateUser = async (req: Request, res: Response) => {
     "isAdmin",
   ];
 
-  const updates = allowedFields.reduce<Record<string, unknown>>((acc, field) => {
-    if (Object.prototype.hasOwnProperty.call(req.body, field)) {
-      acc[field] = req.body[field];
-    }
+  const updates = allowedFields.reduce<Record<string, unknown>>(
+    (acc, field) => {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        acc[field] = req.body[field];
+      }
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {}
+  );
 
   if (updates.yearOfStudy !== undefined) {
     updates.yearOfStudy = Number(updates.yearOfStudy);
@@ -248,7 +251,10 @@ export const updateUser = async (req: Request, res: Response) => {
 
   if (updates.latestMembershipYear === "") {
     updates.latestMembershipYear = null;
-  } else if (updates.latestMembershipYear !== undefined && updates.latestMembershipYear !== null) {
+  } else if (
+    updates.latestMembershipYear !== undefined &&
+    updates.latestMembershipYear !== null
+  ) {
     updates.latestMembershipYear = Number(updates.latestMembershipYear);
   }
 

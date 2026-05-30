@@ -137,7 +137,9 @@ export default function DataTable<TData extends object>({
             <select
               aria-label="Rows per page"
               className="h-10 appearance-none rounded-md border border-slate-300 bg-white pl-3 pr-10 text-sm text-slate-950 outline-none focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/40"
-              onChange={(event) => table.setPageSize(Number(event.target.value))}
+              onChange={(event) =>
+                table.setPageSize(Number(event.target.value))
+              }
               value={table.getState().pagination.pageSize}
             >
               {pageSizeOptions.map((pageSize) => (
@@ -190,7 +192,10 @@ export default function DataTable<TData extends object>({
                             )}
                           </span>
                           {sorted === "asc" ? (
-                            <ArrowUp aria-hidden="true" className="h-3.5 w-3.5" />
+                            <ArrowUp
+                              aria-hidden="true"
+                              className="h-3.5 w-3.5"
+                            />
                           ) : sorted === "desc" ? (
                             <ArrowDown
                               aria-hidden="true"
@@ -232,7 +237,10 @@ export default function DataTable<TData extends object>({
               ))
             ) : error ? (
               <tr>
-                <td className="px-4 py-12 text-center" colSpan={visibleColumnCount}>
+                <td
+                  className="px-4 py-12 text-center"
+                  colSpan={visibleColumnCount}
+                >
                   <div className="mx-auto flex max-w-sm flex-col items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-4 py-5">
                     <p className="text-base font-semibold text-red-700">
                       Could not load records
@@ -243,7 +251,10 @@ export default function DataTable<TData extends object>({
               </tr>
             ) : rows.length ? (
               rows.map((row) => (
-                <tr className="align-middle transition hover:bg-yellow-light/45" key={row.id}>
+                <tr
+                  className="align-middle transition hover:bg-yellow-light/45"
+                  key={row.id}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       className={`min-w-0 overflow-hidden px-3 py-4 text-slate-800 ${isCenteredColumn(cell.column.id) ? "text-center" : ""} ${getColumnWidthClass(
@@ -251,14 +262,20 @@ export default function DataTable<TData extends object>({
                       )}`}
                       key={cell.id}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </td>
                   ))}
                 </tr>
               ))
             ) : (
               <tr>
-                <td className="px-4 py-12 text-center" colSpan={visibleColumnCount}>
+                <td
+                  className="px-4 py-12 text-center"
+                  colSpan={visibleColumnCount}
+                >
                   <div className="mx-auto max-w-sm rounded-lg border border-slate-200 bg-slate-50 px-4 py-6">
                     <p className="text-base font-semibold text-slate-950">
                       {emptyTitle}
@@ -310,7 +327,10 @@ export default function DataTable<TData extends object>({
                         {getColumnLabel(cell)}
                       </dt>
                       <dd className="min-w-0 break-words text-sm text-slate-800">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </dd>
                     </div>
                   ))}

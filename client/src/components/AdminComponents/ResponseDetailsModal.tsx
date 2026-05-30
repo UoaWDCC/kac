@@ -134,7 +134,9 @@ export default function ResponseDetailsModal({
                   <span className={labelClass}>Name</span>
                   <input
                     className={inputClass}
-                    onChange={(event) => updateField("name", event.target.value)}
+                    onChange={(event) =>
+                      updateField("name", event.target.value)
+                    }
                     required
                     value={form.name}
                   />
@@ -189,7 +191,9 @@ export default function ResponseDetailsModal({
                 <span className="sr-only">Type delete to confirm</span>
                 <input
                   className={`${inputClass} w-full border-red-200 focus:border-red-500 focus:ring-red-200`}
-                  onChange={(event) => setDeleteConfirmation(event.target.value)}
+                  onChange={(event) =>
+                    setDeleteConfirmation(event.target.value)
+                  }
                   placeholder="Type delete"
                   value={deleteConfirmation}
                 />

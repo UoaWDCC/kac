@@ -55,7 +55,9 @@ export default function MemberDetailsModal({
     isAdmin: member.isAdmin,
     lastName: member.lastName,
     latestMembershipYear:
-      member.latestMembershipYear === null ? "" : String(member.latestMembershipYear),
+      member.latestMembershipYear === null
+        ? ""
+        : String(member.latestMembershipYear),
     mobileNumber: member.mobileNumber,
     pronouns: member.pronouns ?? "",
     studentId: member.studentId,
@@ -229,7 +231,9 @@ export default function MemberDetailsModal({
                   <span className={labelClass}>Email</span>
                   <input
                     className={inputClass}
-                    onChange={(event) => updateField("email", event.target.value)}
+                    onChange={(event) =>
+                      updateField("email", event.target.value)
+                    }
                     required
                     type="email"
                     value={form.email}
@@ -400,7 +404,9 @@ export default function MemberDetailsModal({
                 <span className="sr-only">Type delete to confirm</span>
                 <input
                   className={`${inputClass} w-full border-red-200 focus:border-red-500 focus:ring-red-200`}
-                  onChange={(event) => setDeleteConfirmation(event.target.value)}
+                  onChange={(event) =>
+                    setDeleteConfirmation(event.target.value)
+                  }
                   placeholder="Type delete"
                   value={deleteConfirmation}
                 />

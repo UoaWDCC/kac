@@ -64,7 +64,8 @@ export const getResponseColumns = (
         <p className="max-h-12 min-w-0 overflow-hidden whitespace-pre-wrap break-words text-sm leading-6 text-slate-700">
           {getMessagePreview(row.original.message)}
         </p>
-        {row.original.message.trim().split(/\s+/).filter(Boolean).length > 18 ? (
+        {row.original.message.trim().split(/\s+/).filter(Boolean).length >
+        18 ? (
           <span className="mt-1 inline-flex text-xs font-semibold text-slate-500">
             Longer message
           </span>
@@ -78,7 +79,9 @@ export const getResponseColumns = (
     accessorFn: (response) =>
       response.createdAt ? new Date(response.createdAt).getTime() : 0,
     cell: ({ row }) => (
-      <span className="whitespace-nowrap">{formatDateTime(row.original.createdAt)}</span>
+      <span className="whitespace-nowrap">
+        {formatDateTime(row.original.createdAt)}
+      </span>
     ),
     header: "Received",
     id: "received",

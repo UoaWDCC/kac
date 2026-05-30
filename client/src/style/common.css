@@ -227,7 +227,7 @@ p {
   grid-template-columns: minmax(0, 1fr) minmax(14rem, 1fr) 1.75rem;
 }
 
-.admin-delete-confirm>div {
+.admin-delete-confirm > div {
   display: grid;
   gap: 0.25rem;
 }

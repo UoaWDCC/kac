@@ -120,7 +120,9 @@ export default function MembersSection() {
           member={selectedMember}
           onClose={() => setSelectedMember(null)}
           onDelete={(id) =>
-            setMembers((current) => current.filter((member) => member._id !== id))
+            setMembers((current) =>
+              current.filter((member) => member._id !== id)
+            )
           }
           onSave={(updatedMember) =>
             setMembers((current) =>

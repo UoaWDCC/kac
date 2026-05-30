@@ -38,9 +38,9 @@ export const getMemberColumns = (
         <div className="flex min-w-0 flex-col gap-2">
           {member.isAdmin ? (
             <span className="inline-flex w-fit shrink-0 items-center gap-1 rounded-full bg-blue-medium px-2 py-0.5 text-xs font-semibold text-white">
-                <ShieldCheck aria-hidden="true" className="h-3 w-3" />
-                Admin
-              </span>
+              <ShieldCheck aria-hidden="true" className="h-3 w-3" />
+              Admin
+            </span>
           ) : null}
           <span
             className="min-w-0 truncate font-semibold text-slate-950"
@@ -49,7 +49,10 @@ export const getMemberColumns = (
             {member.firstName} {member.lastName}
           </span>
           {member.pronouns ? (
-            <span className="truncate text-xs text-slate-500" title={member.pronouns}>
+            <span
+              className="truncate text-xs text-slate-500"
+              title={member.pronouns}
+            >
               {member.pronouns}
             </span>
           ) : null}
@@ -97,11 +100,17 @@ export const getMemberColumns = (
           >
             {row.original.studentId}
           </span>
-          <span className="truncate text-xs text-slate-500" title={row.original.upi}>
+          <span
+            className="truncate text-xs text-slate-500"
+            title={row.original.upi}
+          >
             {row.original.upi}
           </span>
         </div>
-        <span className="truncate text-sm text-slate-800" title={row.original.university}>
+        <span
+          className="truncate text-sm text-slate-800"
+          title={row.original.university}
+        >
           {row.original.university}
         </span>
         <span className="text-xs font-semibold text-slate-500">

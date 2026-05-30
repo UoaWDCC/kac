@@ -14,11 +14,14 @@ export async function fetchContacts() {
   return res.then((response) => response.data);
 }
 
-export async function updateContact(id: string, contactData: {
-  name: string;
-  email: string;
-  message: string;
-}) {
+export async function updateContact(
+  id: string,
+  contactData: {
+    name: string;
+    email: string;
+    message: string;
+  }
+) {
   const res = api.put(`/contacts/${id}`, contactData);
   return res.then((response) => response.data);
 }

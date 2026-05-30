@@ -43,12 +43,11 @@ const Header = () => {
         <Link to="/Faq" style={linkStyle}>
           Faq
         </Link>
-        {role === "admin" ?
+        {role === "admin" ? (
           <Link to="/Admin" style={linkStyle}>
             Admin Dashboard
-          </Link> : null
-        }
-
+          </Link>
+        ) : null}
 
         {!loading &&
           (isSignedIn ? (

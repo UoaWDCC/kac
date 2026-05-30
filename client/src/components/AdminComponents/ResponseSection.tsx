@@ -61,8 +61,9 @@ export default function ResponsesSection() {
       {
         icon: MailOpen,
         label: "Last 7 days",
-        value: responses.filter((response) => isWithinLastWeek(response.createdAt))
-          .length,
+        value: responses.filter((response) =>
+          isWithinLastWeek(response.createdAt)
+        ).length,
       },
       {
         icon: UsersRound,

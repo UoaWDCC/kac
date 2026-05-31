@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
 import { User } from "../model/user";
 import { getMembershipYear } from "../util/date";
-import { signPassToken, verifyPassToken } from "../util/pass";
+import { signToken, verifyToken } from "../util/token";
 
-export const generatePassQR: RequestHandler = async (req, res) => {
+export const generateQR: RequestHandler = async (req, res) => {
   if (!req.isAuthenticated()) {
     res.status(401).json({ message: "Not authenticated" });
     return;
@@ -24,13 +24,13 @@ export const generatePassQR: RequestHandler = async (req, res) => {
     return;
   }
 
-  const token = signPassToken(googleUid, user.latestMembershipYear!);
+  const token = signToken(googleUid, user.latestMembershipYear!);
   const url = `${process.env.CLIENT_URL}/verify/${token}`;
 
   res.status(200).json({ url });
 };
 
-export const verifyPassQR: RequestHandler = async (req, res) => {
+export const verifyQR: RequestHandler = async (req, res) => {
   const tokenParam = req.params.token;
   const token = Array.isArray(tokenParam) ? tokenParam[0] : tokenParam;
 
@@ -41,7 +41,7 @@ export const verifyPassQR: RequestHandler = async (req, res) => {
 
   let payload;
   try {
-    payload = verifyPassToken(token);
+    payload = verifyToken(token);
   } catch (err) {
     res.status(401).json({ message: "Invalid or expired pass" });
     return;

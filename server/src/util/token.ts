@@ -2,12 +2,12 @@ import jwt from "jsonwebtoken";
 
 const SECRET = process.env.PASS_JWT_SECRET!;
 
-export interface PassPayload {
+export interface TokenPayload {
   googleUid: string;
   membershipYear: number;
 }
 
-export const signPassToken = (googleUid: string, membershipYear: number) => {
+export const signToken = (googleUid: string, membershipYear: number) => {
   const expiresAt = new Date(membershipYear, 11, 31, 23, 59, 59).getTime(); // Dec 31 of membership year
   const expiresInSeconds = Math.floor((expiresAt - Date.now()) / 1000);
 
@@ -16,6 +16,6 @@ export const signPassToken = (googleUid: string, membershipYear: number) => {
   });
 };
 
-export const verifyPassToken = (token: string): PassPayload => {
-  return jwt.verify(token, SECRET) as PassPayload;
+export const verifyToken = (token: string): TokenPayload => {
+  return jwt.verify(token, SECRET) as TokenPayload;
 };

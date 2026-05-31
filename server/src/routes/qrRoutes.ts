@@ -1,9 +1,9 @@
 import express from "express";
-import { generatePassQR, verifyPassQR } from "../controllers/qrController";
+import { generateQR, verifyQR } from "../controllers/qrController";
 
 const router = express.Router();
 
-router.get("/qr", generatePassQR);
-router.get("/verify/:token", verifyPassQR);
+router.get("/generate", generateQR);
+router.get("/verify/:token", verifyQR);
 
 export default router;

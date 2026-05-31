@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import axios from "axios";
 import api from "../api";
 
 const MembershipQR = () => {
@@ -7,18 +8,25 @@ const MembershipQR = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchQR = async () => {
-      try {
-        const res = await api.get("/qr/generate");
-        setUrl(res.data.url);
-      } catch {
-        setError("Failed to load membership QR. Please try again.");
-      } finally {
-        setLoading(false);
+  const fetchQR = async () => {
+    try {
+      const res = await api.get("/qr/generate");
+      setUrl(res.data.url);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ??
+            "Failed to load membership QR code. Please try again."
+        );
+      } else {
+        setError("Failed to load membership QR code. Please try again.");
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchQR();
   }, []);
 

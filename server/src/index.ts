@@ -12,6 +12,7 @@ import webhookRoutes from "./routes/webhookRoutes";
 import sponsorRoutes from "./routes/sponsorRoutes";
 import contactRoutes from "./routes/contactRoutes";
 import userRoutes from "./routes/userRoutes";
+import qrRoutes from "./routes/qrRoutes";
 import { User } from "./model/user";
 
 // app config
@@ -72,6 +73,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/qr", qrRoutes);
 
 // Connect to MongoDB and start the server
 mongoose

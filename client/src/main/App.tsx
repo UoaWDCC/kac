@@ -17,6 +17,7 @@ import Events from "../pages/Events.tsx";
 import EventDetail from "../pages/EventDetail.tsx";
 import About from "../pages/About.tsx";
 import SignUp from "../pages/Signup.tsx";
+import Profile from "../pages/Profile.tsx";
 import Toast from "../components/Toast.tsx";
 
 const App = () => {
@@ -36,6 +37,8 @@ const App = () => {
             <Route path="Sponsors" element={<Sponsors />} />
             <Route path="Contact" element={<Contact />} />
             <Route path="Faq" element={<Faq />} />
+            <Route path="Profile" element={<Profile />} />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

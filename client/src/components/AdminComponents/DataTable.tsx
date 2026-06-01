@@ -30,7 +30,7 @@ type DataTableProps<TData extends object> = {
   searchPlaceholder: string;
 };
 
-const pageSizeOptions = [10, 20, 50];
+const pageSizeOptions = [3, 10, 20, 50];
 
 export default function DataTable<TData extends object>({
   columns,
@@ -360,7 +360,7 @@ export default function DataTable<TData extends object>({
         <div className="flex items-center gap-2">
           <button
             aria-label="Previous page"
-            className="inline-flex h-9 items-center gap-1 rounded-md border border-slate-300 bg-white px-3 text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-9 items-center gap-1 rounded-md border border-slate-300 bg-white px-3 text-slate-700 shadow-sm transition hover:enabled:!bg-blue-medium hover:enabled:text-white hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
             title="Previous page"
@@ -371,7 +371,7 @@ export default function DataTable<TData extends object>({
           </button>
           <button
             aria-label="Next page"
-            className="inline-flex h-9 items-center gap-1 rounded-md border border-slate-300 bg-white px-3 text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-9 items-center gap-1 rounded-md border border-slate-300 bg-white px-3 text-slate-700 shadow-sm transition hover:enabled:!bg-blue-medium hover:enabled:text-white hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!table.getCanNextPage()}
             onClick={() => table.nextPage()}
             title="Next page"

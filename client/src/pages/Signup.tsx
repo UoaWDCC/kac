@@ -1,19 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  CardElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
 import "../style/common.css";
 import "../style/signup.css";
-import api from "../api/index";
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const FACULTIES = [
   "Arts",
@@ -26,11 +16,9 @@ const FACULTIES = [
   "Science",
 ];
 
-const SignUpForm = () => {
+const SignUp = () => {
   const { user, hasAccount, loading, refresh } = useAuth();
   const navigate = useNavigate();
-  const stripe = useStripe();
-  const elements = useElements();
 
   const [form, setForm] = useState({
     firstName: "",
@@ -72,33 +60,8 @@ const SignUpForm = () => {
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    // Validate all form fields before Stripe
-    const missingFields = [];
-    if (!form.firstName.trim()) missingFields.push("First Name");
-    if (!form.lastName.trim()) missingFields.push("Last Name");
-    if (!form.mobileNumber.trim()) missingFields.push("Mobile Number");
-    if (!form.university.trim()) missingFields.push("University");
-    if (!form.studentId.trim()) missingFields.push("Student ID");
-    if (!form.upi.trim()) missingFields.push("Student Username / UPI");
-    if (!form.yearOfStudy) missingFields.push("Year of Study");
-    if (form.faculties.length === 0) missingFields.push("Faculty");
-
-    if (missingFields.length > 0) {
-      setError(
-        `Please fill in the following fields: ${missingFields.join(", ")}.`
-      );
-      return;
-    }
-
-    if (!stripe || !elements) {
-      setError("Payment is not ready yet. Please try again.");
-      return;
-    }
-
-    // Check Stripe's card element's mounting status before attempting payment
-    const cardElement = elements.getElement(CardElement);
-    if (!cardElement) {
-      setError("Payment form failed to load. Please refresh and try again.");
+    if (form.faculties.length === 0) {
+      setError("Please select at least one faculty.");
       return;
     }
 
@@ -106,47 +69,16 @@ const SignUpForm = () => {
     setError(null);
 
     try {
-      // Step 1: Create a payment intent on the server ($5 membership fee set on server side)
-      const { data } = await api.post("/payments/create-payment-intent", {
-        type: "membership",
-      });
-
-      // Step 2: Confirm the card payment with Stripe
-      const { error: stripeError, paymentIntent } =
-        await stripe.confirmCardPayment(data.clientSecret, {
-          payment_method: { card: cardElement },
-        });
-
-      if (stripeError) {
-        setError(stripeError.message ?? "Payment failed. Please try again.");
-        return;
-      }
-
-      if (!paymentIntent || paymentIntent.status !== "succeeded") {
-        setError("Payment has not been completed yet.");
-        return;
-      }
-
-      // Step 3: Payment succeeded, create the user account
-      await api.post("/users/signup", {
+      await axios.post("/api/users/signup", {
         ...form,
         yearOfStudy: Number(form.yearOfStudy),
-        paymentIntentId: paymentIntent.id,
       });
-
       await refresh();
       navigate("/");
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        setError(
-          err.response?.data?.message ??
-            "Something went wrong. Please try again."
-        );
-      } else if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message ?? "Something went wrong. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -278,41 +210,16 @@ const SignUpForm = () => {
           </div>
         </div>
 
-        <div className="signup-field">
-          <label>Payment Details</label>
-          <div className="signup-card-element">
-            <CardElement
-              options={{
-                hidePostalCode: true,
-                style: {
-                  base: {
-                    fontSize: "18px",
-                  },
-                },
-              }}
-            />
-          </div>
-          <p className="signup-card-note">
-            A one-time $5 NZD membership fee will be charged.
-          </p>
-        </div>
-
         <button
           className="signup-submit"
           onClick={handleSubmit}
-          disabled={submitting || !stripe}
+          disabled={submitting}
         >
-          {submitting ? "PROCESSING PAYMENT..." : "CREATE ACCOUNT >>"}
+          {submitting ? "CREATING ACCOUNT..." : "CREATE ACCOUNT >>"}
         </button>
       </div>
     </div>
   );
 };
-
-const SignUp = () => (
-  <Elements stripe={stripePromise}>
-    <SignUpForm />
-  </Elements>
-);
 
 export default SignUp;

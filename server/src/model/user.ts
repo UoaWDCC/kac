@@ -6,7 +6,7 @@ const userSchema = new Schema(
   {
     googleUid: { type: String, required: true, unique: true },
     isAdmin: { type: Boolean, default: false },
-    latestMembershipYear: { type: Number, default: null },
+    hasPaid: { type: Boolean, default: false },
     email: { type: String, required: true, unique: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -25,10 +25,7 @@ const userSchema = new Schema(
       },
     },
   },
-  {
-    timestamps: true,
-    versionKey: false,
-  }
+  { timestamps: true, versionKey: false }
 );
 
 export const User = model("User", userSchema);

@@ -22,7 +22,6 @@ const Header = () => {
         <div className="flex items-center w-fit">
           <ImageBlock
             pageKey="logo"
-            role="user" // change to admin for swappable logo
             alt="KAC Logo"
             style={{ width: "64px", height: "64px" }}
           />
@@ -51,7 +50,7 @@ const Header = () => {
                 {isSelected && (
                   <motion.span
                     layoutId="pill-tab"
-                    transition={{ type: "spring", duration: 0.5 }}
+                    transition={{ type: "tween", duration: 0.14 }}
                     className="absolute inset-0 z-0 rounded-full bg-yellow-dark"
                   />
                 )}

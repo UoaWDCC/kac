@@ -1,20 +1,27 @@
+@import url("https://fonts.bunny.net/css?family=alan-sans:300,400");
 @import url("https://fonts.bunny.net/css?family=amaranth:400,400i,700,700i");
 @import url("https://fonts.bunny.net/css?family=bitcount-single:100,200,300,400,500,600,700,800,900");
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Amaranth", sans-serif;
+  --font-alan-sans: "Alan Sans", sans-serif;
   --font-monospace: "Bitcount Single", monospace;
   --color-yellow-light: #faf3d1;
   --color-yellow-medium: #f5df86;
   --color-yellow-dark: #f2b719;
   --color-blue-medium: #0b2d4a;
   --color-blue-light: #14385e;
+  --color-grey-medium: #5a7388;
 }
 
 body {
   color: var(--color-blue-medium);
   font-family: var(--font-sans);
+}
+
+header {
+  background-color: var(--color-yellow-light);
 }
 
 body,
@@ -60,4 +67,22 @@ p {
   display: block;
   text-align: center;
   box-sizing: border-box;
+}
+
+.button {
+  padding: 0.5rem 2rem;
+  border-radius: 1.4rem;
+  position: relative;
+  text-decoration: none;
+  color: var(--color-blue-medium);
+  background-color: var(--color-yellow-dark);
+  box-shadow: 0.2rem 0.2rem var(--color-yellow-medium);
+  width: 80%;
+  transition: 0.3s;
+}
+
+.button:hover {
+  background-color: var(--color-blue-medium);
+  box-shadow: 0.2rem 0.2rem var(--color-grey-medium);
+  color: var(--color-yellow-light);
 }

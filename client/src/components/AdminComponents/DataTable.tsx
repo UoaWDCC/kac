@@ -119,7 +119,7 @@ export default function DataTable<TData extends object>({
           {globalFilter ? (
             <button
               aria-label="Clear search"
-              className="absolute right-1.5 inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-blue-medium"
+              className="absolute right-1.5 inline-flex h-7 w-7 items-center justify-end pr-2 rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-blue-medium"
               onClick={() => setGlobalFilter("")}
               title="Clear search"
               type="button"

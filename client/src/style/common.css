@@ -62,6 +62,8 @@ p {
   box-sizing: border-box;
 }
 
+/* Admin Dashboard Styles */
+
 .admin-action-button {
   align-items: center;
   background-color: #ffffff;

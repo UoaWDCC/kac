@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes";
 import imageRoutes from "./routes/imageRoutes";
 import executivesRoutes from "./routes/executivesRoutes";
 import faqRoutes from "./routes/faqRoutes";
+import contentRoutes from "./routes/contentRoutes";
 import contactRoutes from "./routes/contactRoutes";
 import userRoutes from "./routes/userRoutes";
 import { User } from "./model/user";
@@ -58,6 +59,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/executives", executivesRoutes);
 app.use("/api/faqs", faqRoutes);
+app.use("/api/contents", contentRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/users", userRoutes);
 

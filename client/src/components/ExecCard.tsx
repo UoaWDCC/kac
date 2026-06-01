@@ -1,4 +1,5 @@
 import "../style/common.css";
+import "../style/image_block/ImageBlock.css";
 import { Pencil, Trash2 } from "lucide-react";
 import api from "../api";
 
@@ -25,72 +26,60 @@ interface ExecProps {
 interface ExecCardProps {
   role: "admin" | "user";
   onDelete: () => void;
+  onOpen: () => void;
 }
 
 const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
   role,
   onDelete,
+  onOpen,
   id,
   imageURL,
   displayName,
   execRole,
-  description,
-  fullName,
-  ethnicity,
-  degree,
-  mbti,
-  fact,
-  sponsor,
-  greenFlag,
-  redFlag,
-  emojis,
 }) => {
   return (
     <div className="executive-card">
-      <div className="image-block">
-        <img src={EXEC_IMG || imageURL} alt={displayName} />
-        {role === "admin" && (
-          <button
-            className="image-block__edit-btn"
-            onClick={async () => {
-              // Implementation for edit functionality
-            }}
-            title="Edit Executive"
-          >
-            <Pencil size={17} />
-          </button>
-        )}
+      <button
+        type="button"
+        className="executive-card__click-target"
+        onClick={onOpen}
+        aria-label={`Open ${displayName} preview`}
+      />
 
-        {role === "admin" && (
-          <button
-            className="image-block__delete-btn"
-            onClick={async () => {
-              await api.delete(`/executives/${id}`);
-              onDelete();
-            }}
-            title="Delete Executive"
-          >
-            <Trash2 size={17} />
-          </button>
-        )}
-      </div>
-      <h2>{displayName}</h2>
-      <div className="card-body">
-        <p>
-          Meet our {execRole}, {displayName}!
-        </p>
-        <p className="exec-desc">{description}</p>
-        <ul>
-          <li>Full Name: {fullName}</li>
-          {ethnicity !== "" && <li>Ethnicity: {ethnicity}</li>}
-          {degree !== "" && <li>Degree: {degree}</li>}
-          <li>MBTI: {mbti}</li>
-          <li>Fun Fact: {fact}</li>
-          <li>Favourite KAC Sponsor: {sponsor}</li>
-          <li>Green Flag ✅: {greenFlag}</li>
-          <li>Red Flag 🚩: {redFlag}</li>
-          {emojis !== "" && <li>Fav Emojis: {emojis}</li>}
-        </ul>
+      <div className="executive-card__top">
+        <div className="executive-card__media image-block">
+          <img src={imageURL || EXEC_IMG} alt={displayName} />
+          {role === "admin" && (
+            <button
+              className="image-block__edit-btn"
+              onClick={async () => {
+                // Implementation for edit functionality
+              }}
+              title="Edit Executive"
+            >
+              <Pencil size={17} />
+            </button>
+          )}
+
+          {role === "admin" && (
+            <button
+              className="image-block__delete-btn"
+              onClick={async () => {
+                await api.delete(`/executives/${id}`);
+                onDelete();
+              }}
+              title="Delete Executive"
+            >
+              <Trash2 size={17} />
+            </button>
+          )}
+        </div>
+
+        <div className="executive-card__identity">
+          <p className="executive-card__role">{execRole}</p>
+          <h2 className="executive-card__name">{displayName}</h2>
+        </div>
       </div>
     </div>
   );

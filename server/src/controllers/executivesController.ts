@@ -70,7 +70,6 @@ export const getAllExecs: RequestHandler = async (req, res, next) => {
     const mappedExecs = executives.map((exec) => ({
       ...exec,
       id: exec._id,
-      roleGroup: normaliseRoleGroup(exec.roleGroup),
     }));
     res.status(200).json(mappedExecs);
   } catch (err) {

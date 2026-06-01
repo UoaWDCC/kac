@@ -42,7 +42,7 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
     <div className="executive-card">
       <button
         type="button"
-        className="executive-card__click-target"
+        className="executive-card__click-target cursor-pointer"
         onClick={onOpen}
         aria-label={`Open ${displayName} preview`}
       />

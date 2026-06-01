@@ -62,25 +62,20 @@ const ImageSlider = ({ pageKeys }: ImageSliderProps) => {
           </motion.div>
         );
       })}
-      <button
-        className="absolute z-20 right-[calc(130%*1.2/2)] top-5/8 w-fit! h-fit! rounded-full p-8"
-        onClick={handleBack}
-      >
+      <div className="absolute z-20 right-[calc(130%*1.2/2)] top-5/8 w-fit! h-fit! rounded-full p-8">
         <ChevronLeft
-          size={32}
-          className="stroke-blue-medium stroke-3 hover:rotate-34 duration-200 transition"
+          size={"3rem"}
+          onClick={handleBack}
+          className="stroke-blue-medium stroke-3 hover:rotate-34 duration-200 transition cursor-pointer"
         />
-      </button>
-      <button
-        style={{}}
-        className="absolute z-20 left-[calc(130%*1.2/2)] top-5/8 w-fit! h-fit! rounded-full p-8"
-        onClick={handleNext}
-      >
+      </div>
+      <div className="absolute z-20 left-[calc(130%*1.2/2)] top-5/8 w-fit! h-fit! rounded-full p-8">
         <ChevronRight
-          size={32}
-          className="stroke-blue-medium stroke-3 hover:-rotate-34 duration-200 transition"
+          size={"3rem"}
+          onClick={handleNext}
+          className="stroke-blue-medium stroke-3 hover:-rotate-34 duration-200 transition cursor-pointer"
         />
-      </button>
+      </div>
     </div>
   );
 };

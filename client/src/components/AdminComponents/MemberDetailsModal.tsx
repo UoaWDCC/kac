@@ -360,10 +360,11 @@ export default function MemberDetailsModal({
             <section className="grid gap-3 rounded-lg border border-slate-200 bg-white p-4">
               <h3 className="text-base font-bold text-slate-950">Access</h3>
               <label
-                className={`flex items-center gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm font-semibold ${adminChangeBlockedReason
-                  ? "bg-slate-50 text-slate-500"
-                  : "text-slate-700"
-                  }`}
+                className={`flex items-center gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm font-semibold ${
+                  adminChangeBlockedReason
+                    ? "bg-slate-50 text-slate-500"
+                    : "text-slate-700"
+                }`}
               >
                 <input
                   checked={form.isAdmin}

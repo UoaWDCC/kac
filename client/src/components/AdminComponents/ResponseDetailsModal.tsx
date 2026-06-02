@@ -143,15 +143,13 @@ export default function ResponseDetailsModal({
                 </label>
 
                 <label className="grid gap-1">
-                  <span className={labelClass}>Email</span>
+                  <span className={labelClass}>Email (Cannot Edit)</span>
                   <input
                     className={inputClass}
-                    onChange={(event) =>
-                      updateField("email", event.target.value)
-                    }
                     required
                     type="email"
                     value={form.email}
+                    disabled
                   />
                 </label>
               </div>

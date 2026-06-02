@@ -2,6 +2,7 @@ import "../style/common.css";
 import "../style/image_block/ImageBlock.css";
 import { Pencil, Trash2 } from "lucide-react";
 import api from "../api";
+import { useAuth } from "../auth/useAuth";
 
 /** No access to images currently, use placeholder */
 const EXEC_IMG = "src/images/exec-placeholder.png";
@@ -12,25 +13,14 @@ interface ExecProps {
   displayName: string;
   execRole: string;
   description: string;
-  fullName: string;
-  ethnicity: string;
-  degree: string;
-  mbti: string;
-  fact: string;
-  sponsor: string;
-  greenFlag: string;
-  redFlag: string;
-  emojis: string;
 }
 
 interface ExecCardProps {
-  role: "admin" | "user";
   onDelete: () => void;
   onOpen: () => void;
 }
 
 const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
-  role,
   onDelete,
   onOpen,
   id,
@@ -38,6 +28,8 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
   displayName,
   execRole,
 }) => {
+  const { role } = useAuth();
+
   return (
     <div className="executive-card">
       <button

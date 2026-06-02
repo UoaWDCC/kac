@@ -154,26 +154,15 @@ const Executives = () => {
       {groupedExecs.map(([group, roleExecs]) => (
         <section key={group.id} className="exec-role-section">
           <h2 className="exec-role-title font-monospace">{group.label}</h2>
-
           <div className="exec-role-grid">
             {roleExecs.map((exec) => (
               <ExecCard
-                role="admin"
                 key={exec.id}
                 id={exec.id}
                 imageURL={exec.imageURL}
                 displayName={exec.displayName}
                 execRole={exec.execRole}
                 description={exec.description}
-                fullName={exec.fullName}
-                ethnicity={exec.ethnicity}
-                degree={exec.degree}
-                mbti={exec.mbti}
-                fact={exec.fact}
-                sponsor={exec.sponsor}
-                greenFlag={exec.greenFlag}
-                redFlag={exec.redFlag}
-                emojis={exec.emojis}
                 onDelete={loadExecs}
                 onOpen={() => setSelectedExec(exec)}
               />

@@ -7,7 +7,7 @@ const Home = () => {
     <div>
       {/** TITLE */}
       <section
-        className="section yellow-bg"
+        className="section bg-yellow-light"
         style={{
           width: "100%",
           textAlign: "center",
@@ -16,7 +16,6 @@ const Home = () => {
         <h1>K I W I &nbsp; A S I A N &nbsp; C L U B</h1>
         <ImageBlock
           pageKey="hero"
-          role="admin"
           alt="Hero Page"
           style={{ maxWidth: "1100px", width: "100%", height: "auto" }}
         />
@@ -37,12 +36,11 @@ const Home = () => {
       </section>
 
       {/** EVENTS */}
-      <section className="section yellow-bg">
+      <section className="section bg-yellow-light">
         <div className="narrow-content">
           <h2>CHECK OUT OUR UPCOMING EVENTS</h2>
           <ImageBlock
             pageKey="events"
-            role="admin"
             alt="Kiwi Asian Club group photo"
             style={{
               maxWidth: "1100px",
@@ -58,7 +56,7 @@ const Home = () => {
       </section>
 
       {/** SPONSORS */}
-      <section className="section">
+      <section className="section bg-yellow-light">
         <div className="narrow-content">
           <h2>OUR SPONSORS</h2>
           <Link to="/Sponsors" className="wide-button">

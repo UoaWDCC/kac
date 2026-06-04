@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",
     "framer-motion": "^12.39.0",
+    "@tanstack/react-table": "^8.21.3",
     "axios": "^1.16.0",
     "lucide-react": "^1.11.0",
     "motion": "^12.39.0",

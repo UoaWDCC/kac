@@ -18,14 +18,48 @@ dotenv.config({ quiet: true });
 const port: number = Number(process.env.PORT) || 3000;
 const app: express.Application = express();
 
-let mongoUrl: string;
-if (process.env.MONGODB_STD_CONNECT === "true") {
-  // Optional for developmental usage where DNS resolution of SRV records fail.
-  mongoUrl = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@ac-pcfgzmm-shard-00-00.cf1fyh5.mongodb.net:27017,ac-pcfgzmm-shard-00-01.cf1fyh5.mongodb.net:27017,ac-pcfgzmm-shard-00-02.cf1fyh5.mongodb.net:27017/?ssl=true&replicaSet=atlas-b12118-shard-0&authSource=admin&appName=kac-prod`;
-} else {
-  // Default SRV connection string for production usage.
-  mongoUrl = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@kac-prod.cf1fyh5.mongodb.net/`;
-}
+const mongoUser = encodeURIComponent(process.env.MONGODB_USER ?? "");
+const mongoPassword = encodeURIComponent(process.env.MONGODB_PASSWORD ?? "");
+
+const mongoSrvUrl = `mongodb+srv://${mongoUser}:${mongoPassword}@kac-prod.cf1fyh5.mongodb.net/?appName=kac-prod`;
+const mongoStandardUrl =
+  `mongodb://${mongoUser}:${mongoPassword}` +
+  "@ac-pcfgzmm-shard-00-00.cf1fyh5.mongodb.net:27017," +
+  "ac-pcfgzmm-shard-00-01.cf1fyh5.mongodb.net:27017," +
+  "ac-pcfgzmm-shard-00-02.cf1fyh5.mongodb.net:27017/" +
+  "?tls=true&replicaSet=atlas-b12118-shard-0&authSource=admin&appName=kac-prod";
+
+const isSrvLookupError = (err: unknown) => {
+  const nodeError = err as NodeJS.ErrnoException;
+
+  return (
+    nodeError?.syscall === "querySrv" &&
+    ["ECONNREFUSED", "ENOTFOUND", "ETIMEOUT", "EAI_AGAIN"].includes(
+      nodeError.code ?? ""
+    )
+  );
+};
+
+const connectToMongo = async () => {
+  if (process.env.MONGODB_STD_CONNECT === "true") {
+    console.log("Connecting to MongoDB using standard connection string");
+    await mongoose.connect(mongoStandardUrl);
+    return;
+  }
+
+  try {
+    console.log("Connecting to MongoDB using SRV connection string");
+    await mongoose.connect(mongoSrvUrl);
+  } catch (err) {
+    if (!isSrvLookupError(err)) throw err;
+
+    console.warn(
+      "MongoDB SRV DNS lookup failed; retrying with standard connection string"
+    );
+    await mongoose.disconnect().catch(() => undefined);
+    await mongoose.connect(mongoStandardUrl);
+  }
+};
 
 app.use(
   session({
@@ -70,8 +104,7 @@ app.use("/api/contacts", contactRoutes);
 app.use("/api/users", userRoutes);
 
 // Connect to MongoDB and start the server
-mongoose
-  .connect(mongoUrl)
+connectToMongo()
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(port, "0.0.0.0", () => {

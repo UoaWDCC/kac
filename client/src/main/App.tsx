@@ -9,6 +9,8 @@ import { AuthProvider } from "../auth/AuthProvider.tsx";
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
 
+import { MemberRoute } from "../auth/MemberRoute.tsx";
+
 import Home from "../pages/Home.tsx";
 import Faq from "../pages/Faq.tsx";
 import Contact from "../pages/Contact.tsx";
@@ -17,6 +19,7 @@ import Events from "../pages/Events.tsx";
 import EventDetail from "../pages/EventDetail.tsx";
 import About from "../pages/About.tsx";
 import SignUp from "../pages/Signup.tsx";
+import Profile from "../pages/Profile.tsx";
 import Toast from "../components/Toast.tsx";
 
 const App = () => {
@@ -36,6 +39,15 @@ const App = () => {
             <Route path="Sponsors" element={<Sponsors />} />
             <Route path="Contact" element={<Contact />} />
             <Route path="Faq" element={<Faq />} />
+
+            <Route
+              path="Profile"
+              element={
+                <MemberRoute>
+                  <Profile />
+                </MemberRoute>
+              }
+            />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

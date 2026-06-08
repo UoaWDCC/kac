@@ -140,12 +140,10 @@ const SignUpForm = () => {
       if (axios.isAxiosError(err)) {
         setError(
           err.response?.data?.message ??
-            "Something went wrong. Please try again."
+            "An error occurred during signup. Please try again."
         );
-      } else if (err instanceof Error) {
-        setError(err.message);
       } else {
-        setError("Something went wrong. Please try again.");
+        setError("An error occurred during signup. Please try again.");
       }
     } finally {
       setSubmitting(false);

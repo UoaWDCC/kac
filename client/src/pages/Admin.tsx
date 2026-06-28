@@ -1,23 +1,13 @@
 import "../style/common.css";
-import AdminSidebar from "../components/AdminComponents/AdminSidebar.tsx";
-import AdminDashboard from "../components/AdminComponents/AdminDashboard.tsx";
+import AdminSidebar from "../components/admin/AdminSidebar.tsx";
+import AdminDashboard from "../components/admin/AdminDashboard.tsx";
 import { AdminRoute } from "../auth/AdminRoute.tsx";
-import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import { useState } from "react";
 
 export type AdminSection = "members" | "responses";
 
 const Admin = () => {
   const [activeSection, setActiveSection] = useState<AdminSection>("members");
-  useEffect(() => {
-    const hasShownAdminToast = sessionStorage.getItem("hasShownAdminToast");
-
-    if (!hasShownAdminToast) {
-      toast.success("Welcome to the admin dashboard!");
-
-      sessionStorage.setItem("hasShownAdminToast", "true");
-    }
-  }, []);
 
   return (
     <AdminRoute>

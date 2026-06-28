@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
 import { User } from "../model/user";
+import { getMembershipYear } from "../util/date";
 
 const router = express.Router();
 
@@ -9,7 +10,8 @@ type Role = "guest" | "legacy" | "member" | "admin";
 const deriveRole = (existingUser: any): Role => {
   if (!existingUser) return "legacy";
   if (existingUser.isAdmin) return "admin";
-  if (existingUser.hasPaid) return "member";
+  if (existingUser.latestMembershipYear === getMembershipYear())
+    return "member";
   return "legacy";
 };
 

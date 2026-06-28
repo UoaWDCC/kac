@@ -1,6 +1,6 @@
 import { MapPin, Calendar } from "lucide-react";
 import events from "../placeholders/events.json";
-import { ImageBlock } from "../components/ImageBlock/ImageBlock";
+import { ImageBlock } from "../components/image_block/ImageBlock";
 import "../style/common.css";
 import "../style/event-detail.css";
 

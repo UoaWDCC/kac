@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/useAuth.ts";
-import { ImageBlock } from "../components/ImageBlock/ImageBlock";
+import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 
 import "../style/common.css";
 

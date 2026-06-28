@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, type Variants } from "framer-motion";
-import { ImageBlock } from "./ImageBlock/ImageBlock";
+import { ImageBlock } from "./image_block/ImageBlock";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ImageSliderProps {

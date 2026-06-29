@@ -10,7 +10,7 @@ const tabs = ["Home", "About", "Events", "Sponsors", "Contact", "Faq"];
 
 const Header = () => {
   const location = useLocation();
-  const { user, role, hasAccount, loading, logout } = useAuth();
+  const { user, hasAccount, loading } = useAuth();
 
   // User is only considered "signed in" to the club once they have a full account.
   // A Google-authed user mid-signup should still see the Sign In button.

@@ -22,6 +22,10 @@ function parseFaq(content: string): Faq[] {
       current = { question: line.slice(1).trim(), answer: "" };
     } else if (current) {
       current.answer += (current.answer ? "\n" : "") + line;
+    } else {
+      // We've found an answer line without a question
+      // This is unexpected, but we'll try to handle it gracefully
+      current = { question: "Untitled Question", answer: line };
     }
   }
 

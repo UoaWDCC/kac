@@ -4,6 +4,7 @@ import api from "../api";
 
 import "../style/faq.css";
 import "../style/common.css";
+import { getContent } from "../api/contentApi";
 
 interface Faq {
   question: string;
@@ -32,10 +33,10 @@ const Faq = () => {
   const [faqs, setFaqs] = useState<Faq[]>([]);
 
   useEffect(() => {
-    api
-      .get<{ content: string }[]>("/faqs")
-      .then((res) => setFaqs(res.data.flatMap((faq) => parseFaq(faq.content))))
-      .catch((err) => console.error("Failed to fetch faqs:", err));
+    getContent("faqs").then((data) => {
+      const parsedFaqs = parseFaq(data.content);
+      setFaqs(parsedFaqs);
+    });
   }, []);
 
   return (

@@ -1,17 +1,16 @@
 import express from "express";
 import {
-  getContents,
+  getContent,
   createContent,
   updateContent,
   deleteContent,
-  deleteAllContents,
 } from "../controllers/contentController";
+import { adminGuard } from "../middlewares/adminGuard";
 
 const router = express.Router();
-router.get("/", getContents);
-router.post("/", createContent);
-router.put("/:id", updateContent);
-router.delete("/:id", deleteContent);
-router.delete("/", deleteAllContents);
+router.get("/:id", getContent);
+router.post("/", adminGuard, createContent);
+router.put("/:id", adminGuard, updateContent);
+router.delete("/:id", adminGuard, deleteContent);
 
 export default router;

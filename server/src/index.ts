@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
 import session from "express-session";
 import passport from "passport";
@@ -63,6 +64,26 @@ const connectToMongo = async () => {
     await mongoose.connect(mongoStandardUrl);
   }
 };
+
+// CORS configuration
+const allowedOrigin = process.env.CLIENT_URL;
+
+const corsOptions = {
+  origin(
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) {
+    if (!origin || origin === allowedOrigin) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(
   session({

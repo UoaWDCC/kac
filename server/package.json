@@ -17,6 +17,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1031.0",
     "@types/express": "^5.0.6",
     "@types/node": "^25.3.3",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
@@ -27,6 +28,7 @@
     "stripe": "^21.0.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express-session": "^1.18.2",
     "@types/multer": "^2.1.0",
     "@types/passport": "^1.0.17",

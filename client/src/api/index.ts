@@ -1,7 +1,13 @@
 import axios from "axios";
 
+if (import.meta.env.VITE_SERVER_URL === undefined) {
+  axios.defaults.baseURL = "/api";
+} else {
+  axios.defaults.baseURL = `${import.meta.env.VITE_SERVER_URL}/api`;
+}
+
 const api = axios.create({
-  baseURL: "/api",
+  withCredentials: true,
 });
 
 api.interceptors.response.use(

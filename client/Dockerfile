@@ -15,6 +15,13 @@ RUN npm ci
 # Copy the rest of the app’s source code
 COPY . .
 
+# Set environment variables
+ARG VITE_SERVER_URL
+ARG VITE_STRIPE_PUBLISHABLE_KEY
+
+ENV VITE_SERVER_URL=${VITE_SERVER_URL}
+ENV VITE_STRIPE_PUBLISHABLE_KEY=${VITE_STRIPE_PUBLISHABLE_KEY}
+
 # Build the app
 RUN npm run build
 

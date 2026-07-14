@@ -1,12 +1,9 @@
 import axios from "axios";
 
-if (import.meta.env.VITE_SERVER_URL === undefined) {
-  axios.defaults.baseURL = "/api";
-} else {
-  axios.defaults.baseURL = `${import.meta.env.VITE_SERVER_URL}/api`;
-}
+const baseUrl = import.meta.env.VITE_SERVER_URL || "";
 
 const api = axios.create({
+  baseURL: `${baseUrl}/api`,
   withCredentials: true,
 });
 

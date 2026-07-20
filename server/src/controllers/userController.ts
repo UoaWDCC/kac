@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
+import Stripe from "stripe";
 import { User } from "../model/user";
+import { Payment } from "../model/payment";
+import { getMembershipYear } from "../util/date";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export const createUser = async (req: Request, res: Response) => {
   // Must be signed in via Google to create an account
@@ -38,6 +43,7 @@ export const createUser = async (req: Request, res: Response) => {
     upi,
     yearOfStudy,
     faculties,
+    paymentIntentId,
   } = req.body;
 
   const missingFields = [];
@@ -51,11 +57,92 @@ export const createUser = async (req: Request, res: Response) => {
   if (!faculties || !Array.isArray(faculties) || faculties.length === 0) {
     missingFields.push("faculties");
   }
+  if (!paymentIntentId || typeof paymentIntentId !== "string")
+    missingFields.push("paymentIntentId");
 
   if (missingFields.length > 0) {
     res.status(400).json({
       message: "Missing required fields",
       fields: missingFields,
+    });
+    return;
+  }
+
+  // 1. Payment Intent Verification Steps:
+  // Verify Payment Intent with Stripe
+  let intent: Stripe.PaymentIntent;
+  try {
+    intent = await stripe.paymentIntents.retrieve(paymentIntentId);
+  } catch (err) {
+    console.error("Error verifying payment intent:", err);
+    res
+      .status(400)
+      .json({ message: "Could not verify payment. Please contact support." });
+    return;
+  }
+
+  if (intent.status !== "succeeded") {
+    res.status(402).json({ message: "Payment has not been completed." });
+    return;
+  }
+
+  if (intent.metadata?.type !== "membership") {
+    res.status(400).json({ message: "Invalid payment type for membership." });
+    return;
+  }
+
+  // Verify Payment Intent belongs to the authenticated user
+  if (intent.metadata?.googleUid !== googleUid) {
+    res
+      .status(403)
+      .json({ message: "Payment Intent does not belong to this user." });
+    return;
+  }
+
+  // 2. Existing Payment Record Verification Steps:
+  const payment = await Payment.findOne({
+    stripePaymentIntentId: paymentIntentId,
+  });
+
+  if (!payment) {
+    res.status(404).json({
+      message: "Payment record not found. Please contact support.",
+    });
+    return;
+  }
+
+  // Verify the payment record belongs to the user
+  if (payment.googleUid !== googleUid) {
+    res.status(403).json({
+      message: "Payment record does not belong to this user.",
+    });
+    return;
+  }
+
+  if (payment.amount !== intent.amount) {
+    res.status(400).json({
+      message: "Payment amount mismatch.",
+    });
+    return;
+  }
+
+  if (payment.status === "failed") {
+    res.status(402).json({
+      message: "Payment failed. Please try again.",
+    });
+    return;
+  }
+
+  if (payment.userId) {
+    res.status(409).json({
+      message: "This payment has already been used to create an account.",
+    });
+    return;
+  }
+
+  if (payment.type !== "membership") {
+    res.status(400).json({
+      message: "Existing payment record is not for a membership.",
     });
     return;
   }
@@ -73,8 +160,26 @@ export const createUser = async (req: Request, res: Response) => {
       upi,
       yearOfStudy: Number(yearOfStudy),
       faculties,
+      latestMembershipYear: getMembershipYear(),
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
+
+    // Verify the local payment record belongs to the authenticated Google user
+    try {
+      await Payment.findByIdAndUpdate(payment._id, {
+        userId: newUser._id,
+        status: "succeeded",
+        paidAt: new Date(),
+      });
+    } catch (paymentUpdateErr) {
+      // Payment Intent was successful and user account created, but failed to link the Payment record to the user.
+      // The orphaned Payment record (succeeded status, no userId) will require admin reconciliation.
+      console.error(
+        `Failed to update Payment record ${payment._id} for user ${newUser._id}. ` +
+          `Payment succeeded but userId not linked, requires admin reconciliation.`,
+        paymentUpdateErr
+      );
+    }
 
     res.status(201).json(newUser);
   } catch (err: any) {
@@ -87,6 +192,169 @@ export const createUser = async (req: Request, res: Response) => {
       return;
     }
     console.error("Error creating user:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getUsers = async (_req: Request, res: Response) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 });
+    res.status(200).json(users);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getAuthenticatedUser = async (req: Request) => {
+  const profile = req.user as { id?: string } | undefined;
+
+  if (!profile?.id) return null;
+
+  return User.findOne({ googleUid: profile.id });
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  const allowedFields = [
+    "email",
+    "firstName",
+    "lastName",
+    "mobileNumber",
+    "pronouns",
+    "university",
+    "studentId",
+    "upi",
+    "yearOfStudy",
+    "faculties",
+    "latestMembershipYear",
+    "isAdmin",
+  ];
+
+  const updates = allowedFields.reduce<Record<string, unknown>>(
+    (acc, field) => {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        acc[field] = req.body[field];
+      }
+
+      return acc;
+    },
+    {}
+  );
+
+  if (updates.yearOfStudy !== undefined) {
+    updates.yearOfStudy = Number(updates.yearOfStudy);
+  }
+
+  if (updates.isAdmin !== undefined) {
+    updates.isAdmin = updates.isAdmin === true || updates.isAdmin === "true";
+  }
+
+  if (updates.latestMembershipYear === "") {
+    updates.latestMembershipYear = null;
+  } else if (
+    updates.latestMembershipYear !== undefined &&
+    updates.latestMembershipYear !== null
+  ) {
+    updates.latestMembershipYear = Number(updates.latestMembershipYear);
+  }
+
+  try {
+    const targetUser = await User.findById(req.params.id);
+
+    if (!targetUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    if (updates.isAdmin === false && targetUser.isAdmin) {
+      const currentUser = await getAuthenticatedUser(req);
+
+      if (!currentUser) {
+        res.status(403).json({ message: "Forbidden" });
+        return;
+      }
+
+      if (String(currentUser._id) === String(targetUser._id)) {
+        res.status(400).json({
+          message: "You cannot remove admin access from your own account",
+        });
+        return;
+      }
+
+      const adminCount = await User.countDocuments({ isAdmin: true });
+
+      if (adminCount <= 1) {
+        res.status(400).json({
+          message: "At least one admin account must remain",
+        });
+        return;
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(targetUser._id, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (err: any) {
+    if (err.code === 11000) {
+      const duplicateField = Object.keys(err.keyPattern || {})[0];
+      res.status(409).json({
+        message: `An account with this ${duplicateField} already exists`,
+      });
+      return;
+    }
+
+    console.error("Error updating user:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const targetUser = await User.findById(req.params.id);
+
+    if (!targetUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const currentUser = await getAuthenticatedUser(req);
+
+    if (!currentUser) {
+      res.status(403).json({ message: "Forbidden" });
+      return;
+    }
+
+    if (String(currentUser._id) === String(targetUser._id)) {
+      res.status(400).json({
+        message: "You cannot delete your own admin account",
+      });
+      return;
+    }
+
+    if (targetUser.isAdmin) {
+      const adminCount = await User.countDocuments({ isAdmin: true });
+
+      if (adminCount <= 1) {
+        res.status(400).json({
+          message: "At least one admin account must remain",
+        });
+        return;
+      }
+    }
+
+    await targetUser.deleteOne();
+
+    res.status(200).json({ message: "User deleted" });
+  } catch (err) {
+    console.error("Error deleting user:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -14,12 +14,16 @@ import Faq from "../pages/Faq.tsx";
 import Contact from "../pages/Contact.tsx";
 import Sponsors from "../pages/Sponsors.tsx";
 import Events from "../pages/Events.tsx";
+import EventDetail from "../pages/EventDetail.tsx";
 import About from "../pages/About.tsx";
 import SignUp from "../pages/Signup.tsx";
+import Admin from "../pages/Admin.tsx";
+import Toast from "../components/Toast.tsx";
 
 const App = () => {
   return (
     <AuthProvider>
+      <Toast />
       <BrowserRouter>
         <Routes>
           {/* Sign-up sits outside the main layout — no header/footer chrome */}
@@ -27,11 +31,13 @@ const App = () => {
 
           <Route path="/" element={<Layout />}>
             <Route path="" element={<Home />} />
-            <Route path="About" element={<About />} />
-            <Route path="Events" element={<Events />} />
-            <Route path="Sponsors" element={<Sponsors />} />
-            <Route path="Contact" element={<Contact />} />
-            <Route path="Faq" element={<Faq />} />
+            <Route path="about" element={<About />} />
+            <Route path="events" element={<Events />} />
+            <Route path="events/temp" element={<EventDetail />} />
+            <Route path="sponsors" element={<Sponsors />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="faq" element={<Faq />} />
+            <Route path="admin" element={<Admin />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

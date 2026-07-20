@@ -1,6 +1,6 @@
 import { MapPin, Calendar } from "lucide-react";
 import events from "../placeholders/events.json";
-import { ImageBlock } from "../components/ImageBlock/ImageBlock";
+import { ImageBlock } from "../components/image_block/ImageBlock";
 import "../style/common.css";
 import "../style/event-detail.css";
 
@@ -19,11 +19,7 @@ const EventDetail = () => {
       <div className="event-detail-layout">
         <div className="event-main-content">
           <div className="event-thumbnail">
-            <ImageBlock
-              pageKey={`event-${event.id}`}
-              role="user"
-              alt={event.title}
-            />
+            <ImageBlock pageKey={`event-${event.id}`} alt={event.title} />
           </div>
 
           <div className="event-card">

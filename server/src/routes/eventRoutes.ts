@@ -6,7 +6,7 @@ import {
   getAllEvents,
 } from "../controllers/eventController";
 
-const router = express().Router();
+const router = express.Router();
 
 router.get("/", getAllEvents);
 router.post("/", addEvent);

@@ -9,10 +9,11 @@ export const addEvent: RequestHandler = async (req, res, next) => {
       const month = d.getUTCMonth();
       const dateVal = d.getUTCDate();
 
-      // Create a candidate date in UTC assuming UTC+12 (standard NZST offset)
+      // Start with 11:59 PM NZST represented in UTC (23:59 - 12h = 11:59 UTC)
       const candidate = new Date(Date.UTC(year, month, dateVal, 11, 59, 59));
 
-      // Adjust for daylight saving time (NZDT, UTC+13) if needed
+      // Convert to NZ time to check the local hour.
+      // In daylight savings (NZDT, UTC+13), 11:59 UTC becomes 12:59 AM next day (hour 0 instead of 23).
       const parts = new Intl.DateTimeFormat("en-US", {
         timeZone: "Pacific/Auckland",
         hour: "numeric",
@@ -23,6 +24,7 @@ export const addEvent: RequestHandler = async (req, res, next) => {
         10
       );
 
+      // If daylight savings pushed the hour past 11 PM, roll UTC back 1 hour to keep it at 11:59 PM NZDT
       if (nzHour !== 23) {
         candidate.setUTCHours(candidate.getUTCHours() - 1);
       }

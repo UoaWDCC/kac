@@ -1,0 +1,87 @@
+.tiptap-editor-container {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  width: 100%;
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  background: #f9f9f9;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.editor-toolbar button {
+  padding: 6px;
+  border: 1px solid transparent;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+}
+
+.editor-toolbar button:hover:not(:disabled) {
+  background: #eee;
+}
+
+.editor-toolbar button.is-active {
+  background: #e2e8f0;
+  color: #000;
+  border-color: #cbd5e1;
+}
+
+.editor-toolbar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editor-toolbar .divider {
+  width: 1px;
+  height: 24px;
+  background: #ddd;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.tiptap-content {
+  padding: 10px 5px 5px 5px;
+  min-height: 200px;
+}
+
+.tiptap-content .ProseMirror {
+  min-height: 200px;
+  outline: none;
+  line-height: 1;
+}
+
+.tiptap-content .ProseMirror p:first-child {
+  margin-top: 0;
+}
+
+.tiptap-content .ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin: 1em 0;
+}
+
+.tiptap-content .ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin: 1em 0;
+}
+
+.tiptap-content .ProseMirror li {
+  margin-bottom: 0.5em;
+}

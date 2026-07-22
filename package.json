@@ -13,6 +13,7 @@
     "prettier": "^3.8.3"
   },
   "dependencies": {
+    "@tiptap/starter-kit": "^3.28.0",
     "stripe": "^22.2.0"
   }
 }

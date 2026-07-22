@@ -63,7 +63,7 @@
 .tiptap-content .ProseMirror {
   min-height: 200px;
   outline: none;
-  line-height: 0.5;
+  line-height: 1;
 }
 
 .tiptap-content .ProseMirror p:first-child {

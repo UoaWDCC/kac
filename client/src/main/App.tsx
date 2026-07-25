@@ -14,6 +14,7 @@ import Faq from "../pages/Faq.tsx";
 import Contact from "../pages/Contact.tsx";
 import Sponsors from "../pages/Sponsors.tsx";
 import Events from "../pages/Events.tsx";
+import UpcomingEvent from "../pages/UpcomingEvent.tsx";
 import EventDetail from "../pages/EventDetail.tsx";
 import About from "../pages/About.tsx";
 import SignUp from "../pages/Signup.tsx";
@@ -34,6 +35,7 @@ const App = () => {
             <Route path="about" element={<About />} />
             <Route path="events" element={<Events />} />
             <Route path="events/temp" element={<EventDetail />} />
+            <Route path="events/upcoming" element={<UpcomingEvent />} />
             <Route path="sponsors" element={<Sponsors />} />
             <Route path="contact" element={<Contact />} />
             <Route path="faq" element={<Faq />} />

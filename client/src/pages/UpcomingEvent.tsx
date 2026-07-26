@@ -1,11 +1,12 @@
 import reactStringReplace from "react-string-replace";
-import { LockKeyhole, ChevronLeft } from "lucide-react";
+import { LockKeyhole, CalendarCheck, ChevronLeft } from "lucide-react";
 
 import events from "../placeholders/events.json";
 import "../style/common.css";
 
 const UpcomingEvent = () => {
   const event = events[2]; // later get info from id in db
+  let userSignedUp = true; // in future, check db for this
 
   if (!event) {
     return <div className="medium-content">Event not found</div>;
@@ -44,7 +45,7 @@ const UpcomingEvent = () => {
           </div>
           {/* Right - Description & Form */}
           <div className="flex flex-col w-full min-w-190 2xl:max-w-[48vw]">
-            {event.isSignOpen && (
+            {event.signUpStatus == "Open" && (
               <h2 className="uppercase text-[3rem] text-center font-monospace font-medium mb-2">
                 Signups Open!!
               </h2>
@@ -57,7 +58,8 @@ const UpcomingEvent = () => {
                   ))}
                 </p>
                 <div className="flex flex-1 items-center justify-center">
-                  {!event.isSignOpen && (
+                  {/* Opening Later */}
+                  {event.signUpStatus == "Waiting" && (
                     <div className="flex flex-row gap-4 justify-center items-center mt-10">
                       <LockKeyhole className="size-8" />
                       <h2 className="uppercase text-2xl text-center">
@@ -65,13 +67,23 @@ const UpcomingEvent = () => {
                       </h2>
                     </div>
                   )}
-                  {event.isSignOpen && (
+                  {/* Can Sign Up */}
+                  {event.signUpStatus == "Open" && !userSignedUp && (
                     <button
                       type="button"
                       className="cursor-pointer w-fit! mt-10! py-2 px-12 rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-grey-medium"
                     >
                       Continue {">"}
                     </button>
+                  )}
+                  {/* Already Signed Up */}
+                  {userSignedUp && (
+                    <div className="flex flex-row gap-4 justify-center items-center mt-10">
+                      <CalendarCheck className="size-8" />
+                      <h2 className="uppercase text-2xl text-center">
+                        You have signed up for {event.title}!
+                      </h2>
+                    </div>
                   )}
                 </div>
               </div>

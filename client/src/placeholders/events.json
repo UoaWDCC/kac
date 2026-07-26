@@ -16,7 +16,7 @@
     "location": "Piper's Lodge",
     "time": "",
     "price": "$385",
-    "isSignOpen": false,
+    "signUpStatus": "Closed",
     "dateSignOpen": "Friday 29th May",
     "signedUsers": ["id1", "id2", "moreUserIDs"],
     "coverImgUrl": "https://instagram.fhlz4-1.fna.fbcdn.net/v/t51.82787-15/708210441_18602810863044666_7373864208472527549_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=110&ig_cache_key=MzkwNzUzNDM0ODAzMTg1NjI3OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTM1MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=yPQLUFhThe4Q7kNvwHQMu_i&_nc_oc=AdqAEpSgBmQQeEY-uMUpboNd_VzUJGnI2vmRbjDpECZxjIilhNqstC3zpOPlKwUlOPo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fhlz4-1.fna&_nc_gid=6hddW0_jczxwROrnRAPxew&_nc_ss=7a22e&oh=00_AQBvPWjlT3j-SBI38K-IVPHz8iY6olvTd-QZ7dfRDtyAiw&oe=6A6A16BC"
@@ -29,7 +29,7 @@
     "location": "Tombo BBQ New Market",
     "time": "5:30 PM",
     "price": "$43",
-    "isSignOpen": true,
+    "signUpStatus": "Closed",
     "dateSignOpen": "Friday 29th May",
     "signedUsers": ["id1", "id2", "moreUserIDs"],
     "coverImgUrl": "https://instagram.fhlz4-1.fna.fbcdn.net/v/t51.82787-15/702603043_18600144982044666_7813250256532324782_n.jpg?stp=dst-jpg_e35_p1080x1080_tt6&_nc_cat=106&ig_cache_key=MzkwMTczNjIxMjUxMTk4MTcyNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMzA3Mi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=xyFkwHB32GAQ7kNvwExfGHa&_nc_oc=AdoGy-1kiggw36hHNT9RHXT7M25Ruh3TrhEHI6KUlW6pq8u0aZ6toH_wBYuxeC5DAEY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fhlz4-1.fna&_nc_gid=tUkQ8F5uWA8vIqMraBKq_w&_nc_ss=7a22e&oh=00_AQAZW1-EA0K5n6lMjX5hv7y9VEMASciMh_ZBaTjsae_uBQ&oe=6A6B1DDA"

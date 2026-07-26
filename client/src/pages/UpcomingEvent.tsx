@@ -19,10 +19,12 @@ const UpcomingEvent = () => {
           <h3 className="text-2xl mb-2">Back to Events</h3>
         </a>
 
-        <h2 className="text-[4.8rem] font-sans font-bold uppercase mx-10 mb-4">
+        <h2 className="text-[4.8rem] font-sans font-bold uppercase mx-10 mb-10">
           {event.title}
         </h2>
-        <div className="flex flex-row gap-8 justify-center mx-16">
+
+        <div className="flex flex-row gap-16 justify-center mx-16">
+          {/* Left - Image and Details */}
           <div className="p-6 pl-2 flex flex-col gap-8 self-center">
             <img
               src={event.coverImgUrl}
@@ -40,18 +42,38 @@ const UpcomingEvent = () => {
               <h3 className="text-lg">💰 {event.price}</h3>
             </div>
           </div>
-          <div className="flex flex-col w-full min-w-190 2xl:max-w-[48vw] bg-white rounded-4xl px-24 py-14 shadow-[8px_8px] shadow-yellow-medium">
-            <p className="font-alan-sans text-justify text-[1rem]!">
-              {reactStringReplace(event.description, "\n", (_match, i) => (
-                <br key={i} />
-              ))}
-            </p>
-            <div className="flex flex-1 items-center justify-center mt-[1.2rem]">
-              <div className="flex flex-row gap-4 justify-center items-center">
-                <LockKeyhole className="size-8" />
-                <h2 className="uppercase text-2xl text-center">
-                  Signups open on {event.dateSignOpen}
-                </h2>
+          {/* Right - Description & Form */}
+          <div className="flex flex-col w-full min-w-190 2xl:max-w-[48vw]">
+            {event.isSignOpen && (
+              <h2 className="uppercase text-[3rem] text-center font-monospace font-medium mb-2">
+                Signups Open!!
+              </h2>
+            )}
+            <div className="bg-white rounded-4xl px-24 py-14 shadow-[8px_8px] shadow-yellow-medium">
+              <div>
+                <p className="font-alan-sans text-justify text-[1rem]!">
+                  {reactStringReplace(event.description, "\n", (_match, i) => (
+                    <br key={i} />
+                  ))}
+                </p>
+                <div className="flex flex-1 items-center justify-center">
+                  {!event.isSignOpen && (
+                    <div className="flex flex-row gap-4 justify-center items-center mt-10">
+                      <LockKeyhole className="size-8" />
+                      <h2 className="uppercase text-2xl text-center">
+                        Signups open on {event.dateSignOpen}
+                      </h2>
+                    </div>
+                  )}
+                  {event.isSignOpen && (
+                    <button
+                      type="button"
+                      className="cursor-pointer w-fit! mt-10! py-2 px-12 rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-grey-medium"
+                    >
+                      Continue {">"}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>

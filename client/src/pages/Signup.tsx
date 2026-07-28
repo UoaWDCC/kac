@@ -135,7 +135,7 @@ const SignUpForm = () => {
       });
 
       await refresh();
-      navigate("/");
+      navigate("/profile");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setError(

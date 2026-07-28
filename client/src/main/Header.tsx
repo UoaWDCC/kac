@@ -63,7 +63,8 @@ const Header = () => {
       <div className="flex-1 flex pr-2 justify-end">
         {!loading &&
           (isSignedIn ? (
-            <div
+            <Link
+              to="/profile"
               style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
             >
               <img
@@ -75,7 +76,7 @@ const Header = () => {
                   borderRadius: "50%",
                 }}
               />
-            </div>
+            </Link>
           ) : (
             <a
               href="/api/auth/google"

@@ -43,7 +43,7 @@ const App = () => {
             <Route path="admin" element={<Admin />} />
 
             <Route
-              path="Profile"
+              path="profile"
               element={
                 <MemberRoute>
                   <Profile />

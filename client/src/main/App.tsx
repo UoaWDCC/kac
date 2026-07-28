@@ -19,6 +19,7 @@ import About from "../pages/About.tsx";
 import SignUp from "../pages/Signup.tsx";
 import Admin from "../pages/Admin.tsx";
 import Toast from "../components/Toast.tsx";
+import Profile from "../pages/Profile.tsx";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="faq" element={<Faq />} />
             <Route path="admin" element={<Admin />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

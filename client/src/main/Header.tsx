@@ -75,6 +75,10 @@ const Header = () => {
                   borderRadius: "50%",
                 }}
               />
+              <div className="">
+                <a href="/profile" className="button">Profile</a>
+              </div>
+
             </div>
           ) : (
             <a

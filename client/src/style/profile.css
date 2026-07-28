@@ -3,6 +3,8 @@
 }
 
 .profile-page {
+  position: relative;
+  overflow: hidden;
   background-color: var(--color-yellow-light);
   min-height: 100vh;
 }

@@ -1,4 +1,5 @@
 import kacoTitle from "../images/kaco-title.png";
+import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 
 import "../style/common.css";
 import "../style/profile.css";
@@ -12,13 +13,28 @@ const Profile = () => {
     <div className="profile-page">
       <title>Kiwi Asian Club - My Profile</title>
 
-      {/** Title **/}
-      <section className="section h1 profile-title-section">
-        <div className="profile-title-group">
-          <img className="about-title-kaco" src={kacoTitle} alt="Kaco mascot" />
-          <h1 className="title-text font-sans">MY &nbsp;PROFILE</h1>
-        </div>
-      </section>
+      {/** Background Mascot **/}
+      <div className="pointer-events-none absolute top-0 left-0 w-full h-screen flex items-start justify-start overflow-hidden">
+        <ImageBlock
+          pageKey="mascot-bg"
+          alt="Kaco mascot background"
+          style={{ width: "90vw" }}
+        />
+      </div>
+
+      <div className="relative z-10">
+        {/** Title **/}
+        <section className="section h1 profile-title-section">
+          <div className="profile-title-group">
+            <img
+              className="about-title-kaco"
+              src={kacoTitle}
+              alt="Kaco mascot"
+            />
+            <h1 className="title-text font-sans">MY &nbsp;PROFILE</h1>
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

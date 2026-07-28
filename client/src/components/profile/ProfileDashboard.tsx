@@ -1,134 +1,362 @@
 import type { ProfileSection } from "../../pages/Profile.tsx";
-import { Inbox, UserRoundCheck } from "lucide-react";
+import { CalendarDays, ChevronRight, Images } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { fetchCurrentMember, updateCurrentMember } from "../../api/usersApi";
 
 type ProfileDashboardProps = {
-    activeSection: ProfileSection;
+  activeSection: ProfileSection;
 };
 
-export default function ProfileDashboard({ activeSection }: ProfileDashboardProps) {
-    const section =
-        activeSection === "profile"
-            ? {
-                description:
-                    "Profile Data",
-                label: "Profile",
-                title: "My Details",
-            }
-            : {
-                description:
-                    "Events user has attended",
-                label: "Events Attended",
-                title: "Events I Have Attended",
-            };
+type CurrentMember = {
+  createdAt?: string;
+  email?: string;
+  faculties?: string[];
+  firstName?: string;
+  lastName?: string;
+  mobileNumber?: string;
+  pronouns?: string;
+  studentId?: string;
+  university?: string;
+  upi?: string;
+};
 
-    return (
-        <main className="flex min-w-0 flex-1 flex-col gap-5">
+type ProfileForm = {
+  email: string;
+  faculties: string;
+  firstName: string;
+  lastName: string;
+  memberSince: string;
+  mobileNumber: string;
+  pronouns: string;
+  studentId: string;
+  university: string;
+  upi: string;
+};
 
-            {activeSection === "profile" &&
-                <div className="flex flex-col gap-8 rounded-4xl bg-white p-15 shadow-sm">
-                    <h2 className="text-2xl font-bold">{section.title}</h2>
-                    <div className="profile-grid">
-                        <form action="" className="grid grid-cols-2 gap-4">
-                            <div className="profile-field">
-                                <label>First Name</label>
-                                <input
-                                    name="firstName"
-                                    placeholder={"original name"}
-                                    value={"potato"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>Last Name</label>
-                                <input
-                                    name="lastName"
-                                    placeholder={"original name"}
-                                    value={"potato"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>Email</label>
-                                <input
-                                    name="email"
-                                    placeholder={"original email"}
-                                    value={"potato@example.com"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>Phone Number</label>
-                                <input
-                                    name="phone"
-                                    placeholder={"original phone number"}
-                                    value={"123-456-7890"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>Pronouns</label>
-                                <input
-                                    name="pronouns"
-                                    placeholder={"original pronouns"}
-                                    value={"potato"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>University</label>
-                                <input
-                                    name="university"
-                                    placeholder={"original university"}
-                                    value={"potato"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>UPI</label>
-                                <input
-                                    name="UPI"
-                                    placeholder={"original UPI"}
-                                    value={"potato"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>Student Number</label>
-                                <input
-                                    name="studentNumber"
-                                    placeholder={"original student number"}
-                                    value={"potato"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>Faculty</label>
-                                <input
-                                    name="faculty"
-                                    placeholder={"original faculty"}
-                                    value={"potato"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                            <div className="profile-field">
-                                <label>Physical KAC Card</label>
-                                <input
-                                    name="physicalKACCard"
-                                    placeholder={"Yes"}
-                                    value={"potato"}
-                                    onChange={() => { }}
-                                />
-                            </div>
-                        </form>
-                        <button className="button">Update Details {'>'}</button>
-                    </div>
+type ProfileField = {
+  id: string;
+  label: string;
+  name: keyof ProfileForm;
+  readOnly?: boolean;
+};
+
+const emptyProfileForm: ProfileForm = {
+  email: "",
+  faculties: "",
+  firstName: "",
+  lastName: "",
+  memberSince: "",
+  mobileNumber: "",
+  pronouns: "",
+  studentId: "",
+  university: "",
+  upi: "",
+};
+
+const formatMemberSince = (createdAt?: string) => {
+  if (!createdAt) return "";
+
+  const date = new Date(createdAt);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("en-NZ", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+};
+
+const createProfileForm = (currentUser: CurrentMember): ProfileForm => ({
+  email: currentUser.email ?? "",
+  faculties: currentUser.faculties?.join(", ") ?? "",
+  firstName: currentUser.firstName ?? "",
+  lastName: currentUser.lastName ?? "",
+  memberSince: formatMemberSince(currentUser.createdAt),
+  mobileNumber: currentUser.mobileNumber ?? "",
+  pronouns: currentUser.pronouns ?? "",
+  studentId: currentUser.studentId ?? "",
+  university: currentUser.university ?? "",
+  upi: currentUser.upi ?? "",
+});
+
+const profileFields: ProfileField[] = [
+  {
+    id: "first-name",
+    label: "First Name",
+    name: "firstName",
+  },
+  {
+    id: "university",
+    label: "University",
+    name: "university",
+  },
+  { id: "last-name", label: "Last Name", name: "lastName" },
+  { id: "upi", label: "Student Username / UPI", name: "upi" },
+  {
+    id: "email",
+    label: "Email Address",
+    name: "email",
+    readOnly: true,
+  },
+  {
+    id: "student-number",
+    label: "Student Number",
+    name: "studentId",
+  },
+  {
+    id: "phone",
+    label: "Phone Number",
+    name: "mobileNumber",
+  },
+  {
+    id: "faculty",
+    label: "Faculties",
+    name: "faculties",
+  },
+  { id: "pronouns", label: "Pronouns", name: "pronouns" },
+  {
+    id: "member-since",
+    label: "Member Since",
+    name: "memberSince",
+    readOnly: true,
+  },
+];
+
+const getErrorMessage = (error: unknown) => {
+  if (typeof error === "string") return error;
+  if (error instanceof Error) return error.message;
+  return "Something went wrong.";
+};
+
+const attendedEvents = [
+  "Event Name Here",
+  "Event Name Here",
+  "Event Name Here",
+  "Event Name Here",
+];
+
+export default function ProfileDashboard({
+  activeSection,
+}: ProfileDashboardProps) {
+  const [currentUser, setCurrentUser] = useState<CurrentMember | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [form, setForm] = useState<ProfileForm>(emptyProfileForm);
+  const [isSaving, setIsSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCurrentUser = async () => {
+      try {
+        const member = await fetchCurrentMember();
+
+        if (isMounted) {
+          setCurrentUser(member);
+          setForm(createProfileForm(member));
+        }
+      } catch (error) {
+        console.error("Failed to load current member:", error);
+        setError(getErrorMessage(error));
+      }
+    };
+
+    void loadCurrentUser();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const facultyList = useMemo(
+    () =>
+      form.faculties
+        .split(",")
+        .map((faculty) => faculty.trim())
+        .filter(Boolean),
+    [form.faculties]
+  );
+
+  const updateField = (field: keyof ProfileForm, value: string) => {
+    setForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+    setError(null);
+    setSuccessMessage(null);
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!currentUser) {
+      setError("Profile details are still loading.");
+      return;
+    }
+
+    const missingFields = [];
+    if (!form.firstName.trim()) missingFields.push("First Name");
+    if (!form.lastName.trim()) missingFields.push("Last Name");
+    if (!form.mobileNumber.trim()) missingFields.push("Phone Number");
+    if (!form.university.trim()) missingFields.push("University");
+    if (!form.studentId.trim()) missingFields.push("Student Number");
+    if (!form.upi.trim()) missingFields.push("Student Username / UPI");
+    if (facultyList.length === 0) missingFields.push("Faculties");
+
+    if (missingFields.length > 0) {
+      setError(`Please fill in: ${missingFields.join(", ")}.`);
+      return;
+    }
+
+    setError(null);
+    setSuccessMessage(null);
+    setIsSaving(true);
+
+    try {
+      const updatedMember = await updateCurrentMember({
+        faculties: facultyList,
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        mobileNumber: form.mobileNumber.trim(),
+        pronouns: form.pronouns.trim(),
+        studentId: form.studentId.trim(),
+        university: form.university.trim(),
+        upi: form.upi.trim(),
+      });
+
+      setCurrentUser(updatedMember);
+      setForm(createProfileForm(updatedMember));
+      setSuccessMessage("Details updated.");
+    } catch (requestError) {
+      setError(getErrorMessage(requestError));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <main className="min-w-0">
+      {activeSection === "profile" && (
+        <section className="rounded-[1.35rem] bg-white px-8 py-10 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:px-12 lg:min-h-[36.5rem]">
+          <h2 className="mb-9 mt-0 font-sans text-2xl font-bold text-blue-medium">
+            My Details
+          </h2>
+
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-x-12 gap-y-5 md:grid-cols-2">
+              {profileFields.map((detail) => (
+                <label
+                  key={detail.id}
+                  className="flex flex-col gap-1 font-alan-sans text-[0.94rem] font-semibold text-grey-medium"
+                  htmlFor={detail.id}
+                >
+                  {detail.label}
+                  <input
+                    className={`w-full border-0 border-b-2 border-yellow-dark bg-transparent px-0 pb-1 font-alan-sans text-base font-semibold text-blue-medium outline-none ${
+                      detail.readOnly
+                        ? "cursor-not-allowed text-grey-medium"
+                        : "focus:border-blue-medium"
+                    }`}
+                    id={detail.id}
+                    onChange={(event) =>
+                      updateField(detail.name, event.target.value)
+                    }
+                    readOnly={detail.readOnly || isSaving}
+                    value={form[detail.name]}
+                  />
+                </label>
+              ))}
+            </div>
+
+            {error ? (
+              <p className="!mb-0 mt-6 !text-sm font-semibold text-red-700">
+                {error}
+              </p>
+            ) : null}
+
+            {successMessage ? (
+              <p className="!mb-0 mt-6 !text-sm font-semibold text-blue-medium">
+                {successMessage}
+              </p>
+            ) : null}
+
+            <div className="mt-12 flex justify-center">
+              <button
+                className="button"
+                disabled={isSaving || !currentUser}
+                type="submit"
+              >
+                {isSaving ? "Updating..." : "Update Details >"}
+              </button>
+            </div>
+          </form>
+        </section>
+      )}
+
+      {activeSection === "attended" && (
+        <section className="rounded-[1.35rem] bg-white px-8 py-10 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:px-12 lg:min-h-[31rem]">
+          <h2 className="mb-9 mt-0 font-sans text-2xl font-bold text-blue-medium">
+            Events I have attended
+          </h2>
+
+          <div className="font-alan-sans text-blue-medium">
+            <h3 className="mb-4 mt-0 text-base font-bold">Upcoming:</h3>
+            <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
+              <EventLabel icon={CalendarDays} name="Event Name Here" />
+              <span className="flex items-center text-base font-semibold text-yellow-dark">
+                view details
+                <ChevronRight aria-hidden="true" className="ml-1 h-4 w-4" />
+              </span>
+            </div>
+
+            <h3 className="mb-4 mt-10 text-xl font-bold">2026:</h3>
+            <div className="grid gap-4">
+              {attendedEvents.map((eventName, index) => (
+                <div
+                  className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center"
+                  key={`${eventName}-${index}`}
+                >
+                  <EventLabel icon={Images} name={eventName} />
+                  <span className="flex items-center text-base font-semibold text-yellow-dark">
+                    view photos
+                    <ChevronRight aria-hidden="true" className="ml-1 h-4 w-4" />
+                  </span>
                 </div>
-            }
+              ))}
+            </div>
+          </div>
 
-            {activeSection === "attended" && <div className="flex flex-col gap-4">
-                <h2 className="text-2xl font-bold">{section.title}</h2>
-                <p className="text-slate-600">{section.description}</p>
-            </div>}
-        </main>
-    );
+          <div className="mt-12 flex justify-center">
+            <button className="button" type="button">
+              Load more
+            </button>
+          </div>
+        </section>
+      )}
+    </main>
+  );
+}
+
+type EventLabelProps = {
+  icon: typeof CalendarDays;
+  name: string;
+};
+
+function EventLabel({ icon: Icon, name }: EventLabelProps) {
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <Icon
+        aria-hidden="true"
+        className="h-4 w-4 shrink-0 text-yellow-dark"
+        strokeWidth={2.2}
+      />
+      <span className="truncate text-base font-semibold text-blue-medium">
+        {name}
+      </span>
+      <span className="shrink-0 text-[0.7rem] font-semibold text-grey-medium">
+        (DD/MM)
+      </span>
+    </div>
+  );
 }

@@ -1,7 +1,7 @@
 .profile-title-group {
     position: relative;
     width: fit-content;
-    margin-left: 90px;
+    margin-left: 150px;
 }
 
 .profile-title-kaco {
@@ -14,26 +14,7 @@
     pointer-events: none;
 }
 
-.profile-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-}
-
-.profile-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    width: 300px;
-    border-bottom: 3px solid var(--color-yellow-medium);
-}
-
-.profile-field input,
-.profile-field select {
-    font-size: 18px;
-    padding: 0rem 0.15rem;
-    width: 100%;
-    box-sizing: border-box;
+.profile-title-group h1 {
+    padding-bottom: 0;
+    margin-bottom: 0;
 }

@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from "react";
 import kacoTitle from "../images/kaco-title.png";
 
 import "../style/common.css";
 import "../style/profile.css";
-import { ImageBlock } from '../components/image_block/ImageBlock';
-import ProfileSidebar from '../components/profile/ProfileSidebar';
-import ProfileDashboard from '../components/profile/ProfileDashboard';
+import { ImageBlock } from "../components/image_block/ImageBlock";
+import ProfileSidebar from "../components/profile/ProfileSidebar";
+import ProfileDashboard from "../components/profile/ProfileDashboard";
 
 export type ProfileSection = "profile" | "attended";
 
@@ -15,7 +15,6 @@ const Profile = () => {
     return (
         <div className="profile-page">
             <title>User Profile</title>
-            {/** Title **/}
             <section className="section relative w-full overflow-hidden bg-yellow-light pr-0! p-0!">
                 <div className="justify-self-end relative">
                     <ImageBlock
@@ -24,13 +23,17 @@ const Profile = () => {
                         style={{ width: "90vw" }}
                     />
                 </div>
-                <div className="absolute top-0">
+                <div className="absolute top-0 w-full">
                     <div className="profile-title-group">
-                        <img className="profile-title-kaco" src={kacoTitle} alt="Kaco mascot" />
+                        <img
+                            className="profile-title-kaco"
+                            src={kacoTitle}
+                            alt="Kaco mascot"
+                        />
                         <h1 className="title-text font-sans">MY PROFILE</h1>
                     </div>
-                    <div className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-                        <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 lg:flex-row">
+                    <div className="px-4 py-6 sm:px-6 lg:px-8 flex justify-center items-center">
+                        <div className="grid w-full max-w-[60rem] gap-8 lg:grid-cols-[18.5rem_minmax(0,1fr)] lg:items-start lg:gap-14">
                             <ProfileSidebar
                                 activeSection={activeSection}
                                 onSectionChange={setActiveSection}
@@ -40,8 +43,8 @@ const Profile = () => {
                     </div>
                 </div>
             </section>
-        </div >
-    )
-}
+        </div>
+    );
+};
 
-export default Profile
+export default Profile;

@@ -206,12 +206,104 @@ export const getUsers = async (_req: Request, res: Response) => {
   }
 };
 
+export const getCurrentUser = async (req: Request, res: Response) => {
+  if (!req.isAuthenticated()) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  const profile = req.user as { id?: string } | undefined;
+
+  if (!profile?.id) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  try {
+    const user = await User.findOne({ googleUid: profile.id });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error fetching current user:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getAuthenticatedUser = async (req: Request) => {
   const profile = req.user as { id?: string } | undefined;
 
   if (!profile?.id) return null;
 
   return User.findOne({ googleUid: profile.id });
+};
+
+export const updateCurrentUser = async (req: Request, res: Response) => {
+  const allowedFields = [
+    "firstName",
+    "lastName",
+    "mobileNumber",
+    "pronouns",
+    "university",
+    "studentId",
+    "upi",
+    "faculties",
+  ];
+
+  const updates = allowedFields.reduce<Record<string, unknown>>(
+    (acc, field) => {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        acc[field] = req.body[field];
+      }
+
+      return acc;
+    },
+    {}
+  );
+
+  if (
+    updates.faculties !== undefined &&
+    (!Array.isArray(updates.faculties) || updates.faculties.length === 0)
+  ) {
+    res.status(400).json({ message: "Select at least one faculty." });
+    return;
+  }
+
+  try {
+    const currentUser = await getAuthenticatedUser(req);
+
+    if (!currentUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const user = await User.findByIdAndUpdate(currentUser._id, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (err: any) {
+    if (err.code === 11000) {
+      const duplicateField = Object.keys(err.keyPattern || {})[0];
+      res.status(409).json({
+        message: `An account with this ${duplicateField} already exists`,
+      });
+      return;
+    }
+
+    console.error("Error updating current user:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 export const updateUser = async (req: Request, res: Response) => {

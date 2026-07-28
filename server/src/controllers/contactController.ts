@@ -27,3 +27,49 @@ export const getContacts: RequestHandler = async (req, res) => {
     });
   }
 };
+
+export const updateContact: RequestHandler = async (req, res) => {
+  try {
+    const contact = await Contact.findByIdAndUpdate(
+      req.params.id,
+      {
+        email: req.body.email,
+        message: req.body.message,
+        name: req.body.name,
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!contact) {
+      res.status(404).json({ message: "Contact response not found" });
+      return;
+    }
+
+    res.status(200).json(contact);
+  } catch (error) {
+    console.error("Error updating contact: ", error);
+    res.status(500).json({
+      message: "Error updating contact.",
+      error: error,
+    });
+  }
+};
+
+export const deleteContact: RequestHandler = async (req, res) => {
+  try {
+    const contact = await Contact.findByIdAndDelete(req.params.id);
+
+    if (!contact) {
+      res.status(404).json({ message: "Contact response not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Contact response deleted" });
+  } catch (error) {
+    console.error("Error deleting contact: ", error);
+    res.status(500).json({
+      message: "Error deleting contact.",
+      error: error,
+    });
+  }
+};

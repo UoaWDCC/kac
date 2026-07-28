@@ -32,7 +32,7 @@ const UpcomingEvent = () => {
           <h3 className="text-2xl mb-2">Back to Events</h3>
         </a>
 
-        <h2 className="text-[4.8rem] font-sans font-bold uppercase mx-10 mb-10">
+        <h2 className="text-[4.8rem] font-sans font-bold uppercase mx-10 mb-4">
           {event.title}
         </h2>
 

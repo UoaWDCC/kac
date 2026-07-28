@@ -1,5 +1,6 @@
 import { useState } from "react";
 import reactStringReplace from "react-string-replace";
+
 import {
   LockKeyhole,
   CalendarCheck,
@@ -10,6 +11,8 @@ import {
 
 import events from "../placeholders/events.json";
 import "../style/common.css";
+
+import { ImageBlock } from "../components/image_block/ImageBlock";
 
 const UpcomingEvent = () => {
   const event = events[2]; // later get info from id in db
@@ -61,57 +64,84 @@ const UpcomingEvent = () => {
             )}
             <div className="bg-white rounded-4xl px-24 pb-14 pt-10 shadow-[8px_8px] shadow-yellow-medium">
               <div>
+                {/* Top-left Back Button for Form Steps */}
+                {event.signUpStatus == "Open" &&
+                  !userSignedUp &&
+                  currentStep > 1 &&
+                  currentStep < 4 && (
+                    <div className="w-fit mb-6">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setCurrentStep(Math.max(1, currentStep - 1))
+                        }
+                        className="text-blue-medium hover:underline hover:cursor-pointer underline-offset-6"
+                      >
+                        {"< "} Back
+                      </button>
+                    </div>
+                  )}
                 {/* Stepper Progress */}
-                <div className="flex flex-row gap-16 justify-center mb-8">
-                  <div className="flex flex-col gap-2 items-center">
-                    <div
-                      className={`${
-                        currentStep == 1 ? "bg-blue-medium" : "bg-gray-400"
-                      } text-white rounded-full size-8 text-center`}
-                    >
-                      <p className="pt-0.5">1</p>
+                {currentStep != 4 &&
+                  event.signUpStatus == "Open" &&
+                  !userSignedUp && (
+                    <div className="flex flex-row gap-16 justify-center mb-8">
+                      <div className="flex flex-col gap-2 items-center">
+                        <div
+                          className={`${
+                            currentStep == 1 ? "bg-blue-medium" : "bg-gray-400"
+                          } text-white rounded-full size-8 text-center`}
+                        >
+                          <p className="pt-0.5">1</p>
+                        </div>
+                        <p
+                          className={`${
+                            currentStep == 1
+                              ? "text-blue-medium"
+                              : "text-gray-400"
+                          } font-alan-sans text-[0.8rem]!`}
+                        >
+                          Event Info
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2 items-center">
+                        <div
+                          className={`${
+                            currentStep == 2 ? "bg-blue-medium" : "bg-gray-400"
+                          } text-white rounded-full size-8 text-center`}
+                        >
+                          <p className="pt-0.5">2</p>
+                        </div>
+                        <p
+                          className={`${
+                            currentStep == 2
+                              ? "text-blue-medium"
+                              : "text-gray-400"
+                          } font-alan-sans text-[0.8rem]!`}
+                        >
+                          Details
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2 items-center">
+                        <div
+                          className={`${
+                            currentStep == 3 ? "bg-blue-medium" : "bg-gray-400"
+                          } text-white rounded-full size-8 text-center`}
+                        >
+                          <p className="pt-0.5">3</p>
+                        </div>
+                        <p
+                          className={`${
+                            currentStep == 3
+                              ? "text-blue-medium"
+                              : "text-gray-400"
+                          } font-alan-sans text-[0.8rem]!`}
+                        >
+                          Confirmation
+                        </p>
+                      </div>
                     </div>
-                    <p
-                      className={`${
-                        currentStep == 1 ? "text-blue-medium" : "text-gray-400"
-                      } font-alan-sans text-[0.8rem]!`}
-                    >
-                      Event Info
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-2 items-center">
-                    <div
-                      className={`${
-                        currentStep == 2 ? "bg-blue-medium" : "bg-gray-400"
-                      } text-white rounded-full size-8 text-center`}
-                    >
-                      <p className="pt-0.5">2</p>
-                    </div>
-                    <p
-                      className={`${
-                        currentStep == 2 ? "text-blue-medium" : "text-gray-400"
-                      } font-alan-sans text-[0.8rem]!`}
-                    >
-                      Details
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-2 items-center">
-                    <div
-                      className={`${
-                        currentStep == 3 ? "bg-blue-medium" : "bg-gray-400"
-                      } text-white rounded-full size-8 text-center`}
-                    >
-                      <p className="pt-0.5">3</p>
-                    </div>
-                    <p
-                      className={`${
-                        currentStep == 3 ? "text-blue-medium" : "text-gray-400"
-                      } font-alan-sans text-[0.8rem]!`}
-                    >
-                      Confirmation
-                    </p>
-                  </div>
-                </div>
+                  )}
 
                 {/* Step 1: Event Info */}
                 {currentStep === 1 && (
@@ -243,24 +273,35 @@ const UpcomingEvent = () => {
 
                 {/* Step 3: Confirmation */}
                 {currentStep === 3 && (
-                  <div>
-                    <h3 className="text-2xl font-bold mb-6">
-                      Confirm Registration
+                  <div className="font-alan-sans">
+                    <h3 className="text-lg font-bold mb-6 border-b-2 border-b-yellow-dark">
+                      Please Read Before Confirming:
                     </h3>
-                    <p className="font-alan-sans text-justify text-[1rem]! mb-4">
-                      Erm still need to make this part. 😱😱😱
-                      <br />
-                      <br />
-                      Gotta change inputs to accept valid formats. <br />
-                      Need to add a back button. <br />
-                      Need to do the form submitted message. <br />
-                      Probably not going to get to hooking this up to DB.
-                      <br />
-                      Also handle card expiry? Like no invalid cards.
-                      <br />
-                      Also only show stepper progress if sign ups are open.
-                      <br />
-                      Gang this is a lot of stuff I have not done. 😭
+                    We will not be giving out refunds for cancellations made
+                    within 24 hours prior to the event. Any refund requests must
+                    be made with at least one day's notice.
+                  </div>
+                )}
+
+                {/* Step 4: Completion Message */}
+                {currentStep === 4 && (
+                  <div className="flex flex-col align-middle pt-6 pb-2 gap-4 items-center">
+                    <ImageBlock
+                      pageKey="mascot-small"
+                      alt="Small Mascot"
+                      style={{
+                        maxWidth: "20%",
+                        height: "auto",
+                        rotate: "-10deg",
+                      }}
+                    />
+                    <p className="mt-2 font-alan-sans text-[1rem]! text-center w-[70%]">
+                      Thank you for signing up for this event, we look forward
+                      to seeing you there!
+                    </p>
+                    <p className="font-alan-sans text-[1rem]! text-center w-[80%]">
+                      You will receive a confirmation email once your spot has
+                      been confirmed, so make sure to check your email {":)"}
                     </p>
                   </div>
                 )}
@@ -281,11 +322,21 @@ const UpcomingEvent = () => {
                       <button
                         type="button"
                         onClick={() =>
-                          setCurrentStep(Math.min(3, currentStep + 1))
+                          setCurrentStep(Math.min(4, currentStep + 1))
                         }
-                        className="cursor-pointer w-fit! mt-4! py-2 px-12 rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                        className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                       >
-                        Continue {">"}
+                        {currentStep == 3 && (
+                          <p className="py-2 px-12">Sign Up!</p>
+                        )}
+                        {currentStep == 4 && (
+                          <a href="/Home" className="text-lg px-10">
+                            Back Home {">"}
+                          </a>
+                        )}
+                        {currentStep < 3 && (
+                          <p className="py-2 px-12">Continue {">"}</p>
+                        )}
                       </button>
                     </div>
                   )}

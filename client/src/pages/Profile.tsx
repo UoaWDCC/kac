@@ -29,7 +29,7 @@ const Profile = () => {
         <section className="section h1 profile-title-section">
           <div className="profile-title-group">
             <img
-              className="about-title-kaco"
+              className="profile-title-kaco"
               src={kacoTitle}
               alt="Kaco mascot"
             />

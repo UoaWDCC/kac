@@ -87,6 +87,146 @@ p {
   color: var(--color-yellow-light);
 }
 
+.header-profile-menu-shell {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.header-profile-avatar {
+  background-color: #ffffff;
+  border: 2px solid var(--color-yellow-light);
+  border-radius: 9999px;
+  flex-shrink: 0;
+  height: 2.6rem;
+  object-fit: cover;
+  width: 2.6rem;
+}
+
+.header-profile-avatar-fallback {
+  align-items: center;
+  background-color: var(--color-blue-medium);
+  color: var(--color-yellow-light);
+  display: flex;
+  font-size: 0.875rem;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.header-profile-trigger {
+  align-items: center;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 700;
+  gap: 0.65rem;
+  height: 3.35rem;
+  justify-content: center;
+  padding: 0.35rem 0.8rem 0.35rem 0.35rem;
+  transform: translateY(0);
+  white-space: nowrap;
+  width: auto;
+}
+
+.header-profile-trigger .header-profile-avatar {
+  height: 2.65rem;
+  width: 2.65rem;
+}
+
+.header-profile-menu-icon-shell {
+  align-items: center;
+  background-color: rgba(250, 243, 209, 0.42);
+  border-radius: 9999px;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 1.65rem;
+  justify-content: center;
+  line-height: 0;
+  overflow: hidden;
+  position: relative;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  width: 1.65rem;
+}
+
+.header-profile-menu-icon-frame {
+  align-items: center;
+  display: inline-flex;
+  height: 1.05rem;
+  justify-content: center;
+  width: 1.05rem;
+}
+
+.header-profile-menu-icon {
+  color: var(--color-blue-medium);
+  height: 1.05rem;
+  transition: color 0.2s ease;
+  width: 1.05rem;
+}
+
+.header-profile-trigger:hover .header-profile-menu-icon-shell,
+.header-profile-trigger:focus-visible .header-profile-menu-icon-shell {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+.header-profile-trigger:hover .header-profile-menu-icon,
+.header-profile-trigger:focus-visible .header-profile-menu-icon {
+  color: var(--color-yellow-light);
+}
+
+.header-profile-menu {
+  background-color: #ffffff;
+  border: 1px solid var(--color-yellow-medium);
+  border-radius: 0.5rem;
+  box-shadow: 0 12px 24px rgba(11, 45, 74, 0.16);
+  display: grid;
+  min-width: 12rem;
+  overflow: hidden;
+  padding: 0.5rem 0;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.65rem);
+  z-index: 1000;
+}
+
+.header-profile-menu-item {
+  align-items: center;
+  background-color: #ffffff;
+  border: 0;
+  color: var(--color-blue-medium);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  width: 100%;
+}
+
+.header-profile-menu-item:hover,
+.header-profile-menu-item:focus-visible {
+  background-color: var(--color-yellow-light);
+  color: var(--color-blue-medium);
+}
+
+.header-profile-menu-item svg {
+  flex-shrink: 0;
+  height: 1rem;
+  width: 1rem;
+}
+
 /* Admin Dashboard Styles */
 
 .admin-action-button {

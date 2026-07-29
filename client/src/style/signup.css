@@ -356,6 +356,70 @@
   transform: translateY(-1px);
 }
 
+/* Back Button */
+.signup-back-btn {
+  background: none;
+  border: none;
+  color: #0b2d4a;
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.signup-back-btn:hover {
+  opacity: 0.75;
+}
+
+/* Accordion Trigger for Payment Info */
+.signup-accordion-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 6px 0;
+  border-bottom: 2px solid #e5a93b;
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 15px;
+  color: #2d3748;
+}
+
+/* Yellow Card Input Container */
+.signup-card-details-box {
+  border: 2px solid #f2b719;
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #ffffff;
+}
+
+.signup-stripe-element-wrapper {
+  border-bottom: 2px solid #e5a93b;
+  padding: 6px 0;
+}
+
+.signup-stripe-input {
+  width: 100%;
+}
+
+.signup-total-text {
+  text-align: right;
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: #0b2d4a;
+  margin-top: 16px;
+}
+
 /* Responsive Scaling */
 @media (max-width: 1024px) {
   .signup-content-container {
@@ -401,4 +465,5 @@
     font-size: 40px;
   }
 }
+
 

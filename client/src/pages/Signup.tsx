@@ -19,7 +19,9 @@ import "../style/signup.css";
 import silhouetteMascot from "../images/kaco-silhouette.png";
 import mainMascot from "../images/kaco-title.png";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? "");
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? ""
+);
 
 const UNIVERSITIES = [
   "The University of Auckland",
@@ -83,10 +85,14 @@ const SignUpForm = () => {
 
   // Validation & Submission States
   const [hasSubmittedStep1, setHasSubmittedStep1] = useState(false);
-  const [invalidFieldsStep1, setInvalidFieldsStep1] = useState<Record<string, boolean>>({});
+  const [invalidFieldsStep1, setInvalidFieldsStep1] = useState<
+    Record<string, boolean>
+  >({});
 
   const [hasSubmittedStep2, setHasSubmittedStep2] = useState(false);
-  const [invalidFieldsStep2, setInvalidFieldsStep2] = useState<Record<string, boolean>>({});
+  const [invalidFieldsStep2, setInvalidFieldsStep2] = useState<
+    Record<string, boolean>
+  >({});
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -129,9 +135,7 @@ const SignUpForm = () => {
     }
   };
 
-  const handleStep2Change = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleStep2Change = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (!name) return;
     setStep2Form((prev) => ({ ...prev, [name]: value }));
@@ -208,7 +212,9 @@ const SignUpForm = () => {
 
     const cardNumberElement = elements.getElement(CardNumberElement);
     if (!cardNumberElement) {
-      setSubmitError("Card details missing or incomplete. Please check Step 2.");
+      setSubmitError(
+        "Card details missing or incomplete. Please check Step 2."
+      );
       return;
     }
 
@@ -220,15 +226,15 @@ const SignUpForm = () => {
         type: "membership",
       });
 
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-        data.clientSecret,
-        {
+      const { error: stripeError, paymentIntent } =
+        await stripe.confirmCardPayment(data.clientSecret, {
           payment_method: { card: cardNumberElement },
-        }
-      );
+        });
 
       if (stripeError) {
-        setSubmitError(stripeError.message ?? "Payment failed. Please try again.");
+        setSubmitError(
+          stripeError.message ?? "Payment failed. Please try again."
+        );
         return;
       }
 
@@ -250,7 +256,8 @@ const SignUpForm = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setSubmitError(
-          err.response?.data?.message ?? "Something went wrong. Please try again."
+          err.response?.data?.message ??
+            "Something went wrong. Please try again."
         );
       } else if (err instanceof Error) {
         setSubmitError(err.message);
@@ -264,8 +271,10 @@ const SignUpForm = () => {
 
   if (loading) return <p style={{ padding: "2rem" }}>Loading...</p>;
 
-  const hasStep1Errors = hasSubmittedStep1 && Object.keys(invalidFieldsStep1).length > 0;
-  const hasStep2Errors = hasSubmittedStep2 && Object.keys(invalidFieldsStep2).length > 0;
+  const hasStep1Errors =
+    hasSubmittedStep1 && Object.keys(invalidFieldsStep1).length > 0;
+  const hasStep2Errors =
+    hasSubmittedStep2 && Object.keys(invalidFieldsStep2).length > 0;
 
   const stripeElementOptions = {
     style: {
@@ -326,7 +335,9 @@ const SignUpForm = () => {
               <button
                 type="button"
                 className="signup-back-btn"
-                onClick={() => setCurrentStep((prev) => (prev - 1) as 1 | 2 | 3)}
+                onClick={() =>
+                  setCurrentStep((prev) => (prev - 1) as 1 | 2 | 3)
+                }
               >
                 &lt; Back
               </button>
@@ -334,22 +345,29 @@ const SignUpForm = () => {
 
             {currentStep < 4 && (
               <div className="signup-stepper">
-                <div className={`signup-step-item ${currentStep === 1 ? "active" : ""}`}>
+                <div
+                  className={`signup-step-item ${currentStep === 1 ? "active" : ""}`}
+                >
                   <div className="signup-step-circle">1</div>
                   <span className="signup-step-label">About you</span>
                 </div>
-                <div className={`signup-step-item ${currentStep === 2 ? "active" : ""}`}>
+                <div
+                  className={`signup-step-item ${currentStep === 2 ? "active" : ""}`}
+                >
                   <div className="signup-step-circle">2</div>
                   <span className="signup-step-label">Payment info</span>
                 </div>
-                <div className={`signup-step-item ${currentStep === 3 ? "active" : ""}`}>
+                <div
+                  className={`signup-step-item ${currentStep === 3 ? "active" : ""}`}
+                >
                   <div className="signup-step-circle">3</div>
                   <span className="signup-step-label">Submit</span>
                 </div>
               </div>
             )}
 
-            {((currentStep === 1 && hasStep1Errors) || (currentStep === 2 && hasStep2Errors)) && (
+            {((currentStep === 1 && hasStep1Errors) ||
+              (currentStep === 2 && hasStep2Errors)) && (
               <div className="signup-global-error">
                 <span className="signup-error-icon-badge">!</span>
                 <span>Please fill out all required sections</span>
@@ -503,7 +521,9 @@ const SignUpForm = () => {
                 <div className="signup-field-group">
                   <div className="signup-field-header">
                     <div className="signup-field-label-wrapper">
-                      <span className="signup-field-label">Student Username / UPI</span>
+                      <span className="signup-field-label">
+                        Student Username / UPI
+                      </span>
                       {invalidFieldsStep1.upi && (
                         <span className="signup-field-error-badge">!</span>
                       )}
@@ -527,7 +547,9 @@ const SignUpForm = () => {
                 <div className="signup-field-group">
                   <div className="signup-field-header">
                     <div className="signup-field-label-wrapper">
-                      <span className="signup-field-label">Student ID Number</span>
+                      <span className="signup-field-label">
+                        Student ID Number
+                      </span>
                       {invalidFieldsStep1.studentId && (
                         <span className="signup-field-error-badge">!</span>
                       )}
@@ -565,7 +587,9 @@ const SignUpForm = () => {
                   >
                     <div
                       className="signup-multi-select-trigger"
-                      onClick={() => setIsFacultyDropdownOpen(!isFacultyDropdownOpen)}
+                      onClick={() =>
+                        setIsFacultyDropdownOpen(!isFacultyDropdownOpen)
+                      }
                     >
                       {form.faculties.length > 0 ? (
                         <span className="signup-multi-select-values">
@@ -620,7 +644,9 @@ const SignUpForm = () => {
                 <div className="signup-field-group">
                   <div className="signup-field-header">
                     <div className="signup-field-label-wrapper">
-                      <span className="signup-field-label">Physical KAC Card</span>
+                      <span className="signup-field-label">
+                        Physical KAC Card
+                      </span>
                       {invalidFieldsStep2.physicalCard && (
                         <span className="signup-field-error-badge">!</span>
                       )}
@@ -679,7 +705,9 @@ const SignUpForm = () => {
                 <div className="signup-field-group full-width">
                   <div className="signup-field-header">
                     <div className="signup-field-label-wrapper">
-                      <span className="signup-field-label">Payment Information</span>
+                      <span className="signup-field-label">
+                        Payment Information
+                      </span>
                     </div>
                     <span className="signup-required-badge">Required</span>
                   </div>
@@ -754,7 +782,9 @@ const SignUpForm = () => {
                       edit &gt;
                     </button>
                   </div>
-                  <div className="signup-summary-value">{form.firstName || "—"}</div>
+                  <div className="signup-summary-value">
+                    {form.firstName || "—"}
+                  </div>
                 </div>
 
                 {/* Last Name */}
@@ -769,7 +799,9 @@ const SignUpForm = () => {
                       edit &gt;
                     </button>
                   </div>
-                  <div className="signup-summary-value">{form.lastName || "—"}</div>
+                  <div className="signup-summary-value">
+                    {form.lastName || "—"}
+                  </div>
                 </div>
 
                 {/* Email Address */}
@@ -792,7 +824,9 @@ const SignUpForm = () => {
                 {/* Mobile Phone Number */}
                 <div className="signup-field-group">
                   <div className="signup-summary-header">
-                    <span className="signup-summary-label">Mobile Phone Number</span>
+                    <span className="signup-summary-label">
+                      Mobile Phone Number
+                    </span>
                     <button
                       type="button"
                       className="signup-summary-edit-btn"
@@ -801,7 +835,9 @@ const SignUpForm = () => {
                       edit &gt;
                     </button>
                   </div>
-                  <div className="signup-summary-value">{form.mobileNumber || "—"}</div>
+                  <div className="signup-summary-value">
+                    {form.mobileNumber || "—"}
+                  </div>
                 </div>
 
                 {/* Pronouns */}
@@ -816,7 +852,9 @@ const SignUpForm = () => {
                       edit &gt;
                     </button>
                   </div>
-                  <div className="signup-summary-value">{form.pronouns || "—"}</div>
+                  <div className="signup-summary-value">
+                    {form.pronouns || "—"}
+                  </div>
                 </div>
 
                 {/* University */}
@@ -831,7 +869,9 @@ const SignUpForm = () => {
                       edit &gt;
                     </button>
                   </div>
-                  <div className="signup-summary-value">{form.university || "—"}</div>
+                  <div className="signup-summary-value">
+                    {form.university || "—"}
+                  </div>
                 </div>
 
                 {/* Faculty */}
@@ -847,14 +887,18 @@ const SignUpForm = () => {
                     </button>
                   </div>
                   <div className="signup-summary-value">
-                    {form.faculties.length > 0 ? form.faculties.join(", ") : "—"}
+                    {form.faculties.length > 0
+                      ? form.faculties.join(", ")
+                      : "—"}
                   </div>
                 </div>
 
                 {/* Student Username / UPI */}
                 <div className="signup-field-group">
                   <div className="signup-summary-header">
-                    <span className="signup-summary-label">Student Username / UPI</span>
+                    <span className="signup-summary-label">
+                      Student Username / UPI
+                    </span>
                     <button
                       type="button"
                       className="signup-summary-edit-btn"
@@ -869,7 +913,9 @@ const SignUpForm = () => {
                 {/* Student ID Number */}
                 <div className="signup-field-group">
                   <div className="signup-summary-header">
-                    <span className="signup-summary-label">Student ID Number</span>
+                    <span className="signup-summary-label">
+                      Student ID Number
+                    </span>
                     <button
                       type="button"
                       className="signup-summary-edit-btn"
@@ -878,13 +924,17 @@ const SignUpForm = () => {
                       edit &gt;
                     </button>
                   </div>
-                  <div className="signup-summary-value">{form.studentId || "—"}</div>
+                  <div className="signup-summary-value">
+                    {form.studentId || "—"}
+                  </div>
                 </div>
 
                 {/* Physical KAC Card */}
                 <div className="signup-field-group">
                   <div className="signup-summary-header">
-                    <span className="signup-summary-label">Physical KAC Card</span>
+                    <span className="signup-summary-label">
+                      Physical KAC Card
+                    </span>
                     <button
                       type="button"
                       className="signup-summary-edit-btn"
@@ -927,7 +977,9 @@ const SignUpForm = () => {
                       edit &gt;
                     </button>
                   </div>
-                  <div className="signup-summary-value">•••• •••• •••• ••••</div>
+                  <div className="signup-summary-value">
+                    •••• •••• •••• ••••
+                  </div>
                 </div>
 
                 {/* Expiry Date */}

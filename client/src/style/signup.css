@@ -344,7 +344,9 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 
   display: inline-flex;
   align-items: center;
@@ -553,7 +555,3 @@
     font-size: 40px;
   }
 }
-
-
-
-

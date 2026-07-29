@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -10,6 +11,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
+import api from "../api/index";
 import Header from "../main/Header";
 import "../style/common.css";
 import "../style/signup.css";
@@ -47,13 +49,13 @@ const SIGN_UP_METHODS = [
 ];
 
 const SignUpForm = () => {
-  const { user, hasAccount, loading } = useAuth();
+  const { user, loading, refresh } = useAuth();
   const navigate = useNavigate();
 
   const stripe = useStripe();
   const elements = useElements();
 
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
 
   const initialEmail = user?.emails?.[0]?.value ?? "";
 
@@ -77,26 +79,28 @@ const SignUpForm = () => {
     signUpMethod: "",
   });
 
-  const [isPaymentInfoOpen, setIsPaymentInfoOpen] = useState(false);
+  const [isPaymentInfoOpen, setIsPaymentInfoOpen] = useState(true);
 
-  // Validation States
+  // Validation & Submission States
   const [hasSubmittedStep1, setHasSubmittedStep1] = useState(false);
   const [invalidFieldsStep1, setInvalidFieldsStep1] = useState<Record<string, boolean>>({});
 
   const [hasSubmittedStep2, setHasSubmittedStep2] = useState(false);
   const [invalidFieldsStep2, setInvalidFieldsStep2] = useState<Record<string, boolean>>({});
 
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const [isFacultyDropdownOpen, setIsFacultyDropdownOpen] = useState(false);
   const facultyDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!loading) {
-      if (!user || hasAccount) {
+      if (!user) {
         navigate("/");
       }
     }
-  }, [user, hasAccount, loading, navigate]);
-
+  }, [user, loading, navigate]);
 
   // Click outside to close multi-select faculty dropdown
   useEffect(() => {
@@ -149,14 +153,13 @@ const SignUpForm = () => {
     }
   };
 
-
   const handleContinueStep1 = (e: React.MouseEvent) => {
     e.preventDefault();
 
     const missing: Record<string, boolean> = {};
     if (!form.firstName.trim()) missing.firstName = true;
     if (!form.lastName.trim()) missing.lastName = true;
-    if (!form.email.trim()) missing.email = true;
+    if (!form.email.trim() && !initialEmail.trim()) missing.email = true;
     if (!form.mobileNumber.trim()) missing.mobileNumber = true;
     if (!form.pronouns.trim()) missing.pronouns = true;
     if (!form.university.trim()) missing.university = true;
@@ -171,7 +174,6 @@ const SignUpForm = () => {
       return;
     }
 
-    // Step 1 Passed -> Proceed to Step 2
     setCurrentStep(2);
   };
 
@@ -189,19 +191,76 @@ const SignUpForm = () => {
       return;
     }
 
-    if (!stripe || !elements) {
-      console.warn("Stripe or elements not loaded yet");
-    }
-
-    // If payment info section is not opened, auto-open it
     if (!isPaymentInfoOpen) {
       setIsPaymentInfoOpen(true);
     }
 
-    // Step 2 Validation Passed -> Proceed to Step 3 in future
-    console.log("Step 2 validation succeeded", { form, step2Form });
+    setCurrentStep(3);
   };
 
+  const handleConfirmSubmit = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      setSubmitError("Payment processor is not ready yet. Please try again.");
+      return;
+    }
+
+    const cardNumberElement = elements.getElement(CardNumberElement);
+    if (!cardNumberElement) {
+      setSubmitError("Card details missing or incomplete. Please check Step 2.");
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const { data } = await api.post("/payments/create-payment-intent", {
+        type: "membership",
+      });
+
+      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
+        data.clientSecret,
+        {
+          payment_method: { card: cardNumberElement },
+        }
+      );
+
+      if (stripeError) {
+        setSubmitError(stripeError.message ?? "Payment failed. Please try again.");
+        return;
+      }
+
+      if (!paymentIntent || paymentIntent.status !== "succeeded") {
+        setSubmitError("Payment has not been completed yet.");
+        return;
+      }
+
+      await api.post("/users/signup", {
+        ...form,
+        email: form.email || initialEmail,
+        ...step2Form,
+        yearOfStudy: Number(form.yearOfStudy || 1),
+        paymentIntentId: paymentIntent.id,
+      });
+
+      await refresh();
+      setCurrentStep(4);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setSubmitError(
+          err.response?.data?.message ?? "Something went wrong. Please try again."
+        );
+      } else if (err instanceof Error) {
+        setSubmitError(err.message);
+      } else {
+        setSubmitError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   if (loading) return <p style={{ padding: "2rem" }}>Loading...</p>;
 
@@ -229,62 +288,67 @@ const SignUpForm = () => {
       <Header />
 
       <div className="signup-content-container">
-        {/* Silhouette mascot positioned -495px left, 107px top */}
         <img
           src={silhouetteMascot}
           alt="KAC Silhouette Mascot"
           className="signup-silhouette-mascot"
         />
 
-        {/* Main Mascot positioned 1142px left, 982px top, rotated 12deg */}
         <img
           src={mainMascot}
           alt="KAC Main Mascot"
           className="signup-title-mascot"
         />
 
-        {/* Hero Title */}
         <div className="signup-hero-side">
-          <h1 className="signup-hero-title">
-            JOIN THE
-            <br />
-            KAC FAM
-            <br />
-            TODAY!
-          </h1>
+          {currentStep === 4 ? (
+            <h1 className="signup-hero-title">
+              WELCOME TO
+              <br />
+              THE KAC
+              <br />
+              FAM!
+            </h1>
+          ) : (
+            <h1 className="signup-hero-title">
+              JOIN THE
+              <br />
+              KAC FAM
+              <br />
+              TODAY!
+            </h1>
+          )}
         </div>
 
-        {/* Card Form */}
         <div className="signup-card-side">
           <div className="signup-card">
-            {/* Back button for Step 2 & 3 */}
-            {currentStep > 1 && (
+            {currentStep > 1 && currentStep < 4 && (
               <button
                 type="button"
                 className="signup-back-btn"
-                onClick={() => setCurrentStep((prev) => (prev - 1) as 1 | 2)}
+                onClick={() => setCurrentStep((prev) => (prev - 1) as 1 | 2 | 3)}
               >
                 &lt; Back
               </button>
             )}
 
-            {/* 3-Step Stepper Header */}
-            <div className="signup-stepper">
-              <div className={`signup-step-item ${currentStep === 1 ? "active" : ""}`}>
-                <div className="signup-step-circle">1</div>
-                <span className="signup-step-label">About you</span>
+            {currentStep < 4 && (
+              <div className="signup-stepper">
+                <div className={`signup-step-item ${currentStep === 1 ? "active" : ""}`}>
+                  <div className="signup-step-circle">1</div>
+                  <span className="signup-step-label">About you</span>
+                </div>
+                <div className={`signup-step-item ${currentStep === 2 ? "active" : ""}`}>
+                  <div className="signup-step-circle">2</div>
+                  <span className="signup-step-label">Payment info</span>
+                </div>
+                <div className={`signup-step-item ${currentStep === 3 ? "active" : ""}`}>
+                  <div className="signup-step-circle">3</div>
+                  <span className="signup-step-label">Submit</span>
+                </div>
               </div>
-              <div className={`signup-step-item ${currentStep === 2 ? "active" : ""}`}>
-                <div className="signup-step-circle">2</div>
-                <span className="signup-step-label">Payment info</span>
-              </div>
-              <div className={`signup-step-item ${currentStep === 3 ? "active" : ""}`}>
-                <div className="signup-step-circle">3</div>
-                <span className="signup-step-label">Submit</span>
-              </div>
-            </div>
+            )}
 
-            {/* Global Error Warning Banner */}
             {((currentStep === 1 && hasStep1Errors) || (currentStep === 2 && hasStep2Errors)) && (
               <div className="signup-global-error">
                 <span className="signup-error-icon-badge">!</span>
@@ -292,384 +356,653 @@ const SignUpForm = () => {
               </div>
             )}
 
-            {/* STEP 1 VIEW */}
-            {currentStep === 1 && (
-              <>
-                <div className="signup-form-grid">
-                  {/* First Name */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">First Name</span>
-                        {invalidFieldsStep1.firstName && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <input
-                      type="text"
-                      name="firstName"
-                      className="signup-input"
-                      placeholder="Your first name here"
-                      value={form.firstName}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  {/* Last Name */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Last Name</span>
-                        {invalidFieldsStep1.lastName && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <input
-                      type="text"
-                      name="lastName"
-                      className="signup-input"
-                      placeholder="Your last name here"
-                      value={form.lastName}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  {/* Email Address */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Email Address</span>
-                        {invalidFieldsStep1.email && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <input
-                      type="email"
-                      name="email"
-                      className="signup-input"
-                      placeholder="Your email address here"
-                      value={form.email || initialEmail}
-                      onChange={handleChange}
-                    />
-
-                  </div>
-
-                  {/* Phone Number */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Phone Number</span>
-                        {invalidFieldsStep1.mobileNumber && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <input
-                      type="tel"
-                      name="mobileNumber"
-                      className="signup-input"
-                      placeholder="Your phone number here"
-                      value={form.mobileNumber}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  {/* Pronouns */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Pronouns</span>
-                        {invalidFieldsStep1.pronouns && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <input
-                      type="text"
-                      name="pronouns"
-                      className="signup-input"
-                      placeholder="Your pronouns here"
-                      value={form.pronouns}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  {/* University Dropdown */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">University</span>
-                        {invalidFieldsStep1.university && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <select
-                      name="university"
-                      className="signup-select"
-                      value={form.university}
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Please select your university
-                      </option>
-                      {UNIVERSITIES.map((uni) => (
-                        <option key={uni} value={uni}>
-                          {uni}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Student Username / UPI */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Student Username / UPI</span>
-                        {invalidFieldsStep1.upi && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <p className="signup-field-subtext">
-                      E.g. UOA UPI Format: abcd123. Enter "N/A" if not applicable
-                    </p>
-                    <input
-                      type="text"
-                      name="upi"
-                      className="signup-input"
-                      placeholder="Your student username / UPI here"
-                      value={form.upi}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  {/* Student ID Number */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Student ID Number</span>
-                        {invalidFieldsStep1.studentId && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <p className="signup-field-subtext">
-                      E.g. 123456789. If not applicable, please enter "N/A"
-                    </p>
-                    <input
-                      type="text"
-                      name="studentId"
-                      className="signup-input"
-                      placeholder="Your student ID number here"
-                      value={form.studentId}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  {/* Faculty Dropdown (Multi-Select) */}
-                  <div className="signup-field-group full-width">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Faculty</span>
-                        {invalidFieldsStep1.faculties && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-
-                    <div
-                      className="signup-multi-select-container"
-                      ref={facultyDropdownRef}
-                    >
-                      <div
-                        className="signup-multi-select-trigger"
-                        onClick={() => setIsFacultyDropdownOpen(!isFacultyDropdownOpen)}
-                      >
-                        {form.faculties.length > 0 ? (
-                          <span className="signup-multi-select-values">
-                            {form.faculties.join(", ")}
-                          </span>
-                        ) : (
-                          <span className="signup-multi-select-placeholder">
-                            Please select your faculty
-                          </span>
-                        )}
-                        <span className="signup-chevron-icon">
-                          {isFacultyDropdownOpen ? "▲" : "▼"}
-                        </span>
-                      </div>
-
-                      {isFacultyDropdownOpen && (
-                        <div className="signup-multi-select-dropdown">
-                          {FACULTIES.map((faculty) => (
-                            <label
-                              key={faculty}
-                              className="signup-multi-select-option"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={form.faculties.includes(faculty)}
-                                onChange={() => handleFacultyToggle(faculty)}
-                              />
-                              <span>{faculty}</span>
-                            </label>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="signup-actions">
-                  <button
-                    type="button"
-                    className="signup-continue-btn"
-                    onClick={handleContinueStep1}
-                  >
-                    Continue &gt;
-                  </button>
-                </div>
-              </>
+            {submitError && currentStep === 3 && (
+              <div className="signup-global-error">
+                <span className="signup-error-icon-badge">!</span>
+                <span>{submitError}</span>
+              </div>
             )}
 
-            {/* STEP 2 VIEW */}
-            {currentStep === 2 && (
-              <>
-                <div className="signup-form-grid">
-                  {/* Physical KAC Card */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Physical KAC Card</span>
-                        {invalidFieldsStep2.physicalCard && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
+            {/* STEP 1 VIEW */}
+            <div style={{ display: currentStep === 1 ? "block" : "none" }}>
+              <div className="signup-form-grid">
+                {/* First Name */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">First Name</span>
+                      {invalidFieldsStep1.firstName && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
                     </div>
-                    <p className="signup-field-subtext">
-                      Do you already have a physcial KAC card?
-                    </p>
-                    <select
-                      name="physicalCard"
-                      className="signup-select"
-                      value={step2Form.physicalCard}
-                      onChange={handleStep2Change}
-                    >
-                      <option value="" disabled>
-                        Please select yes or no
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="firstName"
+                    className="signup-input"
+                    placeholder="Your first name here"
+                    value={form.firstName}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Last Name */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Last Name</span>
+                      {invalidFieldsStep1.lastName && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="lastName"
+                    className="signup-input"
+                    placeholder="Your last name here"
+                    value={form.lastName}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Email Address */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Email Address</span>
+                      {invalidFieldsStep1.email && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    className="signup-input"
+                    placeholder="Your email address here"
+                    value={form.email || initialEmail}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Phone Number */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Phone Number</span>
+                      {invalidFieldsStep1.mobileNumber && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <input
+                    type="tel"
+                    name="mobileNumber"
+                    className="signup-input"
+                    placeholder="Your phone number here"
+                    value={form.mobileNumber}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Pronouns */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Pronouns</span>
+                      {invalidFieldsStep1.pronouns && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="pronouns"
+                    className="signup-input"
+                    placeholder="Your pronouns here"
+                    value={form.pronouns}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* University Dropdown */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">University</span>
+                      {invalidFieldsStep1.university && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <select
+                    name="university"
+                    className="signup-select"
+                    value={form.university}
+                    onChange={handleChange}
+                  >
+                    <option value="" disabled>
+                      Please select your university
+                    </option>
+                    {UNIVERSITIES.map((uni) => (
+                      <option key={uni} value={uni}>
+                        {uni}
                       </option>
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                    </select>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Student Username / UPI */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Student Username / UPI</span>
+                      {invalidFieldsStep1.upi && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <p className="signup-field-subtext">
+                    E.g. UOA UPI Format: abcd123. Enter "N/A" if not applicable
+                  </p>
+                  <input
+                    type="text"
+                    name="upi"
+                    className="signup-input"
+                    placeholder="Your student username / UPI here"
+                    value={form.upi}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Student ID Number */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Student ID Number</span>
+                      {invalidFieldsStep1.studentId && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <p className="signup-field-subtext">
+                    E.g. 123456789. If not applicable, please enter "N/A"
+                  </p>
+                  <input
+                    type="text"
+                    name="studentId"
+                    className="signup-input"
+                    placeholder="Your student ID number here"
+                    value={form.studentId}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Faculty Dropdown (Multi-Select) */}
+                <div className="signup-field-group full-width">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Faculty</span>
+                      {invalidFieldsStep1.faculties && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
                   </div>
 
-                  {/* Sign Up Method */}
-                  <div className="signup-field-group">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Sign Up Method</span>
-                        {invalidFieldsStep2.signUpMethod && (
-                          <span className="signup-field-error-badge">!</span>
-                        )}
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-                    <p className="signup-field-subtext">
-                      How did you sign up to KAC?
-                    </p>
-                    <select
-                      name="signUpMethod"
-                      className="signup-select"
-                      value={step2Form.signUpMethod}
-                      onChange={handleStep2Change}
-                    >
-                      <option value="" disabled>
-                        Please select what fits best
-                      </option>
-                      {SIGN_UP_METHODS.map((method) => (
-                        <option key={method} value={method}>
-                          {method}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Payment Information Section */}
-                  <div className="signup-field-group full-width">
-                    <div className="signup-field-header">
-                      <div className="signup-field-label-wrapper">
-                        <span className="signup-field-label">Payment Information</span>
-                      </div>
-                      <span className="signup-required-badge">Required</span>
-                    </div>
-
+                  <div
+                    className="signup-multi-select-container"
+                    ref={facultyDropdownRef}
+                  >
                     <div
-                      className="signup-accordion-trigger"
-                      onClick={() => setIsPaymentInfoOpen(!isPaymentInfoOpen)}
+                      className="signup-multi-select-trigger"
+                      onClick={() => setIsFacultyDropdownOpen(!isFacultyDropdownOpen)}
                     >
-                      <span>Please enter your card details</span>
+                      {form.faculties.length > 0 ? (
+                        <span className="signup-multi-select-values">
+                          {form.faculties.join(", ")}
+                        </span>
+                      ) : (
+                        <span className="signup-multi-select-placeholder">
+                          Please select your faculty
+                        </span>
+                      )}
                       <span className="signup-chevron-icon">
-                        {isPaymentInfoOpen ? "▲" : "▼"}
+                        {isFacultyDropdownOpen ? "▲" : "▼"}
                       </span>
                     </div>
 
-                    {isPaymentInfoOpen && (
-                      <div className="signup-card-details-box">
-                        {/* Card Number */}
-                        <div className="signup-field-group">
-                          <span className="signup-field-label">Card Number</span>
-                          <div className="signup-stripe-element-wrapper">
-                            <CardNumberElement options={stripeElementOptions} />
-                          </div>
-                        </div>
-
-                        {/* Expiry Date & CVC / CVV */}
-                        <div className="signup-form-grid">
-                          <div className="signup-field-group">
-                            <span className="signup-field-label">Expiry Date</span>
-                            <div className="signup-stripe-element-wrapper">
-                              <CardExpiryElement options={stripeElementOptions} />
-                            </div>
-                          </div>
-
-                          <div className="signup-field-group">
-                            <span className="signup-field-label">CVC / CVV</span>
-                            <div className="signup-stripe-element-wrapper">
-                              <CardCvcElement options={stripeElementOptions} />
-                            </div>
-                          </div>
-                        </div>
+                    {isFacultyDropdownOpen && (
+                      <div className="signup-multi-select-dropdown">
+                        {FACULTIES.map((faculty) => (
+                          <label
+                            key={faculty}
+                            className="signup-multi-select-option"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={form.faculties.includes(faculty)}
+                              onChange={() => handleFacultyToggle(faculty)}
+                            />
+                            <span>{faculty}</span>
+                          </label>
+                        ))}
                       </div>
                     )}
-
-                    <div className="signup-total-text">Total: $5.00</div>
                   </div>
+                </div>
+              </div>
+
+              <div className="signup-actions">
+                <button
+                  type="button"
+                  className="signup-continue-btn"
+                  onClick={handleContinueStep1}
+                >
+                  Continue &gt;
+                </button>
+              </div>
+            </div>
+
+            {/* STEP 2 VIEW */}
+            <div style={{ display: currentStep === 2 ? "block" : "none" }}>
+              <div className="signup-form-grid">
+                {/* Physical KAC Card */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Physical KAC Card</span>
+                      {invalidFieldsStep2.physicalCard && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <p className="signup-field-subtext">
+                    Do you already have a physcial KAC card?
+                  </p>
+                  <select
+                    name="physicalCard"
+                    className="signup-select"
+                    value={step2Form.physicalCard}
+                    onChange={handleStep2Change}
+                  >
+                    <option value="" disabled>
+                      Please select yes or no
+                    </option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+
+                {/* Sign Up Method */}
+                <div className="signup-field-group">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Sign Up Method</span>
+                      {invalidFieldsStep2.signUpMethod && (
+                        <span className="signup-field-error-badge">!</span>
+                      )}
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+                  <p className="signup-field-subtext">
+                    How did you sign up to KAC?
+                  </p>
+                  <select
+                    name="signUpMethod"
+                    className="signup-select"
+                    value={step2Form.signUpMethod}
+                    onChange={handleStep2Change}
+                  >
+                    <option value="" disabled>
+                      Please select what fits best
+                    </option>
+                    {SIGN_UP_METHODS.map((method) => (
+                      <option key={method} value={method}>
+                        {method}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Payment Information Section */}
+                <div className="signup-field-group full-width">
+                  <div className="signup-field-header">
+                    <div className="signup-field-label-wrapper">
+                      <span className="signup-field-label">Payment Information</span>
+                    </div>
+                    <span className="signup-required-badge">Required</span>
+                  </div>
+
+                  <div
+                    className="signup-accordion-trigger"
+                    onClick={() => setIsPaymentInfoOpen(!isPaymentInfoOpen)}
+                  >
+                    <span>Please enter your card details</span>
+                    <span className="signup-chevron-icon">
+                      {isPaymentInfoOpen ? "▲" : "▼"}
+                    </span>
+                  </div>
+
+                  <div
+                    className="signup-card-details-box"
+                    style={{ display: isPaymentInfoOpen ? "flex" : "none" }}
+                  >
+                    {/* Card Number */}
+                    <div className="signup-field-group">
+                      <span className="signup-field-label">Card Number</span>
+                      <div className="signup-stripe-element-wrapper">
+                        <CardNumberElement options={stripeElementOptions} />
+                      </div>
+                    </div>
+
+                    {/* Expiry Date & CVC / CVV */}
+                    <div className="signup-form-grid">
+                      <div className="signup-field-group">
+                        <span className="signup-field-label">Expiry Date</span>
+                        <div className="signup-stripe-element-wrapper">
+                          <CardExpiryElement options={stripeElementOptions} />
+                        </div>
+                      </div>
+
+                      <div className="signup-field-group">
+                        <span className="signup-field-label">CVC / CVV</span>
+                        <div className="signup-stripe-element-wrapper">
+                          <CardCvcElement options={stripeElementOptions} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="signup-total-text">Total: $5.00</div>
+                </div>
+              </div>
+
+              <div className="signup-actions">
+                <button
+                  type="button"
+                  className="signup-continue-btn"
+                  onClick={handleContinueStep2}
+                >
+                  Continue &gt;
+                </button>
+              </div>
+            </div>
+
+            {/* STEP 3 VIEW (SUMMARY & CONFIRM) */}
+            <div style={{ display: currentStep === 3 ? "block" : "none" }}>
+              <div className="signup-form-grid">
+                {/* First Name */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">First Name</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">{form.firstName || "—"}</div>
+                </div>
+
+                {/* Last Name */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Last Name</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">{form.lastName || "—"}</div>
+                </div>
+
+                {/* Email Address */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Email Address</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">
+                    {form.email || initialEmail || "—"}
+                  </div>
+                </div>
+
+                {/* Mobile Phone Number */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Mobile Phone Number</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">{form.mobileNumber || "—"}</div>
+                </div>
+
+                {/* Pronouns */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Pronouns</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">{form.pronouns || "—"}</div>
+                </div>
+
+                {/* University */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">University</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">{form.university || "—"}</div>
+                </div>
+
+                {/* Faculty */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Faculty</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">
+                    {form.faculties.length > 0 ? form.faculties.join(", ") : "—"}
+                  </div>
+                </div>
+
+                {/* Student Username / UPI */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Student Username / UPI</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">{form.upi || "—"}</div>
+                </div>
+
+                {/* Student ID Number */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Student ID Number</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">{form.studentId || "—"}</div>
+                </div>
+
+                {/* Physical KAC Card */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Physical KAC Card</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(2)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">
+                    {step2Form.physicalCard || "—"}
+                  </div>
+                </div>
+
+                {/* Sign Up Method */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Sign Up Method</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(2)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">
+                    {step2Form.signUpMethod || "—"}
+                  </div>
+                </div>
+
+                {/* Card Number */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Card Number</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(2)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">•••• •••• •••• ••••</div>
+                </div>
+
+                {/* Expiry Date */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">Expiry Date</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(2)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">••/••</div>
+                </div>
+
+                {/* CVC / CVV */}
+                <div className="signup-field-group">
+                  <div className="signup-summary-header">
+                    <span className="signup-summary-label">CVC / CVV</span>
+                    <button
+                      type="button"
+                      className="signup-summary-edit-btn"
+                      onClick={() => setCurrentStep(2)}
+                    >
+                      edit &gt;
+                    </button>
+                  </div>
+                  <div className="signup-summary-value">•••</div>
+                </div>
+              </div>
+
+              <div className="signup-actions">
+                <button
+                  type="button"
+                  className="signup-continue-btn"
+                  onClick={handleConfirmSubmit}
+                  disabled={submitting}
+                >
+                  {submitting ? "Processing..." : "Confirm >"}
+                </button>
+              </div>
+            </div>
+
+            {/* STEP 4 VIEW (SUCCESS / WELCOME) */}
+            {currentStep === 4 && (
+              <div className="signup-success-container">
+                <img
+                  src={mainMascot}
+                  alt="KAC Mascot"
+                  className="signup-success-mascot"
+                />
+
+                <h2 className="signup-success-title">
+                  Thank you for your submission!
+                </h2>
+
+                <div className="signup-success-text-group">
+                  <p className="signup-success-text">
+                    Here is the link for your digital KAC card:
+                  </p>
+                  <p className="signup-success-link">??????????????</p>
                 </div>
 
                 <div className="signup-actions">
                   <button
                     type="button"
                     className="signup-continue-btn"
-                    onClick={handleContinueStep2}
+                    onClick={() => navigate("/")}
                   >
-                    Continue &gt;
+                    Back Home &gt;
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -685,4 +1018,3 @@ const SignUp = () => (
 );
 
 export default SignUp;
-

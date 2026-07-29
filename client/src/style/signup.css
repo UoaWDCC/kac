@@ -420,6 +420,94 @@
   margin-top: 16px;
 }
 
+/* Step 3 Summary Review Styles */
+.signup-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.signup-summary-label {
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a5568;
+}
+
+.signup-summary-edit-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  color: #e5a93b;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.signup-summary-edit-btn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.signup-summary-value {
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a202c;
+  margin-top: 4px;
+  min-height: 22px;
+}
+
+/* Step 4 Success View Styles */
+.signup-success-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 20px 20px;
+  gap: 16px;
+}
+
+.signup-success-mascot {
+  width: 90px;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.signup-success-title {
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: #0b2d4a;
+  margin: 0;
+}
+
+.signup-success-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.signup-success-text {
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 15px;
+  color: #2d3748;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.signup-success-link {
+  font-family: var(--font-alan-sans, "Alan Sans", sans-serif);
+  font-size: 15px;
+  color: #0b2d4a;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
 /* Responsive Scaling */
 @media (max-width: 1024px) {
   .signup-content-container {
@@ -465,5 +553,7 @@
     font-size: 40px;
   }
 }
+
+
 
 

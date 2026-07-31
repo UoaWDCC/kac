@@ -88,7 +88,7 @@ const Sponsors = () => {
             display: "flex",
             gap: "2rem",
             width: "max-content",
-            animation: "marquee 40s linear infinite",
+            animation: "marquee 400s linear infinite",
           }}
         >
           {marqueeSponsors.map((s, i) => (

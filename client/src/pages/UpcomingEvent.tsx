@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
 import {
@@ -9,20 +10,31 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-import events from "../placeholders/events.json";
+import { getEventById } from "../api/eventsApi";
+import type { Event } from "../api/eventsApi";
 import "../style/common.css";
 
 import { ImageBlock } from "../components/image_block/ImageBlock";
 
 const UpcomingEvent = () => {
-  const event = events[2]; // later get info from id in db
-  let userSignedUp = false; // in future, check db for this
+  const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
   const [cardIsOpen, setCardIsOpen] = useState(false);
+  const [event, setEvent] = useState<Event | undefined>(undefined);
 
-  if (!event) {
-    return <div className="medium-content">Event not found</div>;
-  }
+  useEffect(() => {
+    if (!id) return;
+    const fetchEvent = async () => {
+      const eventData = await getEventById(id);
+      setEvent(eventData);
+    };
+    fetchEvent();
+  }, [id]);
+
+  if (!id || !event)
+    return <div className="medium-content">Event not found!</div>;
+
+  let userSignedUp = false; // in future, check user's account for this
 
   return (
     <div className="bg-yellow-light py-10">

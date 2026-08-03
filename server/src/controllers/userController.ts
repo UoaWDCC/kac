@@ -34,9 +34,7 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  const {
-    paymentIntentId,
-  } = req.body;
+  const { paymentIntentId } = req.body;
 
   const validation = validateUserInput(req.body, {
     requireAll: true,

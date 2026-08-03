@@ -110,14 +110,20 @@ export const filterMemberFieldInput = (field: string, value: string) => {
   }
 
   if (field === "pronouns") {
-    return limitValue(field, collapseWhitespace(value.replace(/[^A-Za-z0-9 /-]/g, "")));
+    return limitValue(
+      field,
+      collapseWhitespace(value.replace(/[^A-Za-z0-9 /-]/g, ""))
+    );
   }
 
   if (field === "email" || field === "memberSince") {
     return limitValue(field, value);
   }
 
-  return limitValue(field, collapseWhitespace(value.replace(/[^A-Za-z0-9 ]/g, "")));
+  return limitValue(
+    field,
+    collapseWhitespace(value.replace(/[^A-Za-z0-9 ]/g, ""))
+  );
 };
 
 const normalizeTextField = (field: string, value: unknown) =>
@@ -156,7 +162,9 @@ export const getMemberValidationErrors = (
 ) => {
   const normalized = normalizeMemberProfile(input);
   const errors: string[] = [];
-  const missingFields: string[] = REQUIRED_FIELDS.filter((field) => !normalized[field]);
+  const missingFields: string[] = REQUIRED_FIELDS.filter(
+    (field) => !normalized[field]
+  );
 
   if (options.requireYearOfStudy && !normalized.yearOfStudy) {
     missingFields.push("yearOfStudy");
@@ -178,11 +186,7 @@ export const getMemberValidationErrors = (
     errors.push("Student Number can only contain numbers.");
   }
 
-  const safeTextFields = [
-    "firstName",
-    "lastName",
-    "university",
-  ] as const;
+  const safeTextFields = ["firstName", "lastName", "university"] as const;
 
   safeTextFields.forEach((field) => {
     const value = normalized[field];

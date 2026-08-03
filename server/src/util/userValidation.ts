@@ -92,7 +92,8 @@ const STRING_RULES = {
     label: "Student Username / UPI",
     maxLength: 32,
     pattern: SAFE_ID,
-    patternMessage: "Student Username / UPI can only contain letters and numbers.",
+    patternMessage:
+      "Student Username / UPI can only contain letters and numbers.",
     required: true,
   },
 } satisfies Record<string, ValidationRule>;
@@ -102,7 +103,8 @@ type StringUserField = keyof typeof STRING_RULES;
 const hasOwn = (input: Record<string, unknown>, field: string) =>
   Object.prototype.hasOwnProperty.call(input, field);
 
-const normalizeWhitespace = (value: string) => value.trim().replace(/\s+/g, " ");
+const normalizeWhitespace = (value: string) =>
+  value.trim().replace(/\s+/g, " ");
 
 const getString = (
   input: Record<string, unknown>,
@@ -249,7 +251,9 @@ const validateYear = (
     numericValue < options.min ||
     numericValue > options.max
   ) {
-    errors.push(`${label} must be a number between ${options.min} and ${options.max}.`);
+    errors.push(
+      `${label} must be a number between ${options.min} and ${options.max}.`
+    );
     return;
   }
 

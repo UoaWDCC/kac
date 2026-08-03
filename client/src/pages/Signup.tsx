@@ -211,7 +211,7 @@ const SignUpForm = () => {
           <input
             {...getMemberInputProps("pronouns")}
             name="pronouns"
-            placeholder="e.g. she her, he him, they them"
+            placeholder="e.g. she/her, he/him, they/them"
             value={form.pronouns}
             onChange={handleChange}
           />

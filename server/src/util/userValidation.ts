@@ -41,6 +41,7 @@ type ValidationRule = {
 
 const DIGITS_ONLY = /^\d+$/;
 const SAFE_TEXT = /^[A-Za-z0-9 ]+$/;
+const SAFE_PRONOUNS = /^[A-Za-z0-9 /-]+$/;
 const SAFE_ID = /^[A-Za-z0-9]+$/;
 const SIMPLE_EMAIL = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 
@@ -69,8 +70,9 @@ const STRING_RULES = {
   pronouns: {
     label: "Pronouns",
     maxLength: 40,
-    pattern: SAFE_TEXT,
-    patternMessage: "Pronouns can only contain letters, numbers, and spaces.",
+    pattern: SAFE_PRONOUNS,
+    patternMessage:
+      "Pronouns can only contain letters, numbers, spaces, /, and -.",
   },
   studentId: {
     label: "Student Number",

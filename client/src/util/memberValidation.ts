@@ -58,6 +58,7 @@ export type NormalizedMemberProfile = {
 
 const DIGITS_ONLY = /^\d+$/;
 const SAFE_TEXT = /^[A-Za-z0-9 ]+$/;
+const SAFE_PRONOUNS = /^[A-Za-z0-9 /-]+$/;
 const SAFE_ID = /^[A-Za-z0-9]+$/;
 const SIMPLE_EMAIL = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 const NUMERIC_FIELDS = new Set<string>([
@@ -108,6 +109,10 @@ export const filterMemberFieldInput = (field: string, value: string) => {
     return limitValue(field, value.replace(/[^A-Za-z0-9]/g, ""));
   }
 
+  if (field === "pronouns") {
+    return limitValue(field, collapseWhitespace(value.replace(/[^A-Za-z0-9 /-]/g, "")));
+  }
+
   if (field === "email" || field === "memberSince") {
     return limitValue(field, value);
   }
@@ -151,7 +156,7 @@ export const getMemberValidationErrors = (
 ) => {
   const normalized = normalizeMemberProfile(input);
   const errors: string[] = [];
-  const missingFields = REQUIRED_FIELDS.filter((field) => !normalized[field]);
+  const missingFields: string[] = REQUIRED_FIELDS.filter((field) => !normalized[field]);
 
   if (options.requireYearOfStudy && !normalized.yearOfStudy) {
     missingFields.push("yearOfStudy");
@@ -176,7 +181,6 @@ export const getMemberValidationErrors = (
   const safeTextFields = [
     "firstName",
     "lastName",
-    "pronouns",
     "university",
   ] as const;
 
@@ -191,6 +195,12 @@ export const getMemberValidationErrors = (
 
   if (normalized.upi && !SAFE_ID.test(normalized.upi)) {
     errors.push("Student Username / UPI can only contain letters and numbers.");
+  }
+
+  if (normalized.pronouns && !SAFE_PRONOUNS.test(normalized.pronouns)) {
+    errors.push(
+      "Pronouns can only contain letters, numbers, spaces, /, and -."
+    );
   }
 
   if (options.requireYearOfStudy && normalized.yearOfStudy) {

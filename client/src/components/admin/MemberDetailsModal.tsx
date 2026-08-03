@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Trash2, X } from "lucide-react";
 import { deleteMember, updateMember } from "../../api/usersApi";
+import { FACULTIES } from "../../constants/faculties";
 import type { Member } from "./MemberColumns";
 
 type MemberDetailsModalProps = {
@@ -11,17 +12,6 @@ type MemberDetailsModalProps = {
   onDelete: (id: string) => void;
   onSave: (member: Member) => void;
 };
-
-const FACULTIES = [
-  "Arts",
-  "Business School",
-  "Creative Arts and Industries",
-  "Education and Social Work",
-  "Engineering",
-  "Law",
-  "Medical and Health Sciences",
-  "Science",
-];
 
 const inputClass =
   "h-10 rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/40";
@@ -162,11 +152,11 @@ export default function MemberDetailsModal({
     (showDeleteConfirm && (deleteConfirmation !== "delete" || isDeleting));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4">
+    <div className="fixed inset-0 z-50 flex justify-center overflow-hidden bg-slate-950/60 px-4 py-6">
       <section
         aria-label={`Edit member ${member.firstName} ${member.lastName}`}
         aria-modal="true"
-        className="relative flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-lg bg-white shadow-2xl"
+        className="relative flex h-[calc(100dvh-3rem)] w-full max-w-4xl flex-col overflow-hidden rounded-lg bg-white shadow-2xl"
         role="dialog"
       >
         <button
@@ -180,7 +170,7 @@ export default function MemberDetailsModal({
         </button>
 
         <form
-          className="min-h-0 flex-1 overflow-y-auto"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
           id="member-details-form"
           onSubmit={handleSave}
           ref={formRef}

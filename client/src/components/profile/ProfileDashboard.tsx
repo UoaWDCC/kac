@@ -1,7 +1,8 @@
 import type { ProfileSection } from "../../pages/Profile.tsx";
 import { CalendarDays, ChevronRight, Images } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchCurrentMember, updateCurrentMember } from "../../api/usersApi";
+import { FACULTIES } from "../../constants/faculties";
 
 type ProfileDashboardProps = {
   activeSection: ProfileSection;
@@ -22,7 +23,7 @@ type CurrentMember = {
 
 type ProfileForm = {
   email: string;
-  faculties: string;
+  faculties: string[];
   firstName: string;
   lastName: string;
   memberSince: string;
@@ -33,16 +34,18 @@ type ProfileForm = {
   upi: string;
 };
 
+type ProfileTextField = Exclude<keyof ProfileForm, "faculties">;
+
 type ProfileField = {
   id: string;
   label: string;
-  name: keyof ProfileForm;
+  name: ProfileTextField;
   readOnly?: boolean;
 };
 
 const emptyProfileForm: ProfileForm = {
   email: "",
-  faculties: "",
+  faculties: [],
   firstName: "",
   lastName: "",
   memberSince: "",
@@ -69,7 +72,7 @@ const formatMemberSince = (createdAt?: string) => {
 
 const createProfileForm = (currentUser: CurrentMember): ProfileForm => ({
   email: currentUser.email ?? "",
-  faculties: currentUser.faculties?.join(", ") ?? "",
+  faculties: currentUser.faculties ?? [],
   firstName: currentUser.firstName ?? "",
   lastName: currentUser.lastName ?? "",
   memberSince: formatMemberSince(currentUser.createdAt),
@@ -109,18 +112,7 @@ const profileFields: ProfileField[] = [
     label: "Phone Number",
     name: "mobileNumber",
   },
-  {
-    id: "faculty",
-    label: "Faculties",
-    name: "faculties",
-  },
   { id: "pronouns", label: "Pronouns", name: "pronouns" },
-  {
-    id: "member-since",
-    label: "Member Since",
-    name: "memberSince",
-    readOnly: true,
-  },
 ];
 
 const getErrorMessage = (error: unknown) => {
@@ -169,19 +161,21 @@ export default function ProfileDashboard({
     };
   }, []);
 
-  const facultyList = useMemo(
-    () =>
-      form.faculties
-        .split(",")
-        .map((faculty) => faculty.trim())
-        .filter(Boolean),
-    [form.faculties]
-  );
-
-  const updateField = (field: keyof ProfileForm, value: string) => {
+  const updateField = (field: ProfileTextField, value: string) => {
     setForm((current) => ({
       ...current,
       [field]: value,
+    }));
+    setError(null);
+    setSuccessMessage(null);
+  };
+
+  const toggleFaculty = (faculty: string) => {
+    setForm((current) => ({
+      ...current,
+      faculties: current.faculties.includes(faculty)
+        ? current.faculties.filter((item) => item !== faculty)
+        : [...current.faculties, faculty],
     }));
     setError(null);
     setSuccessMessage(null);
@@ -202,7 +196,7 @@ export default function ProfileDashboard({
     if (!form.university.trim()) missingFields.push("University");
     if (!form.studentId.trim()) missingFields.push("Student Number");
     if (!form.upi.trim()) missingFields.push("Student Username / UPI");
-    if (facultyList.length === 0) missingFields.push("Faculties");
+    if (form.faculties.length === 0) missingFields.push("Faculties");
 
     if (missingFields.length > 0) {
       setError(`Please fill in: ${missingFields.join(", ")}.`);
@@ -215,7 +209,7 @@ export default function ProfileDashboard({
 
     try {
       const updatedMember = await updateCurrentMember({
-        faculties: facultyList,
+        faculties: form.faculties,
         firstName: form.firstName.trim(),
         lastName: form.lastName.trim(),
         mobileNumber: form.mobileNumber.trim(),
@@ -267,6 +261,39 @@ export default function ProfileDashboard({
                   />
                 </label>
               ))}
+              <div className="flex flex-col gap-2 font-alan-sans text-[0.94rem] font-semibold text-grey-medium md:col-span-2">
+                <span>Faculties</span>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {FACULTIES.map((faculty) => (
+                    <label
+                      className="flex items-center gap-3 rounded-md border border-yellow-dark/70 bg-transparent px-3 py-2 text-base font-semibold text-blue-medium transition hover:border-blue-medium"
+                      key={faculty}
+                    >
+                      <input
+                        checked={form.faculties.includes(faculty)}
+                        className="h-4 w-4 accent-blue-medium"
+                        disabled={isSaving}
+                        onChange={() => toggleFaculty(faculty)}
+                        type="checkbox"
+                      />
+                      {faculty}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <label
+                className="flex flex-col gap-1 font-alan-sans text-[0.94rem] font-semibold text-grey-medium md:col-span-2"
+                htmlFor="member-since"
+              >
+                Member Since
+                <input
+                  className="w-full cursor-not-allowed border-0 border-b-2 border-yellow-dark bg-transparent px-0 pb-1 font-alan-sans text-base font-semibold text-grey-medium outline-none"
+                  id="member-since"
+                  readOnly
+                  value={form.memberSince}
+                />
+              </label>
             </div>
 
             {error ? (

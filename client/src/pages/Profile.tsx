@@ -15,15 +15,15 @@ const Profile = () => {
   return (
     <div className="profile-page">
       <title>User Profile</title>
-      <section className="section relative w-full overflow-hidden bg-yellow-light pr-0! p-0!">
-        <div className="justify-self-end relative">
+      <section className="section relative min-h-screen w-full overflow-hidden bg-yellow-light pr-0! p-0!">
+        <div className="absolute right-0 top-0 z-0 flex w-full justify-end">
           <ImageBlock
             pageKey="mascot-bg"
             alt="Profile Background"
             style={{ width: "90vw" }}
           />
         </div>
-        <div className="absolute top-0 w-full">
+        <div className="relative z-10 w-full pb-16">
           <div className="profile-title-group">
             <img
               className="profile-title-kaco"

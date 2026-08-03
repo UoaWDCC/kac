@@ -9,22 +9,12 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
+import { FACULTIES } from "../constants/faculties";
 import "../style/common.css";
 import "../style/signup.css";
 import api from "../api/index";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-
-const FACULTIES = [
-  "Arts",
-  "Business School",
-  "Creative Arts and Industries",
-  "Education and Social Work",
-  "Engineering",
-  "Law",
-  "Medical and Health Sciences",
-  "Science",
-];
 
 const SignUpForm = () => {
   const { user, hasAccount, loading, refresh } = useAuth();

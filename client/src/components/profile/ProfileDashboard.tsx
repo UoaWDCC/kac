@@ -3,6 +3,12 @@ import { CalendarDays, ChevronRight, Images } from "lucide-react";
 import { useEffect, useState } from "react";
 import { fetchCurrentMember, updateCurrentMember } from "../../api/usersApi";
 import { FACULTIES } from "../../constants/faculties";
+import {
+  filterMemberFieldInput,
+  getMemberInputProps,
+  getMemberValidationErrors,
+  normalizeMemberProfile,
+} from "../../util/memberValidation";
 
 type ProfileDashboardProps = {
   activeSection: ProfileSection;
@@ -164,7 +170,7 @@ export default function ProfileDashboard({
   const updateField = (field: ProfileTextField, value: string) => {
     setForm((current) => ({
       ...current,
-      [field]: value,
+      [field]: filterMemberFieldInput(field, value),
     }));
     setError(null);
     setSuccessMessage(null);
@@ -189,17 +195,11 @@ export default function ProfileDashboard({
       return;
     }
 
-    const missingFields = [];
-    if (!form.firstName.trim()) missingFields.push("First Name");
-    if (!form.lastName.trim()) missingFields.push("Last Name");
-    if (!form.mobileNumber.trim()) missingFields.push("Phone Number");
-    if (!form.university.trim()) missingFields.push("University");
-    if (!form.studentId.trim()) missingFields.push("Student Number");
-    if (!form.upi.trim()) missingFields.push("Student Username / UPI");
-    if (form.faculties.length === 0) missingFields.push("Faculties");
+    const normalizedForm = normalizeMemberProfile(form);
+    const validationErrors = getMemberValidationErrors(normalizedForm);
 
-    if (missingFields.length > 0) {
-      setError(`Please fill in: ${missingFields.join(", ")}.`);
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(" "));
       return;
     }
 
@@ -209,14 +209,14 @@ export default function ProfileDashboard({
 
     try {
       const updatedMember = await updateCurrentMember({
-        faculties: form.faculties,
-        firstName: form.firstName.trim(),
-        lastName: form.lastName.trim(),
-        mobileNumber: form.mobileNumber.trim(),
-        pronouns: form.pronouns.trim(),
-        studentId: form.studentId.trim(),
-        university: form.university.trim(),
-        upi: form.upi.trim(),
+        faculties: normalizedForm.faculties,
+        firstName: normalizedForm.firstName,
+        lastName: normalizedForm.lastName,
+        mobileNumber: normalizedForm.mobileNumber,
+        pronouns: normalizedForm.pronouns,
+        studentId: normalizedForm.studentId,
+        university: normalizedForm.university,
+        upi: normalizedForm.upi,
       });
 
       setCurrentUser(updatedMember);
@@ -247,6 +247,7 @@ export default function ProfileDashboard({
                 >
                   {detail.label}
                   <input
+                    {...getMemberInputProps(detail.name)}
                     className={`w-full border-0 border-b-2 border-yellow-dark bg-transparent px-0 pb-1 font-alan-sans text-base font-semibold text-blue-medium outline-none ${
                       detail.readOnly
                         ? "cursor-not-allowed text-grey-medium"
@@ -288,6 +289,7 @@ export default function ProfileDashboard({
               >
                 Member Since
                 <input
+                  {...getMemberInputProps("memberSince")}
                   className="w-full cursor-not-allowed border-0 border-b-2 border-yellow-dark bg-transparent px-0 pb-1 font-alan-sans text-base font-semibold text-grey-medium outline-none"
                   id="member-since"
                   readOnly

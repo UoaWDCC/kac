@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { User } from "../model/user";
 import { Payment } from "../model/payment";
 import { getMembershipYear } from "../util/date";
+import { validateUserInput } from "../util/userValidation";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -34,36 +35,21 @@ export const createUser = async (req: Request, res: Response) => {
   }
 
   const {
-    firstName,
-    lastName,
-    mobileNumber,
-    pronouns,
-    university,
-    studentId,
-    upi,
-    yearOfStudy,
-    faculties,
     paymentIntentId,
   } = req.body;
 
-  const missingFields = [];
-  if (!firstName) missingFields.push("firstName");
-  if (!lastName) missingFields.push("lastName");
-  if (!mobileNumber) missingFields.push("mobileNumber");
-  if (!university) missingFields.push("university");
-  if (!studentId) missingFields.push("studentId");
-  if (!upi) missingFields.push("upi");
-  if (!yearOfStudy) missingFields.push("yearOfStudy");
-  if (!faculties || !Array.isArray(faculties) || faculties.length === 0) {
-    missingFields.push("faculties");
-  }
-  if (!paymentIntentId || typeof paymentIntentId !== "string")
-    missingFields.push("paymentIntentId");
+  const validation = validateUserInput(req.body, {
+    requireAll: true,
+    requireYearOfStudy: true,
+  });
 
-  if (missingFields.length > 0) {
+  if (!paymentIntentId || typeof paymentIntentId !== "string") {
+    validation.errors.push("Payment details are required.");
+  }
+
+  if (validation.errors.length > 0) {
     res.status(400).json({
-      message: "Missing required fields",
-      fields: missingFields,
+      message: validation.errors.join(" "),
     });
     return;
   }
@@ -151,15 +137,15 @@ export const createUser = async (req: Request, res: Response) => {
     const newUser = await User.create({
       googleUid,
       email,
-      firstName,
-      lastName,
-      mobileNumber,
-      pronouns,
-      university,
-      studentId,
-      upi,
-      yearOfStudy: Number(yearOfStudy),
-      faculties,
+      firstName: validation.values.firstName!,
+      lastName: validation.values.lastName!,
+      mobileNumber: validation.values.mobileNumber!,
+      pronouns: validation.values.pronouns,
+      university: validation.values.university!,
+      studentId: validation.values.studentId!,
+      upi: validation.values.upi!,
+      yearOfStudy: validation.values.yearOfStudy!,
+      faculties: validation.values.faculties!,
       latestMembershipYear: getMembershipYear(),
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
@@ -243,33 +229,10 @@ const getAuthenticatedUser = async (req: Request) => {
 };
 
 export const updateCurrentUser = async (req: Request, res: Response) => {
-  const allowedFields = [
-    "firstName",
-    "lastName",
-    "mobileNumber",
-    "pronouns",
-    "university",
-    "studentId",
-    "upi",
-    "faculties",
-  ];
+  const validation = validateUserInput(req.body);
 
-  const updates = allowedFields.reduce<Record<string, unknown>>(
-    (acc, field) => {
-      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
-        acc[field] = req.body[field];
-      }
-
-      return acc;
-    },
-    {}
-  );
-
-  if (
-    updates.faculties !== undefined &&
-    (!Array.isArray(updates.faculties) || updates.faculties.length === 0)
-  ) {
-    res.status(400).json({ message: "Select at least one faculty." });
+  if (validation.errors.length > 0) {
+    res.status(400).json({ message: validation.errors.join(" ") });
     return;
   }
 
@@ -281,10 +244,14 @@ export const updateCurrentUser = async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await User.findByIdAndUpdate(currentUser._id, updates, {
-      new: true,
-      runValidators: true,
-    });
+    const user = await User.findByIdAndUpdate(
+      currentUser._id,
+      validation.values,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     if (!user) {
       res.status(404).json({ message: "User not found" });
@@ -307,47 +274,20 @@ export const updateCurrentUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  const allowedFields = [
-    "email",
-    "firstName",
-    "lastName",
-    "mobileNumber",
-    "pronouns",
-    "university",
-    "studentId",
-    "upi",
-    "yearOfStudy",
-    "faculties",
-    "latestMembershipYear",
-    "isAdmin",
-  ];
+  const validation = validateUserInput(req.body, {
+    allowEmail: true,
+    allowLatestMembershipYear: true,
+    allowYearOfStudy: true,
+  });
+  const updates: Record<string, unknown> = { ...validation.values };
 
-  const updates = allowedFields.reduce<Record<string, unknown>>(
-    (acc, field) => {
-      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
-        acc[field] = req.body[field];
-      }
-
-      return acc;
-    },
-    {}
-  );
-
-  if (updates.yearOfStudy !== undefined) {
-    updates.yearOfStudy = Number(updates.yearOfStudy);
+  if (validation.errors.length > 0) {
+    res.status(400).json({ message: validation.errors.join(" ") });
+    return;
   }
 
-  if (updates.isAdmin !== undefined) {
-    updates.isAdmin = updates.isAdmin === true || updates.isAdmin === "true";
-  }
-
-  if (updates.latestMembershipYear === "") {
-    updates.latestMembershipYear = null;
-  } else if (
-    updates.latestMembershipYear !== undefined &&
-    updates.latestMembershipYear !== null
-  ) {
-    updates.latestMembershipYear = Number(updates.latestMembershipYear);
+  if (Object.prototype.hasOwnProperty.call(req.body, "isAdmin")) {
+    updates.isAdmin = req.body.isAdmin === true || req.body.isAdmin === "true";
   }
 
   try {

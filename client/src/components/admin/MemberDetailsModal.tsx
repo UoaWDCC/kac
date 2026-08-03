@@ -2,6 +2,12 @@ import { useRef, useState } from "react";
 import { Trash2, X } from "lucide-react";
 import { deleteMember, updateMember } from "../../api/usersApi";
 import { FACULTIES } from "../../constants/faculties";
+import {
+  filterMemberFieldInput,
+  getMemberInputProps,
+  getMemberValidationErrors,
+  normalizeMemberProfile,
+} from "../../util/memberValidation";
 import type { Member } from "./MemberColumns";
 
 type MemberDetailsModalProps = {
@@ -68,9 +74,12 @@ export default function MemberDetailsModal({
       : null;
 
   const updateField = (field: keyof typeof form, value: string | boolean) => {
+    const nextValue =
+      typeof value === "string" ? filterMemberFieldInput(field, value) : value;
+
     setForm((current) => ({
       ...current,
-      [field]: value,
+      [field]: nextValue,
     }));
   };
 
@@ -97,15 +106,36 @@ export default function MemberDetailsModal({
       return;
     }
 
+    const normalizedForm = normalizeMemberProfile(form);
+    const validationErrors = getMemberValidationErrors(normalizedForm, {
+      allowEmail: true,
+      allowLatestMembershipYear: true,
+      requireYearOfStudy: true,
+    });
+
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(" "));
+      return;
+    }
+
     setIsSaving(true);
 
     try {
       const updatedMember = await updateMember(member._id, {
-        ...form,
-        latestMembershipYear: form.latestMembershipYear
-          ? Number(form.latestMembershipYear)
+        email: normalizedForm.email,
+        faculties: normalizedForm.faculties,
+        firstName: normalizedForm.firstName,
+        isAdmin: form.isAdmin,
+        lastName: normalizedForm.lastName,
+        latestMembershipYear: normalizedForm.latestMembershipYear
+          ? Number(normalizedForm.latestMembershipYear)
           : null,
-        yearOfStudy: Number(form.yearOfStudy),
+        mobileNumber: normalizedForm.mobileNumber,
+        pronouns: normalizedForm.pronouns,
+        studentId: normalizedForm.studentId,
+        university: normalizedForm.university,
+        upi: normalizedForm.upi,
+        yearOfStudy: Number(normalizedForm.yearOfStudy),
       });
 
       onSave(updatedMember);
@@ -196,6 +226,7 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1">
                   <span className={labelClass}>First name</span>
                   <input
+                    {...getMemberInputProps("firstName")}
                     className={inputClass}
                     onChange={(event) =>
                       updateField("firstName", event.target.value)
@@ -208,6 +239,7 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1">
                   <span className={labelClass}>Last name</span>
                   <input
+                    {...getMemberInputProps("lastName")}
                     className={inputClass}
                     onChange={(event) =>
                       updateField("lastName", event.target.value)
@@ -220,6 +252,7 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1">
                   <span className={labelClass}>Email (Cannot edit)</span>
                   <input
+                    {...getMemberInputProps("email")}
                     className={inputClass}
                     required
                     type="email"
@@ -231,6 +264,7 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1">
                   <span className={labelClass}>Mobile number</span>
                   <input
+                    {...getMemberInputProps("mobileNumber")}
                     className={inputClass}
                     onChange={(event) =>
                       updateField("mobileNumber", event.target.value)
@@ -243,6 +277,7 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1 md:col-span-2">
                   <span className={labelClass}>Pronouns</span>
                   <input
+                    {...getMemberInputProps("pronouns")}
                     className={inputClass}
                     onChange={(event) =>
                       updateField("pronouns", event.target.value)
@@ -267,6 +302,7 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1">
                   <span className={labelClass}>University</span>
                   <input
+                    {...getMemberInputProps("university")}
                     className={inputClass}
                     onChange={(event) =>
                       updateField("university", event.target.value)
@@ -279,6 +315,7 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1">
                   <span className={labelClass}>UPI</span>
                   <input
+                    {...getMemberInputProps("upi")}
                     className={inputClass}
                     onChange={(event) => updateField("upi", event.target.value)}
                     required
@@ -289,6 +326,7 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1">
                   <span className={labelClass}>Student ID</span>
                   <input
+                    {...getMemberInputProps("studentId")}
                     className={inputClass}
                     onChange={(event) =>
                       updateField("studentId", event.target.value)
@@ -301,13 +339,12 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1">
                   <span className={labelClass}>Year of study</span>
                   <input
+                    {...getMemberInputProps("yearOfStudy")}
                     className={inputClass}
-                    min="1"
                     onChange={(event) =>
                       updateField("yearOfStudy", event.target.value)
                     }
                     required
-                    type="number"
                     value={form.yearOfStudy}
                   />
                 </label>
@@ -315,12 +352,12 @@ export default function MemberDetailsModal({
                 <label className="grid gap-1 md:col-span-2">
                   <span className={labelClass}>Membership year</span>
                   <input
+                    {...getMemberInputProps("latestMembershipYear")}
                     className={inputClass}
                     onChange={(event) =>
                       updateField("latestMembershipYear", event.target.value)
                     }
                     placeholder="No year"
-                    type="number"
                     value={form.latestMembershipYear}
                   />
                 </label>

@@ -56,12 +56,14 @@
 
 .past-event-tile {
   aspect-ratio: 1 / 1;
+  border: 0;
   border-radius: 0.55rem;
   overflow: hidden;
   background: transparent;
   display: grid;
   place-items: center;
   contain: paint;
+  cursor: pointer;
 }
 
 .past-event-image {
@@ -84,6 +86,108 @@
 .past-event-empty {
   margin: 0 0 1.75rem clamp(3.2rem, 6vw, 5.3rem);
   color: var(--color-blue-medium);
+}
+
+.past-event-lightbox {
+  --lightbox-pad-y: clamp(1rem, 4vh, 3rem);
+  --preview-width: clamp(2.5rem, 6vw, 5rem);
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--lightbox-pad-y) 0;
+  background-color: color-mix(in srgb, var(--color-blue-medium) 85%, transparent);
+}
+
+.past-event-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Empty flex space in the stage passes clicks through to the backdrop; only the image and nav buttons opt back in. */
+.past-event-lightbox-stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.past-event-lightbox-preview {
+  position: absolute;
+  top: 50%;
+  height: 100%;
+  width: var(--preview-width);
+  object-fit: cover;
+  flex-shrink: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.past-event-lightbox-preview--left {
+  left: 0;
+}
+
+.past-event-lightbox-preview--right {
+  right: 0;
+}
+
+.past-event-lightbox-main-wrap {
+  position: relative;
+  height: 100%;
+  width: fit-content;
+  max-width: min(82vw, 74rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.past-event-lightbox-image {
+  max-width: 100%;
+  max-height: 86vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  pointer-events: auto;
+  box-shadow: 0 0.4rem 1.8rem rgb(0 0 0 / 34%);
+}
+
+.past-event-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: #ffffff;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 0;
+  z-index: 5;
+}
+
+.past-event-lightbox-nav--left {
+  left: 0;
+  transform: translateY(-50%);
+  translate: -140% 0;
+}
+
+.past-event-lightbox-nav--right {
+  right: 0;
+  transform: translateY(-50%);
+  translate: 140% 0;
 }
 
 @media (max-width: 1100px) {

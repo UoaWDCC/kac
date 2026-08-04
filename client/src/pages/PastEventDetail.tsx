@@ -32,6 +32,7 @@ const PastEventDetail = () => {
   const { slug } = useParams();
   const [event, setEvent] = useState<PastEventRecord | null>(null);
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,6 +65,33 @@ const PastEventDetail = () => {
   const visiblePhotos = galleryImages.slice(0, MAX_VISIBLE_IMAGES);
   const showMorePhotosButton = galleryImages.length > MAX_VISIBLE_IMAGES;
 
+  const closeViewer = () => setActiveIndex(null);
+  const showPrevious = () =>
+    setActiveIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
+  const showNext = () =>
+    setActiveIndex((prev) =>
+      prev !== null && prev < visiblePhotos.length - 1 ? prev + 1 : prev
+    );
+
+  useEffect(() => {
+    if (activeIndex === null) return;
+
+    const onKeyDown = (keyEvent: KeyboardEvent) => {
+      if (keyEvent.key === "Escape") closeViewer();
+      else if (keyEvent.key === "ArrowLeft") showPrevious();
+      else if (keyEvent.key === "ArrowRight") showNext();
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    globalThis.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      globalThis.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [activeIndex, visiblePhotos.length]);
+
   if (loading) {
     return <div className="past-event-page">Loading...</div>;
   }
@@ -81,6 +109,12 @@ const PastEventDetail = () => {
         }).format(parsedDate)
       : rawDate || "Date TBC";
 
+  const activeImage = activeIndex !== null ? visiblePhotos[activeIndex] : null;
+  const hasPrevious = activeIndex !== null && activeIndex > 0;
+  const hasNext = activeIndex !== null && activeIndex < visiblePhotos.length - 1;
+  const previousImage = hasPrevious ? visiblePhotos[activeIndex! - 1] : null;
+  const nextImage = hasNext ? visiblePhotos[activeIndex! + 1] : null;
+
   return (
     <div className="past-event-page">
       <div className="past-event-content">
@@ -91,7 +125,13 @@ const PastEventDetail = () => {
         {visiblePhotos.length > 0 ? (
           <div className="past-event-grid">
             {visiblePhotos.map((photo, index) => (
-              <div key={photo.id} className="past-event-tile">
+              <button
+                key={photo.id}
+                type="button"
+                className="past-event-tile"
+                onClick={() => setActiveIndex(index)}
+                aria-label={`Open photo ${index + 1}`}
+              >
                 <img
                   src={photo.signedUrl}
                   alt={photo.originalName ?? `${event.title} photo ${index + 1}`}
@@ -99,7 +139,7 @@ const PastEventDetail = () => {
                   loading={index < 14 ? "eager" : "lazy"}
                   decoding="async"
                 />
-              </div>
+              </button>
             ))}
           </div>
         ) : (
@@ -110,6 +150,69 @@ const PastEventDetail = () => {
           <button type="button" className="button past-event-more-button">
             More Photos
           </button>
+        )}
+
+        {activeImage && (
+          <div className="past-event-lightbox">
+            <button
+              type="button"
+              className="past-event-lightbox-backdrop"
+              onClick={closeViewer}
+              aria-label="Close image viewer"
+            />
+            <div className="past-event-lightbox-stage">
+              {previousImage && (
+                <img
+                  src={previousImage.signedUrl}
+                  alt=""
+                  aria-hidden="true"
+                  className="past-event-lightbox-preview past-event-lightbox-preview--left"
+                />
+              )}
+
+              <div className="past-event-lightbox-main-wrap">
+                <img
+                  src={activeImage.signedUrl}
+                  alt={
+                    activeImage.originalName ??
+                    `${event.title} photo ${(activeIndex ?? 0) + 1}`
+                  }
+                  className="past-event-lightbox-image"
+                />
+
+                {hasPrevious && (
+                  <button
+                    type="button"
+                    className="past-event-lightbox-nav past-event-lightbox-nav--left"
+                    onClick={showPrevious}
+                    aria-label="Previous image"
+                  >
+                    {"<"}
+                  </button>
+                )}
+
+                {hasNext && (
+                  <button
+                    type="button"
+                    className="past-event-lightbox-nav past-event-lightbox-nav--right"
+                    onClick={showNext}
+                    aria-label="Next image"
+                  >
+                    {">"}
+                  </button>
+                )}
+              </div>
+
+              {nextImage && (
+                <img
+                  src={nextImage.signedUrl}
+                  alt=""
+                  aria-hidden="true"
+                  className="past-event-lightbox-preview past-event-lightbox-preview--right"
+                />
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

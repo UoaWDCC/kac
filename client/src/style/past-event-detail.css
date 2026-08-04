@@ -1,11 +1,16 @@
 .past-event-page {
+  display: flex;
   min-height: 100vh;
   padding: 3rem 0 4rem;
   background-color: var(--color-yellow-light);
 }
 
 .past-event-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   max-width: 84rem;
+  width: 100%;
   margin: 0 auto;
   padding: 0 clamp(1rem, 3vw, 2.25rem);
 }
@@ -67,7 +72,8 @@
 }
 
 .past-event-more-button {
-  margin: 0 auto;
+  display: block;
+  margin: auto auto 0;
   max-width: 11rem;
 }
 
@@ -81,7 +87,6 @@
   }
 
   .past-event-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
     margin-left: clamp(2.2rem, 4vw, 3.2rem);
     margin-right: clamp(2.2rem, 4vw, 3.2rem);
   }
@@ -98,7 +103,6 @@
   }
 
   .past-event-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-left: 0;
     margin-right: 0;
   }

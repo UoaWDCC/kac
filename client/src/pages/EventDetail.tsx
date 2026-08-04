@@ -5,7 +5,6 @@ import "../style/common.css";
 import "../style/event-detail.css";
 
 const EventDetail = () => {
-  // TODO: Proper routing.
   const event = events[0];
 
   if (!event) {
@@ -46,23 +45,18 @@ const EventDetail = () => {
               </div>
             </div>
 
-            <div className="event-description">
-              {
-                event.description /* TODO: This should render RichText in the future. */
-              }
-            </div>
+            <div className="event-description">{event.description}</div>
           </div>
         </div>
 
         <div className="event-sidebar">
           <div className="event-card">
             <button
+              type="button"
               className="wide-button event-signup-button"
-              onClick={
-                () => {
-                  console.log("CLICK");
-                } /* TODO: Create sign up form page. */
-              }
+              onClick={() => {
+                console.log("CLICK");
+              }}
             >
               Sign Up!
             </button>

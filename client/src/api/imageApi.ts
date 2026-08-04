@@ -5,10 +5,15 @@ export function getImageByTag(tag: string) {
   return res.then((response) => response.data);
 }
 
-export function postImage(file: File, tag: string) {
+export function postImage(file: File, tag: string, galleryKey?: string | null) {
   const formData = new FormData();
   formData.append("image", file);
-  formData.append("tag", tag);
+  if (tag) {
+    formData.append("tag", tag);
+  }
+  if (galleryKey) {
+    formData.append("galleryKey", galleryKey);
+  }
 
   const res = api.post("/images", formData);
   return res.then((response) => response.data);

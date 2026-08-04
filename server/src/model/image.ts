@@ -12,6 +12,7 @@ const imageSchema = new Schema(
     bucket: { type: String, required: true },
     uploadedAt: { type: Date, default: Date.now },
     tag: { type: String, default: null }, // e.g. "hero", "events"
+    galleryKey: { type: String, default: null, index: true },
   },
   { versionKey: false }
 );

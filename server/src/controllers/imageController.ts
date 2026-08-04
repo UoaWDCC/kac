@@ -5,11 +5,18 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { RequestHandler } from "express";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { Image } from "../model/image";
 import { s3BucketName, s3Client } from "../config/aws";
 
 const signedUrlExpirySeconds = 60 * 15;
+
+const normaliseOptionalString = (value: unknown) => {
+  if (typeof value !== "string") return null;
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+};
 
 export const uploadImage: RequestHandler = async (req, res, next) => {
   try {
@@ -18,12 +25,21 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const tag = req.body.tag ?? null;
+    const tag = normaliseOptionalString(req.body.tag);
+    const galleryKey = normaliseOptionalString(req.body.galleryKey);
 
-    // If a tag was provided, delete the existing image for that tag
-    if (tag) {
-      const existing = await Image.findOne({ tag });
-      if (existing) {
+    if (!tag && !galleryKey) {
+      res.status(400).json({
+        message: "Either tag (slot mode) or galleryKey (gallery mode) is required",
+      });
+      return;
+    }
+
+    // Slot mode: no galleryKey means one image per slot tag. Replace older slot images for that tag.
+    if (!galleryKey && tag) {
+      const existingSlotImages = await Image.find({ tag, galleryKey: null }).lean();
+
+      for (const existing of existingSlotImages) {
         try {
           await s3Client.send(
             new DeleteObjectCommand({
@@ -34,14 +50,16 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
         } catch (s3Error) {
           console.error("Failed to delete old S3 object:", s3Error);
         }
-        await existing.deleteOne();
+
+        await Image.deleteOne({ _id: existing._id });
       }
     }
 
     const fileExtension = req.file.originalname.includes(".")
       ? req.file.originalname.split(".").pop()
       : "";
-    const s3Key = `images/${randomUUID()}${fileExtension ? `.${fileExtension}` : ""}`;
+    const fileSuffix = fileExtension ? `.${fileExtension}` : "";
+    const s3Key = `images/${randomUUID()}${fileSuffix}`;
 
     const image = await Image.create({
       originalName: req.file.originalname,
@@ -50,6 +68,7 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
       s3Key,
       bucket: s3BucketName,
       tag,
+      galleryKey,
     });
 
     try {
@@ -84,6 +103,8 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
       size: image.size,
       s3Key: image.s3Key,
       uploadedAt: image.uploadedAt,
+      tag: image.tag,
+      galleryKey: image.galleryKey,
       signedUrl,
     });
   } catch (error) {
@@ -117,6 +138,8 @@ export const getImageById: RequestHandler = async (req, res, next) => {
       size: image.size,
       s3Key: image.s3Key,
       uploadedAt: image.uploadedAt,
+      tag: image.tag,
+      galleryKey: image.galleryKey,
       signedUrl,
     });
   } catch (error) {
@@ -148,6 +171,7 @@ export const getImageByTag: RequestHandler = async (req, res) => {
       signedUrl,
     });
   } catch (error) {
+    console.error("Error fetching image by tag:", error);
     res.status(500).json({ message: "Failed to fetch image" });
   }
 };

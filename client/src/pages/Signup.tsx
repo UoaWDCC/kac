@@ -138,7 +138,9 @@ const SignUpForm = () => {
     // If changing university to "None" or "Other", clear any active Student ID/UPI errors
     // If university is "None", also clear faculties errors
     if (name === "university") {
-      const isReq = value === "The University of Auckland" || value === "Auckland University of Technology";
+      const isReq =
+        value === "The University of Auckland" ||
+        value === "Auckland University of Technology";
       const isFacultyReq = value !== "None";
       setInvalidFieldsStep1((prev) => {
         const next = { ...prev };
@@ -186,13 +188,21 @@ const SignUpForm = () => {
 
     // First Name (Max 70, standard characters, non-empty)
     const firstNameClean = form.firstName.trim();
-    if (!firstNameClean || firstNameClean.length > 70 || !nameRegex.test(firstNameClean)) {
+    if (
+      !firstNameClean ||
+      firstNameClean.length > 70 ||
+      !nameRegex.test(firstNameClean)
+    ) {
       missing.firstName = true;
     }
 
     // Last Name (Max 70, standard characters, non-empty)
     const lastNameClean = form.lastName.trim();
-    if (!lastNameClean || lastNameClean.length > 70 || !nameRegex.test(lastNameClean)) {
+    if (
+      !lastNameClean ||
+      lastNameClean.length > 70 ||
+      !nameRegex.test(lastNameClean)
+    ) {
       missing.lastName = true;
     }
 
@@ -204,7 +214,11 @@ const SignUpForm = () => {
 
     // Mobile Number (Max 30, only digits, spaces, hyphens, brackets, plus signs)
     const mobileClean = form.mobileNumber.trim();
-    if (!mobileClean || mobileClean.length > 30 || !phoneRegex.test(mobileClean)) {
+    if (
+      !mobileClean ||
+      mobileClean.length > 30 ||
+      !phoneRegex.test(mobileClean)
+    ) {
       missing.mobileNumber = true;
     }
 
@@ -613,7 +627,9 @@ const SignUpForm = () => {
                         <span className="signup-field-error-badge">!</span>
                       )}
                     </div>
-                    {isStudentRequired && <span className="signup-required-badge">Required</span>}
+                    {isStudentRequired && (
+                      <span className="signup-required-badge">Required</span>
+                    )}
                   </div>
                   <p className="signup-field-subtext">
                     E.g. UOA UPI Format: abcd123. Enter "N/A" if not applicable
@@ -639,7 +655,9 @@ const SignUpForm = () => {
                         <span className="signup-field-error-badge">!</span>
                       )}
                     </div>
-                    {isStudentRequired && <span className="signup-required-badge">Required</span>}
+                    {isStudentRequired && (
+                      <span className="signup-required-badge">Required</span>
+                    )}
                   </div>
                   <p className="signup-field-subtext">
                     E.g. 123456789. If not applicable, please enter "N/A"
@@ -663,7 +681,9 @@ const SignUpForm = () => {
                         <span className="signup-field-error-badge">!</span>
                       )}
                     </div>
-                    {isFacultyRequired && <span className="signup-required-badge">Required</span>}
+                    {isFacultyRequired && (
+                      <span className="signup-required-badge">Required</span>
+                    )}
                   </div>
 
                   <div

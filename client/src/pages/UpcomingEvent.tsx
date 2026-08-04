@@ -347,7 +347,13 @@ const UpcomingEvent = () => {
                           </div>
                         </div>
                         <p className="text-md! text-right py-4">
-                          Total: ${event.price}
+                          Total:{" "}
+                          {event.price != null
+                            ? new Intl.NumberFormat("en-NZ", {
+                                style: "currency",
+                                currency: "NZD",
+                              }).format(event.price)
+                            : ""}
                         </p>
                       </div>
                     </div>

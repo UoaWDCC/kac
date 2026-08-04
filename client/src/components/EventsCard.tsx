@@ -1,6 +1,6 @@
 import "../style/common.css";
 import "../style/events.css";
-import { ImageBlock } from "./ImageBlock/ImageBlock";
+import { ImageBlock } from "./image_block/ImageBlock";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";

@@ -15,14 +15,24 @@ RUN npm ci
 # Copy the rest of the app’s source code
 COPY . .
 
+# Set environment variables
+ARG VITE_STRIPE_PUBLISHABLE_KEY
+
+ENV VITE_STRIPE_PUBLISHABLE_KEY=${VITE_STRIPE_PUBLISHABLE_KEY}
+
 # Build the app
 RUN npm run build
 
 # Step 2: Use an Nginx image to serve the static files
 FROM nginx:alpine
 
+ARG VITE_SERVER_URL
+
+ENV BACKEND_URL=${VITE_SERVER_URL}
+
 # Copy the build files from the builder stage to the Nginx web directory
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 # Expose port 80
 EXPOSE 80

@@ -51,7 +51,7 @@ const SIGN_UP_METHODS = [
 ];
 
 const SignUpForm = () => {
-  const { user, loading, refresh } = useAuth();
+  const { user, hasAccount, loading, refresh } = useAuth();
   const navigate = useNavigate();
 
   const stripe = useStripe();
@@ -102,11 +102,12 @@ const SignUpForm = () => {
 
   useEffect(() => {
     if (!loading) {
-      if (!user) {
+      const email = user?.emails?.[0]?.value ?? "";
+      if (!user || !email || hasAccount) {
         navigate("/");
       }
     }
-  }, [user, loading, navigate]);
+  }, [user, hasAccount, loading, navigate]);
 
   // Click outside to close multi-select faculty dropdown
   useEffect(() => {

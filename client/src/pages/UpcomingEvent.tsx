@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
@@ -21,6 +21,55 @@ const UpcomingEvent = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [cardIsOpen, setCardIsOpen] = useState(false);
   const [event, setEvent] = useState<Event | undefined>(undefined);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const cardContainerRef = useRef<HTMLDivElement | null>(null);
+  const expiryRef = useRef<HTMLInputElement | null>(null);
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardVerification, setCardVerification] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+
+  const handleCardNumberChange = (e: any) => {
+    // Keep only digits, max 16, and insert spaces every 4 digits for readability
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 16);
+    const parts = digits.match(/.{1,4}/g);
+    setCardNumber(parts ? parts.join(" ") : "");
+  };
+
+  const handleCardVerificationChange = (e: any) => {
+    // Also only digits, max 3 for CVC/CVV
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 3);
+    setCardVerification(digits);
+  };
+
+  const handleCardExpiryChange = (e: any) => {
+    setCardExpiry(e.target.value);
+    if (expiryRef.current) expiryRef.current.setCustomValidity("");
+  };
+
+  const validateExpiry = () => {
+    if (!expiryRef.current) return true;
+    const val = expiryRef.current.value;
+    if (!val) {
+      expiryRef.current.setCustomValidity("");
+      return true;
+    }
+
+    const exp = new Date(val);
+    const today = new Date();
+
+    // Consider expired if same date, disregard time of day
+    today.setHours(0, 0, 0, 0);
+    exp.setHours(0, 0, 0, 0);
+
+    if (exp <= today) {
+      expiryRef.current.setCustomValidity(
+        "Card has expired. Enter a valid expiry date."
+      );
+      return false;
+    }
+    expiryRef.current.setCustomValidity("");
+    return true;
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -172,7 +221,11 @@ const UpcomingEvent = () => {
 
                 {/* Step 2: Details */}
                 {currentStep === 2 && (
-                  <div className="font-alan-sans flex flex-col gap-10">
+                  <form
+                    ref={formRef}
+                    onSubmit={(e) => e.preventDefault()}
+                    className="font-alan-sans flex flex-col gap-10"
+                  >
                     <div className="flex flex-row gap-8 justify-between">
                       <div className="flex flex-col gap-1 w-[50%]">
                         <div>
@@ -204,6 +257,7 @@ const UpcomingEvent = () => {
                           </p>
                         </div>
                         <input
+                          required
                           type="text"
                           placeholder="Enter Here"
                           className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
@@ -223,7 +277,10 @@ const UpcomingEvent = () => {
                       </div>
                       <div className="w-[80%]">
                         {/* Almost but not quite same as Collapsible component, diff style */}
-                        <button onClick={() => setCardIsOpen(!cardIsOpen)}>
+                        <button
+                          onClick={() => setCardIsOpen(!cardIsOpen)}
+                          type="button"
+                        >
                           <div className="flex flex-row justify-between pb-2 border-l-0 border-r-0 border-t-0 border-b-yellow-dark border-2">
                             <h2 className="w-full text-left">
                               Please enter your card details
@@ -233,54 +290,68 @@ const UpcomingEvent = () => {
                             </span>
                           </div>
                         </button>
-                        {cardIsOpen && (
-                          <div className="border-yellow-dark border-2 rounded-xl px-8 py-8 mt-4">
-                            <div className="flex flex-col gap-8">
-                              <div>
+                        <div
+                          ref={cardContainerRef}
+                          className="border-yellow-dark border-2 rounded-xl px-8 py-8 mt-4"
+                          style={{ display: cardIsOpen ? "block" : "none" }}
+                        >
+                          <div className="flex flex-col gap-8">
+                            <div>
+                              <h2 className="text-lg font-bold">Card Number</h2>
+                              <input
+                                required
+                                type="text"
+                                inputMode="numeric"
+                                autoComplete="cc-number"
+                                placeholder="0000 0000 0000 0000"
+                                value={cardNumber}
+                                onChange={handleCardNumberChange}
+                                pattern="[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}"
+                                className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
+                              />
+                            </div>
+                            <div className="flex flex-row gap-12 pb-4">
+                              <div className="flex flex-col w-[50%]">
                                 <h2 className="text-lg font-bold">
-                                  Card Number
+                                  Expiry Date
                                 </h2>
                                 <input
-                                  type="string"
-                                  placeholder="0000 0000 0000 0000"
+                                  required
+                                  ref={expiryRef}
+                                  type="date"
+                                  value={cardExpiry}
+                                  onChange={handleCardExpiryChange}
+                                  placeholder="dd/mm/yy"
                                   className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                                 />
                               </div>
-                              <div className="flex flex-row gap-12 pb-4">
-                                <div className="flex flex-col w-[50%]">
-                                  <h2 className="text-lg font-bold">
-                                    Expiry Date
-                                  </h2>
-                                  <input
-                                    type="date"
-                                    placeholder="dd/mm/yy"
-                                    className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
-                                  />
-                                </div>
-                                <div className="flex flex-col w-[50%]">
-                                  <div>
-                                    <div className="flex flex-row justify-between">
-                                      <h2 className="text-lg font-bold">
-                                        CVC / CVV
-                                      </h2>
-                                    </div>
+                              <div className="flex flex-col w-[50%]">
+                                <div>
+                                  <div className="flex flex-row justify-between">
+                                    <h2 className="text-lg font-bold">
+                                      CVC / CVV
+                                    </h2>
                                   </div>
-                                  <input
-                                    type="text"
-                                    placeholder="000"
-                                    className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
-                                  />
                                 </div>
+                                <input
+                                  required
+                                  type="text"
+                                  placeholder="000"
+                                  pattern="[0-9]{3}"
+                                  value={cardVerification}
+                                  onChange={handleCardVerificationChange}
+                                  className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
+                                />
                               </div>
                             </div>
                           </div>
-                        )}
+                        </div>
                         <p className="text-md! text-right py-4">
                           Total: ${event.price}
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </form>
                 )}
 
                 {/* Step 3: Confirmation */}
@@ -329,29 +400,111 @@ const UpcomingEvent = () => {
                     </div>
                   )}
                   {/* Can Sign Up - Show form with continue button */}
-                  {event.signUpStatus == "Open" && !userSignedUp && (
+                  {event.signUpStatus == "Open" &&
+                    !userSignedUp &&
+                    currentStep != 3 && (
+                      <div className="w-full flex justify-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            validateExpiry();
+                            if (currentStep === 2) {
+                              if (
+                                formRef.current &&
+                                !formRef.current.checkValidity()
+                              ) {
+                                const firstInvalid =
+                                  formRef.current.querySelector(
+                                    ":invalid"
+                                  ) as HTMLElement | null;
+                                if (
+                                  firstInvalid &&
+                                  cardContainerRef.current &&
+                                  cardContainerRef.current.contains(
+                                    firstInvalid
+                                  ) &&
+                                  !cardIsOpen
+                                ) {
+                                  // Open the card so the invalid field becomes visible, then focus & show validation
+                                  setCardIsOpen(true);
+                                  setTimeout(() => {
+                                    try {
+                                      firstInvalid.focus();
+                                      (firstInvalid as any).reportValidity
+                                        ? (firstInvalid as any).reportValidity()
+                                        : formRef.current?.reportValidity();
+                                    } catch (e) {
+                                      formRef.current?.reportValidity();
+                                      console.error(e);
+                                    }
+                                  }, 10);
+                                  return;
+                                }
+                                formRef.current.reportValidity();
+                                return;
+                              }
+                            }
+                            setCurrentStep(Math.min(4, currentStep + 1));
+                          }}
+                          className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                        >
+                          {currentStep == 4 && (
+                            <a href="/Home" className="text-lg px-10">
+                              Back Home {">"}
+                            </a>
+                          )}
+                          {currentStep < 3 && (
+                            <p className="py-2 px-12">Continue {">"}</p>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  {/* Handle form submission separately */}
+                  {currentStep == 3 && (
                     <div className="w-full flex justify-center">
                       <button
-                        type="button"
-                        onClick={() =>
-                          setCurrentStep(Math.min(4, currentStep + 1))
-                        }
+                        type="submit"
+                        onClick={() => {
+                          validateExpiry();
+                          if (
+                            formRef.current &&
+                            !formRef.current.checkValidity()
+                          ) {
+                            const firstInvalid = formRef.current.querySelector(
+                              ":invalid"
+                            ) as HTMLElement | null;
+                            if (
+                              firstInvalid &&
+                              cardContainerRef.current &&
+                              cardContainerRef.current.contains(firstInvalid) &&
+                              !cardIsOpen
+                            ) {
+                              setCardIsOpen(true);
+                              setTimeout(() => {
+                                try {
+                                  firstInvalid.focus();
+                                  (firstInvalid as any).reportValidity
+                                    ? (firstInvalid as any).reportValidity()
+                                    : formRef.current?.reportValidity();
+                                } catch (e) {
+                                  formRef.current?.reportValidity();
+                                  console.error(e);
+                                }
+                              }, 10);
+                              return;
+                            }
+                            formRef.current.reportValidity();
+                            return;
+                          }
+                          setCurrentStep(Math.min(4, currentStep + 1));
+                        }}
                         className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                       >
-                        {currentStep == 3 && (
-                          <p className="py-2 px-12">Sign Up!</p>
-                        )}
-                        {currentStep == 4 && (
-                          <a href="/Home" className="text-lg px-10">
-                            Back Home {">"}
-                          </a>
-                        )}
-                        {currentStep < 3 && (
-                          <p className="py-2 px-12">Continue {">"}</p>
-                        )}
+                        <p className="py-2 px-12">Sign Up!</p>
                       </button>
                     </div>
                   )}
+
                   {/* Already Signed Up */}
                   {userSignedUp && (
                     <div className="flex flex-row gap-4 justify-center items-center mt-10">

@@ -133,6 +133,24 @@ const SignUpForm = () => {
     if (invalidFieldsStep1[name]) {
       setInvalidFieldsStep1((prev) => ({ ...prev, [name]: false }));
     }
+
+    // If changing university to "None" or "Other", clear any active Student ID/UPI errors
+    // If university is "None", also clear faculties errors
+    if (name === "university") {
+      const isReq = value === "The University of Auckland" || value === "Auckland University of Technology";
+      const isFacultyReq = value !== "None";
+      setInvalidFieldsStep1((prev) => {
+        const next = { ...prev };
+        if (!isReq) {
+          next.upi = false;
+          next.studentId = false;
+        }
+        if (!isFacultyReq) {
+          next.faculties = false;
+        }
+        return next;
+      });
+    }
   };
 
   const handleStep2Change = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -161,15 +179,71 @@ const SignUpForm = () => {
     e.preventDefault();
 
     const missing: Record<string, boolean> = {};
-    if (!form.firstName.trim()) missing.firstName = true;
-    if (!form.lastName.trim()) missing.lastName = true;
-    if (!form.email.trim() && !initialEmail.trim()) missing.email = true;
-    if (!form.mobileNumber.trim()) missing.mobileNumber = true;
-    if (!form.pronouns.trim()) missing.pronouns = true;
-    if (!form.university.trim()) missing.university = true;
-    if (!form.upi.trim()) missing.upi = true;
-    if (!form.studentId.trim()) missing.studentId = true;
-    if (form.faculties.length === 0) missing.faculties = true;
+    const nameRegex = /^[a-zA-Z\s'-]+$/;
+    const phoneRegex = /^[0-9\s()+-]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // First Name (Max 70, standard characters, non-empty)
+    const firstNameClean = form.firstName.trim();
+    if (!firstNameClean || firstNameClean.length > 70 || !nameRegex.test(firstNameClean)) {
+      missing.firstName = true;
+    }
+
+    // Last Name (Max 70, standard characters, non-empty)
+    const lastNameClean = form.lastName.trim();
+    if (!lastNameClean || lastNameClean.length > 70 || !nameRegex.test(lastNameClean)) {
+      missing.lastName = true;
+    }
+
+    // Email Address (Valid pattern, required)
+    const emailClean = (form.email || initialEmail).trim();
+    if (!emailClean || !emailRegex.test(emailClean)) {
+      missing.email = true;
+    }
+
+    // Mobile Number (Max 30, only digits, spaces, hyphens, brackets, plus signs)
+    const mobileClean = form.mobileNumber.trim();
+    if (!mobileClean || mobileClean.length > 30 || !phoneRegex.test(mobileClean)) {
+      missing.mobileNumber = true;
+    }
+
+    // Pronouns (Max 128, required)
+    const pronounsClean = form.pronouns.trim();
+    if (!pronounsClean || pronounsClean.length > 128) {
+      missing.pronouns = true;
+    }
+
+    // University (Required)
+    if (!form.university) {
+      missing.university = true;
+    }
+
+    // Conditional requirements for UPI and Student ID
+    const isStudentRequired =
+      form.university === "The University of Auckland" ||
+      form.university === "Auckland University of Technology";
+
+    if (isStudentRequired) {
+      // UPI (3-4 letters followed by 3 numbers OR "N/A", case-insensitive)
+      const upiClean = form.upi.trim();
+      const upiRegex = /^([a-zA-Z]{3,4}[0-9]{3}|N\/A)$/i;
+      if (!upiClean || !upiRegex.test(upiClean)) {
+        missing.upi = true;
+      }
+
+      // Student ID (7-9 digits OR "N/A", case-insensitive)
+      const studentIdClean = form.studentId.trim();
+      const studentIdRegex = /^([0-9]{7,9}|N\/A)$/i;
+      if (!studentIdClean || !studentIdRegex.test(studentIdClean)) {
+        missing.studentId = true;
+      }
+    }
+
+    // Faculty (Required unless University is "None")
+    const isFacultyRequired = form.university !== "None";
+    if (isFacultyRequired && form.faculties.length === 0) {
+      missing.faculties = true;
+    }
 
     setInvalidFieldsStep1(missing);
     setHasSubmittedStep1(true);
@@ -275,6 +349,12 @@ const SignUpForm = () => {
     hasSubmittedStep1 && Object.keys(invalidFieldsStep1).length > 0;
   const hasStep2Errors =
     hasSubmittedStep2 && Object.keys(invalidFieldsStep2).length > 0;
+
+  const isStudentRequired =
+    form.university === "The University of Auckland" ||
+    form.university === "Auckland University of Technology";
+
+  const isFacultyRequired = form.university !== "None";
 
   const stripeElementOptions = {
     style: {
@@ -402,6 +482,7 @@ const SignUpForm = () => {
                     placeholder="Your first name here"
                     value={form.firstName}
                     onChange={handleChange}
+                    maxLength={70}
                   />
                 </div>
 
@@ -423,6 +504,7 @@ const SignUpForm = () => {
                     placeholder="Your last name here"
                     value={form.lastName}
                     onChange={handleChange}
+                    maxLength={70}
                   />
                 </div>
 
@@ -465,6 +547,7 @@ const SignUpForm = () => {
                     placeholder="Your phone number here"
                     value={form.mobileNumber}
                     onChange={handleChange}
+                    maxLength={30}
                   />
                 </div>
 
@@ -486,6 +569,7 @@ const SignUpForm = () => {
                     placeholder="Your pronouns here"
                     value={form.pronouns}
                     onChange={handleChange}
+                    maxLength={128}
                   />
                 </div>
 
@@ -528,7 +612,7 @@ const SignUpForm = () => {
                         <span className="signup-field-error-badge">!</span>
                       )}
                     </div>
-                    <span className="signup-required-badge">Required</span>
+                    {isStudentRequired && <span className="signup-required-badge">Required</span>}
                   </div>
                   <p className="signup-field-subtext">
                     E.g. UOA UPI Format: abcd123. Enter "N/A" if not applicable
@@ -554,7 +638,7 @@ const SignUpForm = () => {
                         <span className="signup-field-error-badge">!</span>
                       )}
                     </div>
-                    <span className="signup-required-badge">Required</span>
+                    {isStudentRequired && <span className="signup-required-badge">Required</span>}
                   </div>
                   <p className="signup-field-subtext">
                     E.g. 123456789. If not applicable, please enter "N/A"
@@ -578,7 +662,7 @@ const SignUpForm = () => {
                         <span className="signup-field-error-badge">!</span>
                       )}
                     </div>
-                    <span className="signup-required-badge">Required</span>
+                    {isFacultyRequired && <span className="signup-required-badge">Required</span>}
                   </div>
 
                   <div

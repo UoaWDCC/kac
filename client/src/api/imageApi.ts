@@ -5,6 +5,11 @@ export function getImageByTag(tag: string) {
   return res.then((response) => response.data);
 }
 
+export function getImagesByGalleryKey(galleryKey: string) {
+  const res = api.get(`/images/gallery/${encodeURIComponent(galleryKey)}`);
+  return res.then((response) => response.data);
+}
+
 export function postImage(file: File, tag: string, galleryKey?: string | null) {
   const formData = new FormData();
   formData.append("image", file);

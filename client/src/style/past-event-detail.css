@@ -56,25 +56,34 @@
 
 .past-event-tile {
   aspect-ratio: 1 / 1;
-  border: 0;
   border-radius: 0.55rem;
-  background-color: var(--color-blue-light);
-  cursor: pointer;
   overflow: hidden;
-  padding: 0;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  contain: paint;
 }
 
 .past-event-image {
-  width: 100%;
-  height: 100%;
+  width: 95%;
+  height: 95%;
   display: block;
   object-fit: cover;
+  object-position: center;
+  border-radius: 0.45rem;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .past-event-more-button {
   display: block;
   margin: auto auto 0;
   max-width: 11rem;
+}
+
+.past-event-empty {
+  margin: 0 0 1.75rem clamp(3.2rem, 6vw, 5.3rem);
+  color: var(--color-blue-medium);
 }
 
 @media (max-width: 1100px) {
@@ -89,6 +98,10 @@
   .past-event-grid {
     margin-left: clamp(2.2rem, 4vw, 3.2rem);
     margin-right: clamp(2.2rem, 4vw, 3.2rem);
+  }
+
+  .past-event-empty {
+    margin-left: clamp(2.2rem, 4vw, 3.2rem);
   }
 }
 
@@ -105,5 +118,9 @@
   .past-event-grid {
     margin-left: 0;
     margin-right: 0;
+  }
+
+  .past-event-empty {
+    margin-left: 0;
   }
 }

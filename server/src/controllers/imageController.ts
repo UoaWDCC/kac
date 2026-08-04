@@ -176,6 +176,42 @@ export const getImageByTag: RequestHandler = async (req, res) => {
   }
 };
 
+export const getImagesByGalleryKey: RequestHandler = async (req, res) => {
+  try {
+    const galleryKey = req.params.galleryKey;
+    const images = await Image.find({ galleryKey })
+      .sort({ uploadedAt: 1 })
+      .lean();
+
+    if (!images.length) {
+      res.json([]);
+      return;
+    }
+
+    const mappedImages = await Promise.all(
+      images.map(async (image) => {
+        const signedUrl = await getSignedUrl(
+          s3Client,
+          new GetObjectCommand({ Bucket: image.bucket, Key: image.s3Key }),
+          { expiresIn: signedUrlExpirySeconds }
+        );
+
+        return {
+          id: image._id,
+          originalName: image.originalName,
+          uploadedAt: image.uploadedAt,
+          signedUrl,
+        };
+      })
+    );
+
+    res.json(mappedImages);
+  } catch (error) {
+    console.error("Error fetching images by gallery key:", error);
+    res.status(500).json({ message: "Failed to fetch gallery images" });
+  }
+};
+
 export const listImages: RequestHandler = async (req, res, next) => {
   try {
     const images = await Image.find().sort({ uploadedAt: -1 }).lean();

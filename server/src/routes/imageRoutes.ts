@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getImagesByGalleryKey,
   getImageById,
   getImageByTag,
   listImages,
@@ -11,6 +12,7 @@ import { adminGuard } from "../middlewares/adminGuard";
 const router = express.Router();
 
 router.get("/tag/:tag", getImageByTag);
+router.get("/gallery/:galleryKey", getImagesByGalleryKey);
 router.get("/", listImages);
 router.get("/:id", getImageById);
 router.post("/", adminGuard, upload.single("image"), uploadImage);

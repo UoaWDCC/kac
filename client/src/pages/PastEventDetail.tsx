@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPastEventBySlug } from "../api/eventApi";
+import { getImagesByGalleryKey } from "../api/imageApi";
 import "../style/common.css";
 import "../style/past-event-detail.css";
 
@@ -20,9 +21,17 @@ type PastEventRecord = {
   status?: string | null;
 };
 
+type GalleryImage = {
+  id: string;
+  originalName?: string;
+  signedUrl: string;
+  uploadedAt?: string;
+};
+
 const PastEventDetail = () => {
   const { slug } = useParams();
   const [event, setEvent] = useState<PastEventRecord | null>(null);
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,8 +45,12 @@ const PastEventDetail = () => {
 
       try {
         setLoading(true);
-        const data = await getPastEventBySlug(slug);
-        setEvent(data);
+        const [eventData, imageData] = await Promise.all([
+          getPastEventBySlug(slug),
+          getImagesByGalleryKey(slug),
+        ]);
+        setEvent(eventData);
+        setGalleryImages(Array.isArray(imageData) ? imageData : []);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Event not found");
       } finally {
@@ -48,11 +61,8 @@ const PastEventDetail = () => {
     loadEvent();
   }, [slug]);
 
-  const photos = Array.from({ length: 24 }, (_, index) => ({
-    id: `photo-${index + 1}`,
-  }));
-  const visiblePhotos = photos.slice(0, MAX_VISIBLE_IMAGES);
-  const showMorePhotosButton = photos.length > MAX_VISIBLE_IMAGES;
+  const visiblePhotos = galleryImages.slice(0, MAX_VISIBLE_IMAGES);
+  const showMorePhotosButton = galleryImages.length > MAX_VISIBLE_IMAGES;
 
   if (loading) {
     return <div className="past-event-page">Loading...</div>;
@@ -78,16 +88,23 @@ const PastEventDetail = () => {
         <p className="past-event-subtitle">{formattedDate}</p>
         <h1 className="past-event-title">{event.title}</h1>
 
-        <div className="past-event-grid">
-          {visiblePhotos.map((photo, index) => (
-            <button
-              key={photo.id}
-              type="button"
-              className="past-event-tile"
-              aria-label={`Open photo ${index + 1}`}
-            />
-          ))}
-        </div>
+        {visiblePhotos.length > 0 ? (
+          <div className="past-event-grid">
+            {visiblePhotos.map((photo, index) => (
+              <div key={photo.id} className="past-event-tile">
+                <img
+                  src={photo.signedUrl}
+                  alt={photo.originalName ?? `${event.title} photo ${index + 1}`}
+                  className="past-event-image"
+                  loading={index < 14 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="past-event-empty">No photos uploaded yet.</p>
+        )}
 
         {showMorePhotosButton && (
           <button type="button" className="button past-event-more-button">

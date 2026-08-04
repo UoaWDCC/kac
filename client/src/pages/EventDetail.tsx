@@ -40,8 +40,7 @@ const EventDetail = () => {
                 </div>
                 <div>
                   <div className="event-detail-label">EVENT DATE</div>
-                  <div className="event-detail-value">{event.date}</div>
-                  <div className="event-detail-subvalue">{event.time}</div>
+                  <div className="event-detail-value">{event.datetime}</div>
                 </div>
               </div>
             </div>

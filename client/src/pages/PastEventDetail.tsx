@@ -111,7 +111,8 @@ const PastEventDetail = () => {
 
   const activeImage = activeIndex !== null ? visiblePhotos[activeIndex] : null;
   const hasPrevious = activeIndex !== null && activeIndex > 0;
-  const hasNext = activeIndex !== null && activeIndex < visiblePhotos.length - 1;
+  const hasNext =
+    activeIndex !== null && activeIndex < visiblePhotos.length - 1;
   const previousImage = hasPrevious ? visiblePhotos[activeIndex! - 1] : null;
   const nextImage = hasNext ? visiblePhotos[activeIndex! + 1] : null;
 
@@ -134,7 +135,9 @@ const PastEventDetail = () => {
               >
                 <img
                   src={photo.signedUrl}
-                  alt={photo.originalName ?? `${event.title} photo ${index + 1}`}
+                  alt={
+                    photo.originalName ?? `${event.title} photo ${index + 1}`
+                  }
                   className="past-event-image"
                   loading={index < 14 ? "eager" : "lazy"}
                   decoding="async"

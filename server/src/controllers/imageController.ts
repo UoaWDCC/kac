@@ -30,14 +30,18 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
 
     if (!tag && !galleryKey) {
       res.status(400).json({
-        message: "Either tag (slot mode) or galleryKey (gallery mode) is required",
+        message:
+          "Either tag (slot mode) or galleryKey (gallery mode) is required",
       });
       return;
     }
 
     // Slot mode: no galleryKey means one image per slot tag. Replace older slot images for that tag.
     if (!galleryKey && tag) {
-      const existingSlotImages = await Image.find({ tag, galleryKey: null }).lean();
+      const existingSlotImages = await Image.find({
+        tag,
+        galleryKey: null,
+      }).lean();
 
       for (const existing of existingSlotImages) {
         try {

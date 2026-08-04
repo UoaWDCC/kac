@@ -98,7 +98,11 @@
   align-items: center;
   justify-content: center;
   padding: var(--lightbox-pad-y) 0;
-  background-color: color-mix(in srgb, var(--color-blue-medium) 85%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-blue-medium) 85%,
+    transparent
+  );
 }
 
 .past-event-lightbox-backdrop {

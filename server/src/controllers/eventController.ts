@@ -2,7 +2,10 @@ import { Event } from "../model/event";
 import { RequestHandler } from "express";
 
 const normaliseSlug = (value: string) => {
-  let slug = value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  let slug = value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-");
 
   while (slug.startsWith("-")) {
     slug = slug.slice(1);
@@ -87,8 +90,12 @@ export const deleteEvent: RequestHandler = async (req, res, _next) => {
   }
 };
 
-const isEventPast = (event: { status?: string | null; datetime?: Date | string }) => {
-  const status = typeof event.status === "string" ? event.status.toLowerCase() : null;
+const isEventPast = (event: {
+  status?: string | null;
+  datetime?: Date | string;
+}) => {
+  const status =
+    typeof event.status === "string" ? event.status.toLowerCase() : null;
   if (status === "past") return true;
 
   if (!event.datetime) return false;

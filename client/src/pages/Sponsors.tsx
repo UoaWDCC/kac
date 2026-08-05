@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import SponsorCard from "../components/SponsorCard";
 import { getSponsors } from "../api/sponsorsApi";
 
@@ -32,6 +33,7 @@ const Sponsors = () => {
       </div>
     );
   }
+
   const sorted = [...sponsors].sort((a, b) => a.name.localeCompare(b.name));
   const filtered = sorted.filter((s) => {
     const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase());
@@ -99,7 +101,6 @@ const Sponsors = () => {
 
       {/* MARQUEE + OVERLAPPING MEMBERSHIP CARD */}
       <div style={{ position: "relative", marginTop: "1.5rem" }}>
-        {/* MARQUEE - full width */}
         <div
           style={{
             overflow: "hidden",
@@ -131,7 +132,6 @@ const Sponsors = () => {
           </div>
         </div>
 
-        {/* MEMBERSHIP CARD - overlapping in center */}
         <img
           src="src/images/membership_card.png"
           alt="Membership Card"
@@ -169,20 +169,48 @@ const Sponsors = () => {
       {/* REST OF CONTENT - centered */}
       <div style={{ ...centeredContent, textAlign: "center" }}>
         {/* SEARCH BAR */}
-        <section style={{ padding: "2rem 2rem" }}>
-          <input
-            type="text"
-            placeholder="Search for your favourite sponsors..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              width: "80%",
-              padding: "0.75rem 1rem",
-              borderRadius: "999px",
-              border: "1px solid var(--color-grey-medium)",
-              fontSize: "1rem",
-            }}
-          />
+        <section style={{ padding: "2rem 0" }}>
+          <div style={{ position: "relative", width: "100%" }}>
+            <input
+              type="text"
+              placeholder="Search for your favourite sponsors..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem 3rem 0.75rem 1.5rem",
+                borderRadius: "999px",
+                border: "1px solid var(--color-grey-medium)",
+                fontSize: "1rem",
+                boxSizing: "border-box",
+              }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                right: "1.25rem",
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "var(--color-grey-medium)",
+                pointerEvents: "none",
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </span>
+          </div>
         </section>
 
         {/* TABS */}
@@ -207,7 +235,9 @@ const Sponsors = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
+                onClick={() => {
+                  setActiveTab(tab.value);
+                }}
                 style={{
                   padding: "0.35rem 1.75rem",
                   borderRadius: "999px",
@@ -215,14 +245,27 @@ const Sponsors = () => {
                   cursor: "pointer",
                   fontSize: "0.95rem",
                   whiteSpace: "nowrap",
-                  backgroundColor:
-                    activeTab === tab.value
-                      ? "var(--color-yellow-dark)"
-                      : "var(--color-yellow-medium)",
+                  backgroundColor: "transparent",
                   fontWeight: activeTab === tab.value ? "bold" : "normal",
+                  position: "relative",
                 }}
               >
-                {tab.label}
+                <span style={{ position: "relative", zIndex: 1 }}>
+                  {tab.label}
+                </span>
+                {activeTab === tab.value && (
+                  <motion.span
+                    layoutId="sponsor-pill"
+                    transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      borderRadius: "999px",
+                      backgroundColor: "var(--color-yellow-dark)",
+                      zIndex: 0,
+                    }}
+                  />
+                )}
               </button>
             ))}
           </div>
@@ -230,7 +273,7 @@ const Sponsors = () => {
 
         {/* CBD */}
         {(activeTab === "all" || activeTab === "cbd") && cbd.length > 0 && (
-          <section>
+          <section id="cbd">
             <h2
               style={{
                 marginTop: "2rem",
@@ -258,7 +301,7 @@ const Sponsors = () => {
         {/* NEWMARKET */}
         {(activeTab === "all" || activeTab === "newmarket") &&
           newmarket.length > 0 && (
-            <section>
+            <section id="newmarket">
               <h2
                 style={{
                   marginTop: "2rem",
@@ -285,7 +328,7 @@ const Sponsors = () => {
 
         {/* OTHER */}
         {(activeTab === "all" || activeTab === "other") && other.length > 0 && (
-          <section>
+          <section id="other">
             <h2
               style={{
                 marginTop: "2rem",

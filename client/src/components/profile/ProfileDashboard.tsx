@@ -300,7 +300,7 @@ export default function ProfileDashboard({
                   value={form.memberSince}
                 />
               </label>
-              
+
               <label
                 className="flex flex-col gap-1 font-alan-sans text-[0.94rem] font-semibold text-grey-medium md:col-span-2"
                 htmlFor="member-since"

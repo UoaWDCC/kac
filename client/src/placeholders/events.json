@@ -1,37 +1,40 @@
 [
   {
-    "id": "placeholder",
-    "title": "Placeholder Event",
+    "id": "placeholder1",
+    "title": "Placeholder Event1",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "imageUrl": "src/images/event-image.png",
     "location": "Kate Edger",
-    "date": "4 May 2026",
-    "time": "9:00 AM — 5:00 PM NZT",
-    "state": "open"
+    "datetime": "2026-05-04T09:00:00",
+    "status": "ended"
+  },
+
+  {
+    "id": "placeholder2",
+    "title": "Placeholder Event2",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "imageUrl": "src/images/event-image.png",
+    "location": "Kate Edger",
+    "datetime": "2026-05-04T09:00:00",
+    "status": "ended"
+  },
+
+  {
+    "id": "placeholder3",
+    "title": "Placeholder Event3",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "imageUrl": "src/images/event-image.png",
+    "location": "Kate Edger",
+    "datetime": "2026-05-04T09:00:00",
+    "status": "ended"
   },
   {
-    "id": "placeholder/ski",
-    "title": "Ski Trip",
-    "description": "What better way to celebrate the end of Semester 1 than a trip down south? Come along with us to Mt Ruapehu for a few days of skiing/snowboarding, side quests on the mountain scene and making memorable moments! 🏔️😻\n\nWhether you're hitting the slopes properly or spending half the time falling over 😵‍💫 this trip's all about making the most of the snow season ❄️ Get ready for good vibes, fun nights at the lodge, and memories you'll probably still be talking about next sem 😆\n\n‼️ Price does NOT include ski/snowboard rental at Mt Ruapehu ‼️\n\n⚠️ PLEASE NOTE: Your spot will not be confirmed immediately after signing up. Confirmation emails and deposit information will be sent out after registration.",
-    "date": "15th July - 17th July",
-    "location": "Piper's Lodge",
-    "time": "",
-    "price": 385,
-    "signUpStatus": "Open",
-    "dateSignOpen": "Friday 29th May",
-    "signedUsers": ["id1", "id2", "moreUserIDs"],
-    "coverImgUrl": "https://instagram.fhlz4-1.fna.fbcdn.net/v/t51.82787-15/708210441_18602810863044666_7373864208472527549_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=110&ig_cache_key=MzkwNzUzNDM0ODAzMTg1NjI3OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTM1MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=yPQLUFhThe4Q7kNvwHQMu_i&_nc_oc=AdqAEpSgBmQQeEY-uMUpboNd_VzUJGnI2vmRbjDpECZxjIilhNqstC3zpOPlKwUlOPo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fhlz4-1.fna&_nc_gid=6hddW0_jczxwROrnRAPxew&_nc_ss=7a22e&oh=00_AQBvPWjlT3j-SBI38K-IVPHz8iY6olvTd-QZ7dfRDtyAiw&oe=6A6A16BC"
-  },
-  {
-    "id": "placeholder/kbbq",
-    "title": "KAC KBBQ",
-    "description": "Nothing heals semester stress better than unlimited KBBQ + buffet! 😮‍💨\n\nCome join us at Tombo for a night full of all-you-can-eat meats, a whole buffet at your will, and good yaps with KAC! Whether you’re trying to de-stress because of exams or just missing a good KBBQ session, this is the perfect excuse to eat until you physically can’t anymore 🫡\n\nBring your friends, meet some new people, and spend your Friday night grilling and yapping away with us 🍴✨\n\n‼️Please arrive on time as it will affect how much eating time you have‼️",
-    "date": "Friday 29th of May",
-    "location": "Tombo BBQ New Market",
-    "time": "5:30 PM",
-    "price": 43,
-    "signUpStatus": "Open",
-    "dateSignOpen": "Friday 29th May",
-    "signedUsers": ["id1", "id2", "moreUserIDs"],
-    "coverImgUrl": "https://instagram.fhlz4-1.fna.fbcdn.net/v/t51.82787-15/702603043_18600144982044666_7813250256532324782_n.jpg?stp=dst-jpg_e35_p1080x1080_tt6&_nc_cat=106&ig_cache_key=MzkwMTczNjIxMjUxMTk4MTcyNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMzA3Mi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=xyFkwHB32GAQ7kNvwExfGHa&_nc_oc=AdoGy-1kiggw36hHNT9RHXT7M25Ruh3TrhEHI6KUlW6pq8u0aZ6toH_wBYuxeC5DAEY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fhlz4-1.fna&_nc_gid=tUkQ8F5uWA8vIqMraBKq_w&_nc_ss=7a22e&oh=00_AQAZW1-EA0K5n6lMjX5hv7y9VEMASciMh_ZBaTjsae_uBQ&oe=6A6B1DDA"
+    "id": "placeholder4",
+    "title": "Placeholder Event4",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "imageUrl": "src/images/event-image.png",
+    "location": "Kate Edger",
+    "datetime": "2026-10-04T09:00:00",
+    "status": "open"
   }
 ]

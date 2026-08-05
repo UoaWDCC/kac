@@ -18,7 +18,7 @@ const SponsorCard = ({ name, description, location }: Props) => {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
-          backgroundColor: "white",
+          backgroundColor: "#ffffff",
           borderRadius: "15px",
           width: "200px",
           boxShadow: "5px 5px 0px var(--color-yellow-medium)",
@@ -52,14 +52,14 @@ const SponsorCard = ({ name, description, location }: Props) => {
             alignItems: "center",
             justifyContent: "center",
             padding: "1.5rem",
-            backgroundColor: hovered ? "rgba(26, 46, 90, 0.85)" : "transparent",
+            backgroundColor: hovered ? "rgba(11, 45, 74, 0.85)" : "transparent",
             transition: "background-color 0.3s, opacity 0.3s",
             opacity: hovered ? 1 : 0,
           }}
         >
           <p
             style={{
-              color: "white",
+              color: "#ffffff",
               fontSize: "0.85rem",
               fontWeight: "bold",
               textAlign: "center",
@@ -78,6 +78,7 @@ const SponsorCard = ({ name, description, location }: Props) => {
           fontWeight: "normal",
           marginTop: "0.75rem",
           marginBottom: "0.25rem",
+          color: "var(--color-blue-medium)",
         }}
       >
         {name}
@@ -85,7 +86,7 @@ const SponsorCard = ({ name, description, location }: Props) => {
       <p
         style={{
           fontSize: "0.85rem",
-          color: "#666",
+          color: "var(--color-grey-medium)",
           margin: 0,
           fontFamily: "Alan Sans, sans-serif",
         }}

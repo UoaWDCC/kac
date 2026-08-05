@@ -67,50 +67,85 @@ const Sponsors = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#faf3d1" }}>
+    <div style={{ backgroundColor: "var(--color-yellow-light)" }}>
       {/* HERO - centered */}
-      <div style={{ ...centeredContent, textAlign: "center" }}>
-        <section style={{ padding: "2rem 0" }}>
-          <h1>Our Sponsors</h1>
+      <div style={{ ...centeredContent }}>
+        <section style={{ padding: "6rem 0 2rem 0" }}>
+          <div style={{ position: "relative", display: "inline-block" }}>
+            <img
+              src="src/images/kacoSponsorHeader.png"
+              alt="Mascot"
+              style={{
+                position: "absolute",
+                left: "-95px",
+                bottom: "20px",
+                width: "200px",
+                zIndex: 2,
+              }}
+            />
+            <h1
+              style={{
+                fontWeight: "bold",
+                margin: 0,
+                fontSize: "6rem",
+                paddingLeft: "2rem",
+              }}
+            >
+              OUR SPONSORS
+            </h1>
+          </div>
         </section>
       </div>
 
-      {/* MARQUEE - full width */}
-      <div
-        style={{
-          overflow: "hidden",
-          backgroundColor: "#faf3d1",
-          padding: "1rem 0",
-        }}
-      >
+      {/* MARQUEE + OVERLAPPING MEMBERSHIP CARD */}
+      <div style={{ position: "relative", marginTop: "1.5rem" }}>
+        {/* MARQUEE - full width */}
         <div
           style={{
-            display: "flex",
-            gap: "2rem",
-            width: "max-content",
-            animation: "marquee 400s linear infinite",
+            overflow: "hidden",
+            backgroundColor: "var(--color-yellow-light)",
+            padding: "1rem 0",
           }}
         >
-          {marqueeSponsors.map((s, i) => (
-            <div
-              key={i}
-              style={{
-                backgroundColor: "white",
-                padding: "1rem",
-                borderRadius: "20px",
-                width: "200px",
-                height: "220px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                flexShrink: 0,
-                textAlign: "center",
-              }}
-            >
-              <h3 style={{ fontSize: "0.9rem" }}>{s.name}</h3>
-              <p style={{ fontSize: "0.8rem" }}>{s.deal}</p>
-              <p style={{ fontSize: "0.8rem" }}>{s.address}</p>
-            </div>
-          ))}
+          <div
+            style={{
+              display: "flex",
+              gap: "2rem",
+              width: "max-content",
+              animation: "marquee 400s linear infinite",
+            }}
+          >
+            {marqueeSponsors.map((s, i) => (
+              <div
+                key={i}
+                style={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: "15px",
+                  width: "120px",
+                  height: "120px",
+                  boxShadow: "5px 5px 0px var(--color-yellow-medium)",
+                  flexShrink: 0,
+                }}
+              ></div>
+            ))}
+          </div>
         </div>
+
+        {/* MEMBERSHIP CARD - overlapping in center */}
+        <img
+          src="src/images/membership_card.png"
+          alt="Membership Card"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            maxWidth: "130px",
+            zIndex: 2,
+            border: "3px solid var(--color-blue-medium)",
+            borderRadius: "12px",
+          }}
+        />
       </div>
 
       {/* MARQUEE ANIMATION */}
@@ -121,25 +156,10 @@ const Sponsors = () => {
         }
       `}</style>
 
-      {/* MEMBERSHIP BLURB - full width white section */}
-      <section
-        style={{
-          backgroundColor: "#ffffff",
-          padding: "1rem 2rem",
-          textAlign: "center",
-        }}
-      >
+      {/* MEMBERSHIP BLURB */}
+      <section style={{ padding: "6rem 2rem 2rem 2rem", textAlign: "center" }}>
         <div style={centeredContent}>
-          <img
-            src="src/images/membership_card.png"
-            alt="Membership Card"
-            style={{
-              maxWidth: "80px",
-              display: "block",
-              margin: "0 auto 1rem auto",
-            }}
-          />
-          <p style={{ fontWeight: "bold", fontSize: "1rem" }}>
+          <p style={{ fontWeight: "normal", fontSize: "1rem" }}>
             Present your 2026 KAC membership card to our sponsors and receive
             these amazing deals!
           </p>
@@ -149,7 +169,7 @@ const Sponsors = () => {
       {/* REST OF CONTENT - centered */}
       <div style={{ ...centeredContent, textAlign: "center" }}>
         {/* SEARCH BAR */}
-        <section style={{ padding: "2rem" }}>
+        <section style={{ padding: "2rem 2rem" }}>
           <input
             type="text"
             placeholder="Search for your favourite sponsors..."
@@ -159,7 +179,7 @@ const Sponsors = () => {
               width: "80%",
               padding: "0.75rem 1rem",
               borderRadius: "999px",
-              border: "1px solid #ccc",
+              border: "1px solid var(--color-grey-medium)",
               fontSize: "1rem",
             }}
           />
@@ -171,14 +191,14 @@ const Sponsors = () => {
             display: "flex",
             justifyContent: "center",
             gap: "0",
-            paddingTop: "2rem",
-            paddingBottom: "1.5rem",
+            paddingTop: "1.5rem",
+            paddingBottom: "2rem",
           }}
         >
           <div
             style={{
               display: "flex",
-              backgroundColor: "#F5DF86",
+              backgroundColor: "var(--color-yellow-medium)",
               borderRadius: "999px",
               padding: "0.25rem",
               gap: "0.25rem",
@@ -196,7 +216,9 @@ const Sponsors = () => {
                   fontSize: "0.95rem",
                   whiteSpace: "nowrap",
                   backgroundColor:
-                    activeTab === tab.value ? "#F2B719" : "#F5DF86",
+                    activeTab === tab.value
+                      ? "var(--color-yellow-dark)"
+                      : "var(--color-yellow-medium)",
                   fontWeight: activeTab === tab.value ? "bold" : "normal",
                 }}
               >
@@ -214,7 +236,7 @@ const Sponsors = () => {
                 marginTop: "2rem",
                 textAlign: "left",
                 paddingBottom: "0.5rem",
-                borderBottom: "2px solid #f5a623",
+                borderBottom: "2px solid var(--color-yellow-dark)",
                 fontSize: "2rem",
               }}
             >
@@ -242,7 +264,7 @@ const Sponsors = () => {
                   marginTop: "2rem",
                   textAlign: "left",
                   paddingBottom: "0.5rem",
-                  borderBottom: "2px solid #f5a623",
+                  borderBottom: "2px solid var(--color-yellow-dark)",
                   fontSize: "2rem",
                 }}
               >
@@ -269,7 +291,7 @@ const Sponsors = () => {
                 marginTop: "2rem",
                 textAlign: "left",
                 paddingBottom: "0.5rem",
-                borderBottom: "2px solid #f5a623",
+                borderBottom: "2px solid var(--color-yellow-dark)",
                 fontSize: "2rem",
               }}
             >

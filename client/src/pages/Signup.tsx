@@ -46,7 +46,7 @@ const SignUpForm = () => {
   useEffect(() => {
     if (!loading) {
       if (!user) navigate("/");
-      else if (hasAccount) navigate("/");
+      else if (hasAccount) navigate("/profile");
     }
   }, [user, hasAccount, loading, navigate]);
 
@@ -134,7 +134,7 @@ const SignUpForm = () => {
       });
 
       await refresh();
-      navigate("/");
+      navigate("/profile");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setError(

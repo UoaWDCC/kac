@@ -1,24 +1,97 @@
+import { useState } from "react";
+import { ImageBlock } from "./image_block/ImageBlock.tsx";
+
 type Props = {
   name: string;
   description: string;
   location: string;
 };
 
-const SponsorCard = (props: Props) => {
+const SponsorCard = ({ name, description, location }: Props) => {
+  const [hovered, setHovered] = useState(false);
+  const pageKey = "sponsor-" + name.toLowerCase().replace(/\s+/g, "-");
+
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        padding: "1rem",
-        borderRadius: "20px",
-        width: "200px",
-        height: "220px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-      }}
-    >
-      <h3>{props.name}</h3>
-      <p>{props.description}</p>
-      <p>{props.location}</p>
+    <div style={{ width: "200px", textAlign: "center" }}>
+      {/* THE CARD - just the image */}
+      <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          backgroundColor: "white",
+          borderRadius: "15px",
+          width: "200px",
+          boxShadow: "5px 5px 0px var(--color-yellow-medium)",
+          cursor: "pointer",
+          position: "relative",
+          overflow: "hidden",
+          aspectRatio: "1",
+          padding: "2rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ImageBlock
+          pageKey={pageKey}
+          alt={name}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            borderRadius: "1rem",
+          }}
+        />
+
+        {/* DARK BLUE OVERLAY ON HOVER */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1.5rem",
+            backgroundColor: hovered ? "rgba(26, 46, 90, 0.85)" : "transparent",
+            transition: "background-color 0.3s, opacity 0.3s",
+            opacity: hovered ? 1 : 0,
+          }}
+        >
+          <p
+            style={{
+              color: "white",
+              fontSize: "0.85rem",
+              fontWeight: "bold",
+              textAlign: "center",
+              fontFamily: "Alan Sans, sans-serif",
+            }}
+          >
+            {description}
+          </p>
+        </div>
+      </div>
+
+      {/* NAME + LOCATION - outside the card */}
+      <h3
+        style={{
+          fontSize: "1rem",
+          fontWeight: "normal",
+          marginTop: "0.75rem",
+          marginBottom: "0.25rem",
+        }}
+      >
+        {name}
+      </h3>
+      <p
+        style={{
+          fontSize: "0.85rem",
+          color: "#666",
+          margin: 0,
+          fontFamily: "Alan Sans, sans-serif",
+        }}
+      >
+        {location}
+      </p>
     </div>
   );
 };

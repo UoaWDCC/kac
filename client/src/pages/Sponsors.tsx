@@ -32,8 +32,8 @@ const Sponsors = () => {
       </div>
     );
   }
-
-  const filtered = sponsors.filter((s) => {
+  const sorted = [...sponsors].sort((a, b) => a.name.localeCompare(b.name));
+  const filtered = sorted.filter((s) => {
     const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase());
     const matchesTab = activeTab === "all" || s.category === activeTab;
     return matchesSearch && matchesTab;
@@ -58,7 +58,7 @@ const Sponsors = () => {
     { label: "Other", value: "other" },
   ];
 
-  const marqueeSponsors = [...sponsors, ...sponsors];
+  const marqueeSponsors = [...sorted, ...sorted];
 
   const centeredContent = {
     maxWidth: "1200px",

@@ -10,6 +10,10 @@ import {
   normalizeMemberProfile,
 } from "../../util/memberValidation";
 
+// TODO: replace with dynamic link fetched from admin dashboard once implemented
+const PASS2U_LINK =
+  "https://www.pass2u.net/p/mZvjfJH6V37n?openExternalBrowser=1";
+
 type ProfileDashboardProps = {
   activeSection: ProfileSection;
 };
@@ -295,6 +299,21 @@ export default function ProfileDashboard({
                   readOnly
                   value={form.memberSince}
                 />
+              </label>
+              
+              <label
+                className="flex flex-col gap-1 font-alan-sans text-[0.94rem] font-semibold text-grey-medium md:col-span-2"
+                htmlFor="member-since"
+              >
+                Digital Membership Card
+                <a
+                  href={PASS2U_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button w-fit!"
+                >
+                  Add to Wallet
+                </a>
               </label>
             </div>
 

@@ -24,6 +24,9 @@ export default function ProfileSidebar({
   const { user } = useAuth();
   const [isProfileImageLoading, setIsProfileImageLoading] = useState(true);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const [failedProfileImageUrls, setFailedProfileImageUrls] = useState<
+    Set<string>
+  >(() => new Set());
   const [showProfileUpload, setShowProfileUpload] = useState(false);
 
   const navItems: { icon: LucideIcon; label: string; value: ProfileSection }[] =
@@ -49,6 +52,10 @@ export default function ProfileSidebar({
     void loadProfileImage();
   }, [loadProfileImage]);
 
+  useEffect(() => {
+    setFailedProfileImageUrls(new Set());
+  }, [user?.id]);
+
   const profileInitials = useMemo(() => {
     const displayName = user?.displayName?.trim() ?? "";
     const initials = displayName
@@ -60,7 +67,27 @@ export default function ProfileSidebar({
     return initials.toUpperCase() || "KAC";
   }, [user?.displayName]);
 
-  const imageUrl = profileImageUrl ?? user?.photos?.[0]?.value ?? null;
+  const fallbackProfileImage =
+    user?.photos?.find(
+      (photo) => photo.value && !failedProfileImageUrls.has(photo.value)
+    )?.value ?? null;
+  const storedProfileImage =
+    profileImageUrl && !failedProfileImageUrls.has(profileImageUrl)
+      ? profileImageUrl
+      : null;
+  const imageUrl = storedProfileImage ?? fallbackProfileImage;
+
+  const handleProfileImageError = useCallback(() => {
+    if (!imageUrl) return;
+
+    setFailedProfileImageUrls((current) => {
+      if (current.has(imageUrl)) return current;
+
+      const next = new Set(current);
+      next.add(imageUrl);
+      return next;
+    });
+  }, [imageUrl]);
 
   return (
     <aside className="w-full shrink-0 rounded-[1.35rem] bg-white px-8 py-7 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:w-[18.5rem] lg:sticky lg:top-8 lg:self-start">
@@ -72,6 +99,7 @@ export default function ProfileSidebar({
                 alt="Profile"
                 className="h-full w-full object-cover"
                 src={imageUrl}
+                onError={handleProfileImageError}
               />
             ) : isProfileImageLoading ? (
               <div className="flex h-full w-full items-center justify-center text-blue-medium">

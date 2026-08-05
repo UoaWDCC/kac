@@ -23,14 +23,36 @@ const Header = () => {
   const { user, hasAccount, loading, logout, role } = useAuth();
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const [failedProfileImageUrls, setFailedProfileImageUrls] = useState<
+    Set<string>
+  >(() => new Set());
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   // User is only considered "signed in" to the club once they have a full account.
   // A Google-authed user mid-signup should still see the Sign In button.
   const isSignedIn = !!user && hasAccount;
   const isAdmin = role === "admin";
-  const fallbackProfileImage = user?.photos?.[0]?.value ?? null;
-  const navbarProfileImage = profileImageUrl ?? fallbackProfileImage;
+  const fallbackProfileImage =
+    user?.photos?.find(
+      (photo) => photo.value && !failedProfileImageUrls.has(photo.value)
+    )?.value ?? null;
+  const storedProfileImage =
+    profileImageUrl && !failedProfileImageUrls.has(profileImageUrl)
+      ? profileImageUrl
+      : null;
+  const navbarProfileImage = storedProfileImage ?? fallbackProfileImage;
+
+  const handleProfileImageError = useCallback(() => {
+    if (!navbarProfileImage) return;
+
+    setFailedProfileImageUrls((current) => {
+      if (current.has(navbarProfileImage)) return current;
+
+      const next = new Set(current);
+      next.add(navbarProfileImage);
+      return next;
+    });
+  }, [navbarProfileImage]);
 
   const loadProfileImage = useCallback(async () => {
     if (!isSignedIn) {
@@ -68,6 +90,10 @@ const Header = () => {
       );
     };
   }, [isSignedIn, loadProfileImage]);
+
+  useEffect(() => {
+    setFailedProfileImageUrls(new Set());
+  }, [user?.id]);
 
   useEffect(() => {
     if (!isProfileMenuOpen) return;
@@ -156,6 +182,7 @@ const Header = () => {
                     className="header-profile-avatar"
                     src={navbarProfileImage}
                     alt="profile"
+                    onError={handleProfileImageError}
                   />
                 ) : (
                   <span className="header-profile-avatar header-profile-avatar-fallback">

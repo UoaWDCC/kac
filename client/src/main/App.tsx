@@ -9,6 +9,8 @@ import { AuthProvider } from "../auth/AuthProvider.tsx";
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
 
+import { MemberRoute } from "../auth/MemberRoute.tsx";
+
 import Home from "../pages/Home.tsx";
 import Faq from "../pages/Faq.tsx";
 import Contact from "../pages/Contact.tsx";
@@ -39,7 +41,16 @@ const App = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="faq" element={<Faq />} />
             <Route path="admin" element={<Admin />} />
-            <Route path="profile" element={<Profile />} />
+
+            <Route
+              path="profile"
+              element={
+                <MemberRoute>
+                  <Profile />
+                </MemberRoute>
+              }
+            />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

@@ -9,22 +9,18 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
+import { FACULTIES } from "../constants/faculties";
+import {
+  filterMemberFieldInput,
+  getMemberInputProps,
+  getMemberValidationErrors,
+  normalizeMemberProfile,
+} from "../util/memberValidation";
 import "../style/common.css";
 import "../style/signup.css";
 import api from "../api/index";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-
-const FACULTIES = [
-  "Arts",
-  "Business School",
-  "Creative Arts and Industries",
-  "Education and Social Work",
-  "Engineering",
-  "Law",
-  "Medical and Health Sciences",
-  "Science",
-];
 
 const SignUpForm = () => {
   const { user, hasAccount, loading, refresh } = useAuth();
@@ -50,14 +46,18 @@ const SignUpForm = () => {
   useEffect(() => {
     if (!loading) {
       if (!user) navigate("/");
-      else if (hasAccount) navigate("/");
+      else if (hasAccount) navigate("/profile");
     }
   }, [user, hasAccount, loading, navigate]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: filterMemberFieldInput(name, value),
+    }));
   };
 
   const handleFacultyChange = (faculty: string) => {
@@ -72,21 +72,13 @@ const SignUpForm = () => {
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    // Validate all form fields before Stripe
-    const missingFields = [];
-    if (!form.firstName.trim()) missingFields.push("First Name");
-    if (!form.lastName.trim()) missingFields.push("Last Name");
-    if (!form.mobileNumber.trim()) missingFields.push("Mobile Number");
-    if (!form.university.trim()) missingFields.push("University");
-    if (!form.studentId.trim()) missingFields.push("Student ID");
-    if (!form.upi.trim()) missingFields.push("Student Username / UPI");
-    if (!form.yearOfStudy) missingFields.push("Year of Study");
-    if (form.faculties.length === 0) missingFields.push("Faculty");
+    const normalizedForm = normalizeMemberProfile(form);
+    const validationErrors = getMemberValidationErrors(normalizedForm, {
+      requireYearOfStudy: true,
+    });
 
-    if (missingFields.length > 0) {
-      setError(
-        `Please fill in the following fields: ${missingFields.join(", ")}.`
-      );
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(" "));
       return;
     }
 
@@ -129,13 +121,20 @@ const SignUpForm = () => {
 
       // Step 3: Payment succeeded, create the user account
       await api.post("/users/signup", {
-        ...form,
-        yearOfStudy: Number(form.yearOfStudy),
+        faculties: normalizedForm.faculties,
+        firstName: normalizedForm.firstName,
+        lastName: normalizedForm.lastName,
+        mobileNumber: normalizedForm.mobileNumber,
+        pronouns: normalizedForm.pronouns,
+        studentId: normalizedForm.studentId,
+        university: normalizedForm.university,
+        upi: normalizedForm.upi,
+        yearOfStudy: Number(normalizedForm.yearOfStudy),
         paymentIntentId: paymentIntent.id,
       });
 
       await refresh();
-      navigate("/");
+      navigate("/profile");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setError(
@@ -176,6 +175,7 @@ const SignUpForm = () => {
           <div className="signup-field half">
             <label>First Name</label>
             <input
+              {...getMemberInputProps("firstName")}
               name="firstName"
               placeholder="e.g. Jonah"
               value={form.firstName}
@@ -185,6 +185,7 @@ const SignUpForm = () => {
           <div className="signup-field half">
             <label>Last Name</label>
             <input
+              {...getMemberInputProps("lastName")}
               name="lastName"
               placeholder="e.g. Dao"
               value={form.lastName}
@@ -196,9 +197,10 @@ const SignUpForm = () => {
         <div className="signup-field">
           <label>Mobile Number</label>
           <input
+            {...getMemberInputProps("mobileNumber")}
             name="mobileNumber"
             type="tel"
-            placeholder="+64 21 123 4567"
+            placeholder="64211234567"
             value={form.mobileNumber}
             onChange={handleChange}
           />
@@ -207,6 +209,7 @@ const SignUpForm = () => {
         <div className="signup-field">
           <label>Pronouns (optional)</label>
           <input
+            {...getMemberInputProps("pronouns")}
             name="pronouns"
             placeholder="e.g. she/her, he/him, they/them"
             value={form.pronouns}
@@ -217,6 +220,7 @@ const SignUpForm = () => {
         <div className="signup-field">
           <label>University</label>
           <input
+            {...getMemberInputProps("university")}
             name="university"
             placeholder="e.g. University of Auckland"
             value={form.university}
@@ -228,6 +232,7 @@ const SignUpForm = () => {
           <div className="signup-field half">
             <label>Student ID Number</label>
             <input
+              {...getMemberInputProps("studentId")}
               name="studentId"
               placeholder="e.g. 4206769173"
               value={form.studentId}
@@ -237,6 +242,7 @@ const SignUpForm = () => {
           <div className="signup-field half">
             <label>Student Username / UPI</label>
             <input
+              {...getMemberInputProps("upi")}
               name="upi"
               placeholder="e.g. jdoe123"
               value={form.upi}

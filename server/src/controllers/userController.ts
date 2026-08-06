@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { User } from "../model/user";
 import { Payment } from "../model/payment";
 import { getMembershipYear } from "../util/date";
+import { validateUserInput } from "../util/userValidation";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -33,37 +34,20 @@ export const createUser = async (req: Request, res: Response) => {
     return;
   }
 
-  const {
-    firstName,
-    lastName,
-    mobileNumber,
-    pronouns,
-    university,
-    studentId,
-    upi,
-    yearOfStudy,
-    faculties,
-    paymentIntentId,
-  } = req.body;
+  const { paymentIntentId } = req.body;
 
-  const missingFields = [];
-  if (!firstName) missingFields.push("firstName");
-  if (!lastName) missingFields.push("lastName");
-  if (!mobileNumber) missingFields.push("mobileNumber");
-  if (!university) missingFields.push("university");
-  if (!studentId) missingFields.push("studentId");
-  if (!upi) missingFields.push("upi");
-  if (!yearOfStudy) missingFields.push("yearOfStudy");
-  if (!faculties || !Array.isArray(faculties) || faculties.length === 0) {
-    missingFields.push("faculties");
+  const validation = validateUserInput(req.body, {
+    requireAll: true,
+    requireYearOfStudy: true,
+  });
+
+  if (!paymentIntentId || typeof paymentIntentId !== "string") {
+    validation.errors.push("Payment details are required.");
   }
-  if (!paymentIntentId || typeof paymentIntentId !== "string")
-    missingFields.push("paymentIntentId");
 
-  if (missingFields.length > 0) {
+  if (validation.errors.length > 0) {
     res.status(400).json({
-      message: "Missing required fields",
-      fields: missingFields,
+      message: validation.errors.join(" "),
     });
     return;
   }
@@ -151,15 +135,15 @@ export const createUser = async (req: Request, res: Response) => {
     const newUser = await User.create({
       googleUid,
       email,
-      firstName,
-      lastName,
-      mobileNumber,
-      pronouns,
-      university,
-      studentId,
-      upi,
-      yearOfStudy: Number(yearOfStudy),
-      faculties,
+      firstName: validation.values.firstName!,
+      lastName: validation.values.lastName!,
+      mobileNumber: validation.values.mobileNumber!,
+      pronouns: validation.values.pronouns,
+      university: validation.values.university!,
+      studentId: validation.values.studentId!,
+      upi: validation.values.upi!,
+      yearOfStudy: validation.values.yearOfStudy!,
+      faculties: validation.values.faculties!,
       latestMembershipYear: getMembershipYear(),
       // createdAt / updatedAt handled automatically by { timestamps: true }
     });
@@ -206,6 +190,34 @@ export const getUsers = async (_req: Request, res: Response) => {
   }
 };
 
+export const getCurrentUser = async (req: Request, res: Response) => {
+  if (!req.isAuthenticated()) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  const profile = req.user as { id?: string } | undefined;
+
+  if (!profile?.id) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  try {
+    const user = await User.findOne({ googleUid: profile.id });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error fetching current user:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getAuthenticatedUser = async (req: Request) => {
   const profile = req.user as { id?: string } | undefined;
 
@@ -214,48 +226,66 @@ const getAuthenticatedUser = async (req: Request) => {
   return User.findOne({ googleUid: profile.id });
 };
 
-export const updateUser = async (req: Request, res: Response) => {
-  const allowedFields = [
-    "email",
-    "firstName",
-    "lastName",
-    "mobileNumber",
-    "pronouns",
-    "university",
-    "studentId",
-    "upi",
-    "yearOfStudy",
-    "faculties",
-    "latestMembershipYear",
-    "isAdmin",
-  ];
+export const updateCurrentUser = async (req: Request, res: Response) => {
+  const validation = validateUserInput(req.body);
 
-  const updates = allowedFields.reduce<Record<string, unknown>>(
-    (acc, field) => {
-      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
-        acc[field] = req.body[field];
+  if (validation.errors.length > 0) {
+    res.status(400).json({ message: validation.errors.join(" ") });
+    return;
+  }
+
+  try {
+    const currentUser = await getAuthenticatedUser(req);
+
+    if (!currentUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const user = await User.findByIdAndUpdate(
+      currentUser._id,
+      validation.values,
+      {
+        new: true,
+        runValidators: true,
       }
+    );
 
-      return acc;
-    },
-    {}
-  );
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
 
-  if (updates.yearOfStudy !== undefined) {
-    updates.yearOfStudy = Number(updates.yearOfStudy);
+    res.status(200).json(user);
+  } catch (err: any) {
+    if (err.code === 11000) {
+      const duplicateField = Object.keys(err.keyPattern || {})[0];
+      res.status(409).json({
+        message: `An account with this ${duplicateField} already exists`,
+      });
+      return;
+    }
+
+    console.error("Error updating current user:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  const validation = validateUserInput(req.body, {
+    allowEmail: true,
+    allowLatestMembershipYear: true,
+    allowYearOfStudy: true,
+  });
+  const updates: Record<string, unknown> = { ...validation.values };
+
+  if (validation.errors.length > 0) {
+    res.status(400).json({ message: validation.errors.join(" ") });
+    return;
   }
 
-  if (updates.isAdmin !== undefined) {
-    updates.isAdmin = updates.isAdmin === true || updates.isAdmin === "true";
-  }
-
-  if (updates.latestMembershipYear === "") {
-    updates.latestMembershipYear = null;
-  } else if (
-    updates.latestMembershipYear !== undefined &&
-    updates.latestMembershipYear !== null
-  ) {
-    updates.latestMembershipYear = Number(updates.latestMembershipYear);
+  if (Object.prototype.hasOwnProperty.call(req.body, "isAdmin")) {
+    updates.isAdmin = req.body.isAdmin === true || req.body.isAdmin === "true";
   }
 
   try {

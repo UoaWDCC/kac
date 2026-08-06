@@ -4,10 +4,14 @@ import {
   Route,
   Navigate,
   Outlet,
+  useLocation,
 } from "react-router-dom";
+import { useEffect } from "react";
 import { AuthProvider } from "../auth/AuthProvider.tsx";
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
+
+import { MemberRoute } from "../auth/MemberRoute.tsx";
 
 import Home from "../pages/Home.tsx";
 import Faq from "../pages/Faq.tsx";
@@ -20,6 +24,7 @@ import About from "../pages/About.tsx";
 import SignUp from "../pages/Signup.tsx";
 import Admin from "../pages/Admin.tsx";
 import Toast from "../components/Toast.tsx";
+import Profile from "../pages/Profile.tsx";
 
 const App = () => {
   return (
@@ -40,6 +45,16 @@ const App = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="faq" element={<Faq />} />
             <Route path="admin" element={<Admin />} />
+
+            <Route
+              path="profile"
+              element={
+                <MemberRoute>
+                  <Profile />
+                </MemberRoute>
+              }
+            />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
@@ -49,6 +64,14 @@ const App = () => {
 };
 
 const Layout = () => {
+  const { pathname } = useLocation();
+
+  // Reset scroll position on every route change - BrowserRouter doesn't do
+  // this automatically the way a full-page navigation would.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <>
       <Header />

@@ -8,6 +8,7 @@ const eventSchema = new Schema({
   imageUrl: { type: String, required: true },
   location: { type: String, required: true },
   datetime: { type: Date, required: true },
+  capacity: { type: Number, required: false },
 });
 
 export const Event = model("Event", eventSchema);

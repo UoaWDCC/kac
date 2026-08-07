@@ -16,6 +16,7 @@ export interface Event {
   price: number;
   signUpStatus: "Waiting" | "Open" | "Closed";
   dateSignOpen: string;
+  capacity: number;
 }
 
 export const getEventById = async (id: string): Promise<Event | undefined> => {

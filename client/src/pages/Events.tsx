@@ -1,8 +1,8 @@
 import "../style/common.css";
 import "../style/events.css";
 import EventsCard from "../components/EventsCard.tsx";
+import CreateEventModal from "../components/CreateEventModal.tsx";
 import eventsData from "../placeholders/events.json";
-import { Link } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 
 const getTime = (t: string) => new Date(t).getTime();
@@ -34,15 +34,7 @@ const Events = () => {
       <h1 className="title-text">{"Upcoming Events:"}</h1>
 
       <div className="event-dashboard">
-        {role === "admin" && (
-          <Link
-            to="/Events"
-            className="events-card add-event-card"
-            style={{ textDecoration: "none" }}
-          >
-            + Add Event
-          </Link>
-        )}
+        {role === "admin" && <CreateEventModal />}
 
         {upcomingEvents.map((event) => (
           <EventsCard

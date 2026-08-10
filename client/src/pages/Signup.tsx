@@ -130,17 +130,17 @@ const SignUpForm = () => {
   ) => {
     const { name, value } = e.target;
     if (!name) return;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const sanitized =
+      name === "mobileNumber" ? value.replace(/[^0-9\s()+-]/g, "") : value;
+    setForm((prev) => ({ ...prev, [name]: sanitized }));
     if (invalidFieldsStep1[name]) {
       setInvalidFieldsStep1((prev) => ({ ...prev, [name]: false }));
     }
 
-    // If changing university to "None" or "Other", clear any active Student ID/UPI errors
+    // If changing university away from UoA, clear any active Student ID/UPI errors
     // If university is "None", also clear faculties errors
     if (name === "university") {
-      const isReq =
-        value === "The University of Auckland" ||
-        value === "Auckland University of Technology";
+      const isReq = value === "The University of Auckland";
       const isFacultyReq = value !== "None";
       setInvalidFieldsStep1((prev) => {
         const next = { ...prev };
@@ -235,8 +235,7 @@ const SignUpForm = () => {
 
     // Conditional requirements for UPI and Student ID
     const isStudentRequired =
-      form.university === "The University of Auckland" ||
-      form.university === "Auckland University of Technology";
+      form.university === "The University of Auckland";
 
     if (isStudentRequired) {
       // UPI (3-4 letters followed by 3 numbers OR "N/A", case-insensitive)
@@ -366,8 +365,7 @@ const SignUpForm = () => {
     hasSubmittedStep2 && Object.keys(invalidFieldsStep2).length > 0;
 
   const isStudentRequired =
-    form.university === "The University of Auckland" ||
-    form.university === "Auckland University of Technology";
+    form.university === "The University of Auckland";
 
   const isFacultyRequired = form.university !== "None";
 
@@ -540,7 +538,7 @@ const SignUpForm = () => {
                     className="signup-input"
                     placeholder="Your email address here"
                     value={form.email || initialEmail}
-                    onChange={handleChange}
+                    readOnly
                   />
                 </div>
 

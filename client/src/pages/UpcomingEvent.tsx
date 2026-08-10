@@ -12,6 +12,8 @@ import {
 
 import { getEventById } from "../api/eventsApi";
 import type { Event } from "../api/eventsApi";
+import createTicket from "../api/ticketsApi";
+
 import "../style/common.css";
 
 import { ImageBlock } from "../components/image_block/ImageBlock";
@@ -27,6 +29,8 @@ const UpcomingEvent = () => {
   const [cardNumber, setCardNumber] = useState("");
   const [cardVerification, setCardVerification] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
+  const [groupBuddy, setGroupBuddy] = useState("");
+  const [dietaryRequirements, setDietaryRequirements] = useState("");
 
   const handleCardNumberChange = (e: any) => {
     // Keep only digits, max 16, and insert spaces every 4 digits for readability
@@ -84,6 +88,26 @@ const UpcomingEvent = () => {
     return <div className="medium-content">Event not found!</div>;
 
   let userSignedUp = false; // in future, check user's account for this
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    try {
+      const submittedGroupBuddy = groupBuddy.trim() ? groupBuddy.trim() : "N/A";
+      const submittedDietaryRequirements = dietaryRequirements.trim();
+
+      await createTicket(
+        "dummyUserID",
+        id.toString(),
+        "dummyPaymentID",
+        submittedGroupBuddy,
+        submittedDietaryRequirements
+      );
+      console.log("Ticket created successfully!");
+    } catch (error) {
+      console.error("Error occurred while submitting the form:", error);
+    }
+  };
 
   return (
     <div className="bg-yellow-light">
@@ -237,7 +261,10 @@ const UpcomingEvent = () => {
                         </p>
                       </div>
                       <input
+                        id="groupBuddy"
                         type="text"
+                        value={groupBuddy}
+                        onChange={(e) => setGroupBuddy(e.target.value)}
                         placeholder="Name Here"
                         className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                       />
@@ -260,7 +287,10 @@ const UpcomingEvent = () => {
                       </div>
                       <input
                         required
+                        id="dietaryRequirements"
                         type="text"
+                        value={dietaryRequirements}
+                        onChange={(e) => setDietaryRequirements(e.target.value)}
                         placeholder="Enter Here"
                         className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                       />
@@ -500,6 +530,7 @@ const UpcomingEvent = () => {
                           formRef.current.reportValidity();
                           return;
                         }
+                        handleSubmit(new Event("submit") as any);
                         setCurrentStep(Math.min(4, currentStep + 1));
                       }}
                       className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"

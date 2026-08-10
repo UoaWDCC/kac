@@ -1,0 +1,123 @@
+.events-card {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  grid-template-rows: 5fr 1fr;
+  grid-template-areas:
+    "image image"
+    "content button";
+
+  width: 100%;
+  height: 400px;
+  max-width: 400px;
+  max-height: 400px;
+  background: var(--color-blue-medium);
+  color: white;
+  border-radius: 40px;
+  padding: 20px;
+  margin: 20px auto;
+  gap: 20px;
+  border: 1px solid;
+  box-sizing: border-box;
+  box-shadow: 10px 10px 0 var(--color-yellow-medium);
+}
+
+.event-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+  max-width: 100%;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+.event-title {
+  font-size: 1.4rem;
+  line-height: 1;
+  margin-bottom: 3px;
+  display: flex;
+  text-align: left;
+  justify-self: end;
+}
+
+.event-content {
+  grid-area: content;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.event-image-container {
+  grid-area: image;
+  height: 100%;
+}
+
+.event-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  display: block;
+}
+
+.redirect-button {
+  grid-area: button;
+  border: 1.5px solid;
+  padding: 15px;
+  border-radius: 35px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  max-height: 50px;
+  max-width: 200;
+  transition: 0.2s;
+  text-transform: uppercase;
+  align-self: end;
+}
+
+.redirect-button:hover {
+  background: var(--color-yellow-medium);
+  color: var(--color-blue-medium);
+  transform: translateY(-2px);
+}
+
+.event-date {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-direction: row;
+  align-items: center;
+  font-size: 0.8rem;
+  margin-bottom: 3px;
+  justify-self: end;
+}
+
+.add-event-card {
+  text-align: center;
+  font-size: 2rem;
+  color: white;
+  border: 1.5px dashed;
+}
+
+.add-event-card:hover {
+  background: var(--color-yellow-light);
+  color: var(--color-blue-medium);
+  transform: translateY(-2px);
+}
+
+.event-page {
+  background-color: var(--color-yellow-light);
+  color: var(--color-blue-medium);
+  padding-bottom: 40px;
+}
+
+.title-text {
+  align-self: flex-start;
+  padding: 0 80px;
+  margin-bottom: 10px;
+  font-family: var(--font-monospace);
+}

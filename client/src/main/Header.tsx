@@ -1,20 +1,126 @@
 import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ChevronDown,
+  LogOut,
+  Menu,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
+import { getCurrentProfileImage } from "../api/imageApi.ts";
 import { useAuth } from "../auth/useAuth.ts";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 
 import "../style/common.css";
 
 const tabs = ["Home", "About", "Events", "Sponsors", "Contact", "Faq"];
+const profileImageUpdatedEvent = "profile-image-updated";
 
 const Header = () => {
   const location = useLocation();
-  const { user, hasAccount, loading } = useAuth();
+  const { user, hasAccount, loading, logout, role } = useAuth();
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const [failedProfileImageUrls, setFailedProfileImageUrls] = useState<
+    Set<string>
+  >(() => new Set());
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   // User is only considered "signed in" to the club once they have a full account.
   // A Google-authed user mid-signup should still see the Sign In button.
   const isSignedIn = !!user && hasAccount;
+  const isAdmin = role === "admin";
+  const fallbackProfileImage =
+    user?.photos?.find(
+      (photo) => photo.value && !failedProfileImageUrls.has(photo.value)
+    )?.value ?? null;
+  const storedProfileImage =
+    profileImageUrl && !failedProfileImageUrls.has(profileImageUrl)
+      ? profileImageUrl
+      : null;
+  const navbarProfileImage = storedProfileImage ?? fallbackProfileImage;
+
+  const handleProfileImageError = useCallback(() => {
+    if (!navbarProfileImage) return;
+
+    setFailedProfileImageUrls((current) => {
+      if (current.has(navbarProfileImage)) return current;
+
+      const next = new Set(current);
+      next.add(navbarProfileImage);
+      return next;
+    });
+  }, [navbarProfileImage]);
+
+  const loadProfileImage = useCallback(async () => {
+    if (!isSignedIn) {
+      setProfileImageUrl(null);
+      return;
+    }
+
+    try {
+      const image = await getCurrentProfileImage();
+      setProfileImageUrl(image.signedUrl ?? null);
+    } catch (error) {
+      console.error("Failed to load navbar profile image:", error);
+      setProfileImageUrl(null);
+    }
+  }, [isSignedIn]);
+
+  useEffect(() => {
+    void loadProfileImage();
+
+    if (!isSignedIn) return;
+
+    const handleProfileImageUpdated = () => {
+      void loadProfileImage();
+    };
+
+    globalThis.addEventListener(
+      profileImageUpdatedEvent,
+      handleProfileImageUpdated
+    );
+
+    return () => {
+      globalThis.removeEventListener(
+        profileImageUpdatedEvent,
+        handleProfileImageUpdated
+      );
+    };
+  }, [isSignedIn, loadProfileImage]);
+
+  useEffect(() => {
+    setFailedProfileImageUrls(new Set());
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!isProfileMenuOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isProfileMenuOpen]);
 
   return (
     <div className="header flex items-center p-6 bg-yellow-light w-full">
@@ -63,18 +169,96 @@ const Header = () => {
       <div className="flex-1 flex pr-2 justify-end">
         {!loading &&
           (isSignedIn ? (
-            <div
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <img
-                src={user.photos?.[0]?.value}
-                alt="profile"
-                style={{
-                  width: "2.6rem",
-                  height: "2.6rem",
-                  borderRadius: "50%",
-                }}
-              />
+            <div className="header-profile-menu-shell" ref={profileMenuRef}>
+              <button
+                aria-expanded={isProfileMenuOpen}
+                aria-haspopup="menu"
+                className="button header-profile-trigger"
+                onClick={() => setIsProfileMenuOpen((current) => !current)}
+                type="button"
+              >
+                {navbarProfileImage ? (
+                  <img
+                    className="header-profile-avatar"
+                    src={navbarProfileImage}
+                    alt="profile"
+                    onError={handleProfileImageError}
+                  />
+                ) : (
+                  <span className="header-profile-avatar header-profile-avatar-fallback">
+                    {user.displayName?.charAt(0).toUpperCase() ?? "K"}
+                  </span>
+                )}
+                <span className="header-profile-menu-icon-shell">
+                  <AnimatePresence initial={false} mode="wait">
+                    <motion.span
+                      key={isProfileMenuOpen ? "chevron" : "hamburger"}
+                      animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                      className="header-profile-menu-icon-frame"
+                      exit={{ opacity: 0, rotate: 90, scale: 0.72 }}
+                      initial={{ opacity: 0, rotate: -90, scale: 0.72 }}
+                      transition={{ duration: 0.16, ease: "easeOut" }}
+                    >
+                      {isProfileMenuOpen ? (
+                        <ChevronDown
+                          aria-hidden="true"
+                          className="header-profile-menu-icon"
+                        />
+                      ) : (
+                        <Menu
+                          aria-hidden="true"
+                          className="header-profile-menu-icon"
+                        />
+                      )}
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
+              </button>
+
+              <AnimatePresence>
+                {isProfileMenuOpen ? (
+                  <motion.div
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className="header-profile-menu"
+                    exit={{ opacity: 0, scale: 0.98, y: -6 }}
+                    initial={{ opacity: 0, scale: 0.98, y: -6 }}
+                    role="menu"
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                  >
+                    <Link
+                      className="header-profile-menu-item"
+                      onClick={() => setIsProfileMenuOpen(false)}
+                      role="menuitem"
+                      to="/profile"
+                    >
+                      <UserRound aria-hidden="true" className="h-4 w-4" />
+                      Profile
+                    </Link>
+
+                    {isAdmin ? (
+                      <Link
+                        className="header-profile-menu-item"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                        role="menuitem"
+                        to="/admin"
+                      >
+                        <ShieldCheck aria-hidden="true" className="h-4 w-4" />
+                        Admin
+                      </Link>
+                    ) : null}
+
+                    <button
+                      className="header-profile-menu-item"
+                      onClick={logout}
+                      role="menuitem"
+                      type="button"
+                    >
+                      <LogOut aria-hidden="true" className="h-4 w-4" />
+                      Logout
+                    </button>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
             </div>
           ) : (
             <a

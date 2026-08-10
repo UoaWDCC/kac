@@ -17,7 +17,8 @@ const normaliseOptionalString = (value: unknown) => {
 
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
-}
+};
+
 const getProfileImageTag = (userId: unknown) =>
   `profile-image:${String(userId)}`;
 
@@ -38,6 +39,8 @@ const buildSignedImageResponse = async (image: any) => {
     size: image.size,
     s3Key: image.s3Key,
     uploadedAt: image.uploadedAt,
+    tag: image.tag,
+    galleryKey: image.galleryKey,
     signedUrl,
   };
 };
@@ -104,7 +107,7 @@ const getAuthenticatedUser = async (req: Parameters<RequestHandler>[0]) => {
   return User.findOne({ googleUid: profile.id });
 };
 
-export const uploadImage: RequestHandler = async (req, res, next) => {
+export const uploadImage: RequestHandler = async (req, res) => {
   try {
     if (!req.file) {
       res.status(400).json({ message: "Image file is required" });
@@ -151,7 +154,7 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
     const fileSuffix = fileExtension ? `.${fileExtension}` : "";
     const s3Key = `images/${randomUUID()}${fileSuffix}`;
 
-    const image = await Image.create({
+    const newImage = await Image.create({
       originalName: req.file.originalname,
       mimeType: req.file.mimetype,
       size: req.file.size,
@@ -172,35 +175,13 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
       );
     } catch (s3Error) {
       console.error("S3 upload failed, rolling back Mongo record:", s3Error);
-      await image.deleteOne();
+      await newImage.deleteOne();
       res.status(500).json({ message: "Failed to upload image to storage" });
       return;
     }
 
-    const signedUrl = await getSignedUrl(
-      s3Client,
-      new GetObjectCommand({
-        Bucket: s3BucketName,
-        Key: s3Key,
-      }),
-      { expiresIn: signedUrlExpirySeconds }
-    );
-
-    res.status(201).json({
-      id: image._id,
-      originalName: image.originalName,
-      mimeType: image.mimeType,
-      size: image.size,
-      s3Key: image.s3Key,
-      uploadedAt: image.uploadedAt,
-      tag: image.tag,
-      galleryKey: image.galleryKey,
-      signedUrl,
-    });
-    const tag = req.body.tag ?? null;
-    const image = await replaceImageForTag(req.file, tag);
-
-    res.status(201).json(image);
+    const response = await buildSignedImageResponse(newImage);
+    res.status(201).json(response);
   } catch (error) {
     console.error("Error uploading image:", error);
     res.status(500).json({
@@ -210,7 +191,7 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getImageById: RequestHandler = async (req, res, next) => {
+export const getImageById: RequestHandler = async (req, res) => {
   try {
     const image = await Image.findById(req.params.id);
 
@@ -219,27 +200,8 @@ export const getImageById: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const signedUrl = await getSignedUrl(
-      s3Client,
-      new GetObjectCommand({
-        Bucket: image.bucket,
-        Key: image.s3Key,
-      }),
-      { expiresIn: signedUrlExpirySeconds }
-    );
-
-    res.json({
-      id: image._id,
-      originalName: image.originalName,
-      mimeType: image.mimeType,
-      size: image.size,
-      s3Key: image.s3Key,
-      uploadedAt: image.uploadedAt,
-      tag: image.tag,
-      galleryKey: image.galleryKey,
-      signedUrl,
-    });
-    res.json(await buildSignedImageResponse(image));
+    const response = await buildSignedImageResponse(image);
+    res.json(response);
   } catch (error) {
     console.error("Error fetching image:", error);
     res.status(500).json({ message: "Failed to fetch image" });
@@ -298,7 +260,8 @@ export const getImagesByGalleryKey: RequestHandler = async (req, res) => {
     console.error("Error fetching images by gallery key:", error);
     res.status(500).json({ message: "Failed to fetch gallery images" });
   }
-}
+};
+
 export const getCurrentProfileImage: RequestHandler = async (req, res) => {
   try {
     const user = await getAuthenticatedUser(req);
@@ -355,7 +318,7 @@ export const uploadCurrentProfileImage: RequestHandler = async (req, res) => {
   }
 };
 
-export const listImages: RequestHandler = async (req, res, next) => {
+export const listImages: RequestHandler = async (req, res) => {
   try {
     const images = await Image.find().sort({ uploadedAt: -1 }).lean();
     res.json(images);

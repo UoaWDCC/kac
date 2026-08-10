@@ -5,25 +5,11 @@ export function getEvents() {
   return res.then((response) => response.data);
 }
 
-export interface Event {
-  _id: string;
-  title: string;
-  description: string;
-  coverImgUrl: string;
-  date: string;
-  time: string;
-  location: string;
-  price: number;
-  signUpStatus: "Waiting" | "Open" | "Closed";
-  dateSignOpen: string;
-}
-
 export const getEventById = async (id: string): Promise<Event | undefined> => {
   return api.get(`/events/${id}`).then((response) => response.data);
 };
 
-// TODO: confirm current event interface mismatch with event schema in server
-export interface TempEvent {
+export interface Event {
   title: string;
   description: string;
   imageUrl: string;
@@ -31,11 +17,11 @@ export interface TempEvent {
   capacity?: number;
 }
 
-export interface CreatedEvent extends TempEvent {
+export interface CreatedEvent extends Event {
   _id: string;
 }
 
-export const createEvent = async (event: TempEvent): Promise<CreatedEvent> => {
+export const createEvent = async (event: Event): Promise<CreatedEvent> => {
   const res = await api.post("/events", event);
   return res.data;
 };

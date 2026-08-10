@@ -42,7 +42,6 @@ const Events = () => {
             title={event.title}
             description={event.description}
             imageUrl={event.imageUrl}
-            location={event.location}
             datetime={new Date(event.datetime)}
             status={event.status as "open" | "waitlist" | "ended"}
           />
@@ -58,7 +57,6 @@ const Events = () => {
             title={event.title}
             description={event.description}
             imageUrl={event.imageUrl}
-            location={event.location}
             datetime={new Date(event.datetime)}
             status={event.status as "open" | "waitlist" | "ended"}
           />

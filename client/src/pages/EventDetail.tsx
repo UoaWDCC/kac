@@ -1,4 +1,4 @@
-import { MapPin, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import events from "../placeholders/events.json";
 import { ImageBlock } from "../components/image_block/ImageBlock";
 import "../style/common.css";
@@ -24,16 +24,6 @@ const EventDetail = () => {
 
           <div className="event-card">
             <div className="event-details-row">
-              <div className="event-detail-item">
-                <div className="event-icon-container">
-                  <MapPin size={20} color="black" />
-                </div>
-                <div>
-                  <div className="event-detail-label">LOCATION</div>
-                  <div className="event-detail-value">{event.location}</div>
-                </div>
-              </div>
-
               <div className="event-detail-item">
                 <div className="event-icon-container">
                   <Calendar size={20} color="black" />

@@ -112,7 +112,6 @@ const UpcomingEvent = () => {
                   <h3 className="text-lg">🕑 {event.time}</h3>
                 </div>
               )}
-              <h3 className="text-lg pl-1">📍 {event.location}</h3>
               <h3 className="text-lg">💰 ${event.price}</h3>
             </div>
           </div>

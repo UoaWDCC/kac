@@ -59,32 +59,42 @@ export const PastEventLightbox: React.FC<LightboxProps> = ({
   if (!images || images.length === 0) return null;
 
   return (
-    <div className="past-event-lightbox">
+    <div className="past-event-lightbox" onClick={onClose}>
       <div
         className="past-event-lightbox-backdrop"
-        onClick={onClose}
         role="button"
         tabIndex={-1}
         aria-label="Close lightbox"
       />
 
-      <div className="past-event-lightbox-stage">
-        {!isFirst && (
-          <button
-            type="button"
-            className="past-event-lightbox-nav past-event-lightbox-nav--left"
-            onClick={handlePrev}
-            aria-label="Previous image"
-          >
-            {"<"}
-          </button>
-        )}
+      {!isFirst && (
+        <button
+          type="button"
+          className="past-event-lightbox-nav past-event-lightbox-nav--left"
+          onClick={handlePrev}
+          aria-label="Previous image"
+        >
+          &#8249;
+        </button>
+      )}
 
+      {!isLast && (
+        <button
+          type="button"
+          className="past-event-lightbox-nav past-event-lightbox-nav--right"
+          onClick={handleNext}
+          aria-label="Next image"
+        >
+          &#8250;
+        </button>
+      )}
+
+      <div className="past-event-lightbox-stage">
         <div className="past-event-lightbox-viewport">
           <div
             className="past-event-lightbox-track"
             style={{
-              transform: `translateX(calc(-${activeIndex} * var(--lightbox-slide-width)))`,
+                transform: `translateX(calc(50vw - ((var(--lightbox-slide-width) + var(--lightbox-gap)) / 2) - (${activeIndex} * (var(--lightbox-slide-width) + var(--lightbox-gap)))))`,
             }}
           >
             {images.map((img, index) => {
@@ -98,7 +108,9 @@ export const PastEventLightbox: React.FC<LightboxProps> = ({
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (!isActive) onSelectIndex(index);
+                    if (!isActive) {
+                      onSelectIndex(index);
+                    }
                   }}
                 >
                   <div className="past-event-lightbox-frame">
@@ -113,17 +125,6 @@ export const PastEventLightbox: React.FC<LightboxProps> = ({
             })}
           </div>
         </div>
-
-        {!isLast && (
-          <button
-            type="button"
-            className="past-event-lightbox-nav past-event-lightbox-nav--right"
-            onClick={handleNext}
-            aria-label="Next image"
-          >
-            {">"}
-          </button>
-        )}
       </div>
     </div>
   );

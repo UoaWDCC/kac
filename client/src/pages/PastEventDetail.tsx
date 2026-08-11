@@ -123,16 +123,16 @@ const PastEventDetail = () => {
             More Photos
           </button>
         )}
-
-        {activeIndex !== null && (
-          <PastEventLightbox
-            images={visiblePhotos}
-            activeIndex={activeIndex}
-            onClose={closeViewer}
-            onSelectIndex={setActiveIndex}
-          />
-        )}
       </div>
+
+      {activeIndex !== null && (
+        <PastEventLightbox
+          images={visiblePhotos}
+          activeIndex={activeIndex}
+          onClose={closeViewer}
+          onSelectIndex={setActiveIndex}
+        />
+      )}
     </div>
   );
 };

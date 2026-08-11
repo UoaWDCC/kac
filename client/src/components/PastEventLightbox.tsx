@@ -94,7 +94,7 @@ export const PastEventLightbox: React.FC<LightboxProps> = ({
           <div
             className="past-event-lightbox-track"
             style={{
-                transform: `translateX(calc(50vw - ((var(--lightbox-slide-width) + var(--lightbox-gap)) / 2) - (${activeIndex} * (var(--lightbox-slide-width) + var(--lightbox-gap)))))`,
+              transform: `translateX(calc(50vw - ((var(--lightbox-slide-width) + var(--lightbox-gap)) / 2) - (${activeIndex} * (var(--lightbox-slide-width) + var(--lightbox-gap)))))`,
             }}
           >
             {images.map((img, index) => {

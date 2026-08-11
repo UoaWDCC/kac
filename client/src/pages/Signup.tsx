@@ -13,6 +13,12 @@ import {
 import { useAuth } from "../auth/useAuth";
 import api from "../api/index";
 import Header from "../main/Header";
+import { FACULTIES } from "../constants/faculties";
+import {
+  filterMemberFieldInput,
+  getMemberValidationErrors,
+  normalizeMemberProfile,
+} from "../util/memberValidation";
 import "../style/common.css";
 import "../style/signup.css";
 
@@ -27,18 +33,6 @@ const UNIVERSITIES = [
   "The University of Auckland",
   "Auckland University of Technology",
   "None",
-  "Other",
-];
-
-const FACULTIES = [
-  "Arts",
-  "Business School",
-  "Creative Arts and Industries",
-  "Education and Social Work",
-  "Engineering",
-  "Law",
-  "Medical and Health Sciences",
-  "Science",
   "Other",
 ];
 
@@ -103,9 +97,9 @@ const SignUpForm = () => {
   useEffect(() => {
     if (!loading) {
       const email = user?.emails?.[0]?.value ?? "";
-      if (!user || !email || hasAccount) {
+      if (!user || !email) {
         navigate("/");
-      }
+      } else if (hasAccount) navigate("/profile");
     }
   }, [user, hasAccount, loading, navigate]);
 
@@ -130,12 +124,13 @@ const SignUpForm = () => {
   ) => {
     const { name, value } = e.target;
     if (!name) return;
-    const sanitized =
-      name === "mobileNumber" ? value.replace(/[^0-9\s()+-]/g, "") : value;
+
+    const sanitized = filterMemberFieldInput(name, value);
 
     if (name === "university") {
       setForm((prev) => {
         const next = { ...prev, [name]: sanitized };
+
         if (sanitized !== "The University of Auckland") {
           next.upi = "";
           next.studentId = "";
@@ -143,37 +138,35 @@ const SignUpForm = () => {
         if (!sanitized || sanitized === "None") {
           next.faculties = [];
         }
+
         return next;
       });
-    } else {
-      setForm((prev) => ({ ...prev, [name]: sanitized }));
+
+      const isStudentRequired = sanitized === "The University of Auckland";
+      const isFacultyRequired = sanitized !== "None";
+
+      if (!isFacultyRequired || !sanitized) {
+        setIsFacultyDropdownOpen(false);
+      }
+
+      setInvalidFieldsStep1((prev) => ({
+        ...prev,
+        university: false,
+        upi: isStudentRequired ? prev.upi : false,
+        studentId: isStudentRequired ? prev.studentId : false,
+        faculties: isFacultyRequired ? prev.faculties : false,
+      }));
+
+      return;
     }
+
+    setForm((prev) => ({ ...prev, [name]: sanitized }));
 
     if (invalidFieldsStep1[name]) {
       setInvalidFieldsStep1((prev) => ({ ...prev, [name]: false }));
     }
-
-    // If changing university away from UoA, clear any active Student ID/UPI errors
-    // If university is "None", also clear faculties errors
-    if (name === "university") {
-      const isReq = value === "The University of Auckland";
-      const isFacultyReq = value !== "None";
-      if (!isFacultyReq || !value) {
-        setIsFacultyDropdownOpen(false);
-      }
-      setInvalidFieldsStep1((prev) => {
-        const next = { ...prev };
-        if (!isReq) {
-          next.upi = false;
-          next.studentId = false;
-        }
-        if (!isFacultyReq) {
-          next.faculties = false;
-        }
-        return next;
-      });
-    }
   };
+
 
   const handleStep2Change = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -200,13 +193,14 @@ const SignUpForm = () => {
   const handleContinueStep1 = (e: React.MouseEvent) => {
     e.preventDefault();
 
+    const normalizedForm = normalizeMemberProfile(form);
+
     const missing: Record<string, boolean> = {};
     const nameRegex = /^[a-zA-Z\s'-]+$/;
     const phoneRegex = /^[0-9\s()+-]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // First Name (Max 70, standard characters, non-empty)
-    const firstNameClean = form.firstName.trim();
+    const firstNameClean = normalizedForm.firstName.trim();
     if (
       !firstNameClean ||
       firstNameClean.length > 70 ||
@@ -215,8 +209,7 @@ const SignUpForm = () => {
       missing.firstName = true;
     }
 
-    // Last Name (Max 70, standard characters, non-empty)
-    const lastNameClean = form.lastName.trim();
+    const lastNameClean = normalizedForm.lastName.trim();
     if (
       !lastNameClean ||
       lastNameClean.length > 70 ||
@@ -225,14 +218,12 @@ const SignUpForm = () => {
       missing.lastName = true;
     }
 
-    // Email Address (Valid pattern, required)
-    const emailClean = (form.email || initialEmail).trim();
+    const emailClean = (normalizedForm.email || initialEmail).trim();
     if (!emailClean || !emailRegex.test(emailClean)) {
       missing.email = true;
     }
 
-    // Mobile Number (Max 30, only digits, spaces, hyphens, brackets, plus signs)
-    const mobileClean = form.mobileNumber.trim();
+    const mobileClean = normalizedForm.mobileNumber.trim();
     if (
       !mobileClean ||
       mobileClean.length > 30 ||
@@ -241,46 +232,48 @@ const SignUpForm = () => {
       missing.mobileNumber = true;
     }
 
-    // Pronouns (Max 128, required)
-    const pronounsClean = form.pronouns.trim();
+    const pronounsClean = normalizedForm.pronouns.trim();
     if (!pronounsClean || pronounsClean.length > 128) {
       missing.pronouns = true;
     }
 
-    // University (Required)
-    if (!form.university) {
+    if (!normalizedForm.university) {
       missing.university = true;
     }
 
-    // Conditional requirements for UPI and Student ID
-    const isStudentRequired = form.university === "The University of Auckland";
+    const isStudentRequired =
+      normalizedForm.university === "The University of Auckland";
 
     if (isStudentRequired) {
-      // UPI (3-4 letters followed by 3 numbers OR "N/A", case-insensitive)
-      const upiClean = form.upi.trim();
+      const upiClean = normalizedForm.upi.trim();
       const upiRegex = /^([a-zA-Z]{3,4}[0-9]{3}|N\/A)$/i;
       if (!upiClean || !upiRegex.test(upiClean)) {
         missing.upi = true;
       }
 
-      // Student ID (7-9 digits OR "N/A", case-insensitive)
-      const studentIdClean = form.studentId.trim();
+      const studentIdClean = normalizedForm.studentId.trim();
       const studentIdRegex = /^([0-9]{7,9}|N\/A)$/i;
       if (!studentIdClean || !studentIdRegex.test(studentIdClean)) {
         missing.studentId = true;
       }
     }
 
-    // Faculty (Required unless University is "None")
-    const isFacultyRequired = form.university !== "None";
-    if (isFacultyRequired && form.faculties.length === 0) {
+    const isFacultyRequired = normalizedForm.university !== "None";
+    if (isFacultyRequired && normalizedForm.faculties.length === 0) {
       missing.faculties = true;
+    }
+
+    const validationErrors = getMemberValidationErrors(normalizedForm, {
+      requireYearOfStudy: true,
+    });
+    if (validationErrors.length > 0) {
+      setSubmitError(validationErrors.join(" "));
     }
 
     setInvalidFieldsStep1(missing);
     setHasSubmittedStep1(true);
 
-    if (Object.keys(missing).length > 0) {
+    if (Object.keys(missing).length > 0 || validationErrors.length > 0) {
       return;
     }
 
@@ -324,6 +317,8 @@ const SignUpForm = () => {
       return;
     }
 
+    const normalizedForm = normalizeMemberProfile(form);
+
     setSubmitting(true);
     setSubmitError(null);
 
@@ -350,15 +345,23 @@ const SignUpForm = () => {
       }
 
       await api.post("/users/signup", {
-        ...form,
-        email: form.email || initialEmail,
+        faculties: normalizedForm.faculties,
+        firstName: normalizedForm.firstName,
+        lastName: normalizedForm.lastName,
+        mobileNumber: normalizedForm.mobileNumber,
+        pronouns: normalizedForm.pronouns,
+        studentId: normalizedForm.studentId,
+        university: normalizedForm.university,
+        upi: normalizedForm.upi,
+        yearOfStudy: Number(normalizedForm.yearOfStudy || 1),
+        email: normalizedForm.email || initialEmail,
         ...step2Form,
-        yearOfStudy: Number(form.yearOfStudy || 1),
         paymentIntentId: paymentIntent.id,
       });
 
       await refresh();
       setCurrentStep(4);
+      setTimeout(() => navigate("/profile"), 1200);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setSubmitError(

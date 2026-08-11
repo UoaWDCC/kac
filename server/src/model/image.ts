@@ -16,4 +16,7 @@ const imageSchema = new Schema(
   { versionKey: false }
 );
 
+imageSchema.index({ tag: 1, uploadedAt: -1 });
+imageSchema.index({ uploadedAt: -1 });
+
 export const Image = model("Image", imageSchema);

@@ -7,9 +7,96 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { RequestHandler } from "express";
 import { randomUUID } from "crypto";
 import { Image } from "../model/image";
+import { User } from "../model/user";
 import { s3BucketName, s3Client } from "../config/aws";
 
 const signedUrlExpirySeconds = 60 * 15;
+
+const getProfileImageTag = (userId: unknown) =>
+  `profile-image:${String(userId)}`;
+
+const buildSignedImageResponse = async (image: any) => {
+  const signedUrl = await getSignedUrl(
+    s3Client,
+    new GetObjectCommand({
+      Bucket: image.bucket,
+      Key: image.s3Key,
+    }),
+    { expiresIn: signedUrlExpirySeconds }
+  );
+
+  return {
+    id: image._id,
+    originalName: image.originalName,
+    mimeType: image.mimeType,
+    size: image.size,
+    s3Key: image.s3Key,
+    uploadedAt: image.uploadedAt,
+    signedUrl,
+  };
+};
+
+const replaceImageForTag = async (
+  file: Express.Multer.File,
+  tag: string | null
+) => {
+  const existing = tag ? await Image.findOne({ tag }) : null;
+
+  const fileExtension = file.originalname.includes(".")
+    ? file.originalname.split(".").pop()
+    : "";
+  const s3Key = `images/${randomUUID()}${fileExtension ? `.${fileExtension}` : ""}`;
+
+  const image = await Image.create({
+    originalName: file.originalname,
+    mimeType: file.mimetype,
+    size: file.size,
+    s3Key,
+    bucket: s3BucketName,
+    tag,
+  });
+
+  try {
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: s3BucketName,
+        Key: s3Key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      })
+    );
+  } catch (s3Error) {
+    console.error("S3 upload failed, rolling back Mongo record:", s3Error);
+    await image.deleteOne();
+    throw new Error("Failed to upload image to storage");
+  }
+
+  if (existing) {
+    try {
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: existing.bucket,
+          Key: existing.s3Key,
+        })
+      );
+    } catch (s3Error) {
+      console.error("Failed to delete old S3 object:", s3Error);
+    }
+
+    await existing.deleteOne();
+  }
+
+  return buildSignedImageResponse(image);
+};
+
+const getAuthenticatedUser = async (req: Parameters<RequestHandler>[0]) => {
+  if (!req.isAuthenticated()) return null;
+
+  const profile = req.user as { id?: string } | undefined;
+  if (!profile?.id) return null;
+
+  return User.findOne({ googleUid: profile.id });
+};
 
 export const uploadImage: RequestHandler = async (req, res, next) => {
   try {
@@ -19,76 +106,15 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
     }
 
     const tag = req.body.tag ?? null;
+    const image = await replaceImageForTag(req.file, tag);
 
-    // If a tag was provided, delete the existing image for that tag
-    if (tag) {
-      const existing = await Image.findOne({ tag });
-      if (existing) {
-        try {
-          await s3Client.send(
-            new DeleteObjectCommand({
-              Bucket: existing.bucket,
-              Key: existing.s3Key,
-            })
-          );
-        } catch (s3Error) {
-          console.error("Failed to delete old S3 object:", s3Error);
-        }
-        await existing.deleteOne();
-      }
-    }
-
-    const fileExtension = req.file.originalname.includes(".")
-      ? req.file.originalname.split(".").pop()
-      : "";
-    const s3Key = `images/${randomUUID()}${fileExtension ? `.${fileExtension}` : ""}`;
-
-    const image = await Image.create({
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-      size: req.file.size,
-      s3Key,
-      bucket: s3BucketName,
-      tag,
-    });
-
-    try {
-      await s3Client.send(
-        new PutObjectCommand({
-          Bucket: s3BucketName,
-          Key: s3Key,
-          Body: req.file.buffer,
-          ContentType: req.file.mimetype,
-        })
-      );
-    } catch (s3Error) {
-      console.error("S3 upload failed, rolling back Mongo record:", s3Error);
-      await image.deleteOne();
-      res.status(500).json({ message: "Failed to upload image to storage" });
-      return;
-    }
-
-    const signedUrl = await getSignedUrl(
-      s3Client,
-      new GetObjectCommand({
-        Bucket: s3BucketName,
-        Key: s3Key,
-      }),
-      { expiresIn: signedUrlExpirySeconds }
-    );
-
-    res.status(201).json({
-      id: image._id,
-      originalName: image.originalName,
-      mimeType: image.mimeType,
-      size: image.size,
-      s3Key: image.s3Key,
-      uploadedAt: image.uploadedAt,
-      signedUrl,
-    });
+    res.status(201).json(image);
   } catch (error) {
     console.error("Error uploading image:", error);
-    res.status(500).json({ message: "Failed to upload image" });
+    res.status(500).json({
+      message:
+        error instanceof Error ? error.message : "Failed to upload image",
+    });
   }
 };
 
@@ -101,24 +127,7 @@ export const getImageById: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const signedUrl = await getSignedUrl(
-      s3Client,
-      new GetObjectCommand({
-        Bucket: image.bucket,
-        Key: image.s3Key,
-      }),
-      { expiresIn: signedUrlExpirySeconds }
-    );
-
-    res.json({
-      id: image._id,
-      originalName: image.originalName,
-      mimeType: image.mimeType,
-      size: image.size,
-      s3Key: image.s3Key,
-      uploadedAt: image.uploadedAt,
-      signedUrl,
-    });
+    res.json(await buildSignedImageResponse(image));
   } catch (error) {
     console.error("Error fetching image:", error);
     res.status(500).json({ message: "Failed to fetch image" });
@@ -136,19 +145,65 @@ export const getImageByTag: RequestHandler = async (req, res) => {
       return;
     }
 
-    const signedUrl = await getSignedUrl(
-      s3Client,
-      new GetObjectCommand({ Bucket: image.bucket, Key: image.s3Key }),
-      { expiresIn: signedUrlExpirySeconds }
-    );
-
-    res.json({
-      id: image._id,
-      originalName: image.originalName,
-      signedUrl,
-    });
+    res.json(await buildSignedImageResponse(image));
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch image" });
+  }
+};
+
+export const getCurrentProfileImage: RequestHandler = async (req, res) => {
+  try {
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
+      res.status(401).json({ message: "Not authenticated" });
+      return;
+    }
+
+    const image = await Image.findOne({
+      tag: getProfileImageTag(user._id),
+    }).sort({ uploadedAt: -1 });
+
+    if (!image) {
+      res.json({ signedUrl: null });
+      return;
+    }
+
+    res.json(await buildSignedImageResponse(image));
+  } catch (error) {
+    console.error("Error fetching profile image:", error);
+    res.status(500).json({ message: "Failed to fetch profile image" });
+  }
+};
+
+export const uploadCurrentProfileImage: RequestHandler = async (req, res) => {
+  try {
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
+      res.status(401).json({ message: "Not authenticated" });
+      return;
+    }
+
+    if (!req.file) {
+      res.status(400).json({ message: "Image file is required" });
+      return;
+    }
+
+    const image = await replaceImageForTag(
+      req.file,
+      getProfileImageTag(user._id)
+    );
+
+    res.status(201).json(image);
+  } catch (error) {
+    console.error("Error uploading profile image:", error);
+    res.status(500).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to upload profile image",
+    });
   }
 };
 

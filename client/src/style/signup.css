@@ -311,6 +311,37 @@
   color: #4a5568;
 }
 
+.signup-faculty-chevron {
+  width: 10px;
+  height: 10px;
+  font-size: 0;
+  line-height: 0;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.signup-faculty-chevron::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid #4a5568;
+  border-bottom: 1px solid #4a5568;
+  transform: rotate(45deg);
+}
+
+.signup-faculty-chevron.is-open::before {
+  top: 3px;
+  transform: rotate(-135deg);
+}
+
+.signup-multi-select-trigger.is-disabled .signup-faculty-chevron::before {
+  border-right-color: #c0c4cc;
+  border-bottom-color: #c0c4cc;
+}
+
 .signup-multi-select-dropdown {
   position: absolute;
   top: 100%;

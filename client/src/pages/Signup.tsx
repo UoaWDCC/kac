@@ -730,7 +730,12 @@ const SignUpForm = () => {
                           Please select your faculty
                         </span>
                       )}
-                      <span className="signup-chevron-icon">
+                      <span
+                        className={`signup-chevron-icon signup-faculty-chevron${
+                          isFacultyDropdownOpen ? " is-open" : ""
+                        }`}
+                        aria-hidden="true"
+                      >
                         {isFacultyDropdownOpen ? "▲" : "▼"}
                       </span>
                     </div>

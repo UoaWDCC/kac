@@ -109,12 +109,9 @@ const PastEventDetail = () => {
         }).format(parsedDate)
       : rawDate || "Date TBC";
 
-  const activeImage = activeIndex !== null ? visiblePhotos[activeIndex] : null;
   const hasPrevious = activeIndex !== null && activeIndex > 0;
   const hasNext =
     activeIndex !== null && activeIndex < visiblePhotos.length - 1;
-  const previousImage = hasPrevious ? visiblePhotos[activeIndex! - 1] : null;
-  const nextImage = hasNext ? visiblePhotos[activeIndex! + 1] : null;
 
   return (
     <div className="past-event-page">
@@ -155,7 +152,7 @@ const PastEventDetail = () => {
           </button>
         )}
 
-        {activeImage && (
+        {activeIndex !== null && (
           <div className="past-event-lightbox">
             <button
               type="button"
@@ -164,55 +161,61 @@ const PastEventDetail = () => {
               aria-label="Close image viewer"
             />
             <div className="past-event-lightbox-stage">
-              {previousImage && (
-                <img
-                  src={previousImage.signedUrl}
-                  alt=""
-                  aria-hidden="true"
-                  className="past-event-lightbox-preview past-event-lightbox-preview--left"
-                />
-              )}
+              <div className="past-event-lightbox-viewport">
+                <div
+                  className="past-event-lightbox-track"
+                  style={{
+                    transform: `translateX(calc(-1 * ${activeIndex} * var(--lightbox-slide-width)))`,
+                  }}
+                >
+                  {visiblePhotos.map((photo, index) => {
+                    const isActive = index === activeIndex;
 
-              <div className="past-event-lightbox-main-wrap">
-                <img
-                  src={activeImage.signedUrl}
-                  alt={
-                    activeImage.originalName ??
-                    `${event.title} photo ${(activeIndex ?? 0) + 1}`
-                  }
-                  className="past-event-lightbox-image"
-                />
-
-                {hasPrevious && (
-                  <button
-                    type="button"
-                    className="past-event-lightbox-nav past-event-lightbox-nav--left"
-                    onClick={showPrevious}
-                    aria-label="Previous image"
-                  >
-                    {"<"}
-                  </button>
-                )}
-
-                {hasNext && (
-                  <button
-                    type="button"
-                    className="past-event-lightbox-nav past-event-lightbox-nav--right"
-                    onClick={showNext}
-                    aria-label="Next image"
-                  >
-                    {">"}
-                  </button>
-                )}
+                    return (
+                      <div
+                        key={photo.id}
+                        className={`past-event-lightbox-slide${isActive ? " past-event-lightbox-slide--active" : ""}`}
+                        aria-hidden={!isActive}
+                      >
+                        <div className="past-event-lightbox-frame">
+                          <img
+                            src={photo.signedUrl}
+                            alt={
+                              isActive
+                                ? photo.originalName ?? `${event.title} photo ${index + 1}`
+                                : ""
+                            }
+                            className="past-event-lightbox-image"
+                            loading={Math.abs(index - activeIndex) <= 1 ? "eager" : "lazy"}
+                            decoding="async"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
-              {nextImage && (
-                <img
-                  src={nextImage.signedUrl}
-                  alt=""
-                  aria-hidden="true"
-                  className="past-event-lightbox-preview past-event-lightbox-preview--right"
-                />
+              {hasPrevious && (
+                <button
+                  type="button"
+                  className="past-event-lightbox-nav past-event-lightbox-nav--left"
+                  onClick={showPrevious}
+                  aria-label="Previous image"
+                >
+                  {"<"}
+                </button>
+              )}
+
+              {hasNext && (
+                <button
+                  type="button"
+                  className="past-event-lightbox-nav past-event-lightbox-nav--right"
+                  onClick={showNext}
+                  aria-label="Next image"
+                >
+                  {">"}
+                </button>
               )}
             </div>
           </div>

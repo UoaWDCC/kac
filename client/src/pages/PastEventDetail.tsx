@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { PastEventLightbox } from "../components/PastEventLightbox";
 import { getPastEventBySlug } from "../api/eventApi";
 import { getImagesByGalleryKey } from "../api/imageApi";
 import "../style/common.css";
@@ -66,31 +67,6 @@ const PastEventDetail = () => {
   const showMorePhotosButton = galleryImages.length > MAX_VISIBLE_IMAGES;
 
   const closeViewer = () => setActiveIndex(null);
-  const showPrevious = () =>
-    setActiveIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
-  const showNext = () =>
-    setActiveIndex((prev) =>
-      prev !== null && prev < visiblePhotos.length - 1 ? prev + 1 : prev
-    );
-
-  useEffect(() => {
-    if (activeIndex === null) return;
-
-    const onKeyDown = (keyEvent: KeyboardEvent) => {
-      if (keyEvent.key === "Escape") closeViewer();
-      else if (keyEvent.key === "ArrowLeft") showPrevious();
-      else if (keyEvent.key === "ArrowRight") showNext();
-    };
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    globalThis.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      globalThis.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [activeIndex, visiblePhotos.length]);
 
   if (loading) {
     return <div className="past-event-page">Loading...</div>;
@@ -108,10 +84,6 @@ const PastEventDetail = () => {
           dateStyle: "long",
         }).format(parsedDate)
       : rawDate || "Date TBC";
-
-  const hasPrevious = activeIndex !== null && activeIndex > 0;
-  const hasNext =
-    activeIndex !== null && activeIndex < visiblePhotos.length - 1;
 
   return (
     <div className="past-event-page">
@@ -153,72 +125,12 @@ const PastEventDetail = () => {
         )}
 
         {activeIndex !== null && (
-          <div className="past-event-lightbox">
-            <button
-              type="button"
-              className="past-event-lightbox-backdrop"
-              onClick={closeViewer}
-              aria-label="Close image viewer"
-            />
-            <div className="past-event-lightbox-stage">
-              <div className="past-event-lightbox-viewport">
-                <div
-                  className="past-event-lightbox-track"
-                  style={{
-                    transform: `translateX(calc(-1 * ${activeIndex} * var(--lightbox-slide-width)))`,
-                  }}
-                >
-                  {visiblePhotos.map((photo, index) => {
-                    const isActive = index === activeIndex;
-
-                    return (
-                      <div
-                        key={photo.id}
-                        className={`past-event-lightbox-slide${isActive ? " past-event-lightbox-slide--active" : ""}`}
-                        aria-hidden={!isActive}
-                      >
-                        <div className="past-event-lightbox-frame">
-                          <img
-                            src={photo.signedUrl}
-                            alt={
-                              isActive
-                                ? photo.originalName ?? `${event.title} photo ${index + 1}`
-                                : ""
-                            }
-                            className="past-event-lightbox-image"
-                            loading={Math.abs(index - activeIndex) <= 1 ? "eager" : "lazy"}
-                            decoding="async"
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {hasPrevious && (
-                <button
-                  type="button"
-                  className="past-event-lightbox-nav past-event-lightbox-nav--left"
-                  onClick={showPrevious}
-                  aria-label="Previous image"
-                >
-                  {"<"}
-                </button>
-              )}
-
-              {hasNext && (
-                <button
-                  type="button"
-                  className="past-event-lightbox-nav past-event-lightbox-nav--right"
-                  onClick={showNext}
-                  aria-label="Next image"
-                >
-                  {">"}
-                </button>
-              )}
-            </div>
-          </div>
+          <PastEventLightbox
+            images={visiblePhotos}
+            activeIndex={activeIndex}
+            onClose={closeViewer}
+            onSelectIndex={setActiveIndex}
+          />
         )}
       </div>
     </div>

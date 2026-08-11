@@ -132,7 +132,23 @@ const SignUpForm = () => {
     if (!name) return;
     const sanitized =
       name === "mobileNumber" ? value.replace(/[^0-9\s()+-]/g, "") : value;
-    setForm((prev) => ({ ...prev, [name]: sanitized }));
+
+    if (name === "university") {
+      setForm((prev) => {
+        const next = { ...prev, [name]: sanitized };
+        if (sanitized !== "The University of Auckland") {
+          next.upi = "";
+          next.studentId = "";
+        }
+        if (!sanitized || sanitized === "None") {
+          next.faculties = [];
+        }
+        return next;
+      });
+    } else {
+      setForm((prev) => ({ ...prev, [name]: sanitized }));
+    }
+
     if (invalidFieldsStep1[name]) {
       setInvalidFieldsStep1((prev) => ({ ...prev, [name]: false }));
     }
@@ -142,6 +158,9 @@ const SignUpForm = () => {
     if (name === "university") {
       const isReq = value === "The University of Auckland";
       const isFacultyReq = value !== "None";
+      if (!isFacultyReq || !value) {
+        setIsFacultyDropdownOpen(false);
+      }
       setInvalidFieldsStep1((prev) => {
         const next = { ...prev };
         if (!isReq) {
@@ -366,8 +385,10 @@ const SignUpForm = () => {
 
   const isStudentRequired =
     form.university === "The University of Auckland";
+  const isStudentFieldsDisabled = !isStudentRequired;
 
   const isFacultyRequired = form.university !== "None";
+  const isFacultyDisabled = !form.university || form.university === "None";
 
   const stripeElementOptions = {
     style: {
@@ -639,6 +660,7 @@ const SignUpForm = () => {
                     placeholder="Your student username / UPI here"
                     value={form.upi}
                     onChange={handleChange}
+                    disabled={isStudentFieldsDisabled}
                   />
                 </div>
 
@@ -667,6 +689,7 @@ const SignUpForm = () => {
                     placeholder="Your student ID number here"
                     value={form.studentId}
                     onChange={handleChange}
+                    disabled={isStudentFieldsDisabled}
                   />
                 </div>
 
@@ -689,10 +712,14 @@ const SignUpForm = () => {
                     ref={facultyDropdownRef}
                   >
                     <div
-                      className="signup-multi-select-trigger"
-                      onClick={() =>
-                        setIsFacultyDropdownOpen(!isFacultyDropdownOpen)
-                      }
+                      className={`signup-multi-select-trigger${
+                        isFacultyDisabled ? " is-disabled" : ""
+                      }`}
+                      onClick={() => {
+                        if (isFacultyDisabled) return;
+                        setIsFacultyDropdownOpen(!isFacultyDropdownOpen);
+                      }}
+                      aria-disabled={isFacultyDisabled}
                     >
                       {form.faculties.length > 0 ? (
                         <span className="signup-multi-select-values">

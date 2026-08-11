@@ -246,6 +246,19 @@
   border-bottom-color: #0b2d4a;
 }
 
+.signup-input:disabled,
+.signup-select:disabled {
+  background: transparent;
+  border-bottom-color: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.signup-input:disabled::placeholder {
+  color: #c0c4cc;
+}
+
 /* Custom Multi-Select Dropdown */
 .signup-multi-select-container {
   position: relative;
@@ -263,6 +276,20 @@
   font-size: 15px;
   color: #2d3748;
   background: transparent;
+}
+
+.signup-multi-select-trigger.is-disabled {
+  background: transparent;
+  border-bottom-color: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.signup-multi-select-trigger.is-disabled .signup-chevron-icon,
+.signup-multi-select-trigger.is-disabled .signup-multi-select-placeholder,
+.signup-multi-select-trigger.is-disabled .signup-multi-select-values {
+  color: #c0c4cc;
 }
 
 .signup-multi-select-placeholder {

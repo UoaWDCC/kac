@@ -1,14 +1,12 @@
 import api from "./index";
 
 export default function createTicket(
-  userID: string,
-  eventID: string,
+  eventID: Object,
   paymentID: string,
   groupBuddy?: string,
   dietaryRequirements?: string
 ) {
   const res = api.post("/tickets/create-ticket", {
-    userID,
     eventID,
     paymentID,
     groupBuddy: groupBuddy,

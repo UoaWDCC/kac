@@ -4,9 +4,20 @@ const { model } = mongoose;
 
 const ticketSchema = new mongoose.Schema(
   {
-    userID: { type: String, default: "N/A" },
-    eventID: { type: String, default: "N/A" },
-    paymentID: { type: String, default: "N/A" },
+    userID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    eventID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
+      default: null,
+    },
+    paymentID: {
+      type: String,
+      default: "N/A",
+    },
     groupBuddy: { type: String, default: "N/A" },
     dietaryRequirements: { type: String, default: "N/A" },
   },

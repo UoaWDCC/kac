@@ -1,24 +1,22 @@
 import { Ticket } from "../model/ticket";
 import { Request, Response } from "express";
-// import { User } from "../model/user";
+import { User } from "../model/user";
 
 export const createTicket = async (req: Request, res: Response) => {
-  // if (!req.isAuthenticated()) {
-  //  return res.status(401).json({ message: "Not Authenticated." });
-  // }
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: "Not Authenticated." });
+  }
 
-  // const profile = req.user as any;
-  // const user = await User.findOne({ googleUid: profile.id });
+  const profile = req.user as any;
+  const user = await User.findOne({ googleUid: profile.id });
 
-  // if (!user) {
-  //  res.status(404).json({ message: "User not found" });
-  //  return;
-  // }
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
 
-  // const userId = user._id;
+  const userID = user._id;
 
-  const { userID, eventID, paymentID, groupBuddy, dietaryRequirements } =
-    req.body;
+  const { eventID, paymentID, groupBuddy, dietaryRequirements } = req.body;
 
   if (!userID || !eventID || !paymentID) {
     return res
@@ -39,3 +37,5 @@ export const createTicket = async (req: Request, res: Response) => {
     console.error("[!] Error creating ticket: ", ticketCreationError);
   }
 };
+
+export const getTicketsByUserID = async (req: Request, res: Response) => {};

@@ -99,11 +99,9 @@ const UpcomingEvent = () => {
     try {
       const submittedGroupBuddy = groupBuddy.trim() ? groupBuddy.trim() : "N/A";
       const submittedDietaryRequirements = dietaryRequirements.trim();
-      const submittedUserID = user?.id ?? "UnknownUser";
 
       await createTicket(
-        submittedUserID,
-        id.toString(),
+        id,
         "dummyPaymentID",
         submittedGroupBuddy,
         submittedDietaryRequirements

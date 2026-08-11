@@ -253,8 +253,7 @@ const SignUpForm = () => {
     }
 
     // Conditional requirements for UPI and Student ID
-    const isStudentRequired =
-      form.university === "The University of Auckland";
+    const isStudentRequired = form.university === "The University of Auckland";
 
     if (isStudentRequired) {
       // UPI (3-4 letters followed by 3 numbers OR "N/A", case-insensitive)
@@ -383,8 +382,7 @@ const SignUpForm = () => {
   const hasStep2Errors =
     hasSubmittedStep2 && Object.keys(invalidFieldsStep2).length > 0;
 
-  const isStudentRequired =
-    form.university === "The University of Auckland";
+  const isStudentRequired = form.university === "The University of Auckland";
   const isStudentFieldsDisabled = !isStudentRequired;
 
   const isFacultyRequired = form.university !== "None";

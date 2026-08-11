@@ -167,7 +167,6 @@ const SignUpForm = () => {
     }
   };
 
-
   const handleStep2Change = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (!name) return;

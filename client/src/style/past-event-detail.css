@@ -1,7 +1,7 @@
 .past-event-page {
   display: flex;
   min-height: 100vh;
-  padding: 3rem 0 4rem;
+  padding: 6rem 0 4rem;
   background-color: var(--color-yellow-light);
 }
 
@@ -9,7 +9,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  max-width: 84rem;
+  max-width: 97.5%;
   width: 100%;
   margin: 0 auto;
   padding: 0 clamp(1rem, 3vw, 2.25rem);
@@ -17,38 +17,35 @@
 
 .past-event-back-link {
   display: inline-block;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.25 rem;
   color: var(--color-blue-medium);
-  text-decoration: none;
-  font-size: 0.95rem;
-}
-
-.past-event-back-link:hover {
-  text-decoration: underline;
+  font-size: 1.5rem;
+  font-weight: 300;
 }
 
 .past-event-subtitle {
-  margin: 0 0 0.35rem clamp(1rem, 2.2vw, 2rem);
+  margin-left: 1.5%;
   color: var(--color-blue-medium);
   font-family: var(--font-monospace);
-  font-size: 2.5rem;
+  font-size: 4rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .past-event-title {
-  margin: 0 0 2rem clamp(2.2rem, 4.5vw, 3.75rem);
+  margin-left: 1.5%;
   color: var(--color-blue-medium);
-  font-size: 4.5rem;
+  font-size: 7rem;
   font-weight: bold;
-  line-height: 0.95;
+  line-height: 0.4;
 }
 
 .past-event-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.6rem;
+  margin-top: 2%;
   margin-left: clamp(3.2rem, 6vw, 5.3rem);
   margin-right: clamp(3.2rem, 6vw, 5.3rem);
   margin-bottom: 1.75rem;
@@ -67,12 +64,12 @@
 }
 
 .past-event-image {
-  width: 95%;
-  height: 95%;
+  width: 100%;
+  height: 100%;
   display: block;
   object-fit: cover;
   object-position: center;
-  border-radius: 0.45rem;
+  border-radius: 1rem;
   backface-visibility: hidden;
   transform: translateZ(0);
 }
@@ -113,7 +110,6 @@
   cursor: pointer;
 }
 
-/* Empty flex space in the stage passes clicks through to the backdrop; only the image and nav buttons opt back in. */
 .past-event-lightbox-stage {
   position: relative;
   z-index: 1;

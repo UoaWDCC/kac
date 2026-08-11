@@ -4,11 +4,11 @@ const { model } = mongoose;
 
 const ticketSchema = new mongoose.Schema(
   {
-    userID: { type: String, default: null },
-    eventID: { type: String, default: null },
-    paymentID: { type: String, default: null },
-    groupBuddy: { type: String },
-    dietaryRequirements: { type: String },
+    userID: { type: String, default: "N/A" },
+    eventID: { type: String, default: "N/A" },
+    paymentID: { type: String, default: "N/A" },
+    groupBuddy: { type: String, default: "N/A" },
+    dietaryRequirements: { type: String, default: "N/A" },
   },
   {
     timestamps: true,

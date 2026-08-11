@@ -8,11 +8,13 @@ import {
   ChevronLeft,
   ChevronUp,
   ChevronDown,
+  User,
 } from "lucide-react";
 
 import { getEventById } from "../api/eventsApi";
 import type { Event } from "../api/eventsApi";
 import createTicket from "../api/ticketsApi";
+import { useAuth } from "../auth/useAuth.ts";
 
 import "../style/common.css";
 
@@ -31,6 +33,8 @@ const UpcomingEvent = () => {
   const [cardExpiry, setCardExpiry] = useState("");
   const [groupBuddy, setGroupBuddy] = useState("");
   const [dietaryRequirements, setDietaryRequirements] = useState("");
+
+  const { user, hasAccount } = useAuth();
 
   const handleCardNumberChange = (e: any) => {
     // Keep only digits, max 16, and insert spaces every 4 digits for readability
@@ -95,9 +99,10 @@ const UpcomingEvent = () => {
     try {
       const submittedGroupBuddy = groupBuddy.trim() ? groupBuddy.trim() : "N/A";
       const submittedDietaryRequirements = dietaryRequirements.trim();
+      const submittedUserID = user?.id ?? "UnknownUser";
 
       await createTicket(
-        "dummyUserID",
+        submittedUserID,
         id.toString(),
         "dummyPaymentID",
         submittedGroupBuddy,
@@ -391,7 +396,7 @@ const UpcomingEvent = () => {
               {/* Step 3: Confirmation */}
               {currentStep === 3 && (
                 <div className="font-alan-sans">
-                  <h3 className="text-lg font-bold mb-6 border-b-2 border-b-yellow-dark">
+                  <h3 className="text-lg font-bold my-6 border-b-2 border-b-yellow-dark">
                     Please Read Before Confirming:
                   </h3>
                   We will not be giving out refunds for cancellations made
@@ -436,6 +441,7 @@ const UpcomingEvent = () => {
                 {/* Can Sign Up - Show form with continue button */}
                 {event.signUpStatus == "Open" &&
                   !userSignedUp &&
+                  hasAccount &&
                   currentStep != 3 && (
                     <div className="w-full flex justify-center">
                       <button
@@ -546,6 +552,15 @@ const UpcomingEvent = () => {
                     <CalendarCheck className="size-8" />
                     <h2 className="uppercase text-2xl text-center">
                       You have signed up for {event.title}!
+                    </h2>
+                  </div>
+                )}
+                {/* Not Signed In */}
+                {!hasAccount && event.signUpStatus == "Open" && (
+                  <div className="flex flex-row gap-4 justify-center items-center mt-10">
+                    <User className="size-8" />
+                    <h2 className="uppercase text-2xl text-center">
+                      Log in to sign up for {event.title}!
                     </h2>
                   </div>
                 )}

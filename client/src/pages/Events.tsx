@@ -94,14 +94,17 @@ const footerColumns = [
 const Events = () => {
   return (
     <div className="events-page">
-      <section className="events-title-section" aria-labelledby="events-title">
+      <section
+        className="section h1 events-title-section"
+        aria-labelledby="events-title"
+      >
         <div className="events-title-group">
           <img
             className="events-title-kaco"
             src={kacoTitle}
             alt="Kaco mascot"
           />
-          <h1 id="events-title" className="events-title-text font-sans">
+          <h1 id="events-title" className="title-text font-sans">
             OUR EVENTS
           </h1>
         </div>

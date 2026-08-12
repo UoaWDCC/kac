@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import SponsorCard from "../components/SponsorCard";
 import { getSponsors } from "../api/sponsorsApi";
 import "../style/sponsors.css";
+import { ImageBlock } from "../components/image_block/ImageBlock";
 
 interface Sponsor {
   name: string;
@@ -75,9 +76,39 @@ const Sponsors = () => {
       <div className="sponsors-marquee-shell">
         <div className="sponsors-marquee-track-wrap">
           <div className="sponsors-marquee-track">
-            {marqueeSponsors.map((_, i) => (
-              <div key={i} className="sponsors-marquee-card"></div>
-            ))}
+            {marqueeSponsors.map((s, i) => {
+              const pageKey =
+                "sponsor-" + s.name.toLowerCase().replace(/\s+/g, "-");
+              return (
+                <div
+                  key={i}
+                  style={{
+                    backgroundColor: "#ffffff",
+                    borderRadius: "15px",
+                    width: "120px",
+                    height: "120px",
+                    boxShadow: "5px 5px 0px var(--color-yellow-medium)",
+                    flexShrink: 0,
+                    padding: "0.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                  }}
+                >
+                  <ImageBlock
+                    pageKey={pageKey}
+                    alt={s.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      borderRadius: "8px",
+                    }}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
 

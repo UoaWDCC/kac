@@ -15,35 +15,30 @@
   width: 100%;
 }
 
-.events-hero {
-  align-items: flex-end;
-  display: flex;
-  margin-bottom: 4.75rem;
-  min-height: 8.5rem;
+.events-title-group {
   position: relative;
+  width: fit-content;
+  margin-left: max(150px, calc((100vw - 1080px) / 2 - 30px));
 }
 
-.events-hero-mascot {
-  height: auto;
-  left: -1.7rem;
-  pointer-events: none;
+.events-title-kaco {
   position: absolute;
-  top: -0.45rem;
-  width: 9.4rem;
-  z-index: 2;
+  left: -31px;
+  top: -7px;
+  width: 150px;
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
 }
 
-.events-hero-title {
+.events-title-text {
   color: var(--color-blue-medium);
-  font-family: var(--font-sans);
-  font-size: clamp(4.75rem, 7.6vw, 7.35rem);
+  font-size: 100px;
   font-weight: 700;
-  letter-spacing: 0;
-  line-height: 0.86;
-  margin: 0;
-  position: relative;
+  line-height: 1;
+  margin-left: 60px;
+  padding-bottom: 0;
   text-transform: uppercase;
-  z-index: 1;
 }
 
 .events-section {
@@ -99,6 +94,7 @@
 
 .events-card-eyebrow {
   color: var(--color-blue-medium);
+  font-family: var(--font-alan-sans);
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.15;
@@ -170,43 +166,57 @@
 .events-past-grid {
   display: grid;
   gap: 4.25rem 3.65rem;
-  grid-template-columns: repeat(3, minmax(0, 18.4rem));
+  grid-template-columns: repeat(3, 17rem);
   justify-content: center;
 }
 
 .events-past-card {
   background: var(--color-yellow-dark);
-  border-radius: 1.25rem;
-  box-shadow: 0.65rem 0.55rem 0 var(--color-yellow-medium);
-  height: 18.85rem;
+  border-radius: 1.35rem;
+  box-shadow: 0.75rem 0.75rem 0 var(--color-yellow-medium);
+  display: flex;
+  flex-direction: column;
+  height: 16.85rem;
   min-width: 0;
   overflow: hidden;
+  width: 17rem;
 }
 
 .events-past-image {
   background: #ffffff;
-  height: 10.4rem;
+  border-radius: 0.95rem 0.95rem 0 0;
+  flex: 0 0 9.2rem;
   overflow: hidden;
   position: relative;
+  margin: 0.5rem auto 0;
+  width: calc(100% - 1rem);
+}
+
+.events-past-image img {
+  object-position: center top;
 }
 
 .events-past-image::after {
   background: var(--color-yellow-dark);
-  border-radius: 999px;
-  bottom: -1.85rem;
+  border-radius: 10px 10px 10px 0;
+  bottom: -1.9rem;
   content: "";
-  height: 3.8rem;
-  left: 6.55rem;
+  height: 3.75rem;
   position: absolute;
-  width: 3.8rem;
+  width: 5.25rem;
 }
 
 .events-past-copy {
-  padding: 2.4rem 1rem 1rem;
+  padding: 3.25rem 0.95rem 0.9rem;
+}
+
+.events-past-copy .events-card-eyebrow {
+  margin-bottom: 0.48rem;
 }
 
 .events-past-title {
-  font-size: 1.16rem;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .events-more-button {
@@ -313,16 +323,8 @@
   }
 
   .events-past-grid {
-    gap: 3.5rem 2.6rem;
-    grid-template-columns: repeat(3, minmax(0, 16.7rem));
-  }
-
-  .events-past-card {
-    height: 17.55rem;
-  }
-
-  .events-past-image {
-    height: 9.65rem;
+    gap: 3.5rem 2rem;
+    grid-template-columns: repeat(3, 17rem);
   }
 }
 
@@ -337,18 +339,26 @@
     padding-right: 1.5rem;
   }
 
-  .events-hero {
+  .events-title-section {
     margin-bottom: 3.75rem;
+    max-width: 42rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
-  .events-hero-mascot {
-    left: 0;
-    top: 0;
+  .events-title-group {
+    margin-left: 0;
+  }
+
+  .events-title-kaco {
+    left: -1.2rem;
+    top: -0.35rem;
     width: 7.35rem;
   }
 
-  .events-hero-title {
+  .events-title-text {
     font-size: clamp(3.35rem, 12vw, 5.4rem);
+    margin-left: 3rem;
   }
 
   .events-section-title {
@@ -357,7 +367,7 @@
 
   .events-featured-grid,
   .events-past-grid {
-    grid-template-columns: minmax(0, 21rem);
+    grid-template-columns: 17rem;
   }
 
   .events-section {
@@ -381,14 +391,19 @@
     padding-right: 1.1rem;
   }
 
-  .events-hero {
-    min-height: 6rem;
+  .events-title-section {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
   }
 
-  .events-hero-mascot {
-    left: -0.3rem;
-    top: -0.2rem;
+  .events-title-kaco {
+    left: -0.6rem;
+    top: -0.25rem;
     width: 5.8rem;
+  }
+
+  .events-title-text {
+    margin-left: 2.25rem;
   }
 
   .events-feature-details {
@@ -399,10 +414,6 @@
   .events-pill-button,
   .events-more-button {
     min-width: 100%;
-  }
-
-  .events-past-card {
-    height: 18rem;
   }
 
   .events-footer {

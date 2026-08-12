@@ -94,19 +94,17 @@ const footerColumns = [
 const Events = () => {
   return (
     <div className="events-page">
-      <section
-        className="events-hero events-content"
-        aria-labelledby="events-title"
-      >
-        <img
-          className="events-hero-mascot"
-          src={kacoTitle}
-          alt=""
-          aria-hidden="true"
-        />
-        <h1 id="events-title" className="events-hero-title">
-          Our Events
-        </h1>
+      <section className="events-title-section" aria-labelledby="events-title">
+        <div className="events-title-group">
+          <img
+            className="events-title-kaco"
+            src={kacoTitle}
+            alt="Kaco mascot"
+          />
+          <h1 id="events-title" className="events-title-text font-sans">
+            OUR EVENTS
+          </h1>
+        </div>
       </section>
 
       <section className="events-content events-section">
@@ -179,7 +177,7 @@ const Events = () => {
               <img src={kacoTitle} alt="" aria-hidden="true" />
               KAC
             </span>
-            <span>© 2026 Kiwi Asian Club</span>
+            <span>&copy; 2026 Kiwi Asian Club</span>
           </div>
         </div>
       </footer>

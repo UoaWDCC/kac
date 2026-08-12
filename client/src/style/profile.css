@@ -1,0 +1,20 @@
+.profile-title-group {
+  position: relative;
+  width: fit-content;
+  margin-left: 150px;
+}
+
+.profile-title-kaco {
+  position: absolute;
+  left: -31px;
+  top: -7px;
+  width: 150px;
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.profile-title-group h1 {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}

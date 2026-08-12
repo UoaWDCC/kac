@@ -1,5 +1,15 @@
 import api from "./index";
 
+export async function fetchCurrentMember() {
+  const response = await api.get(`/users/me`);
+  return response.data;
+}
+
+export async function updateCurrentMember(member: object) {
+  const response = await api.put("/users/me", member);
+  return response.data;
+}
+
 export async function fetchMembers() {
   const response = await api.get("/users");
   return response.data;

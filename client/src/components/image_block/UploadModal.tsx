@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { postImage } from "../../api/imageApi";
 import "../../style/image_block/UploadModal.css";
 
 interface UploadModalProps {
   onClose: () => void;
   onSuccess: () => void;
-  tag: string;
+  tag?: string;
+  title?: string;
+  uploadImage?: (file: File) => Promise<unknown>;
 }
 
 export function UploadModal({
   onClose,
   onSuccess,
   tag,
+  title = "UPLOAD IMAGE",
+  uploadImage,
 }: Readonly<UploadModalProps>) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -37,7 +42,14 @@ export function UploadModal({
     setUploading(true);
     setError(null);
     try {
-      await postImage(file, tag);
+      if (uploadImage) {
+        await uploadImage(file);
+      } else if (tag) {
+        await postImage(file, tag);
+      } else {
+        throw new Error("Upload target is missing");
+      }
+
       onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -46,10 +58,10 @@ export function UploadModal({
     }
   };
 
-  return (
+  const modal = (
     <div className="upload-modal__overlay" onClick={onClose}>
       <div className="upload-modal" onClick={(e) => e.stopPropagation()}>
-        <h2>UPLOAD IMAGE</h2>
+        <h2>{title}</h2>
 
         <label
           className={`upload-modal__dropzone${preview ? " upload-modal__dropzone--has-preview" : ""}`}
@@ -93,4 +105,6 @@ export function UploadModal({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

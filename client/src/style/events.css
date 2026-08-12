@@ -183,6 +183,10 @@
 }
 
 .events-past-image {
+  --events-past-curve-radius: 1.9rem;
+  --events-past-shape-height: 2.45rem;
+  --events-past-shape-width: 5.8rem;
+
   background: #ffffff;
   border-radius: 0.95rem 0.95rem 0 0;
   flex: 0 0 9.2rem;
@@ -194,16 +198,37 @@
 
 .events-past-image img {
   object-position: center top;
+  position: relative;
+  z-index: 1;
+}
+
+.events-past-image::before,
+.events-past-image::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+
+.events-past-image::before {
+  background: var(--color-yellow-dark);
+  border-top-right-radius: var(--events-past-curve-radius);
+  bottom: 0;
+  height: var(--events-past-shape-height);
+  left: 0;
+  width: var(--events-past-shape-width);
 }
 
 .events-past-image::after {
-  background: var(--color-yellow-dark);
-  border-radius: 10px 10px 10px 0;
-  bottom: -1.9rem;
-  content: "";
-  height: 3.75rem;
-  position: absolute;
-  width: 5.25rem;
+  background: radial-gradient(
+    circle at 100% 0%,
+    transparent var(--events-past-curve-radius),
+    var(--color-yellow-dark) calc(var(--events-past-curve-radius) + 0.5px)
+  );
+  bottom: 0;
+  height: var(--events-past-curve-radius);
+  left: var(--events-past-shape-width);
+  width: var(--events-past-curve-radius);
 }
 
 .events-past-copy {

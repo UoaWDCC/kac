@@ -12,7 +12,7 @@ const SponsorCard = ({ name, description, location }: Props) => {
   const pageKey = "sponsor-" + name.toLowerCase().replace(/\s+/g, "-");
 
   return (
-    <div style={{ width: "200px", textAlign: "center" }}>
+    <div style={{ width: "100%", textAlign: "center" }}>
       {/* THE CARD - just the image */}
       <div
         onMouseEnter={() => setHovered(true)}
@@ -20,13 +20,13 @@ const SponsorCard = ({ name, description, location }: Props) => {
         style={{
           backgroundColor: "#ffffff",
           borderRadius: "15px",
-          width: "200px",
+          width: "100%",
           boxShadow: "5px 5px 0px var(--color-yellow-medium)",
           cursor: "pointer",
           position: "relative",
           overflow: "hidden",
           aspectRatio: "1",
-          padding: "2rem",
+          padding: "1rem",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -81,7 +81,7 @@ const SponsorCard = ({ name, description, location }: Props) => {
           color: "var(--color-blue-medium)",
         }}
       >
-        {name}
+        {name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
       </h3>
       <p
         style={{

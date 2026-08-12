@@ -46,17 +46,16 @@ const Sponsors = () => {
   const other = filtered.filter((s) => s.category === "other");
 
   const gridStyle = {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    gap: "2rem",
-    padding: "2rem",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+    gap: "1.5rem",
+    padding: "2rem 0",
   } as const;
 
   const tabs: { label: string; value: Tab }[] = [
     { label: "All", value: "all" },
     { label: "Auckland CBD", value: "cbd" },
-    { label: "New Market", value: "newmarket" },
+    { label: "Newmarket", value: "newmarket" },
     { label: "Other", value: "other" },
   ];
 
@@ -116,7 +115,7 @@ const Sponsors = () => {
               animation: "marquee 400s linear infinite",
             }}
           >
-            {marqueeSponsors.map((s, i) => (
+            {marqueeSponsors.map((_, i) => (
               <div
                 key={i}
                 style={{
@@ -239,14 +238,14 @@ const Sponsors = () => {
                   setActiveTab(tab.value);
                 }}
                 style={{
-                  padding: "0.35rem 1.75rem",
+                  padding: "0.35rem 1rem",
                   borderRadius: "999px",
                   border: "none",
                   cursor: "pointer",
                   fontSize: "0.95rem",
                   whiteSpace: "nowrap",
                   backgroundColor: "transparent",
-                  fontWeight: activeTab === tab.value ? "bold" : "normal",
+                  fontWeight: "normal",
                   position: "relative",
                 }}
               >
@@ -286,12 +285,14 @@ const Sponsors = () => {
               Auckland CBD
             </h2>
             <div style={gridStyle}>
-              {cbd.map((s, index) => (
+              {cbd.map((s) => (
                 <SponsorCard
-                  key={index}
+                  key={s.name}
                   name={s.name}
                   description={s.deal}
-                  location={s.address}
+                  location={s.address
+                    .replace(/, Auckland CBD$/i, "")
+                    .replace(/, Auckland City$/i, "")}
                 />
               ))}
             </div>
@@ -311,15 +312,15 @@ const Sponsors = () => {
                   fontSize: "2rem",
                 }}
               >
-                New Market
+                Newmarket
               </h2>
               <div style={gridStyle}>
-                {newmarket.map((s, index) => (
+                {newmarket.map((s) => (
                   <SponsorCard
-                    key={index}
+                    key={s.name}
                     name={s.name}
                     description={s.deal}
-                    location={s.address}
+                    location={s.address.replace(/, Newmarket$/i, "")}
                   />
                 ))}
               </div>

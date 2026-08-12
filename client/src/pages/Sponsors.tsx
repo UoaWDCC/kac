@@ -63,7 +63,7 @@ const Sponsors = () => {
         <section className="sponsors-hero-section">
           <div className="sponsors-hero-inner">
             <img
-              src="src/images/kacoSponsorHeader.png"
+              src="src/images/kaco-title.png"
               alt="Mascot"
               className="sponsors-hero-mascot"
             />

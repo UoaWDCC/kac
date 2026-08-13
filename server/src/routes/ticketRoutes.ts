@@ -3,6 +3,6 @@ import { createTicket } from "../controllers/ticketController";
 
 const router = express.Router();
 
-router.post("/create-ticket", createTicket);
+router.post("/", createTicket);
 
 export default router;

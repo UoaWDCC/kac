@@ -54,8 +54,10 @@ const Sponsors = () => {
     { label: "Other", value: "other" },
   ];
 
-  const marqueeSponsors = [...sorted, ...sorted];
-
+  const uniqueSponsors = sorted.filter(
+    (s, index, self) => index === self.findIndex((t) => t.name === s.name)
+  );
+  const marqueeSponsors = [...uniqueSponsors, ...uniqueSponsors];
   return (
     <div className="sponsors-page">
       {/* HERO - centered */}

@@ -43,7 +43,6 @@ const Events = () => {
             description={event.description}
             imageUrl={event.imageUrl}
             datetime={new Date(event.datetime)}
-            status={event.status as "open" | "waitlist" | "ended"}
           />
         ))}
       </div>
@@ -58,7 +57,6 @@ const Events = () => {
             description={event.description}
             imageUrl={event.imageUrl}
             datetime={new Date(event.datetime)}
-            status={event.status as "open" | "waitlist" | "ended"}
           />
         ))}
       </div>

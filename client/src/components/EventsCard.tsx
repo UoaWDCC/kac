@@ -15,7 +15,6 @@ interface EventProps {
   description: string;
   imageUrl: string;
   datetime: Date;
-  status: "open" | "waitlist" | "ended";
 }
 
 const EventsCard: React.FC<EventProps> = ({ title, imageUrl, datetime }) => {

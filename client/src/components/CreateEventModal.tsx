@@ -80,7 +80,7 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
       setIsOpen(false);
       setForm(emptyForm);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create event.");
+      setError(typeof err === "string" ? err : "Failed to create event.");
     } finally {
       setSubmitting(false);
     }

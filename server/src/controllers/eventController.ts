@@ -77,7 +77,7 @@ export const getEventById: RequestHandler = async (req, res, _next) => {
 
 export const getAllEvents: RequestHandler = async (req, res, _next) => {
   try {
-    const events = await Event.find().lean();
+    const events = await Event.find().sort({ datetime: 1 }).lean();
     const now = new Date();
 
     const mappedEvents = events.reduce<{ upcoming: any[]; past: any[] }>(
@@ -97,6 +97,9 @@ export const getAllEvents: RequestHandler = async (req, res, _next) => {
       },
       { upcoming: [], past: [] }
     );
+
+    // reverse the past events to have the most recent first
+    mappedEvents.past.reverse();
 
     res.status(200).json(mappedEvents);
   } catch (err) {

@@ -34,7 +34,7 @@ const UpcomingEvent = () => {
   const [groupBuddy, setGroupBuddy] = useState("");
   const [dietaryRequirements, setDietaryRequirements] = useState("");
 
-  const { user, hasAccount } = useAuth();
+  const { hasAccount } = useAuth();
 
   const handleCardNumberChange = (e: any) => {
     // Keep only digits, max 16, and insert spaces every 4 digits for readability

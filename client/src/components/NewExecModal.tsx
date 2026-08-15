@@ -6,7 +6,6 @@ import "../style/about.css";
 
 import { useAuth } from "../auth/useAuth";
 import createExec from "../api/execsApi";
-import { create } from "axios";
 
 interface ModalProps {
   onCreated?: () => void;

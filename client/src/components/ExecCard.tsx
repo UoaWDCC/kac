@@ -32,21 +32,15 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
 
   return (
     <div className="executive-card">
-      <button
-        type="button"
-        className="executive-card__click-target cursor-pointer"
-        onClick={onOpen}
-        aria-label={`Open ${displayName} preview`}
-      />
-
-      <div className="executive-card__top">
+      <div className="executive-card__top z-10">
         <div className="executive-card__media image-block">
-          <img src={imageURL || EXEC_IMG} alt={displayName} />
+          <img src={imageURL || EXEC_IMG} alt={displayName} onClick={onOpen} />
           {role === "admin" && (
             <button
+              type="button"
               className="image-block__edit-btn"
               onClick={async () => {
-                // Implementation for edit functionality
+                console.log("Edit executive functionality not implemented yet");
               }}
               title="Edit Executive"
             >
@@ -56,6 +50,7 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
 
           {role === "admin" && (
             <button
+              type="button"
               className="image-block__delete-btn"
               onClick={async () => {
                 await api.delete(`/executives/${id}`);
@@ -68,7 +63,7 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
           )}
         </div>
 
-        <div className="executive-card__identity">
+        <div className="executive-card__identity" onClick={onOpen}>
           <p className="executive-card__role">{execRole}</p>
           <h2 className="executive-card__name">{displayName}</h2>
         </div>

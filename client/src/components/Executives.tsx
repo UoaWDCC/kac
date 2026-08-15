@@ -213,7 +213,7 @@ const Executives = () => {
         </div>
       )}
 
-      <NewExecModal />
+      <NewExecModal onCreated={loadExecs} />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import "../style/events.css";
 
 interface FeaturedEvent {
   id: string;
+  link: string;
   eyebrow: string;
   title: string;
   imageTag: string;
@@ -22,12 +23,14 @@ interface PastEvent {
 const featuredEvents: FeaturedEvent[] = [
   {
     id: "kac-kbbq",
+    link: "6a6ee549b6759256e88091db",
     eyebrow: "Sem 1 Week 11: May 29",
     title: "KAC KBBQ",
     imageTag: "KAC KBBQ",
   },
   {
     id: "ski-trip",
+    link: "6a6ef457c7a83d02200a7865",
     eyebrow: "Inter-semester Break 2026",
     title: "SKI TRIP",
     imageTag: "SKI TRIP",
@@ -75,29 +78,6 @@ const pastEventSections = [
   },
 ];
 
-const footerColumns = [
-  {
-    heading: "About",
-    links: ["Our History", "Our Execs"],
-  },
-  {
-    heading: "Events",
-    links: ["Upcoming Events", "Past Events"],
-  },
-  {
-    heading: "Sponsors",
-    links: ["CBD Sponsors", "New Market Sponsors", "Other Sponsors"],
-  },
-  {
-    heading: "Contact Us",
-    links: ["Contact", "FAQ's"],
-  },
-  {
-    heading: "Connect With Us!",
-    links: ["Social Media Logos here"],
-  },
-];
-
 const Events = () => {
   return (
     <div className="events-page">
@@ -134,7 +114,10 @@ const Events = () => {
                   <p className="events-card-eyebrow">{event.eyebrow}</p>
                   <h3 className="events-feature-title">{event.title}</h3>
                 </div>
-                <Link className="events-pill-button" to={`/events/${event.id}`}>
+                <Link
+                  className="events-pill-button"
+                  to={`/events/${event.link}`}
+                >
                   See Details
                   <span aria-hidden="true">&gt;</span>
                 </Link>
@@ -169,36 +152,6 @@ const Events = () => {
           </button>
         </section>
       ))}
-
-      <footer className="events-footer">
-        <img
-          className="events-footer-mascot"
-          src={kacoTitle}
-          alt=""
-          aria-hidden="true"
-        />
-        <div className="events-footer-content">
-          <nav className="events-footer-links" aria-label="Events footer">
-            {footerColumns.map((column) => (
-              <div className="events-footer-column" key={column.heading}>
-                <h2>{column.heading}</h2>
-                {column.links.map((link) => (
-                  <a href="/" key={link}>
-                    {link}
-                  </a>
-                ))}
-              </div>
-            ))}
-          </nav>
-          <div className="events-footer-bottom">
-            <span className="events-footer-brand">
-              <img src={kacoTitle} alt="" aria-hidden="true" />
-              KAC
-            </span>
-            <span>&copy; 2026 Kiwi Asian Club</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -113,9 +113,7 @@ const Events = () => {
             src={kacoTitle}
             alt="Kaco mascot"
           />
-          <h1 className="title-text font-sans">
-            OUR EVENTS
-          </h1>
+          <h1 className="title-text font-sans">OUR EVENTS</h1>
         </div>
       </section>
 

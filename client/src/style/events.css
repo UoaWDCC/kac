@@ -244,9 +244,11 @@
 }
 
 .events-past-image::after {
-  background: radial-gradient(circle at 100% 0%,
-      transparent var(--events-past-curve-radius),
-      var(--color-yellow-dark) calc(var(--events-past-curve-radius) + 0.5px));
+  background: radial-gradient(
+    circle at 100% 0%,
+    transparent var(--events-past-curve-radius),
+    var(--color-yellow-dark) calc(var(--events-past-curve-radius) + 0.5px)
+  );
   bottom: 0;
   height: var(--events-past-curve-radius);
   left: calc(var(--events-past-shape-width) - 0.1rem);

@@ -63,7 +63,10 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          <img src="src/images/kaco-title.png" alt="Club logo" />
+          <div className="footer-logo">
+            <img src="src/images/kaco-title.png" alt="Club logo" />
+            <span>KAC</span>
+          </div>
           <p>© 2026 Kiwi Asian Club</p>
         </div>
       </footer>

@@ -1,16 +1,20 @@
 body {
   background-color: var(--color-yellow-light);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .footer-wrapper {
   position: relative;
+  margin-top: 150px;
 }
 
 .footer-image {
   position: absolute;
   width: 300px;
   top: -150px;
-  left: 92%;
+  left: 90%;
   transform: translateX(-50%) rotate(-15deg);
   z-index: 1;
 }
@@ -67,13 +71,20 @@ body {
   gap: 50px;
 }
 
-.footer-bottom img {
-  width: 45px;
-  height: 45px;
-  object-fit: contain;
-}
-
 .footer-bottom p {
   font-size: 14px;
   margin: 0;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
+.footer-logo img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
 }

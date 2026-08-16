@@ -94,6 +94,8 @@ const footerColumns = [
 const Events = () => {
   return (
     <div className="events-page">
+      <title>Kiwi Asian Club - Events</title>
+      {/** Title **/}
       <section
         className="section h1 events-title-section"
         aria-labelledby="events-title"
@@ -104,7 +106,7 @@ const Events = () => {
             src={kacoTitle}
             alt="Kaco mascot"
           />
-          <h1 id="events-title" className="title-text font-sans">
+          <h1 className="title-text font-sans">
             OUR EVENTS
           </h1>
         </div>

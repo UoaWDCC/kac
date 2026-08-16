@@ -80,6 +80,22 @@
   margin-bottom: 1rem;
 }
 
+.events-feature-image .image-block,
+.events-past-image .image-block {
+  display: block;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+.events-feature-image .image-block img,
+.events-past-image .image-block img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
 .events-feature-image img,
 .events-past-image img {
   display: block;
@@ -189,7 +205,7 @@
 }
 
 .events-past-image {
-  --events-past-curve-radius: 1.9rem;
+  --events-past-curve-radius: 1.5rem;
   --events-past-shape-height: 2.45rem;
   --events-past-shape-width: 5.8rem;
 
@@ -233,7 +249,7 @@
       var(--color-yellow-dark) calc(var(--events-past-curve-radius) + 0.5px));
   bottom: 0;
   height: var(--events-past-curve-radius);
-  left: 5.25rem;
+  left: calc(var(--events-past-shape-width) - 0.1rem);
   width: var(--events-past-curve-radius);
 }
 

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
+import { ImageBlock } from "../components/image_block/ImageBlock";
 import kacoTitle from "../images/kaco-title.png";
-import placeholder from "../images/placeholder.png";
 import "../style/common.css";
 import "../style/events.css";
 
@@ -9,12 +9,14 @@ interface FeaturedEvent {
   id: string;
   eyebrow: string;
   title: string;
+  imageTag: string;
 }
 
 interface PastEvent {
   id: string;
   eyebrow: string;
   title: string;
+  imageTag: string;
 }
 
 const featuredEvents: FeaturedEvent[] = [
@@ -22,11 +24,13 @@ const featuredEvents: FeaturedEvent[] = [
     id: "kac-kbbq",
     eyebrow: "Sem 1 Week 11: May 29",
     title: "KAC KBBQ",
+    imageTag: "KAC KBBQ",
   },
   {
     id: "ski-trip",
     eyebrow: "Inter-semester Break 2026",
     title: "SKI TRIP",
+    imageTag: "SKI TRIP",
   },
 ];
 
@@ -34,14 +38,17 @@ const eventPattern: Omit<PastEvent, "id">[] = [
   {
     eyebrow: "Sem 1 Week 9: May 15",
     title: "KAC x TANSA: World Tour",
+    imageTag: "KAC x TANSA: World Tour",
   },
   {
     eyebrow: "Sem 1 Week 8: May 8",
     title: "Ice Skating",
+    imageTag: "Ice Skating",
   },
   {
     eyebrow: "Sem 1 Week 7: May 1",
     title: "A Night Out in Hongdae",
+    imageTag: "A Night Out in Hongdae",
   },
 ];
 
@@ -118,7 +125,11 @@ const Events = () => {
           {featuredEvents.map((event) => (
             <article className="events-feature-card" key={event.id}>
               <div className="events-feature-image">
-                <img src={placeholder} alt="" />
+                <ImageBlock
+                  pageKey={event.imageTag}
+                  alt={event.title}
+                  style={{ width: "100%", height: "100%" }}
+                />
               </div>
               <div className="events-feature-details">
                 <div>
@@ -142,7 +153,11 @@ const Events = () => {
             {section.events.map((event) => (
               <article className="events-past-card" key={event.id}>
                 <div className="events-past-image">
-                  <img src={placeholder} alt="" />
+                  <ImageBlock
+                    pageKey={event.imageTag}
+                    alt={event.title}
+                    style={{ width: "100%", height: "100%" }}
+                  />
                 </div>
                 <div className="events-past-copy">
                   <p className="events-card-eyebrow">{event.eyebrow}</p>

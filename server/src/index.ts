@@ -14,6 +14,7 @@ import paymentRoutes from "./routes/paymentRoutes";
 import webhookRoutes from "./routes/webhookRoutes";
 import sponsorRoutes from "./routes/sponsorRoutes";
 import contactRoutes from "./routes/contactRoutes";
+import ticketRoutes from "./routes/ticketRoutes";
 import userRoutes from "./routes/userRoutes";
 import { User } from "./model/user";
 
@@ -131,6 +132,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/tickets", ticketRoutes);
 
 // Connect to MongoDB and start the server
 connectToMongo()

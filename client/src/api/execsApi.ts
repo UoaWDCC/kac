@@ -1,6 +1,6 @@
 import api from "./index";
 
-export default function createExec(
+export async function createExec(
   imageURL: string,
   displayName: string,
   execRole: string,
@@ -14,5 +14,24 @@ export default function createExec(
     roleGroup,
     description,
   });
-  return res.then((response: { data: any }) => response.data);
+  return res.then((response) => response.data);
+}
+
+export async function editExec(
+  id: string,
+  imageURL: string,
+  displayName: string,
+  execRole: string,
+  roleGroup: string,
+  description: string
+) {
+  const execData = {
+    imageURL,
+    displayName,
+    execRole,
+    roleGroup,
+    description,
+  };
+  const res = api.put(`/executives/${id}`, execData);
+  return res.then((response) => response.data);
 }

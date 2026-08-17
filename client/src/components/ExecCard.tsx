@@ -1,6 +1,8 @@
 import "../style/common.css";
 import "../style/image_block/ImageBlock.css";
+
 import { Pencil, Trash2 } from "lucide-react";
+
 import api from "../api";
 import { useAuth } from "../auth/useAuth";
 
@@ -18,11 +20,13 @@ interface ExecProps {
 interface ExecCardProps {
   onDelete: () => void;
   onOpen: () => void;
+  onEdit: () => void;
 }
 
 const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
   onDelete,
   onOpen,
+  onEdit,
   id,
   imageURL,
   displayName,
@@ -40,7 +44,7 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
               type="button"
               className="image-block__edit-btn"
               onClick={async () => {
-                console.log("Edit executive functionality not implemented yet");
+                onEdit();
               }}
               title="Edit Executive"
             >

@@ -5,13 +5,13 @@ import "../style/common.css";
 import "../style/about.css";
 
 import { useAuth } from "../auth/useAuth";
-import createExec from "../api/execsApi";
+import { createExec } from "../api/execsApi";
 
 interface ModalProps {
   onCreated?: () => void;
 }
 
-export default function Modal({ onCreated }: ModalProps) {
+export default function Modal({ onCreated }: Readonly<ModalProps>) {
   const { role } = useAuth();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [displayName, setDisplayName] = useState("");
@@ -28,7 +28,7 @@ export default function Modal({ onCreated }: ModalProps) {
     }
   };
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async () => {
     try {
       console.log(displayName, execRole, roleGroup, description);
       const created = await createExec(
@@ -136,7 +136,7 @@ export default function Modal({ onCreated }: ModalProps) {
                     className="cursor-pointer py-2 px-12 w-fit! h-10 rounded-3xl font-bold text-lg text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                     type="submit"
                     onClick={() => {
-                      handleSubmit(new Event("submit") as any);
+                      handleSubmit();
                     }}
                   >
                     Create!

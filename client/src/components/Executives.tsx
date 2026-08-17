@@ -4,6 +4,7 @@ import "../style/about.css";
 import { useMemo, useEffect, useState } from "react";
 
 import NewExecModal from "./NewExecModal";
+import EditExecModal from "./EditExecModal";
 
 import ExecCard from "./ExecCard";
 import api from "../api";
@@ -74,6 +75,7 @@ const Executives = () => {
   const [execs, setExecs] = useState<Executive[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedExec, setSelectedExec] = useState<Executive | null>(null);
+  const [editingExec, setEditingExec] = useState<Executive | null>(null);
 
   const loadExecs = async () => {
     try {
@@ -165,6 +167,7 @@ const Executives = () => {
                 description={exec.description}
                 onDelete={loadExecs}
                 onOpen={() => setSelectedExec(exec)}
+                onEdit={() => setEditingExec(exec)}
               />
             ))}
           </div>
@@ -211,6 +214,14 @@ const Executives = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {editingExec && (
+        <EditExecModal
+          exec={editingExec}
+          onClose={() => setEditingExec(null)}
+          onEdited={loadExecs}
+        />
       )}
 
       <NewExecModal onCreated={loadExecs} />

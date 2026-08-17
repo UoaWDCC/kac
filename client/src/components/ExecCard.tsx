@@ -79,7 +79,9 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
 
         <div className="executive-card__identity" onClick={onOpen}>
           <p className="executive-card__role">{execRole}</p>
-          <h2 className="executive-card__name">{displayName}</h2>
+          <h2 className="executive-card__name leading-[1.1]! max-w-[80%]">
+            {displayName}
+          </h2>
         </div>
       </div>
     </div>

@@ -90,17 +90,19 @@ export const deleteEvent: RequestHandler = async (req, res, _next) => {
   }
 };
 
-export const getEventById: RequestHandler = async (req, res) => {
+export const getEventById: RequestHandler = async (req, res, _next) => {
   try {
     const event = await Event.findById(req.params.id).lean();
     if (!event) {
-      res.status(404).json({ message: "Event not found." });
-      return;
+      return res.status(404).json({ message: "Event not found." });
     }
-    res.status(200).json({ ...event, id: event._id });
+    res.status(200).json(event);
   } catch (err) {
-    console.error("[!] Error fetching event by id:", err);
-    res.status(500).json({ message: "Error fetching event.", error: err });
+    console.error("[!] Error fetching event: ", err);
+    res.status(500).json({
+      message: "Error fetching event.",
+      error: err,
+    });
   }
 };
 

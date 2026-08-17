@@ -19,3 +19,16 @@ export function postImage(file: File, tag: string, galleryKey = false) {
   const res = api.post("/images", formData);
   return res.then((response) => response.data);
 }
+
+export function getCurrentProfileImage() {
+  const res = api.get("/images/profile/me");
+  return res.then((response) => response.data);
+}
+
+export function postCurrentProfileImage(file: File) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const res = api.post("/images/profile/me", formData);
+  return res.then((response) => response.data);
+}

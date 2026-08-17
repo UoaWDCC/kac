@@ -9,7 +9,6 @@ import "../style/events.css";
 const emptyForm = {
   title: "",
   description: "",
-  imageUrl: "",
   datetime: "",
   capacity: "",
 };
@@ -50,9 +49,8 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
 
     const title = form.title.trim();
     const description = form.description.trim();
-    const imageUrl = form.imageUrl.trim();
 
-    if (!title || !description || !imageUrl || !form.datetime) {
+    if (!title || !description || !form.datetime) {
       setError("Please fill out all required fields.");
       return;
     }
@@ -60,7 +58,6 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
     const payload: Event = {
       title,
       description,
-      imageUrl,
       datetime: new Date(form.datetime).toISOString(),
     };
 
@@ -133,18 +130,6 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
                   value={form.description}
                   onChange={handleChange}
                   className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none resize-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-lg font-bold">Image URL</label>
-                <input
-                  type="text"
-                  name="imageUrl"
-                  placeholder="e.g., src/images/event.png"
-                  value={form.imageUrl}
-                  onChange={handleChange}
-                  className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                 />
               </div>
 

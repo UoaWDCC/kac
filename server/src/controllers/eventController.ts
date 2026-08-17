@@ -32,6 +32,7 @@ export const addEvent: RequestHandler = async (req, res, next) => {
     }
 
     const newEvent = new Event(req.body);
+    newEvent.imageUrl = `event-image:${newEvent._id}`;
     const savedEvent = await newEvent.save();
     res.status(201).json(savedEvent);
   } catch (err) {

@@ -1,15 +1,28 @@
 import { MapPin, Calendar } from "lucide-react";
-import events from "../placeholders/events.json";
 import { ImageBlock } from "../components/image_block/ImageBlock";
 import "../style/common.css";
 import "../style/event-detail.css";
 
-const EventDetail = () => {
-  const event = events[0];
+type EventRecord = {
+  id: string;
+  title: string;
+  description: string;
+  location: string;
+  datetime: string;
+};
 
-  if (!event) {
-    return <div className="medium-content">Event not found</div>;
-  }
+interface EventDetailProps {
+  event: EventRecord;
+}
+
+const EventDetail = ({ event }: EventDetailProps) => {
+  const parsedDate = new Date(event.datetime);
+  const formattedDate = new Intl.DateTimeFormat("en-NZ", {
+    dateStyle: "long",
+  }).format(parsedDate);
+  const formattedTime = new Intl.DateTimeFormat("en-NZ", {
+    timeStyle: "short",
+  }).format(parsedDate);
 
   return (
     <div className="medium-content event-detail-page">
@@ -39,8 +52,8 @@ const EventDetail = () => {
                 </div>
                 <div>
                   <div className="event-detail-label">EVENT DATE</div>
-                  <div className="event-detail-value">{event.date}</div>
-                  <div className="event-detail-subvalue">{event.time}</div>
+                  <div className="event-detail-value">{formattedDate}</div>
+                  <div className="event-detail-subvalue">{formattedTime}</div>
                 </div>
               </div>
             </div>

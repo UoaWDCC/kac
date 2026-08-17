@@ -1,6 +1,5 @@
 import api from "./index";
 
-export async function getPastEventBySlug(slug: string) {
-  const res = api.get(`/events/past/${encodeURIComponent(slug)}`);
-  return res.then((response) => response.data);
+export function getEventById(id: string) {
+  return api.get(`/events/${encodeURIComponent(id)}`).then((r) => r.data);
 }

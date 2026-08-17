@@ -26,21 +26,19 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
     }
 
     const tag = normaliseOptionalString(req.body.tag);
-    const galleryKey = normaliseOptionalString(req.body.galleryKey);
 
-    if (!tag && !galleryKey) {
-      res.status(400).json({
-        message:
-          "Either tag (slot mode) or galleryKey (gallery mode) is required",
-      });
+    if (!tag) {
+      res.status(400).json({ message: "tag is required" });
       return;
     }
 
-    // Slot mode: no galleryKey means one image per slot tag. Replace older slot images for that tag.
-    if (!galleryKey && tag) {
+    const galleryKey = req.body.galleryKey === "true";
+
+    // galleryKey === false: slot mode — replace existing slot image for this tag.
+    if (!galleryKey) {
       const existingSlotImages = await Image.find({
         tag,
-        galleryKey: null,
+        galleryKey: false,
       }).lean();
 
       for (const existing of existingSlotImages) {
@@ -180,10 +178,30 @@ export const getImageByTag: RequestHandler = async (req, res) => {
   }
 };
 
-export const getImagesByGalleryKey: RequestHandler = async (req, res) => {
+export const getGalleryImagesByTagAndYear: RequestHandler = async (req, res) => {
   try {
-    const galleryKey = req.params.galleryKey;
-    const images = await Image.find({ galleryKey })
+    const tag = typeof req.query.tag === "string" ? req.query.tag : null;
+    const yearStr = typeof req.query.year === "string" ? req.query.year : null;
+
+    if (!tag || !yearStr) {
+      res.status(400).json({ message: "tag and year query params are required" });
+      return;
+    }
+
+    const year = Number.parseInt(yearStr, 10);
+    if (Number.isNaN(year)) {
+      res.status(400).json({ message: "year must be a number" });
+      return;
+    }
+
+    const start = new Date(Date.UTC(year, 0, 1));
+    const end = new Date(Date.UTC(year + 1, 0, 1));
+
+    const images = await Image.find({
+      tag,
+      galleryKey: true,
+      uploadedAt: { $gte: start, $lt: end },
+    })
       .sort({ uploadedAt: 1 })
       .lean();
 
@@ -211,7 +229,7 @@ export const getImagesByGalleryKey: RequestHandler = async (req, res) => {
 
     res.json(mappedImages);
   } catch (error) {
-    console.error("Error fetching images by gallery key:", error);
+    console.error("Error fetching gallery images:", error);
     res.status(500).json({ message: "Failed to fetch gallery images" });
   }
 };

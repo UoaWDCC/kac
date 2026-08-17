@@ -90,47 +90,17 @@ export const deleteEvent: RequestHandler = async (req, res, _next) => {
   }
 };
 
-const isEventPast = (event: {
-  status?: string | null;
-  datetime?: Date | string;
-}) => {
-  const status =
-    typeof event.status === "string" ? event.status.toLowerCase() : null;
-  if (status === "past") return true;
-
-  if (!event.datetime) return false;
-
-  const parsed = new Date(event.datetime);
-  if (Number.isNaN(parsed.getTime())) return false;
-
-  return parsed < new Date();
-};
-
-export const getPastEventBySlug: RequestHandler = async (req, res) => {
+export const getEventById: RequestHandler = async (req, res) => {
   try {
-    const event = await Event.findOne({ slug: req.params.slug }).lean();
-
+    const event = await Event.findById(req.params.id).lean();
     if (!event) {
-      res.status(404).json({ message: "Past event not found." });
+      res.status(404).json({ message: "Event not found." });
       return;
     }
-
-    if (!isEventPast(event)) {
-      res.status(404).json({ message: "Past event not found." });
-      return;
-    }
-
-    res.status(200).json({
-      ...event,
-      id: event._id,
-      isPast: true,
-    });
+    res.status(200).json({ ...event, id: event._id });
   } catch (err) {
-    console.error("[!] Error fetching past event:", err);
-    res.status(500).json({
-      message: "Error fetching past event.",
-      error: err,
-    });
+    console.error("[!] Error fetching event by id:", err);
+    res.status(500).json({ message: "Error fetching event.", error: err });
   }
 };
 

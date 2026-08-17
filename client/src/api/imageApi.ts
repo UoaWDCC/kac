@@ -5,20 +5,16 @@ export function getImageByTag(tag: string) {
   return res.then((response) => response.data);
 }
 
-export function getImagesByGalleryKey(galleryKey: string) {
-  const res = api.get(`/images/gallery/${encodeURIComponent(galleryKey)}`);
+export function getGalleryImages(tag: string, year: number) {
+  const res = api.get("/images/gallery", { params: { tag, year } });
   return res.then((response) => response.data);
 }
 
-export function postImage(file: File, tag: string, galleryKey?: string | null) {
+export function postImage(file: File, tag: string, galleryKey = false) {
   const formData = new FormData();
   formData.append("image", file);
-  if (tag) {
-    formData.append("tag", tag);
-  }
-  if (galleryKey) {
-    formData.append("galleryKey", galleryKey);
-  }
+  formData.append("tag", tag);
+  formData.append("galleryKey", String(galleryKey));
 
   const res = api.post("/images", formData);
   return res.then((response) => response.data);

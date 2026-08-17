@@ -10,7 +10,7 @@ const eventSchema = new Schema(
     datetime: { type: Date, required: true },
     capacity: {
       type: Number,
-      required: false,  
+      required: false,
       min: [1, "Capacity must be at least 1."],
       validate: {
         validator: Number.isInteger,

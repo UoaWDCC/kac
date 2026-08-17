@@ -8,6 +8,7 @@ export interface Event {
   description: string;
   datetime: string;
   capacity?: number;
+  releaseDatetime?: string;
 }
 
 // Persisted event, as returned by the server

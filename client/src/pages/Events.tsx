@@ -7,6 +7,9 @@ import { getAllEvents } from "../api/eventsApi";
 import type { EventsByTime } from "../api/eventsApi";
 import { useAuth } from "../auth/useAuth";
 
+// TODO: Unreleased events are only visible to admins.
+// Currently, on an admin POV, there is no visual differnce between released and unreleased events.
+
 const Events = () => {
   const { role } = useAuth();
   const [events, setEvents] = useState<EventsByTime>({

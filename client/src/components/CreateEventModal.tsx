@@ -11,6 +11,7 @@ const emptyForm = {
   description: "",
   datetime: "",
   capacity: "",
+  releaseDatetime: "",
 };
 
 interface CreateEventModalProps {
@@ -67,6 +68,16 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
       description,
       datetime: new Date(form.datetime).toISOString(),
     };
+
+    if (form.releaseDatetime.trim() !== "") {
+      const release = new Date(form.releaseDatetime);
+      const eventDate = new Date(form.datetime);
+      if (release.getTime() > eventDate.getTime()) {
+        setError("Release date can't be after the event itself.");
+        return;
+      }
+      payload.releaseDatetime = release.toISOString();
+    }
 
     if (form.capacity.trim() !== "") {
       const parsed = Number(form.capacity);
@@ -163,6 +174,22 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
                   onChange={handleChange}
                   className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                 />
+              </div>
+
+              <div>
+                <label className="text-lg font-bold">
+                  Release Date &amp; Time
+                </label>
+                <input
+                  type="datetime-local"
+                  name="releaseDatetime"
+                  value={form.releaseDatetime}
+                  onChange={handleChange}
+                  className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
+                />
+                <span className="text-xs text-gray-400">
+                  Leave blank to make the event public immediately.
+                </span>
               </div>
 
               {error && (

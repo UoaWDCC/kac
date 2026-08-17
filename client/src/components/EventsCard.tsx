@@ -43,7 +43,7 @@ const EventsCard: React.FC<EventProps> = ({ title, imageUrl, datetime }) => {
     // Eventually navigate to the extended page
     // For now, we'll just log the intent
     console.log(`Navigating to extended page for event as ${role}`);
-    navigate(`/Events/`);
+    navigate(`/events/`);
   };
 
   return (

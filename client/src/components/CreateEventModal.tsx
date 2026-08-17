@@ -30,10 +30,17 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
     setError(null);
   };
 
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
+  const [mouseDownOnOverlay, setMouseDownOnOverlay] = useState(false);
+
+  const handleOverlayMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setMouseDownOnOverlay(e.target === e.currentTarget);
+  };
+
+  const handleOverlayMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (mouseDownOnOverlay && e.target === e.currentTarget) {
       closeModal();
     }
+    setMouseDownOnOverlay(false);
   };
 
   const handleChange = (
@@ -97,7 +104,8 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
 
       {isOpen && (
         <div
-          onClick={handleOverlayClick}
+          onMouseDown={handleOverlayMouseDown}
+          onMouseUp={handleOverlayMouseUp}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
         >
           <div className="w-full max-w-md rounded-4xl bg-white p-10 shadow-[10px_10px] shadow-yellow-medium">

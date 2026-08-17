@@ -1,5 +1,6 @@
 import { Event } from "../model/event";
 import { RequestHandler } from "express";
+import { isAdminRequest } from "../middlewares/adminGuard";
 
 export const addEvent: RequestHandler = async (req, res, next) => {
   try {
@@ -66,6 +67,16 @@ export const getEventById: RequestHandler = async (req, res, _next) => {
     if (!event) {
       return res.status(404).json({ message: "Event not found." });
     }
+
+    const isAdmin = await isAdminRequest(req);
+    const isReleased =
+      !event.releaseDatetime || event.releaseDatetime <= new Date();
+
+    if (!isAdmin && !isReleased) {
+      // Unreleased events do not exists to non-admins.
+      return res.status(404).json({ message: "Event not found." });
+    }
+
     res.status(200).json(event);
   } catch (err) {
     console.error("[!] Error fetching event: ", err);
@@ -78,8 +89,16 @@ export const getEventById: RequestHandler = async (req, res, _next) => {
 
 export const getAllEvents: RequestHandler = async (req, res, _next) => {
   try {
-    const events = await Event.find().sort({ datetime: 1 }).lean();
     const now = new Date();
+    const isAdmin = await isAdminRequest(req);
+
+    const filter = isAdmin
+      ? {}
+      : {
+          $or: [{ releaseDatetime: null }, { releaseDatetime: { $lte: now } }],
+        };
+
+    const events = await Event.find(filter).sort({ datetime: 1 }).lean();
 
     const mappedEvents = events.reduce<{ upcoming: any[]; past: any[] }>(
       (acc, event) => {

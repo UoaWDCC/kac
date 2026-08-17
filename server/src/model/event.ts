@@ -9,6 +9,7 @@ const eventSchema = new Schema(
     imageUrl: { type: String, required: true },
     datetime: { type: Date, required: true },
     capacity: { type: Number, required: false },
+    releaseDatetime: { type: Date, required: false }, // if unset, event is released immediately
   },
   { versionKey: false }
 );

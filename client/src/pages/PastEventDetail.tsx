@@ -39,12 +39,11 @@ const PastEventDetail = ({ event, gallery }: PastEventDetailProps) => {
   const closeViewer = () => setActiveIndex(null);
 
   const parsedDate = new Date(event.datetime);
-  const formattedDate =
-    !Number.isNaN(parsedDate.getTime())
-      ? new Intl.DateTimeFormat("en-NZ", {
-          dateStyle: "long",
-        }).format(parsedDate)
-      : "Date TBC";
+  const formattedDate = !Number.isNaN(parsedDate.getTime())
+    ? new Intl.DateTimeFormat("en-NZ", {
+        dateStyle: "long",
+      }).format(parsedDate)
+    : "Date TBC";
 
   return (
     <div className="past-event-page">
@@ -99,4 +98,3 @@ const PastEventDetail = ({ event, gallery }: PastEventDetailProps) => {
 };
 
 export default PastEventDetail;
-

@@ -224,13 +224,18 @@ export const getImageByTag: RequestHandler = async (req, res) => {
   }
 };
 
-export const getGalleryImagesByTagAndYear: RequestHandler = async (req, res) => {
+export const getGalleryImagesByTagAndYear: RequestHandler = async (
+  req,
+  res
+) => {
   try {
     const tag = typeof req.query.tag === "string" ? req.query.tag : null;
     const yearStr = typeof req.query.year === "string" ? req.query.year : null;
 
     if (!tag || !yearStr) {
-      res.status(400).json({ message: "tag and year query params are required" });
+      res
+        .status(400)
+        .json({ message: "tag and year query params are required" });
       return;
     }
 

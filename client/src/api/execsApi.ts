@@ -35,3 +35,8 @@ export async function editExec(
   const res = api.put(`/executives/${id}`, execData);
   return res.then((response) => response.data);
 }
+
+export async function deleteExec(id: string) {
+  const res = api.delete(`/executives/${id}`);
+  return res.then((response) => response.data);
+}

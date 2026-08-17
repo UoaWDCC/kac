@@ -3,8 +3,9 @@ import "../style/image_block/ImageBlock.css";
 
 import { Pencil, Trash2 } from "lucide-react";
 
-import api from "../api";
+import { deleteExec } from "../api/execsApi";
 import { useAuth } from "../auth/useAuth";
+import { useState } from "react";
 
 /** No access to images currently, use placeholder */
 const EXEC_IMG = "src/images/exec-placeholder.png";
@@ -33,6 +34,7 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
   execRole,
 }) => {
   const { role } = useAuth();
+  const [deleting, setDeleting] = useState(false);
 
   return (
     <div className="executive-card">
@@ -57,10 +59,18 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
               type="button"
               className="image-block__delete-btn"
               onClick={async () => {
-                await api.delete(`/executives/${id}`);
-                onDelete();
+                setDeleting(true);
+                try {
+                  await deleteExec(id);
+                  onDelete();
+                } catch (err) {
+                  console.error("Failed to delete executive:", err);
+                } finally {
+                  setDeleting(false);
+                }
               }}
-              title="Delete Executive"
+              title={deleting ? "Deleting..." : "Delete Executive"}
+              disabled={deleting}
             >
               <Trash2 size={17} />
             </button>

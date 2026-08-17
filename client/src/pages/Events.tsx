@@ -6,7 +6,7 @@ import "../style/events.css";
 import EventsCard from "../components/EventsCard.tsx";
 import CreateEventModal from "../components/CreateEventModal.tsx";
 import { getAllEvents } from "../api/eventsApi";
-import type { EventsByTime } from "../api/eventsApi";
+import type { CreatedEvent, EventsByTime } from "../api/eventsApi";
 import { useAuth } from "../auth/useAuth";
 
 const Events = () => {
@@ -17,6 +17,10 @@ const Events = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleCreated = (event: CreatedEvent) => {
+    setEvents((prev) => ({ ...prev, upcoming: [event, ...prev.upcoming] }));
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -57,7 +61,7 @@ const Events = () => {
       {error && <p className="text-red-600">{error}</p>}
 
       <div className="event-dashboard">
-        {role === "admin" && <CreateEventModal />}
+        {role === "admin" && <CreateEventModal onCreated={handleCreated} />}
 
         {!loading &&
           upcomingEvents.map((event) => (

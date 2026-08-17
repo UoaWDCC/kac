@@ -1,5 +1,4 @@
 import Executives from "../components/Executives.tsx";
-import kacoTitle from "../images/kaco-title.png";
 
 import "../style/common.css";
 import "../style/about.css";

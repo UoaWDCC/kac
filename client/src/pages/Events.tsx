@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
+
 import "../style/common.css";
 import "../style/events.css";
-// import EventsCard from "../components/EventsCard.tsx"; todo: delete file?
+
 import CreateEventModal from "../components/CreateEventModal.tsx";
+import { ImageBlock } from "../components/image_block/ImageBlock";
+
 import { getAllEvents } from "../api/eventsApi";
 import type { CreatedEvent, EventsByTime } from "../api/eventsApi";
-import { useAuth } from "../auth/useAuth";
 
+import { useAuth } from "../auth/useAuth";
 import { Link } from "react-router-dom";
 
-import { ImageBlock } from "../components/image_block/ImageBlock";
 import kacoTitle from "../images/kaco-title.png";
 
 // TODO: Unreleased events are only visible to admins.

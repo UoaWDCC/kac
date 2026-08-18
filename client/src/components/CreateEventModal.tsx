@@ -106,7 +106,7 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
       <button
         type="button"
         onClick={openModal}
-        className="events-pill-button !mb-2"
+        className="events-pill-button !mb-6.5"
       >
         <Plus size={16} aria-hidden="true" />
         <p>Add Event</p>

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "../style/common.css";
 import "../style/events.css";
-import EventsCard from "../components/EventsCard.tsx";
+// import EventsCard from "../components/EventsCard.tsx"; todo: delete file?
 import CreateEventModal from "../components/CreateEventModal.tsx";
 import { getAllEvents } from "../api/eventsApi";
 import type { CreatedEvent, EventsByTime } from "../api/eventsApi";
@@ -16,22 +16,30 @@ import kacoTitle from "../images/kaco-title.png";
 // Currently, on an admin POV, there is no visual differnce between released and unreleased events.
 
 interface EventsByYear {
-  year: number;
+  year: number | null;
   events: CreatedEvent[];
 }
 
 function groupPastEventsByYear(events: CreatedEvent[]): EventsByYear[] {
-  const grouped = new Map<number, CreatedEvent[]>();
+  const grouped = new Map<number | null, CreatedEvent[]>();
 
   for (const event of events) {
-    const year = new Date(event.datetime).getFullYear();
+    const parsedYear = new Date(event.datetime).getFullYear();
+    const year = Number.isNaN(parsedYear) ? null : parsedYear;
+
     if (!grouped.has(year)) grouped.set(year, []);
     grouped.get(year)!.push(event);
   }
 
+  // Sort events within each year by datetime, descending; null/invalid years are sorted last
   return Array.from(grouped.entries())
     .map(([year, events]) => ({ year, events }))
-    .sort((a, b) => b.year - a.year);
+    .sort((a, b) => {
+      if (a.year === null && b.year === null) return 0;
+      if (a.year === null) return 1;
+      if (b.year === null) return -1;
+      return b.year - a.year;
+    });
 }
 
 const Events = () => {
@@ -86,8 +94,6 @@ const Events = () => {
   );
 
   return (
-    // <CreateEventModal onCreated={handleCreated} />
-
     <div className="events-page">
       <title>Kiwi Asian Club - Events</title>
 
@@ -106,65 +112,78 @@ const Events = () => {
         </div>
       </section>
 
+      {error && <p className="text-red-600">{error}</p>}
+
+      {/** Upcoming Concerts **/}
       <section className="events-content events-section">
-        <div className="flex flex-row justify-between items-center mb-4">
+        <div className="flex flex-row justify-between items-center">
           <h2 className="events-section-title">Upcoming Events:</h2>
           {role === "admin" && <CreateEventModal onCreated={handleCreated} />}
         </div>
 
         <div className="events-featured-grid">
-          {events.upcoming.map((event) => (
-            <article className="events-feature-card" key={event._id}>
-              <div className="events-feature-image">
-                <ImageBlock
-                  pageKey={event.imageUrl}
-                  alt={event.title}
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div className="events-feature-details">
-                <div>
-                  <p className="events-card-eyebrow">{event.datetime}</p>
-                  <h3 className="events-feature-title">{event.title}</h3>
-                </div>
-                <Link
-                  className="events-pill-button"
-                  to={`/events/${event._id}`}
-                >
-                  See Details
-                  <span aria-hidden="true">&gt;</span>
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {pastByYear.map((section) => (
-        <section className="events-content events-section" key={section.year}>
-          <h2 className="events-section-title">{section.year} Past Events:</h2>
-          <div className="events-past-grid">
-            {section.events.map((event) => (
-              <article className="events-past-card" key={event._id}>
-                <div className="events-past-image">
+          {!loading &&
+            events.upcoming.map((event) => (
+              <article className="events-feature-card" key={event._id}>
+                <div className="events-feature-image">
                   <ImageBlock
                     pageKey={event.imageUrl}
                     alt={event.title}
                     style={{ width: "100%", height: "100%" }}
                   />
                 </div>
-                <div className="events-past-copy">
-                  <p className="events-card-eyebrow">{event.datetime}</p>
-                  <h3 className="events-past-title">{event.title}</h3>
+                <div className="events-feature-details">
+                  <div>
+                    <p className="events-card-eyebrow">{event.datetime}</p>
+                    <h3 className="events-feature-title">{event.title}</h3>
+                  </div>
+                  <Link
+                    className="events-pill-button"
+                    to={`/events/${event._id}`}
+                  >
+                    See Details
+                    <span aria-hidden="true">&gt;</span>
+                  </Link>
                 </div>
               </article>
             ))}
-          </div>
-          <button className="events-more-button" type="button">
-            More Photos
-          </button>
-        </section>
-      ))}
+        </div>
+      </section>
+
+      {/** Past Concerts by Year**/}
+      {!loading &&
+        pastByYear.map((section) => (
+          <section
+            className="events-content events-section"
+            key={section.year ?? "unknown"}
+          >
+            <h2 className="events-section-title">
+              {section.year !== null
+                ? `${section.year} Past Events:`
+                : "Past Events (Date Unknown):"}
+            </h2>
+            <div className="events-past-grid">
+              {section.events.map((event) => (
+                <article className="events-past-card" key={event._id}>
+                  <div className="events-past-image">
+                    <ImageBlock
+                      pageKey={event.imageUrl}
+                      alt={event.title}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </div>
+                  <div className="events-past-copy">
+                    <p className="events-card-eyebrow">{event.datetime}</p>
+                    <h3 className="events-past-title">{event.title}</h3>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <button className="events-more-button" type="button">
+              More Photos
+            </button>
+          </section>
+        ))}
     </div>
   );
 };

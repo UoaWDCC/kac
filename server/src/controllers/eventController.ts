@@ -1,23 +1,6 @@
 import { Event } from "../model/event";
 import { RequestHandler } from "express";
 
-const normaliseSlug = (value: string) => {
-  let slug = value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-");
-
-  while (slug.startsWith("-")) {
-    slug = slug.slice(1);
-  }
-
-  while (slug.endsWith("-")) {
-    slug = slug.slice(0, -1);
-  }
-
-  return slug;
-};
-
 const normaliseStatus = (value?: string) => {
   if (!value) return null;
 
@@ -26,12 +9,6 @@ const normaliseStatus = (value?: string) => {
 
 export const addEvent: RequestHandler = async (req, res, next) => {
   try {
-    if (typeof req.body.slug === "string" && req.body.slug.trim()) {
-      req.body.slug = normaliseSlug(req.body.slug);
-    } else if (typeof req.body.title === "string" && req.body.title.trim()) {
-      req.body.slug = normaliseSlug(req.body.title);
-    }
-
     req.body.status = normaliseStatus(req.body.status);
 
     if (req.body.datetime) {

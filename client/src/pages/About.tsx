@@ -1,5 +1,4 @@
 import Executives from "../components/Executives.tsx";
-import kacoTitle from "../images/kaco-title.png";
 
 import "../style/common.css";
 import "../style/about.css";
@@ -11,14 +10,18 @@ import "../style/about.css";
 const About = () => {
   return (
     <div className="about-page">
-      <title>Kiwi Asian Club - About Us</title>
+      <title>Kiwi Asian Club</title>
       {/** Title **/}
-      <section className="section h1 about-title-section">
-        <div className="about-title-group">
-          <img className="about-title-kaco" src={kacoTitle} alt="Kaco mascot" />
-          <h1 className="title-text font-sans">MEET &nbsp;THE &nbsp;EXECS</h1>
-        </div>
-      </section>
+      <div className="pt-12 flex flex-row pl-24">
+        <img
+          src="src/images/kaco-title.png"
+          alt="Mascot"
+          className="absolute w-[16vw]"
+        />
+        <h1 className="w-full uppercase m-0 text-[7.4vw]! font-bold pl-40 2xl:pl-52 pt-8 2xl:pt-16">
+          Meet the Execs
+        </h1>
+      </div>
 
       {/** Executive Cards */}
       <section>

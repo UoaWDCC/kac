@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import SponsorCard from "../components/SponsorCard";
 import { getSponsors } from "../api/sponsorsApi";
+import "../style/sponsors.css";
+import { ImageBlock } from "../components/image_block/ImageBlock";
 
 interface Sponsor {
   name: string;
@@ -10,9 +13,13 @@ interface Sponsor {
   code?: string;
 }
 
+type Tab = "all" | "cbd" | "newmarket" | "other";
+
 const Sponsors = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState<Tab>("all");
 
   useEffect(() => {
     getSponsors()
@@ -29,87 +36,222 @@ const Sponsors = () => {
     );
   }
 
-  const gridStyle = {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    gap: "2rem",
-    padding: "2rem",
-  } as const;
+  const sorted = [...sponsors].sort((a, b) => a.name.localeCompare(b.name));
+  const filtered = sorted.filter((s) => {
+    const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase());
+    const matchesTab = activeTab === "all" || s.category === activeTab;
+    return matchesSearch && matchesTab;
+  });
 
-  const cbd = sponsors.filter((s) => s.category === "cbd");
-  const newmarket = sponsors.filter((s) => s.category === "newmarket");
-  const other = sponsors.filter((s) => s.category === "other");
+  const cbd = filtered.filter((s) => s.category === "cbd");
+  const newmarket = filtered.filter((s) => s.category === "newmarket");
+  const other = filtered.filter((s) => s.category === "other");
+
+  const tabs: { label: string; value: Tab }[] = [
+    { label: "All", value: "all" },
+    { label: "Auckland CBD", value: "cbd" },
+    { label: "Newmarket", value: "newmarket" },
+    { label: "Other", value: "other" },
+  ];
+
+  const marqueeSponsors = [...sorted, ...sorted];
 
   return (
-    <div style={{ textAlign: "center", backgroundColor: "#faf3d1" }}>
-      {/* HERO SECTION */}
-      <section style={{ padding: "2rem 0" }}>
-        <h1>Sponsors</h1>
-        <div style={{ display: "flex", justifyContent: "center", gap: "2rem" }}>
-          <a href="#CBD">CBD Sponsors</a>
-          <a href="#Newmarket">Newmarket Sponsors</a>
-          <a href="#Other">Other Sponsors</a>
-        </div>
-      </section>
+    <div className="sponsors-page">
+      {/* HERO - centered */}
+      <div className="sponsors-centered-content">
+        <section className="sponsors-hero-section">
+          <div className="sponsors-hero-inner">
+            <img
+              src="src/images/kaco-title.png"
+              alt="Mascot"
+              className="sponsors-hero-mascot"
+            />
+            <h1 className="sponsors-title">OUR SPONSORS</h1>
+          </div>
+        </section>
+      </div>
 
-      {/* MEMBERSHIP BLURB */}
-      <section style={{ backgroundColor: "#ffffff", padding: "2rem" }}>
+      {/* MARQUEE + OVERLAPPING MEMBERSHIP CARD */}
+      <div className="sponsors-marquee-shell">
+        <div className="sponsors-marquee-track-wrap">
+          <div className="sponsors-marquee-track">
+            {marqueeSponsors.map((s, i) => {
+              const pageKey =
+                "sponsor-" + s.name.toLowerCase().replace(/\s+/g, "-");
+              return (
+                <div
+                  key={i}
+                  style={{
+                    backgroundColor: "#ffffff",
+                    borderRadius: "15px",
+                    width: "120px",
+                    height: "120px",
+                    boxShadow: "5px 5px 0px var(--color-yellow-medium)",
+                    flexShrink: 0,
+                    padding: "0.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                  }}
+                >
+                  <ImageBlock
+                    pageKey={pageKey}
+                    alt={s.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      borderRadius: "8px",
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <img
           src="src/images/membership_card.png"
           alt="Membership Card"
-          style={{ maxWidth: "150px" }}
+          className="sponsors-membership-card"
         />
-        <h2>
-          Present your 2026 KAC membership card to our sponsors and receive
-          these amazing deals!
-        </h2>
-      </section>
+      </div>
 
-      {/* CBD SPONSOR SECTION */}
-      <section id="CBD">
-        <h2 style={{ marginTop: "2rem" }}>CBD Sponsors</h2>
-        <div style={gridStyle}>
-          {cbd.map((s, index) => (
-            <SponsorCard
-              key={index}
-              name={s.name}
-              description={s.deal}
-              location={s.address}
-            />
-          ))}
+      {/* MEMBERSHIP BLURB */}
+      <section className="sponsors-blurb">
+        <div className="sponsors-centered-content">
+          <p>
+            Present your 2026 KAC membership card to our sponsors and receive
+            these amazing deals!
+          </p>
         </div>
       </section>
 
-      {/* NEWMARKET SPONSOR SECTION */}
-      <section id="Newmarket">
-        <h2 style={{ marginTop: "2rem" }}>Newmarket Sponsors</h2>
-        <div style={gridStyle}>
-          {newmarket.map((s, index) => (
-            <SponsorCard
-              key={index}
-              name={s.name}
-              description={s.deal}
-              location={s.address}
+      {/* REST OF CONTENT - centered */}
+      <div className="sponsors-centered-content sponsors-content-shell">
+        {/* SEARCH BAR */}
+        <section className="sponsors-search-section">
+          <div className="sponsors-search-wrap">
+            <input
+              type="text"
+              placeholder="Search for your favourite sponsors..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="sponsors-search-input"
             />
-          ))}
-        </div>
-      </section>
+            <span className="sponsors-search-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </span>
+          </div>
+        </section>
 
-      {/* OTHER SPONSOR SECTION */}
-      <section id="Other">
-        <h2 style={{ marginTop: "2rem" }}>Other Sponsors</h2>
-        <div style={gridStyle}>
-          {other.map((s, index) => (
-            <SponsorCard
-              key={index}
-              name={s.name}
-              description={s.deal + (s.code ? ` (Code: ${s.code})` : "")}
-              location={s.address}
-            />
-          ))}
-        </div>
-      </section>
+        {/* TABS */}
+        <section className="sponsors-tabs-section">
+          <div className="sponsors-tab-group">
+            {tabs.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => {
+                  setActiveTab(tab.value);
+                }}
+                className={`sponsors-tab-button ${
+                  activeTab === tab.value ? "active" : ""
+                }`}
+              >
+                <span>{tab.label}</span>
+                {activeTab === tab.value && (
+                  <motion.span
+                    layoutId="sponsor-pill"
+                    transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                    className="sponsors-tab-pill"
+                    style={{
+                      position: "absolute",
+                      inset: "2px",
+                      borderRadius: "999px",
+                      backgroundColor: "var(--color-yellow-dark)",
+                      zIndex: 0,
+                    }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* CBD */}
+        {(activeTab === "all" || activeTab === "cbd") && cbd.length > 0 && (
+          <section id="cbd">
+            <h2 className="sponsors-section-title">Auckland CBD</h2>
+            <div className="sponsors-grid">
+              {cbd.map((s) => (
+                <SponsorCard
+                  key={s.name}
+                  name={s.name}
+                  description={s.deal}
+                  location={s.address
+                    .replace(/, Auckland CBD$/i, "")
+                    .replace(/, Auckland City$/i, "")}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* NEWMARKET */}
+        {(activeTab === "all" || activeTab === "newmarket") &&
+          newmarket.length > 0 && (
+            <section id="newmarket">
+              <h2 className="sponsors-section-title">Newmarket</h2>
+              <div className="sponsors-grid">
+                {newmarket.map((s) => (
+                  <SponsorCard
+                    key={s.name}
+                    name={s.name}
+                    description={s.deal}
+                    location={s.address.replace(/, Newmarket$/i, "")}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+        {/* OTHER */}
+        {(activeTab === "all" || activeTab === "other") && other.length > 0 && (
+          <section id="other">
+            <h2 className="sponsors-section-title">Other</h2>
+            <div className="sponsors-grid">
+              {other.map((s, index) => (
+                <SponsorCard
+                  key={index}
+                  name={s.name}
+                  description={s.deal + (s.code ? ` (Code: ${s.code})` : "")}
+                  location={s.address}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* NO RESULTS */}
+        {filtered.length === 0 && (
+          <p className="sponsors-empty-state">No sponsors found.</p>
+        )}
+      </div>
     </div>
   );
 };

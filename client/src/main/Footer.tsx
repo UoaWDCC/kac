@@ -1,3 +1,4 @@
+import { ImageBlock } from "../components/image_block/ImageBlock";
 import "../style/common.css";
 import "../style/footer.css";
 
@@ -35,9 +36,9 @@ const Footer = () => {
               <h3>Sponsors</h3>
             </a>
 
-            <a href="/sponsors">CBD Sponsors</a>
-            <a href="/sponsors">New Market Sponsors</a>
-            <a href="/sponsors">Other Sponsors</a>
+            <a href="/sponsors">CBD</a>
+            <a href="/sponsors">New Market</a>
+            <a href="/sponsors">Other</a>
           </div>
 
           <div className="footer-column">
@@ -64,7 +65,7 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <div className="footer-logo">
-            <img src="src/images/kaco-title.png" alt="Club logo" />
+            <ImageBlock pageKey="logo" alt="KAC Logo" />
             <span>KAC</span>
           </div>
           <p>© 2026 Kiwi Asian Club</p>

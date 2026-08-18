@@ -107,7 +107,10 @@ const Events = () => {
       </section>
 
       <section className="events-content events-section">
-        <h2 className="events-section-title">Upcoming Events:</h2>
+        <div className="flex flex-row justify-between items-center mb-4">
+          <h2 className="events-section-title">Upcoming Events:</h2>
+          {role === "admin" && <CreateEventModal onCreated={handleCreated} />}
+        </div>
 
         <div className="events-featured-grid">
           {events.upcoming.map((event) => (

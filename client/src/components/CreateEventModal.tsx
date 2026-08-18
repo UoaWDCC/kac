@@ -106,11 +106,10 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
       <button
         type="button"
         onClick={openModal}
-        className="events-card flex! flex-col! items-center justify-center cursor-pointer
-        transition duration-300 hover:!bg-yellow-medium hover:!border-yellow-medium hover:!text-blue-medium"
+        className="events-pill-button !mb-2"
       >
-        <Plus className="size-8" />
-        <p>Add New Event</p>
+        <Plus size={16} aria-hidden="true" />
+        <p>Add Event</p>
       </button>
 
       {isOpen && (

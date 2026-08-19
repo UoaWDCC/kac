@@ -122,7 +122,9 @@ const Events = () => {
       {!loading && (
         <section className="events-content events-section">
           <div className="flex flex-row justify-between items-center">
-            <h2 className="events-section-title">Upcoming Events:</h2>
+            {events.upcoming.length > 0 && (
+              <h2 className="events-section-title">Upcoming Events:</h2>
+            )}
             {role === "admin" && <CreateEventModal onCreated={handleCreated} />}
           </div>
 

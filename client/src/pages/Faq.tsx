@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Minus } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import toast from "react-hot-toast";
 
 import "../style/faq.css";
@@ -208,7 +208,12 @@ const Faq = () => {
   return (
     <div className="faq-container">
       <section className="faq-title-wrap">
-        <h1 className="faq-title">FAQ</h1>
+        <h1 className="faq-title">OUR FAQs</h1>
+        <img
+          className="faq-title-image"
+          src="src/images/kaco-title.png"
+          alt="Club mascot"
+        />
       </section>
       {isAdmin ? (
         <section className="faq-admin-panel" aria-label="FAQ admin controls">
@@ -298,11 +303,20 @@ const Faq = () => {
                       </button>
                     </span>
                   ) : null}
-                  {isOpen ? (
-                    <Minus className="faq-item-icon" aria-hidden="true" />
-                  ) : (
-                    <Plus className="faq-item-icon" aria-hidden="true" />
-                  )}
+                  <button
+                    className="faq-item-icon-button"
+                    type="button"
+                    aria-label={isOpen ? "Collapse answer" : "Expand answer"}
+                    aria-expanded={isOpen}
+                    aria-controls={answerId}
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                  >
+                    {isOpen ? (
+                      <ChevronUp aria-hidden="true" />
+                    ) : (
+                      <ChevronDown aria-hidden="true" />
+                    )}
+                  </button>
                 </span>
               </div>
               {isOpen ? (

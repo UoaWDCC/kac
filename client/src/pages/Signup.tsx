@@ -144,8 +144,9 @@ const SignUpForm = () => {
 
       const isStudentRequired = sanitized === "The University of Auckland";
       const isFacultyRequired = sanitized !== "None";
+      const isFacultyDisabled = !sanitized || sanitized === "None";
 
-      if (!isFacultyRequired || !sanitized) {
+      if (isFacultyDisabled) {
         setIsFacultyDropdownOpen(false);
       }
 
@@ -257,7 +258,8 @@ const SignUpForm = () => {
       }
     }
 
-    const isFacultyRequired = normalizedForm.university !== "None";
+    const isFacultyRequired =
+      normalizedForm.university && normalizedForm.university !== "None";
     if (isFacultyRequired && normalizedForm.faculties.length === 0) {
       missing.faculties = true;
     }
@@ -387,7 +389,7 @@ const SignUpForm = () => {
   const isStudentRequired = form.university === "The University of Auckland";
   const isStudentFieldsDisabled = !isStudentRequired;
 
-  const isFacultyRequired = form.university !== "None";
+  const isFacultyRequired = form.university && form.university !== "None";
   const isFacultyDisabled = !form.university || form.university === "None";
 
   const stripeElementOptions = {

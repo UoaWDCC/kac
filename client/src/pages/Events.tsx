@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { formatEventDateTime } from "../util/formatDate";
+
 import "../style/common.css";
 import "../style/events.css";
 
@@ -117,40 +119,44 @@ const Events = () => {
       {error && <p className="text-red-600">{error}</p>}
 
       {/** Upcoming Concerts **/}
-      <section className="events-content events-section">
-        <div className="flex flex-row justify-between items-center">
-          <h2 className="events-section-title">Upcoming Events:</h2>
-          {role === "admin" && <CreateEventModal onCreated={handleCreated} />}
-        </div>
+      {!loading && (
+        <section className="events-content events-section">
+          <div className="flex flex-row justify-between items-center">
+            <h2 className="events-section-title">Upcoming Events:</h2>
+            {role === "admin" && <CreateEventModal onCreated={handleCreated} />}
+          </div>
 
-        <div className="events-featured-grid">
-          {!loading &&
-            events.upcoming.map((event) => (
-              <article className="events-feature-card" key={event._id}>
-                <div className="events-feature-image">
-                  <ImageBlock
-                    pageKey={event.imageUrl}
-                    alt={event.title}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </div>
-                <div className="events-feature-details">
-                  <div>
-                    <p className="events-card-eyebrow">{event.datetime}</p>
-                    <h3 className="events-feature-title">{event.title}</h3>
+          <div className="events-featured-grid">
+            {!loading &&
+              events.upcoming.map((event) => (
+                <article className="events-feature-card" key={event._id}>
+                  <div className="events-feature-image">
+                    <ImageBlock
+                      pageKey={event.imageUrl}
+                      alt={event.title}
+                      style={{ width: "100%", height: "100%" }}
+                    />
                   </div>
-                  <Link
-                    className="events-pill-button"
-                    to={`/events/${event._id}`}
-                  >
-                    See Details
-                    <span aria-hidden="true">&gt;</span>
-                  </Link>
-                </div>
-              </article>
-            ))}
-        </div>
-      </section>
+                  <div className="events-feature-details">
+                    <div>
+                      <p className="events-card-eyebrow">
+                        {formatEventDateTime(event.datetime)}
+                      </p>
+                      <h3 className="events-feature-title">{event.title}</h3>
+                    </div>
+                    <Link
+                      className="events-pill-button"
+                      to={`/events/${event._id}`}
+                    >
+                      See Details
+                      <span aria-hidden="true">&gt;</span>
+                    </Link>
+                  </div>
+                </article>
+              ))}
+          </div>
+        </section>
+      )}
 
       {/** Past Concerts by Year**/}
       {!loading &&
@@ -175,7 +181,9 @@ const Events = () => {
                     />
                   </div>
                   <div className="events-past-copy">
-                    <p className="events-card-eyebrow">{event.datetime}</p>
+                    <p className="events-card-eyebrow">
+                      {formatEventDateTime(event.datetime)}
+                    </p>
                     <h3 className="events-past-title">{event.title}</h3>
                   </div>
                 </article>

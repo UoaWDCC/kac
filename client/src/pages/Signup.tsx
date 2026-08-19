@@ -653,7 +653,7 @@ const SignUpForm = () => {
                     )}
                   </div>
                   <p className="signup-field-subtext">
-                    E.g. UOA UPI Format: abcd123. Enter "N/A" if not applicable
+                    E.g. UOA UPI Format: abcd123.
                   </p>
                   <input
                     type="text"
@@ -682,7 +682,7 @@ const SignUpForm = () => {
                     )}
                   </div>
                   <p className="signup-field-subtext">
-                    E.g. 123456789. If not applicable, please enter "N/A"
+                    E.g. 123456789.
                   </p>
                   <input
                     type="text"

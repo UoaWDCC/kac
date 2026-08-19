@@ -1,16 +1,211 @@
 .faq-container {
-  padding-top: 45px;
-  padding-bottom: 45px;
+  background-color: var(--color-yellow-light);
+  color: var(--color-blue-medium);
+  min-height: 85vh;
+  padding: 3rem 1.5rem 4rem;
+}
+
+.faq-title-wrap {
+  margin: 0 auto 3.5rem;
+  max-width: 58rem;
 }
 
 .faq-title {
+  font-size: clamp(3rem, 9vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
   text-align: center;
-  font-weight: bold;
-  font-size: 60px;
-  padding-bottom: 160px;
+  text-transform: uppercase;
 }
 
 .faq-list {
-  margin-left: 400px;
-  margin-right: 400px;
+  margin: 0 auto;
+  max-width: 58rem;
+}
+
+.faq-item {
+  border-top: 1px solid rgba(11, 45, 74, 0.2);
+}
+
+.faq-item:last-child {
+  border-bottom: 1px solid rgba(11, 45, 74, 0.2);
+}
+
+.faq-item-trigger {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1.7rem 0.25rem;
+}
+
+.faq-item-toggle {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  font-family: inherit;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 700;
+  text-align: left;
+  width: auto;
+  flex: 1;
+}
+
+.faq-item-question {
+  display: block;
+  max-width: 100%;
+}
+
+.faq-item-right-controls {
+  align-items: center;
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 0.75rem;
+}
+
+.faq-item-admin-actions {
+  display: inline-flex;
+  gap: 0.45rem;
+}
+
+.faq-item-admin-button {
+  background-color: transparent;
+  border: 1px solid rgba(11, 45, 74, 0.35);
+  border-radius: 9999px;
+  color: var(--color-blue-medium);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  width: auto;
+}
+
+.faq-item-admin-button:hover,
+.faq-item-admin-button:focus-visible {
+  background-color: rgba(11, 45, 74, 0.08);
+}
+
+.faq-item-admin-button-delete {
+  border-color: rgba(153, 27, 27, 0.45);
+  color: #991b1b;
+}
+
+.faq-item-admin-button-delete:hover,
+.faq-item-admin-button-delete:focus-visible {
+  background-color: rgba(153, 27, 27, 0.08);
+}
+
+.faq-item-icon {
+  height: 2rem;
+  opacity: 0.8;
+  width: 2rem;
+}
+
+.faq-item-answer {
+  font-size: 1.2rem;
+  line-height: 1.55;
+  margin: -0.35rem 0 1.7rem;
+  max-width: 90%;
+  opacity: 0.95;
+  padding-right: 2.75rem;
+}
+
+.faq-item-toggle:hover,
+.faq-item-toggle:focus-visible {
+  color: var(--color-blue-light);
+}
+
+.faq-item-answer p {
+  margin: 0 0 0.8rem;
+}
+
+.faq-item-answer p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-item-answer ul,
+.faq-item-answer ol {
+  margin: 0.7rem 0;
+  padding-left: 1.5rem;
+}
+
+.faq-admin-panel {
+  margin: 0 auto 2rem;
+  max-width: 58rem;
+  border: 1px solid rgba(11, 45, 74, 0.18);
+  border-radius: 0.8rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.faq-admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.faq-admin-title {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.faq-admin-form {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.faq-admin-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.faq-admin-input {
+  border: 1px solid rgba(11, 45, 74, 0.3);
+  border-radius: 0.45rem;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.faq-admin-actions {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.faq-admin-button {
+  background-color: var(--color-blue-medium);
+  border: 1px solid var(--color-blue-medium);
+  border-radius: 9999px;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.45rem 0.95rem;
+  width: auto;
+}
+
+.faq-admin-button:hover,
+.faq-admin-button:focus-visible {
+  background-color: var(--color-blue-light);
+  border-color: var(--color-blue-light);
+}
+
+.faq-admin-button-secondary {
+  background-color: transparent;
+  border-color: rgba(11, 45, 74, 0.45);
+  color: var(--color-blue-medium);
+}
+
+.faq-admin-button-secondary:hover,
+.faq-admin-button-secondary:focus-visible {
+  background-color: rgba(11, 45, 74, 0.08);
+  border-color: rgba(11, 45, 74, 0.45);
 }

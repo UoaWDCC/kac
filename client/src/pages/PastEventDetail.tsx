@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { PastEventLightbox } from "../components/PastEventLightbox";
 import "../style/common.css";
 import "../style/past-event-detail.css";
@@ -48,7 +49,9 @@ const PastEventDetail = ({ event, gallery }: PastEventDetailProps) => {
   return (
     <div className="past-event-page">
       <div className="past-event-content">
-        <p className="past-event-back-link">{"<"} Back to all events</p>
+        <Link to="/events" className="past-event-back-link">
+          {"<"} Back to all events
+        </Link>
         <p className="past-event-subtitle">{formattedDate}</p>
         <h1 className="past-event-title">{event.title}</h1>
 

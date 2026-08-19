@@ -21,26 +21,30 @@ interface ImageBlockProps {
 export function ImageBlock({ pageKey, style, alt }: Readonly<ImageBlockProps>) {
   const { role } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
-  const loadImage = async () => {
-    try {
-      setLoading(true);
-      const data = await getImageByTag(pageKey);
-      setImageData(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadImage();
-  }, [pageKey]);
+    let active = true;
 
-  if (loading) return <p>Loading...</p>;
+    setImageData(null);
+    const loadImage = async () => {
+      try {
+        const data = await getImageByTag(pageKey);
+
+        if (active) {
+          setImageData(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    void loadImage();
+
+    return () => {
+      active = false;
+    };
+  }, [pageKey]);
 
   return (
     <>
@@ -63,7 +67,14 @@ export function ImageBlock({ pageKey, style, alt }: Readonly<ImageBlockProps>) {
           onClose={() => setShowModal(false)}
           onSuccess={() => {
             setShowModal(false);
-            loadImage();
+            void (async () => {
+              try {
+                const data = await getImageByTag(pageKey);
+                setImageData(data);
+              } catch (err) {
+                console.error(err);
+              }
+            })();
           }}
           tag={pageKey}
         />

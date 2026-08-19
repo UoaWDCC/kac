@@ -15,6 +15,10 @@
   --color-grey-medium: #5a7388;
 }
 
+html {
+  background-color: var(--color-yellow-light);
+}
+
 body {
   color: var(--color-blue-medium);
   font-family: var(--font-sans);

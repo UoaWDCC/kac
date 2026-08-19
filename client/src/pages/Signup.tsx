@@ -681,9 +681,7 @@ const SignUpForm = () => {
                       <span className="signup-required-badge">Required</span>
                     )}
                   </div>
-                  <p className="signup-field-subtext">
-                    E.g. 123456789.
-                  </p>
+                  <p className="signup-field-subtext">E.g. 123456789.</p>
                   <input
                     type="text"
                     name="studentId"

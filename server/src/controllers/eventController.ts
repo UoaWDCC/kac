@@ -1,5 +1,6 @@
 import { Event } from "../model/event";
 import { RequestHandler } from "express";
+import { isAdminRequest } from "../middlewares/adminGuard";
 
 const normaliseStatus = (value?: string) => {
   if (!value) return null;
@@ -11,35 +12,8 @@ export const addEvent: RequestHandler = async (req, res, next) => {
   try {
     req.body.status = normaliseStatus(req.body.status);
 
-    if (req.body.datetime) {
-      const d = new Date(req.body.datetime);
-      const year = d.getUTCFullYear();
-      const month = d.getUTCMonth();
-      const dateVal = d.getUTCDate();
-
-      // Start with 11:59 PM NZST represented in UTC (23:59 - 12h = 11:59 UTC)
-      const candidate = new Date(Date.UTC(year, month, dateVal, 11, 59, 59));
-
-      // Convert to NZ time to check the local hour.
-      // In daylight savings (NZDT, UTC+13), 11:59 UTC becomes 12:59 AM next day (hour 0 instead of 23).
-      const parts = new Intl.DateTimeFormat("en-US", {
-        timeZone: "Pacific/Auckland",
-        hour: "numeric",
-        hourCycle: "h23",
-      }).formatToParts(candidate);
-      const nzHour = Number.parseInt(
-        parts.find((p) => p.type === "hour")?.value || "23",
-        10
-      );
-
-      // If daylight savings pushed the hour past 11 PM, roll UTC back 1 hour to keep it at 11:59 PM NZDT
-      if (nzHour !== 23) {
-        candidate.setUTCHours(candidate.getUTCHours() - 1);
-      }
-      req.body.datetime = candidate;
-    }
-
     const newEvent = new Event(req.body);
+    newEvent.imageUrl = `event-image:${newEvent._id}`;
     const savedEvent = await newEvent.save();
     res.status(201).json(savedEvent);
   } catch (err) {
@@ -73,6 +47,16 @@ export const getEventById: RequestHandler = async (req, res, _next) => {
     if (!event) {
       return res.status(404).json({ message: "Event not found." });
     }
+
+    const isAdmin = await isAdminRequest(req);
+    const isReleased =
+      !event.releaseDatetime || event.releaseDatetime <= new Date();
+
+    if (!isAdmin && !isReleased) {
+      // Unreleased events do not exists to non-admins.
+      return res.status(404).json({ message: "Event not found." });
+    }
+
     res.status(200).json(event);
   } catch (err) {
     console.error("[!] Error fetching event: ", err);
@@ -83,10 +67,28 @@ export const getEventById: RequestHandler = async (req, res, _next) => {
   }
 };
 
+// Helper function: format a Date object to a string with YYYY-MM-DD format in NZ timezone
+function getNZDateString(date: Date): string {
+  // en-CA formats as YYYY-MM-DD
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Pacific/Auckland",
+  }).format(date);
+}
+
 export const getAllEvents: RequestHandler = async (req, res, _next) => {
   try {
-    const events = await Event.find().lean();
     const now = new Date();
+    const isAdmin = await isAdminRequest(req);
+
+    const filter = isAdmin
+      ? {}
+      : {
+          $or: [{ releaseDatetime: null }, { releaseDatetime: { $lte: now } }],
+        };
+
+    const events = await Event.find(filter).sort({ datetime: 1 }).lean();
+
+    const todayNZ = getNZDateString(now);
 
     const mappedEvents = events.reduce<{ upcoming: any[]; past: any[] }>(
       (acc, event) => {
@@ -95,7 +97,17 @@ export const getAllEvents: RequestHandler = async (req, res, _next) => {
           id: event._id,
         };
 
-        if (new Date(event.datetime) >= now) {
+        const eventDate = new Date(event.datetime);
+
+        // Legacy/malformed objects without a usable datetime will be treated as a past event
+        if (Number.isNaN(eventDate.getTime())) {
+          acc.past.push(formattedEvent);
+          return acc;
+        }
+
+        const eventDateNZ = getNZDateString(eventDate);
+
+        if (eventDateNZ >= todayNZ) {
           acc.upcoming.push(formattedEvent);
         } else {
           acc.past.push(formattedEvent);
@@ -105,6 +117,9 @@ export const getAllEvents: RequestHandler = async (req, res, _next) => {
       },
       { upcoming: [], past: [] }
     );
+
+    // reverse the past events to have the most recent first
+    mappedEvents.past.reverse();
 
     res.status(200).json(mappedEvents);
   } catch (err) {

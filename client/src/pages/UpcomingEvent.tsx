@@ -18,8 +18,7 @@ import "../style/common.css";
 
 import { ImageBlock } from "../components/image_block/ImageBlock";
 
-// TODO - Typecheck event
-const UpcomingEvent = (event: any) => {
+const UpcomingEvent = ({ event }: { event: any }) => {
   const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
   const [cardIsOpen, setCardIsOpen] = useState(false);

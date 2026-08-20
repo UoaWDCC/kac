@@ -11,7 +11,7 @@ const Contact = () => {
   const [message, setMessage] = useState("");
 
   // TODO: temp comment out, ui is not ready for testing yet
-  
+
   // const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
   //   e.preventDefault();
 

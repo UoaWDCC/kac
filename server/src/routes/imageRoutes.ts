@@ -1,9 +1,10 @@
 import express from "express";
 import {
-  getCurrentProfileImage,
+  getGalleryImagesByTagAndYear,
   getImageById,
   getImageByTag,
   listImages,
+  getCurrentProfileImage,
   uploadCurrentProfileImage,
   uploadImage,
 } from "../controllers/imageController";
@@ -15,6 +16,7 @@ const router = express.Router();
 router.get("/profile/me", getCurrentProfileImage);
 router.post("/profile/me", upload.single("image"), uploadCurrentProfileImage);
 router.get("/tag/:tag", getImageByTag);
+router.get("/gallery", getGalleryImagesByTagAndYear);
 router.get("/", listImages);
 router.get("/:id", getImageById);
 router.post("/", adminGuard, upload.single("image"), uploadImage);

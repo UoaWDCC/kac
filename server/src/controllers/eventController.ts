@@ -2,8 +2,16 @@ import { Event } from "../model/event";
 import { RequestHandler } from "express";
 import { isAdminRequest } from "../middlewares/adminGuard";
 
+const normaliseStatus = (value?: string) => {
+  if (!value) return null;
+
+  return value.trim().toLowerCase();
+};
+
 export const addEvent: RequestHandler = async (req, res, next) => {
   try {
+    req.body.status = normaliseStatus(req.body.status);
+
     const newEvent = new Event(req.body);
     newEvent.imageUrl = `event-image:${newEvent._id}`;
     const savedEvent = await newEvent.save();

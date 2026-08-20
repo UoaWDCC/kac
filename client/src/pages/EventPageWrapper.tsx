@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getEventById } from "../api/eventApi";
 import { getGalleryImages } from "../api/imageApi";
-import EventDetail from "./EventDetail";
 import PastEventDetail from "./PastEventDetail";
+import UpcomingEvent from "./UpcomingEvent";
 
 type EventRecord = {
   id: string;
@@ -70,7 +70,7 @@ const EventPageWrapper = () => {
   const eventDateTime = new Date(event.datetime);
 
   if (eventDateTime > now) {
-    return <EventDetail event={event} />;
+    return <UpcomingEvent event={event} />;
   }
 
   return <PastEventDetail event={event} gallery={galleryImages} />;

@@ -119,10 +119,16 @@ const UpcomingEvent = ({ event }: { event: any }) => {
       <div className="flex flex-row gap-22 justify-center mx-16 -my-24 py-10">
         {/* Left - Image and Details */}
         <div className="pt-10 mt-24">
-          <img
-            src={event.coverImgUrl}
-            className="max-w-72 2xl:max-w-md h-fit rounded-4xl shadow-[8px_8px] shadow-yellow-medium"
+          <ImageBlock
+            pageKey={event.imageUrl}
             alt={event.title}
+            style={{
+              maxWidth: "24rem",
+              width: "100%",
+              height: "auto",
+              borderRadius: "2rem",
+              boxShadow: "8px 8px #d7b51b",
+            }}
           />
         </div>
         {/* Right - Description & Form */}

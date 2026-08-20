@@ -1,8 +1,16 @@
 import { Event } from "../model/event";
 import { RequestHandler } from "express";
 
+const normaliseStatus = (value?: string) => {
+  if (!value) return null;
+
+  return value.trim().toLowerCase();
+};
+
 export const addEvent: RequestHandler = async (req, res, next) => {
   try {
+    req.body.status = normaliseStatus(req.body.status);
+
     if (req.body.datetime) {
       const d = new Date(req.body.datetime);
       const year = d.getUTCFullYear();
@@ -19,7 +27,7 @@ export const addEvent: RequestHandler = async (req, res, next) => {
         hour: "numeric",
         hourCycle: "h23",
       }).formatToParts(candidate);
-      const nzHour = parseInt(
+      const nzHour = Number.parseInt(
         parts.find((p) => p.type === "hour")?.value || "23",
         10
       );

@@ -33,7 +33,7 @@ const Profile = () => {
             <h1 className="title-text font-sans">MY PROFILE</h1>
           </div>
           <div className="px-4 py-6 sm:px-6 lg:px-8 flex justify-center items-center">
-            <div className="grid w-full max-w-[60rem] gap-8 lg:grid-cols-[18.5rem_minmax(0,1fr)] lg:items-start lg:gap-14">
+            <div className="grid w-full max-w-240 gap-8 lg:grid-cols-[18.5rem_minmax(0,1fr)] lg:items-start lg:gap-14">
               <ProfileSidebar
                 activeSection={activeSection}
                 onSectionChange={setActiveSection}

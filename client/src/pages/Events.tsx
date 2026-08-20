@@ -15,8 +15,6 @@ import type { CreatedEvent, EventsByTime } from "../api/eventsApi";
 import { useAuth } from "../auth/useAuth";
 import { Link } from "react-router-dom";
 
-import kacoTitle from "../images/kaco-title.png";
-
 // TODO: Unreleased events are only visible to admins.
 // Currently, on an admin POV, there is no visual differnce between released and unreleased events.
 

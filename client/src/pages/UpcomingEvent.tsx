@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
@@ -11,8 +11,6 @@ import {
   User,
 } from "lucide-react";
 
-import { getEventById } from "../api/eventsApi";
-import type { Event } from "../api/eventsApi";
 import createTicket from "../api/ticketsApi";
 import { useAuth } from "../auth/useAuth.ts";
 
@@ -20,11 +18,11 @@ import "../style/common.css";
 
 import { ImageBlock } from "../components/image_block/ImageBlock";
 
-const UpcomingEvent = () => {
+// TODO - Typecheck event
+const UpcomingEvent = (event: any) => {
   const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
   const [cardIsOpen, setCardIsOpen] = useState(false);
-  const [event, setEvent] = useState<Event | undefined>(undefined);
   const formRef = useRef<HTMLFormElement | null>(null);
   const cardContainerRef = useRef<HTMLDivElement | null>(null);
   const expiryRef = useRef<HTMLInputElement | null>(null);
@@ -78,15 +76,6 @@ const UpcomingEvent = () => {
     expiryRef.current.setCustomValidity("");
     return true;
   };
-
-  useEffect(() => {
-    if (!id) return;
-    const fetchEvent = async () => {
-      const eventData = await getEventById(id);
-      setEvent(eventData);
-    };
-    fetchEvent();
-  }, [id]);
 
   if (!id || !event)
     return <div className="medium-content">Event not found!</div>;

@@ -2,7 +2,7 @@
   background-color: var(--color-yellow-light);
   color: var(--color-blue-medium);
   min-height: 85vh;
-  padding: 3rem 1.5rem 4rem;
+  padding: 0rem 1.5rem 4rem;
 }
 
 .faq-title-wrap {

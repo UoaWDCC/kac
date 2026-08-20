@@ -4,6 +4,7 @@ import { ImageBlock } from "../components/image_block/ImageBlock";
 import kacoTitle from "../images/kaco-title.png";
 import "../style/common.css";
 import "../style/events.css";
+import PageTitle from "../components/PageTitle";
 
 interface FeaturedEvent {
   id: string;
@@ -83,19 +84,7 @@ const Events = () => {
     <div className="events-page">
       <title>Kiwi Asian Club - Events</title>
       {/** Title **/}
-      <section
-        className="section h1 events-title-section"
-        aria-labelledby="events-title"
-      >
-        <div className="events-title-group">
-          <img
-            className="events-title-kaco"
-            src={kacoTitle}
-            alt="Kaco mascot"
-          />
-          <h1 className="title-text font-sans">OUR EVENTS</h1>
-        </div>
-      </section>
+      <PageTitle title="OUR EVENTS" />
 
       <section className="events-content events-section">
         <h2 className="events-section-title">Upcoming Events:</h2>

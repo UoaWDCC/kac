@@ -13,6 +13,7 @@ import {
 } from "../api/contentApi";
 import mockFaqs from "../placeholders/faqs.json";
 import { useAuth } from "../auth/useAuth";
+import PageTitle from "../components/PageTitle";
 
 interface Faq {
   question: string;
@@ -207,14 +208,7 @@ const Faq = () => {
 
   return (
     <div className="faq-container">
-      <section className="faq-title-wrap">
-        <h1 className="faq-title">OUR FAQs</h1>
-        <img
-          className="faq-title-image"
-          src="src/images/kaco-title.png"
-          alt="Club mascot"
-        />
-      </section>
+      <PageTitle title="OUR FAQs" />
       {isAdmin ? (
         <section className="faq-admin-panel" aria-label="FAQ admin controls">
           <div className="faq-admin-panel-header">

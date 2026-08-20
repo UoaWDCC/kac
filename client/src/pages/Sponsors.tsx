@@ -4,6 +4,7 @@ import SponsorCard from "../components/SponsorCard";
 import { getSponsors } from "../api/sponsorsApi";
 import "../style/sponsors.css";
 import { ImageBlock } from "../components/image_block/ImageBlock";
+import PageTitle from "../components/PageTitle";
 
 interface Sponsor {
   name: string;
@@ -60,19 +61,7 @@ const Sponsors = () => {
   const marqueeSponsors = [...uniqueSponsors, ...uniqueSponsors];
   return (
     <div className="sponsors-page">
-      {/* HERO - centered */}
-      <div className="sponsors-centered-content">
-        <section className="sponsors-hero-section">
-          <div className="sponsors-hero-inner">
-            <img
-              src="src/images/kaco-title.png"
-              alt="Mascot"
-              className="sponsors-hero-mascot"
-            />
-            <h1 className="sponsors-title">OUR SPONSORS</h1>
-          </div>
-        </section>
-      </div>
+      <PageTitle title="OUR SPONSORS" />
 
       {/* MARQUEE + OVERLAPPING MEMBERSHIP CARD */}
       <div className="sponsors-marquee-shell">

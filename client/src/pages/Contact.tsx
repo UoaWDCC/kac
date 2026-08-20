@@ -39,13 +39,13 @@ const Contact = () => {
       <section className="section">
         <h1 className="page-title pl-24">Contact Us</h1>
 
-        <div className="flex flex-row items-center px-24 pb-24">
+        <div className="flex flex-row items-center pl-24 pr-36 pb-24">
           <img src={kaco} className="w-[34rem] shrink-0 relative z-10 -mr-10" />
 
           <div className="bg-white rounded-4xl shadow-[8px_8px] shadow-yellow-medium px-16 py-12 flex-1">
             <form
               // onSubmit={handleSubmit} TODO
-              className="flex flex-col gap-8 font-alan-sans"
+              className="flex flex-col gap-10 font-alan-sans"
             >
               <p className="text-lg font-bold text-blue-medium text-center pb-4">
                 Feel free to let us know any questions you have.
@@ -54,7 +54,7 @@ const Contact = () => {
               </p>
 
               <div className="grid grid-cols-2 gap-20">
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col">
                   <div className="field-header">
                     <label htmlFor="contact-name" className="text-lg font-bold">
                       Your Name
@@ -70,7 +70,7 @@ const Contact = () => {
                   />
                 </div>
 
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col">
                   <div className="field-header">
                     <label
                       htmlFor="contact-email"
@@ -90,7 +90,7 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col">
                 <div className="field-header">
                   <label
                     htmlFor="contact-message"

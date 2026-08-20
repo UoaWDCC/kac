@@ -4,6 +4,7 @@ import { formatEventDateTime } from "../util/formatDate";
 
 import "../style/common.css";
 import "../style/events.css";
+import PageTitle from "../components/PageTitle";
 
 import CreateEventModal from "../components/CreateEventModal.tsx";
 import { ImageBlock } from "../components/image_block/ImageBlock";
@@ -102,19 +103,7 @@ const Events = () => {
       <title>Kiwi Asian Club - Events</title>
 
       {/** Title **/}
-      <section
-        className="section h1 events-title-section"
-        aria-labelledby="events-title"
-      >
-        <div className="events-title-group">
-          <img
-            className="events-title-kaco"
-            src={kacoTitle}
-            alt="Kaco mascot"
-          />
-          <h1 className="title-text font-sans">OUR EVENTS</h1>
-        </div>
-      </section>
+      <PageTitle title="OUR EVENTS" />
 
       {error && <p className="text-red-600">{error}</p>}
 

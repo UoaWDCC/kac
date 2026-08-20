@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Minus } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import toast from "react-hot-toast";
 
 import "../style/faq.css";
@@ -13,6 +13,7 @@ import {
 } from "../api/contentApi";
 import mockFaqs from "../placeholders/faqs.json";
 import { useAuth } from "../auth/useAuth";
+import PageTitle from "../components/PageTitle";
 
 interface Faq {
   question: string;
@@ -92,7 +93,7 @@ const Faq = () => {
   const { role } = useAuth();
   const isAdmin = role === "admin";
   const [faqs, setFaqs] = useState<Faq[]>([]);
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndexes, setOpenIndexes] = useState<number[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [draftQuestion, setDraftQuestion] = useState("");
   const [draftAnswer, setDraftAnswer] = useState("");
@@ -197,7 +198,7 @@ const Faq = () => {
       } else if (editingIndex !== null && editingIndex > index) {
         setEditingIndex(editingIndex - 1);
       }
-      setOpenIndex(null);
+      setOpenIndexes([]);
     } catch {
       toast.error("Failed to delete FAQ.");
     } finally {
@@ -207,9 +208,7 @@ const Faq = () => {
 
   return (
     <div className="faq-container">
-      <section className="faq-title-wrap">
-        <h1 className="faq-title">FAQ</h1>
-      </section>
+      <PageTitle title="OUR FAQs" />
       {isAdmin ? (
         <section className="faq-admin-panel" aria-label="FAQ admin controls">
           <div className="faq-admin-panel-header">
@@ -262,7 +261,7 @@ const Faq = () => {
       ) : null}
       <section className="faq-list" aria-label="Frequently asked questions">
         {faqs.map((item, index) => {
-          const isOpen = openIndex === index;
+          const isOpen = openIndexes.includes(index);
           const answerId = `faq-answer-${index}`;
 
           return (
@@ -273,7 +272,13 @@ const Faq = () => {
                   type="button"
                   aria-expanded={isOpen}
                   aria-controls={answerId}
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  onClick={() =>
+                    setOpenIndexes((current) =>
+                      isOpen
+                        ? current.filter((item) => item != index)
+                        : [...current, index]
+                    )
+                  }
                 >
                   <span className="faq-item-question">{item.question}</span>
                 </button>
@@ -298,11 +303,26 @@ const Faq = () => {
                       </button>
                     </span>
                   ) : null}
-                  {isOpen ? (
-                    <Minus className="faq-item-icon" aria-hidden="true" />
-                  ) : (
-                    <Plus className="faq-item-icon" aria-hidden="true" />
-                  )}
+                  <button
+                    className="faq-item-icon-button"
+                    type="button"
+                    aria-label={isOpen ? "Collapse answer" : "Expand answer"}
+                    aria-expanded={isOpen}
+                    aria-controls={answerId}
+                    onClick={() =>
+                      setOpenIndexes((current) =>
+                        isOpen
+                          ? current.filter((item) => item != index)
+                          : [...current, index]
+                      )
+                    }
+                  >
+                    {isOpen ? (
+                      <ChevronUp aria-hidden="true" />
+                    ) : (
+                      <ChevronDown aria-hidden="true" />
+                    )}
+                  </button>
                 </span>
               </div>
               {isOpen ? (

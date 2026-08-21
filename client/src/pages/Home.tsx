@@ -52,6 +52,7 @@ const Home = () => {
                 style={{
                   width: "40vw",
                 }}
+                editable={true}
               />
             </div>
             <div className="text-2xl ml-[-8vw] w-f  it">
@@ -84,6 +85,7 @@ const Home = () => {
                   height: "auto",
                   borderRadius: "1.6rem",
                 }}
+                editable={true}
               />
             </div>
             <div className="w-4/10 flex flex-col justify-between h-full self-center">
@@ -134,6 +136,7 @@ const Home = () => {
             pageKey="mascot-bg"
             alt="Events"
             style={{ width: "90vw" }}
+            editable={true}
           />
         </div>
         <h2 className="font-monospace text-[2.6rem] font-medium absolute inset-0 justify-self-center top-[20vh] 2xl:top-[22vh]">
@@ -167,6 +170,7 @@ const Home = () => {
                   pageKey="sponsor-1"
                   alt="Sponsor 1"
                   style={{ borderRadius: "1.6rem" }}
+                  editable={true}
                 />
               </div>
             </div>
@@ -179,6 +183,7 @@ const Home = () => {
                   pageKey="sponsor-2"
                   alt="Sponsor 2"
                   style={{ borderRadius: "1.6rem" }}
+                  editable={true}
                 />
               </div>
             </div>
@@ -191,6 +196,7 @@ const Home = () => {
                   pageKey="sponsor-3"
                   alt="Sponsor 3"
                   style={{ borderRadius: "1.6rem" }}
+                  editable={true}
                 />
               </div>
             </div>
@@ -203,6 +209,7 @@ const Home = () => {
                   pageKey="sponsor-4"
                   alt="Sponsor 4"
                   style={{ borderRadius: "1.6rem" }}
+                  editable={true}
                 />
               </div>
             </div>
@@ -218,6 +225,7 @@ const Home = () => {
                   pageKey="sponsor-5"
                   alt="Sponsor 5"
                   style={{ borderRadius: "1.6rem" }}
+                  editable={true}
                 />
               </div>
             </div>
@@ -230,6 +238,7 @@ const Home = () => {
                   pageKey="sponsor-6"
                   alt="Sponsor 6"
                   style={{ borderRadius: "1.6rem" }}
+                  editable={true}
                 />
               </div>
             </div>
@@ -242,6 +251,7 @@ const Home = () => {
                   pageKey="sponsor-7"
                   alt="Sponsor 7"
                   style={{ borderRadius: "1.6rem" }}
+                  editable={true}
                 />
               </div>
             </div>
@@ -254,6 +264,7 @@ const Home = () => {
                   pageKey="sponsor-8"
                   alt="Sponsor 8"
                   style={{ borderRadius: "1.6rem" }}
+                  editable={true}
                 />
               </div>
             </div>

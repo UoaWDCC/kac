@@ -96,6 +96,7 @@ const Sponsors = () => {
                       objectFit: "contain",
                       borderRadius: "8px",
                     }}
+                    editable={true}
                   />
                 </div>
               );
@@ -160,9 +161,8 @@ const Sponsors = () => {
                 onClick={() => {
                   setActiveTab(tab.value);
                 }}
-                className={`sponsors-tab-button ${
-                  activeTab === tab.value ? "active" : ""
-                }`}
+                className={`sponsors-tab-button ${activeTab === tab.value ? "active" : ""
+                  }`}
               >
                 <span>{tab.label}</span>
                 {activeTab === tab.value && (

@@ -53,6 +53,7 @@ const ImageSlider = ({ pageKeys }: ImageSliderProps) => {
                   pageKey={pageKey}
                   alt={pageKey}
                   style={{ borderRadius: "0.8rem" }}
+                  editable={true}
                 />
               </div>
               <h3 className="mt-4 mb-2 justify-self-start! font-sans text-[1.4rem]">

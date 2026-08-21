@@ -21,6 +21,7 @@ const Profile = () => {
             pageKey="mascot-bg"
             alt="Profile Background"
             style={{ width: "90vw" }}
+            editable={true}
           />
         </div>
         <div className="relative z-10 w-full pb-16">

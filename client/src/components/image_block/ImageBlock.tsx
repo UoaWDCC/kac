@@ -16,9 +16,10 @@ interface ImageBlockProps {
   pageKey: string;
   style?: React.CSSProperties;
   alt: string;
+  editable?: boolean;
 }
 
-export function ImageBlock({ pageKey, style, alt }: Readonly<ImageBlockProps>) {
+export function ImageBlock({ pageKey, style, alt, editable }: Readonly<ImageBlockProps>) {
   const { role } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -51,7 +52,7 @@ export function ImageBlock({ pageKey, style, alt }: Readonly<ImageBlockProps>) {
       <div className="image-block" style={style}>
         <img src={imageData?.signedUrl ?? placeholder} alt={alt} />
 
-        {role === "admin" && (
+        {editable && role === "admin" && (
           <button
             className="image-block__edit-btn"
             onClick={() => setShowModal(true)}

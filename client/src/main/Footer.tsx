@@ -65,7 +65,7 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <div className="footer-logo">
-            <ImageBlock pageKey="logo" alt="KAC Logo" />
+            <ImageBlock pageKey="logo" alt="KAC Logo" editable={true} />
             <span>KAC</span>
           </div>
           <p>© 2026 Kiwi Asian Club</p>

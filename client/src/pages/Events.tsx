@@ -126,6 +126,7 @@ const Events = () => {
                       pageKey={event.imageUrl}
                       alt={event.title}
                       style={{ width: "100%", height: "100%" }}
+                      editable={true}
                     />
                   </div>
                   <div className="events-feature-details">
@@ -169,6 +170,7 @@ const Events = () => {
                       pageKey={event.imageUrl}
                       alt={event.title}
                       style={{ width: "100%", height: "100%" }}
+                      editable={true}
                     />
                   </div>
                   <div className="events-past-copy">

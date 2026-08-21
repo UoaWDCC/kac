@@ -129,6 +129,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
               borderRadius: "2rem",
               boxShadow: "8px 8px #d7b51b",
             }}
+            editable={true}
           />
         </div>
         {/* Right - Description & Form */}

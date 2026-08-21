@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getImageByTag } from "../../api/imageApi";
+import { getImageByTag, refreshImageByTag } from "../../api/imageApi";
 import { UploadModal } from "./UploadModal";
 import placeholder from "../../images/placeholder.png";
 import "../../style/image_block/ImageBlock.css";
@@ -70,7 +70,7 @@ export function ImageBlock({ pageKey, style, alt, editable }: Readonly<ImageBloc
             setShowModal(false);
             void (async () => {
               try {
-                const data = await getImageByTag(pageKey);
+                const data = await refreshImageByTag(pageKey);
                 setImageData(data);
               } catch (err) {
                 console.error(err);

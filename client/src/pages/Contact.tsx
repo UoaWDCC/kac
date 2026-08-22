@@ -23,7 +23,7 @@ const Contact = () => {
   const [message, setMessage] = useState("");
 
   const [status, setStatus] = useState<Status>("idle");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setSubmitError] = useState<string | null>(null);
 
   const isSending = status === "sending";
 
@@ -38,13 +38,13 @@ const Contact = () => {
     };
 
     if (!contactData.name || !contactData.email || !contactData.message) {
-      setError("Please fill in every field before sending.");
+      setSubmitError("Please fill in every field before sending.");
       setStatus("error");
       return;
     }
 
     setStatus("sending");
-    setError(null);
+    setSubmitError(null);
 
     try {
       await sendContact(contactData);
@@ -57,7 +57,7 @@ const Contact = () => {
       console.error(error);
 
       // api/index.ts rejects with a plain string, not an Error object.
-      setError(
+      setSubmitError(
         typeof error === "string"
           ? error
           : "We couldn't send your message. Please try again."
@@ -76,10 +76,25 @@ const Contact = () => {
         <div className="flex flex-row items-center pl-24 pr-36 pb-24">
           <img src={kaco} className="w-[34rem] shrink-0 relative z-10 -mr-10" />
 
-          <div className="bg-white rounded-4xl shadow-[8px_8px] shadow-yellow-medium px-16 py-12 flex-1">
+          <div className="bg-white rounded-4xl shadow-[8px_8px] shadow-yellow-medium px-16 py-12 flex-1 grid">
+            <div
+              className={`col-start-1 row-start-1 font-alan-sans flex flex-col items-center justify-center gap-16 ${
+                status === "sent" ? "" : "invisible pointer-events-none"
+              }`}
+            >
+              <p className="text-lg font-bold text-blue-medium text-center">
+                Feel free to let us know any questions you have.
+                <br />
+                We will get back to you as soon as we can!
+              </p>
+              <button className="pill-button">Back Home &gt;</button>
+            </div>
+
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col gap-10 font-alan-sans"
+              className={`col-start-1 row-start-1 flex flex-col gap-10 font-alan-sans ${
+                status === "sent" ? "invisible pointer-events-none" : ""
+              }`}
             >
               <p className="text-lg font-bold text-blue-medium text-center pb-4">
                 Feel free to let us know any questions you have.

@@ -2,6 +2,7 @@ import "../style/common.css";
 import "../style/about.css";
 
 import { useMemo, useEffect, useState } from "react";
+import { X } from "lucide-react";
 
 import NewExecModal from "./NewExecModal";
 import EditExecModal from "./EditExecModal";
@@ -164,7 +165,6 @@ const Executives = () => {
                 imageURL={exec.imageURL}
                 displayName={exec.displayName}
                 execRole={exec.execRole}
-                description={exec.description}
                 onDelete={loadExecs}
                 onOpen={() => setSelectedExec(exec)}
                 onEdit={() => setEditingExec(exec)}
@@ -183,34 +183,64 @@ const Executives = () => {
             aria-label="Close executive preview"
           />
 
-          <div className="exec-preview-modal">
-            <button
-              type="button"
-              className="exec-preview-close"
+          <div className="relative w-[64vw] h-[80vh] max-h-150 max-w-254 bg-yellow-dark z-1 overflow-hidden flex rounded-4xl shadow-[10px_10px] shadow-yellow-medium">
+            <div
+              className="absolute right-8 top-10 z-10 flex size-10 items-center justify-center rounded-full text-blue-medium transition hover:scale-120 hover:cursor-pointer"
               onClick={() => setSelectedExec(null)}
               aria-label="Close executive preview"
             >
-              ×
-            </button>
+              <X size={40} strokeWidth={2} />
+            </div>
 
-            <div className="exec-preview-layout">
-              <section className="exec-preview-image-section">
-                <img
-                  className="exec-preview-image"
-                  src={selectedExec.imageURL || EXEC_IMG}
-                  alt={selectedExec.displayName}
-                />
-              </section>
+            <div className="flex flex-row gap-4 text-blue-medium items-center w-full p-12">
+              <img
+                className="flex rounded-4xl h-full"
+                src={selectedExec.imageURL || EXEC_IMG}
+                alt={selectedExec.displayName}
+              />
 
-              <section className="exec-preview-copy-section">
-                <p className="exec-preview-role">{selectedExec.execRole}</p>
-                <h3 className="exec-preview-name">
-                  {selectedExec.displayName}
-                </h3>
-                <p className="exec-preview-description">
-                  {selectedExec.description}
-                </p>
-              </section>
+              <div className="flex flex-col gap-4 2xl:gap-10 px-4 py-2 h-full justify-end 2xl:justify-center">
+                <div className="flex flex-col gap-1">
+                  <h4 className="font-monospace font-semibold text-[20px] uppercase pl-1">
+                    {selectedExec.execRole}
+                  </h4>
+                  <h3 className="text-4xl uppercase">
+                    {selectedExec.displayName}
+                  </h3>
+                </div>
+                <div className="flex flex-col gap-2 2xl:gap-8 font-alan-sans">
+                  <div>
+                    <p className="text-lg! 2xl:text-xl!">
+                      <strong>Ethnicity:</strong> {selectedExec.ethnicity}
+                    </p>
+                    <p className="text-lg! 2xl:text-xl!">
+                      <strong>Degree:</strong> {selectedExec.degree}
+                    </p>
+                    <p className="text-lg! 2xl:text-xl!">
+                      <strong>MBTI:</strong> {selectedExec.mbti}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-lg! 2xl:text-xl!">
+                      <strong>Fun Fact:</strong> {selectedExec.fact}
+                    </p>
+                    <p className="text-lg! 2xl:text-xl!">
+                      <strong>Favourite KAC Sponsor:</strong>{" "}
+                      {selectedExec.sponsor}
+                    </p>
+                    <p className="text-lg! 2xl:text-xl!">
+                      <strong>Green Flag:</strong> {selectedExec.greenFlag}
+                    </p>
+                    <p className="text-lg! 2xl:text-xl!">
+                      <strong>Red Flag:</strong> {selectedExec.redFlag}
+                    </p>
+                    <p className="text-lg! 2xl:text-xl!">
+                      <strong>Fav Emojis:</strong> {selectedExec.emojis}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -10,7 +10,6 @@ const executiveSchema = new Schema(
     roleGroup: { type: String, required: true },
     ethnicity: { type: String, required: true },
     degree: { type: String, required: true },
-    description: { type: String, required: true },
     mbti: { type: String, required: true },
     fact: { type: String, required: true },
     sponsor: { type: String, required: true },

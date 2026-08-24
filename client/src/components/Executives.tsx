@@ -194,7 +194,7 @@ const Executives = () => {
 
             <div className="flex flex-row gap-8 text-blue-medium items-center w-full p-12">
               <img
-                className="flex rounded-4xl h-full"
+                className="flex rounded-4xl h-full max-h-[64vh]"
                 src={selectedExec.imageURL || EXEC_IMG}
                 alt={selectedExec.displayName}
               />

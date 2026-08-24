@@ -211,32 +211,32 @@ const Executives = () => {
                 <div className="flex flex-col gap-2 2xl:gap-8 font-alan-sans">
                   <div>
                     <p className="text-md! 2xl:text-xl!">
-                      <strong>Ethnicity:</strong> {selectedExec.ethnicity}
+                      <strong>🌏 Ethnicity:</strong> {selectedExec.ethnicity}
                     </p>
                     <p className="text-md! 2xl:text-xl!">
-                      <strong>Degree:</strong> {selectedExec.degree}
+                      <strong>🎓 Degree:</strong> {selectedExec.degree}
                     </p>
                     <p className="text-md! 2xl:text-xl!">
-                      <strong>MBTI:</strong> {selectedExec.mbti}
+                      <strong>🌟 MBTI:</strong> {selectedExec.mbti}
                     </p>
                   </div>
 
                   <div>
                     <p className="text-md! 2xl:text-xl!">
-                      <strong>Fun Fact:</strong> {selectedExec.fact}
+                      <strong>🧩 Fun Fact:</strong> {selectedExec.fact}
                     </p>
                     <p className="text-md! 2xl:text-xl!">
-                      <strong>Favourite KAC Sponsor:</strong>{" "}
+                      <strong>💰 Favourite KAC Sponsor:</strong>{" "}
                       {selectedExec.sponsor}
                     </p>
                     <p className="text-md! 2xl:text-xl!">
-                      <strong>Green Flag:</strong> {selectedExec.greenFlag}
+                      <strong>✅ Green Flag:</strong> {selectedExec.greenFlag}
                     </p>
                     <p className="text-md! 2xl:text-xl!">
-                      <strong>Red Flag:</strong> {selectedExec.redFlag}
+                      <strong>🚩 Red Flag:</strong> {selectedExec.redFlag}
                     </p>
                     <p className="text-md! 2xl:text-xl!">
-                      <strong>Fav Emojis:</strong> {selectedExec.emojis}
+                      <strong>🤩 Fav Emojis:</strong> {selectedExec.emojis}
                     </p>
                   </div>
                 </div>

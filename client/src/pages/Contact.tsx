@@ -158,7 +158,15 @@ const Contact = () => {
                 />
               </div>
 
-              <div className="flex justify-center mt-4">
+              <div className="flex flex-col items-center">
+                <p
+                  id="contact-error"
+                  className="form-error mb-4"
+                  aria-live="polite"
+                >
+                  {error}
+                </p>
+
                 <button type="submit" className="pill-button">
                   Submit &gt;
                 </button>

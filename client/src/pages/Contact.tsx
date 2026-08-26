@@ -25,11 +25,9 @@ const Contact = () => {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setSubmitError] = useState<string | null>(null);
 
-  const isSending = status === "sending";
-
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isSending) return;
+    if (status === "sending") return;
 
     const contactData = {
       name: name.trim(),
@@ -167,7 +165,11 @@ const Contact = () => {
                   {error}
                 </p>
 
-                <button type="submit" className="pill-button">
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="pill-button"
+                >
                   Submit &gt;
                 </button>
               </div>

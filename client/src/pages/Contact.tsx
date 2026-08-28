@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 import "../style/common.css";
 
@@ -170,7 +171,14 @@ const Contact = () => {
                   disabled={status === "sending"}
                   className="pill-button"
                 >
-                  Submit &gt;
+                  {status === "sending" ? (
+                    <div className="flex gap-2 items-center justify-center">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending...
+                    </div>
+                  ) : (
+                    <div>Submit &gt;</div>
+                  )}
                 </button>
               </div>
             </form>

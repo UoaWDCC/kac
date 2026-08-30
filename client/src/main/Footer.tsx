@@ -5,10 +5,18 @@ import "../style/footer.css";
 const Footer = () => {
   return (
     <div className="footer-wrapper">
-      <img
-        src="src/images/kaco-title.png"
-        className="footer-image"
+      <ImageBlock
+        pageKey="footer"
         alt="Club mascot"
+        style={{
+          position: "absolute",
+          width: "300px",
+          top: "-150px",
+          left: "90%",
+          transform: "translateX(-50%) rotate(-15deg)",
+          zIndex: 1
+        }}
+        editable={true}
       />
 
       <footer className="footer">

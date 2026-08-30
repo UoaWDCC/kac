@@ -136,7 +136,7 @@ const Home = () => {
             pageKey="mascot-bg"
             alt="Events"
             style={{ width: "90vw" }}
-            editable={true}
+            editable={false}
           />
         </div>
         <h2 className="font-monospace text-[2.6rem] font-medium absolute inset-0 justify-self-center top-[20vh] 2xl:top-[22vh]">

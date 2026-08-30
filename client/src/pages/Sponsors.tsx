@@ -104,10 +104,21 @@ const Sponsors = () => {
           </div>
         </div>
 
-        <img
-          src="src/images/membership_card.png"
+        {/* CSS taken from sponsor.css formerly sponsors-membership-card */}
+        <ImageBlock
+          pageKey="membership-card"
           alt="Membership Card"
-          className="sponsors-membership-card"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            maxWidth: "130px",
+            zIndex: "2",
+            border: "3px solid var(--color-blue-medium)",
+            borderRadius: "12px",
+          }}
+          editable={false}
         />
       </div>
 
@@ -243,7 +254,7 @@ const Sponsors = () => {
           <p className="sponsors-empty-state">No sponsors found.</p>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

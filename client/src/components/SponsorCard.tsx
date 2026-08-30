@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ImageBlock } from "./image_block/ImageBlock.tsx";
+import { sponsorPageKey } from "../util/sponsors";
 
 type Props = {
   name: string;
@@ -9,7 +10,7 @@ type Props = {
 
 const SponsorCard = ({ name, description, location }: Props) => {
   const [hovered, setHovered] = useState(false);
-  const pageKey = "sponsor-" + name.toLowerCase().replace(/\s+/g, "-");
+  const pageKey = sponsorPageKey(name);
 
   return (
     <div style={{ width: "100%", textAlign: "center" }}>

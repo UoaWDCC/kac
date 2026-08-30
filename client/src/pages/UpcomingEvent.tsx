@@ -165,48 +165,54 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                   <div className="flex flex-row gap-16 justify-center mb-4">
                     <div className="flex flex-col gap-2 items-center">
                       <div
-                        className={`${currentStep == 1 ? "bg-blue-medium" : "bg-gray-400"
-                          } text-white rounded-full size-8 text-center`}
+                        className={`${
+                          currentStep == 1 ? "bg-blue-medium" : "bg-gray-400"
+                        } text-white rounded-full size-8 text-center`}
                       >
                         <p className="pt-0.5">1</p>
                       </div>
                       <p
-                        className={`${currentStep == 1
-                          ? "text-blue-medium"
-                          : "text-gray-400"
-                          } font-alan-sans text-[0.8rem]!`}
+                        className={`${
+                          currentStep == 1
+                            ? "text-blue-medium"
+                            : "text-gray-400"
+                        } font-alan-sans text-[0.8rem]!`}
                       >
                         Event Info
                       </p>
                     </div>
                     <div className="flex flex-col gap-2 items-center">
                       <div
-                        className={`${currentStep == 2 ? "bg-blue-medium" : "bg-gray-400"
-                          } text-white rounded-full size-8 text-center`}
+                        className={`${
+                          currentStep == 2 ? "bg-blue-medium" : "bg-gray-400"
+                        } text-white rounded-full size-8 text-center`}
                       >
                         <p className="pt-0.5">2</p>
                       </div>
                       <p
-                        className={`${currentStep == 2
-                          ? "text-blue-medium"
-                          : "text-gray-400"
-                          } font-alan-sans text-[0.8rem]!`}
+                        className={`${
+                          currentStep == 2
+                            ? "text-blue-medium"
+                            : "text-gray-400"
+                        } font-alan-sans text-[0.8rem]!`}
                       >
                         Details
                       </p>
                     </div>
                     <div className="flex flex-col gap-2 items-center">
                       <div
-                        className={`${currentStep == 3 ? "bg-blue-medium" : "bg-gray-400"
-                          } text-white rounded-full size-8 text-center`}
+                        className={`${
+                          currentStep == 3 ? "bg-blue-medium" : "bg-gray-400"
+                        } text-white rounded-full size-8 text-center`}
                       >
                         <p className="pt-0.5">3</p>
                       </div>
                       <p
-                        className={`${currentStep == 3
-                          ? "text-blue-medium"
-                          : "text-gray-400"
-                          } font-alan-sans text-[0.8rem]!`}
+                        className={`${
+                          currentStep == 3
+                            ? "text-blue-medium"
+                            : "text-gray-400"
+                        } font-alan-sans text-[0.8rem]!`}
                       >
                         Confirmation
                       </p>
@@ -370,9 +376,9 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                         Total:{" "}
                         {event.price != null
                           ? new Intl.NumberFormat("en-NZ", {
-                            style: "currency",
-                            currency: "NZD",
-                          }).format(event.price)
+                              style: "currency",
+                              currency: "NZD",
+                            }).format(event.price)
                           : ""}
                       </p>
                     </div>

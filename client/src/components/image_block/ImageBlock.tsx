@@ -19,7 +19,12 @@ interface ImageBlockProps {
   editable?: boolean;
 }
 
-export function ImageBlock({ pageKey, style, alt, editable }: Readonly<ImageBlockProps>) {
+export function ImageBlock({
+  pageKey,
+  style,
+  alt,
+  editable,
+}: Readonly<ImageBlockProps>) {
   const { role } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
   const [showModal, setShowModal] = useState(false);

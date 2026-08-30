@@ -144,10 +144,11 @@ export default function ProfileSidebar({
                 />
               </span>
               <span
-                className={`flex min-h-9 items-center rounded-full px-4 text-base font-bold leading-none transition ${isActive
+                className={`flex min-h-9 items-center rounded-full px-4 text-base font-bold leading-none transition ${
+                  isActive
                     ? "bg-yellow-dark"
                     : "bg-transparent group-hover:bg-yellow-medium"
-                  }`}
+                }`}
               >
                 {item.label}
                 {item.value === "attended" && (

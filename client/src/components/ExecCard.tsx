@@ -15,7 +15,6 @@ interface ExecProps {
   imageURL: string;
   displayName: string;
   execRole: string;
-  description: string;
 }
 
 interface ExecCardProps {

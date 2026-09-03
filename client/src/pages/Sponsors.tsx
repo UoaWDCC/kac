@@ -92,7 +92,7 @@ const Sponsors = () => {
                       objectFit: "contain",
                       borderRadius: "8px",
                     }}
-                    editable={true}
+                    editable={false}
                   />
                 </div>
               );

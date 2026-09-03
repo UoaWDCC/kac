@@ -129,6 +129,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
               borderRadius: "2rem",
               boxShadow: "8px 8px #d7b51b",
             }}
+            editable={true}
           />
         </div>
         {/* Right - Description & Form */}
@@ -408,6 +409,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                       height: "auto",
                       rotate: "-10deg",
                     }}
+                    editable={true}
                   />
                   <p className="mt-2 font-alan-sans text-[1rem]! text-center w-[70%]">
                     Thank you for signing up for this event, we look forward to

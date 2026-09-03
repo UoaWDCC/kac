@@ -31,7 +31,11 @@ const EventDetail = ({ event }: EventDetailProps) => {
       <div className="event-detail-layout">
         <div className="event-main-content">
           <div className="event-thumbnail">
-            <ImageBlock pageKey={`event-${event.id}`} alt={event.title} />
+            <ImageBlock
+              pageKey={`event-${event.id}`}
+              alt={event.title}
+              editable={true}
+            />
           </div>
 
           <div className="event-card">

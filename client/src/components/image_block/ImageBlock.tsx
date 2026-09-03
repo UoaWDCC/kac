@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getImageByTag } from "../../api/imageApi";
+import { getImageByTag, refreshImageByTag } from "../../api/imageApi";
 import { UploadModal } from "./UploadModal";
 import placeholder from "../../images/placeholder.png";
 import "../../style/image_block/ImageBlock.css";
@@ -16,9 +16,15 @@ interface ImageBlockProps {
   pageKey: string;
   style?: React.CSSProperties;
   alt: string;
+  editable?: boolean;
 }
 
-export function ImageBlock({ pageKey, style, alt }: Readonly<ImageBlockProps>) {
+export function ImageBlock({
+  pageKey,
+  style,
+  alt,
+  editable,
+}: Readonly<ImageBlockProps>) {
   const { role } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -51,7 +57,7 @@ export function ImageBlock({ pageKey, style, alt }: Readonly<ImageBlockProps>) {
       <div className="image-block" style={style}>
         <img src={imageData?.signedUrl ?? placeholder} alt={alt} />
 
-        {role === "admin" && (
+        {editable && role === "admin" && (
           <button
             className="image-block__edit-btn"
             onClick={() => setShowModal(true)}
@@ -69,7 +75,7 @@ export function ImageBlock({ pageKey, style, alt }: Readonly<ImageBlockProps>) {
             setShowModal(false);
             void (async () => {
               try {
-                const data = await getImageByTag(pageKey);
+                const data = await refreshImageByTag(pageKey);
                 setImageData(data);
               } catch (err) {
                 console.error(err);

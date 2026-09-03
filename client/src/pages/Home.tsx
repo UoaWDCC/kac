@@ -85,6 +85,7 @@ const Home = () => {
                 style={{
                   width: "40vw",
                 }}
+                editable={true}
               />
             </div>
             <div className="text-2xl ml-[-8vw] w-f  it">
@@ -117,6 +118,7 @@ const Home = () => {
                   height: "auto",
                   borderRadius: "1.6rem",
                 }}
+                editable={true}
               />
             </div>
             <div className="w-4/10 flex flex-col justify-between h-full self-center">
@@ -167,6 +169,7 @@ const Home = () => {
             pageKey="mascot-bg"
             alt="Events"
             style={{ width: "90vw" }}
+            editable={false}
           />
         </div>
         <h2 className="font-monospace text-[2.6rem] font-medium absolute inset-0 justify-self-center top-[20vh] 2xl:top-[22vh]">

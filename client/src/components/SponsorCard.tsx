@@ -42,9 +42,11 @@ const SponsorCard = ({ name, description, location }: Props) => {
             objectFit: "contain",
             borderRadius: "1rem",
           }}
+          editable={true}
         />
 
-        {/* DARK BLUE OVERLAY ON HOVER */}
+        {/* DARK
+         BLUE OVERLAY ON HOVER */}
         <div
           style={{
             position: "absolute",

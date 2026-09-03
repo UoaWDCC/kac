@@ -5,10 +5,18 @@ import "../style/footer.css";
 const Footer = () => {
   return (
     <div className="footer-wrapper">
-      <img
-        src="src/images/kaco-title.png"
-        className="footer-image"
+      <ImageBlock
+        pageKey="footer"
         alt="Club mascot"
+        style={{
+          position: "absolute",
+          width: "300px",
+          top: "-150px",
+          left: "90%",
+          transform: "translateX(-50%) rotate(-15deg)",
+          zIndex: 1,
+        }}
+        editable={true}
       />
 
       <footer className="footer">
@@ -65,7 +73,7 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <div className="footer-logo">
-            <ImageBlock pageKey="logo" alt="KAC Logo" />
+            <ImageBlock pageKey="logo" alt="KAC Logo" editable={false} />
             <span>KAC</span>
           </div>
           <p>© 2026 Kiwi Asian Club</p>

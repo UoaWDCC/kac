@@ -10,15 +10,6 @@ body {
   margin-top: 100px;
 }
 
-.footer-image {
-  position: absolute;
-  width: 300px;
-  top: -150px;
-  left: 90%;
-  transform: translateX(-50%) rotate(-15deg);
-  z-index: 1;
-}
-
 .footer {
   padding-top: 40px;
   border-radius: 50px 50px 0 0;

@@ -1,12 +1,45 @@
 import "../style/common.css";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 import ImageSlider from "../components/ImageSlider";
+import SponsorCard from "../components/SponsorCard";
 import { useAuth } from "../auth/useAuth.ts";
+import { getSponsors } from "../api/sponsorsApi";
+import {
+  formatSponsorDeal,
+  formatSponsorLocation,
+  pickRandomSponsors,
+  type Sponsor,
+} from "../util/sponsors";
+
+const FEATURED_SPONSOR_COUNT = 8;
 
 const Home = () => {
   const { user, hasAccount, loading } = useAuth();
   const isSignedIn = !!user && hasAccount;
+  const [featuredSponsors, setFeaturedSponsors] = useState<Sponsor[]>([]);
+
+  useEffect(() => {
+    let active = true;
+
+    getSponsors()
+      .then((data: Sponsor[]) => {
+        if (active) {
+          setFeaturedSponsors(pickRandomSponsors(data, FEATURED_SPONSOR_COUNT));
+        }
+      })
+      .catch((err) => console.error("Error loading sponsors:", err));
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const sponsorRows = [
+    featuredSponsors.slice(0, FEATURED_SPONSOR_COUNT / 2),
+    featuredSponsors.slice(FEATURED_SPONSOR_COUNT / 2),
+  ];
 
   return (
     <div>
@@ -159,116 +192,22 @@ const Home = () => {
           <h2 className="-mt-8! pl-4 font-monospace text-[2.6rem] font-medium">
             Our Sponsors:
           </h2>
-          {/** ROW ONE */}
-          <div className="pl-16 py-8 flex flex-row gap-12">
+          {sponsorRows.map((row, rowIndex) => (
             <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
-              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
+              key={rowIndex}
+              className={`${rowIndex === 0 ? "pl-16" : "pl-32"} py-8 flex flex-row gap-12`}
             >
-              <div className="w-fit aspect-square">
-                <ImageBlock
-                  pageKey="sponsor-1"
-                  alt="Sponsor 1"
-                  style={{ borderRadius: "1.6rem" }}
-                  editable={true}
-                />
-              </div>
+              {row.map((sponsor) => (
+                <div key={sponsor.name} className="w-[15vw]">
+                  <SponsorCard
+                    name={sponsor.name}
+                    description={formatSponsorDeal(sponsor)}
+                    location={formatSponsorLocation(sponsor)}
+                  />
+                </div>
+              ))}
             </div>
-            <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
-              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            >
-              <div className="w-fit aspect-square">
-                <ImageBlock
-                  pageKey="sponsor-2"
-                  alt="Sponsor 2"
-                  style={{ borderRadius: "1.6rem" }}
-                  editable={true}
-                />
-              </div>
-            </div>
-            <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
-              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            >
-              <div className="w-fit aspect-square">
-                <ImageBlock
-                  pageKey="sponsor-3"
-                  alt="Sponsor 3"
-                  style={{ borderRadius: "1.6rem" }}
-                  editable={true}
-                />
-              </div>
-            </div>
-            <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
-              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            >
-              <div className="w-fit aspect-square">
-                <ImageBlock
-                  pageKey="sponsor-4"
-                  alt="Sponsor 4"
-                  style={{ borderRadius: "1.6rem" }}
-                  editable={true}
-                />
-              </div>
-            </div>
-          </div>
-          {/** ROW TWO */}
-          <div className="pl-32 py-8 flex flex-row gap-12">
-            <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
-              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            >
-              <div className="w-fit aspect-square">
-                <ImageBlock
-                  pageKey="sponsor-5"
-                  alt="Sponsor 5"
-                  style={{ borderRadius: "1.6rem" }}
-                  editable={true}
-                />
-              </div>
-            </div>
-            <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
-              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            >
-              <div className="w-fit aspect-square">
-                <ImageBlock
-                  pageKey="sponsor-6"
-                  alt="Sponsor 6"
-                  style={{ borderRadius: "1.6rem" }}
-                  editable={true}
-                />
-              </div>
-            </div>
-            <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
-              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            >
-              <div className="w-fit aspect-square">
-                <ImageBlock
-                  pageKey="sponsor-7"
-                  alt="Sponsor 7"
-                  style={{ borderRadius: "1.6rem" }}
-                  editable={true}
-                />
-              </div>
-            </div>
-            <div
-              className="bg-white w-[15vw] aspect-square justify-self-left rounded-4xl p-8 items-center flex justify-center"
-              style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-            >
-              <div className="w-fit aspect-square">
-                <ImageBlock
-                  pageKey="sponsor-8"
-                  alt="Sponsor 8"
-                  style={{ borderRadius: "1.6rem" }}
-                  editable={true}
-                />
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
         <div className="text-2xl py-8 w-fit justify-self-center">
           <a href="/sponsors" className="button">

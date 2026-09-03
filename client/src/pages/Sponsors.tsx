@@ -5,14 +5,13 @@ import { getSponsors } from "../api/sponsorsApi";
 import "../style/sponsors.css";
 import { ImageBlock } from "../components/image_block/ImageBlock";
 import PageTitle from "../components/PageTitle";
-
-interface Sponsor {
-  name: string;
-  deal: string;
-  address: string;
-  category: "cbd" | "newmarket" | "other";
-  code?: string;
-}
+import {
+  dedupeSponsorsByName,
+  formatSponsorDeal,
+  formatSponsorLocation,
+  sponsorPageKey,
+  type Sponsor,
+} from "../util/sponsors";
 
 type Tab = "all" | "cbd" | "newmarket" | "other";
 
@@ -55,9 +54,7 @@ const Sponsors = () => {
     { label: "Other", value: "other" },
   ];
 
-  const uniqueSponsors = sorted.filter(
-    (s, index, self) => index === self.findIndex((t) => t.name === s.name)
-  );
+  const uniqueSponsors = dedupeSponsorsByName(sorted);
   const marqueeSponsors = [...uniqueSponsors, ...uniqueSponsors];
   return (
     <div className="sponsors-page">
@@ -68,8 +65,7 @@ const Sponsors = () => {
         <div className="sponsors-marquee-track-wrap">
           <div className="sponsors-marquee-track">
             {marqueeSponsors.map((s, i) => {
-              const pageKey =
-                "sponsor-" + s.name.toLowerCase().replace(/\s+/g, "-");
+              const pageKey = sponsorPageKey(s.name);
               return (
                 <div
                   key={i}
@@ -205,10 +201,8 @@ const Sponsors = () => {
                 <SponsorCard
                   key={s.name}
                   name={s.name}
-                  description={s.deal}
-                  location={s.address
-                    .replace(/, Auckland CBD$/i, "")
-                    .replace(/, Auckland City$/i, "")}
+                  description={formatSponsorDeal(s)}
+                  location={formatSponsorLocation(s)}
                 />
               ))}
             </div>
@@ -225,8 +219,8 @@ const Sponsors = () => {
                   <SponsorCard
                     key={s.name}
                     name={s.name}
-                    description={s.deal}
-                    location={s.address.replace(/, Newmarket$/i, "")}
+                    description={formatSponsorDeal(s)}
+                    location={formatSponsorLocation(s)}
                   />
                 ))}
               </div>
@@ -242,8 +236,8 @@ const Sponsors = () => {
                 <SponsorCard
                   key={index}
                   name={s.name}
-                  description={s.deal + (s.code ? ` (Code: ${s.code})` : "")}
-                  location={s.address}
+                  description={formatSponsorDeal(s)}
+                  location={formatSponsorLocation(s)}
                 />
               ))}
             </div>

@@ -106,6 +106,20 @@ const hasOwn = (input: Record<string, unknown>, field: string) =>
 const normalizeWhitespace = (value: string) =>
   value.trim().replace(/\s+/g, " ");
 
+const isStudentDetailsRequired = (input: Record<string, unknown>) => {
+  const university =
+    typeof input.university === "string" ? input.university.trim() : "";
+
+  return university === "The University of Auckland";
+};
+
+const requiresFacultySelection = (input: Record<string, unknown>) => {
+  const university =
+    typeof input.university === "string" ? input.university.trim() : "";
+
+  return !!university && university !== "None";
+};
+
 const getString = (
   input: Record<string, unknown>,
   field: StringUserField,
@@ -130,9 +144,13 @@ const validateStringField = (
 ) => {
   const rule = STRING_RULES[field];
   const isRequired = "required" in rule && rule.required === true;
+  const shouldRequire =
+    field === "studentId" || field === "upi"
+      ? isStudentDetailsRequired(input)
+      : isRequired || requireAll;
 
   if (!hasOwn(input, field)) {
-    if (requireAll && isRequired) {
+    if (shouldRequire) {
       errors.push(`${rule.label} is required.`);
     }
 
@@ -146,7 +164,7 @@ const validateStringField = (
   }
 
   if (!value) {
-    if (isRequired || requireAll) {
+    if (shouldRequire) {
       errors.push(`${rule.label} is required.`);
     }
 
@@ -171,6 +189,18 @@ const validateFaculties = (
   errors: string[],
   requireAll: boolean
 ) => {
+  if (!requiresFacultySelection(input)) {
+    if (requireAll && hasOwn(input, "faculties")) {
+      const faculties = input.faculties;
+
+      if (Array.isArray(faculties) && faculties.length === 0) {
+        return;
+      }
+    }
+
+    return;
+  }
+
   if (!hasOwn(input, "faculties")) {
     if (requireAll) {
       errors.push("Select at least one faculty.");

@@ -12,17 +12,13 @@ const userSchema = new Schema(
     lastName: { type: String, required: true },
     mobileNumber: { type: String, required: true },
     pronouns: { type: String, required: false },
-    university: { type: String, required: true },
-    studentId: { type: String, required: true },
-    upi: { type: String, required: true },
-    yearOfStudy: { type: Number, required: true, min: 1 },
+    university: { type: String, required: false },
+    studentId: { type: String, required: false },
+    upi: { type: String, required: false },
+    yearOfStudy: { type: Number, required: false, min: 1 },
     faculties: {
       type: [String],
-      required: true,
-      validate: {
-        validator: (v: string[]) => v.length >= 1,
-        message: "At least one faculty is required",
-      },
+      required: false,
     },
   },
   {

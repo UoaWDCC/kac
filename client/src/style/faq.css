@@ -232,7 +232,11 @@
 
 @media (max-width: 600px) {
   .faq-list {
-    padding-left: clamp(16px, 6vw, 28px);
-    padding-right: clamp(16px, 6vw, 28px);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding-left: clamp(16px, 6vw, 20px);
+    padding-right: clamp(16px, 6vw, 20px);
   }
 }

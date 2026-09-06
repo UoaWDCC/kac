@@ -81,10 +81,10 @@ const Home = () => {
   return (
     <div>
       {/** HERO */}
-      <section className="section bg-yellow-light flex items-center justify-center max-lg:px-5!">
-        <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-8 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24 max-lg:w-full">
+      <section className="section bg-yellow-light flex items-center justify-center max-lg:px-5! max-lg:pt-0!">
+        <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-8 max-lg:gap-[3.15rem] 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24 max-lg:w-full">
           <div className="w-full lg:w-auto">
-            <h2 className="px-0 lg:px-[2.4rem] 2xl:px-16 pb-4 lg:pb-12 2xl:pb-0 font-monospace text-[clamp(1.5rem,7.55vw,2.2rem)] lg:text-[2.6rem]! 2xl:text-[2.8rem]! font-medium">
+            <h2 className="px-0 lg:px-[2.4rem] 2xl:px-16 pb-0 max-lg:-mb-[7px] lg:pb-12 2xl:pb-0 font-monospace text-[clamp(1.5rem,7.55vw,2.2rem)] lg:text-[2.6rem]! 2xl:text-[2.8rem]! font-medium">
               Welcome to
             </h2>
             <div>
@@ -115,7 +115,7 @@ const Home = () => {
             </div>
 
             {/** Sits under the wordmark on mobile, beside the mascot from lg up */}
-            <div className="text-center text-xl mt-8 lg:hidden">
+            <div className="text-center text-xl mt-[2.65rem] lg:hidden">
               {joinUsButton}
             </div>
           </div>
@@ -246,16 +246,16 @@ const Home = () => {
       {/** SPONSORS */}
       <section className="section bg-yellow-light">
         <div className="justify-self-center mt-8">
-          <h2 className="-mt-8! pl-4 uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium">
+          <h2 className="-mt-8! max-lg:-mt-[45px]! pl-4 uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium">
             Our Sponsors:
           </h2>
 
           {/** Mobile - logo tiles in a staggered 2/3/2 stack, each row centred */}
-          <div className="flex flex-col items-center gap-4 py-8 lg:hidden">
+          <div className="flex flex-col items-center gap-[14px] pt-[22px] pb-0 lg:hidden">
             {mobileSponsorRows.map((row, rowIndex) => (
-              <div key={rowIndex} className="flex justify-center gap-4">
+              <div key={rowIndex} className="flex justify-center gap-[14px]">
                 {row.map((sponsor) => (
-                  <div key={sponsor.name} className="w-[25vw] max-w-[100px]">
+                  <div key={sponsor.name} className="w-[27.2vw] max-w-[106px]">
                     <SponsorCard
                       compact
                       name={sponsor.name}
@@ -288,7 +288,7 @@ const Home = () => {
             ))}
           </div>
         </div>
-        <div className="text-xl lg:text-2xl py-8 w-fit justify-self-center">
+        <div className="text-xl lg:text-2xl py-8 max-lg:pt-[47px] max-lg:pb-8 w-fit justify-self-center">
           <a href="/sponsors" className="button">
             Discover More
           </a>

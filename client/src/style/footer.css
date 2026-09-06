@@ -99,6 +99,12 @@ body {
     display: none !important;
   }
 
+  /* The 100px top margin exists to clear that mascot. With it hidden the gap is
+     just dead space, so the footer sits close under Discover More as in Figma. */
+  .footer-wrapper {
+    margin-top: 8px;
+  }
+
   .footer-bottom {
     flex-direction: column;
     gap: 12px;

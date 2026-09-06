@@ -229,3 +229,10 @@
   background-color: rgba(11, 45, 74, 0.08);
   border-color: rgba(11, 45, 74, 0.45);
 }
+
+@media (max-width: 600px) {
+  .faq-list {
+    padding-left: clamp(16px, 6vw, 28px);
+    padding-right: clamp(16px, 6vw, 28px);
+  }
+}

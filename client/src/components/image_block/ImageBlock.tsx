@@ -17,6 +17,7 @@ interface ImageBlockProps {
   style?: React.CSSProperties;
   alt: string;
   editable?: boolean;
+  onImageUpdated?: () => void;
 }
 
 export function ImageBlock({
@@ -24,6 +25,7 @@ export function ImageBlock({
   style,
   alt,
   editable,
+  onImageUpdated,
 }: Readonly<ImageBlockProps>) {
   const { role } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
@@ -77,6 +79,7 @@ export function ImageBlock({
               try {
                 const data = await refreshImageByTag(pageKey);
                 setImageData(data);
+                onImageUpdated?.();
               } catch (err) {
                 console.error(err);
               }

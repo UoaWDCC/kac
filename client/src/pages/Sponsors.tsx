@@ -57,7 +57,7 @@ const Sponsors = () => {
   const uniqueSponsors = dedupeSponsorsByName(sorted);
   const marqueeSponsors = [...uniqueSponsors, ...uniqueSponsors];
   return (
-    <div className="sponsors-page">
+    <div className="sponsors-page mb-40">
       <PageTitle title="OUR SPONSORS" />
 
       {/* MARQUEE + OVERLAPPING MEMBERSHIP CARD */}
@@ -168,9 +168,8 @@ const Sponsors = () => {
                 onClick={() => {
                   setActiveTab(tab.value);
                 }}
-                className={`sponsors-tab-button ${
-                  activeTab === tab.value ? "active" : ""
-                }`}
+                className={`sponsors-tab-button ${activeTab === tab.value ? "active" : ""
+                  }`}
               >
                 <span>{tab.label}</span>
                 {activeTab === tab.value && (

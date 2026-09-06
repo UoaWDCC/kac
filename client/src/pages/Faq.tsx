@@ -166,8 +166,8 @@ const Faq = () => {
       editingIndex === -1
         ? [...faqs, updatedFaq]
         : faqs.map((item, index) =>
-            index === editingIndex ? updatedFaq : item
-          );
+          index === editingIndex ? updatedFaq : item
+        );
 
     setIsSaving(true);
     try {
@@ -207,7 +207,7 @@ const Faq = () => {
   };
 
   return (
-    <div className="faq-container">
+    <div className="faq-container mb-40">
       <PageTitle title="OUR FAQs" />
       {isAdmin ? (
         <section className="faq-admin-panel" aria-label="FAQ admin controls">

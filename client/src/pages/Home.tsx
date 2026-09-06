@@ -42,7 +42,7 @@ const Home = () => {
   ];
 
   return (
-    <div>
+    <div className="mb-40">
       {/** HERO */}
       <section className="section bg-yellow-light flex items-center justify-center">
         <div className="flex items-end justify-center gap-8 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24">

@@ -9,6 +9,7 @@ import EditExecModal from "./EditExecModal";
 
 import ExecCard from "./ExecCard";
 import api from "../api";
+import { ImageBlock } from "./image_block/ImageBlock";
 
 interface Executive {
   id: string;
@@ -70,13 +71,16 @@ const normaliseRoleKey = (value?: string) =>
     .toLowerCase()
     .replace(/[\s_-]+/g, " ");
 
-const EXEC_IMG = "src/images/exec-placeholder.png";
+
+
+// const EXEC_IMG = "exec-placeholder";
 
 const Executives = () => {
   const [execs, setExecs] = useState<Executive[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedExec, setSelectedExec] = useState<Executive | null>(null);
   const [editingExec, setEditingExec] = useState<Executive | null>(null);
+  const [imageVersion, setImageVersion] = useState(0);
 
   const loadExecs = async () => {
     try {
@@ -160,7 +164,7 @@ const Executives = () => {
           <div className="exec-role-grid">
             {roleExecs.map((exec) => (
               <ExecCard
-                key={exec.id}
+                key={`${exec.id}-${imageVersion}`}
                 id={exec.id}
                 imageURL={exec.imageURL}
                 displayName={exec.displayName}
@@ -193,10 +197,19 @@ const Executives = () => {
             </div>
 
             <div className="flex flex-row gap-8 text-blue-medium items-center w-full p-12">
-              <img
-                className="flex rounded-4xl h-full max-h-[64vh]"
-                src={selectedExec.imageURL || EXEC_IMG}
+              <ImageBlock
+                pageKey={selectedExec.imageURL}
                 alt={selectedExec.displayName}
+                style={{
+                  flex: 1,
+                  borderRadius: "2rem",
+                  height: "100%",
+                  maxHeight: "64vh",
+                }}
+                editable={true}
+                onImageUpdated={() =>
+                  setImageVersion((version) => version + 1)
+                }
               />
 
               <div className="flex flex-col gap-8 2xl:gap-10 px-4 py-2 h-full justify-center">

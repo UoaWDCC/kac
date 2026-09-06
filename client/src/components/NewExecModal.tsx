@@ -29,7 +29,8 @@ export default function Modal({ onCreated }: Readonly<ModalProps>) {
 
   const handleSubmit = async () => {
     try {
-      const imageURL = "src/images/exec-placeholder.png";
+      const imageURL = "exec-image:" + form.displayName.toLowerCase().replace(/\s+/g, "-") + form.execRole.toLowerCase().replace(/\s+/g, "-");
+      // const imageURL = "exec-placeholder";
       const created = await createExec({
         imageURL,
         ...form,

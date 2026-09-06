@@ -10,7 +10,7 @@ import PageTitle from "../components/PageTitle.tsx";
 
 const About = () => {
   return (
-    <div className="about-page">
+    <div className="about-page mb-40">
       <title>Kiwi Asian Club</title>
       {/** Title **/}
       <PageTitle title="MEET THE EXECS" />

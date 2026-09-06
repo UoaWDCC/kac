@@ -69,7 +69,7 @@ export default function Modal({
     try {
       if (!exec?.id) return;
 
-      const imageURL = "src/images/exec-placeholder.png";
+      const imageURL = exec.imageURL;
 
       const edited = await editExec(exec.id, {
         imageURL,

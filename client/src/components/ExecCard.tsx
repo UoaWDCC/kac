@@ -6,9 +6,9 @@ import { Pencil, Trash2 } from "lucide-react";
 import { deleteExec } from "../api/execsApi";
 import { useAuth } from "../auth/useAuth";
 import { useState } from "react";
+import { ImageBlock } from "./image_block/ImageBlock";
 
-/** No access to images currently, use placeholder */
-const EXEC_IMG = "src/images/exec-placeholder.png";
+const EXEC_IMG = "exec-placeholder";
 
 interface ExecProps {
   id: string;
@@ -39,7 +39,13 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
     <div className="executive-card">
       <div className="executive-card__top z-10">
         <div className="executive-card__media image-block">
-          <img src={imageURL || EXEC_IMG} alt={displayName} onClick={onOpen} />
+          <div onClick={onOpen} >
+            <ImageBlock
+              pageKey={imageURL || EXEC_IMG}
+              alt={displayName}
+              editable={false}
+            />
+          </div>
           {role === "admin" && (
             <button
               type="button"

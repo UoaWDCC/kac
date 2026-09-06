@@ -252,11 +252,10 @@ export default function ProfileDashboard({
                   {detail.label}
                   <input
                     {...getMemberInputProps(detail.name)}
-                    className={`w-full border-0 border-b-2 border-yellow-dark bg-transparent px-0 pb-1 font-alan-sans text-base font-semibold text-blue-medium outline-none ${
-                      detail.readOnly
-                        ? "cursor-not-allowed text-grey-medium"
-                        : "focus:border-blue-medium"
-                    }`}
+                    className={`w-full border-0 border-b-2 border-yellow-dark bg-transparent px-0 pb-1 font-alan-sans text-base font-semibold text-blue-medium outline-none ${detail.readOnly
+                      ? "cursor-not-allowed text-grey-medium"
+                      : "focus:border-blue-medium"
+                      }`}
                     id={detail.id}
                     onChange={(event) =>
                       updateField(detail.name, event.target.value)

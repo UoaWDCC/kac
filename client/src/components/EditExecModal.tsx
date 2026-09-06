@@ -9,6 +9,7 @@ import ExecFormModal, {
   emptyExecFormValues,
   type ExecFormValues,
 } from "./ExecFormModal";
+import { postImage } from "../api/imageApi";
 
 interface Executive {
   id: string;
@@ -41,9 +42,12 @@ export default function Modal({
 }: Readonly<ModalProps>) {
   const { role } = useAuth();
   const [form, setForm] = useState<ExecFormValues>(emptyExecFormValues);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!exec) return;
+    setImageFile(null);
     setForm({
       displayName: exec.displayName ?? "",
       execRole: exec.execRole ?? "",
@@ -63,13 +67,24 @@ export default function Modal({
     setForm((current) => ({ ...current, [field]: value }));
   };
 
+  const handleClose = () => {
+    if (isSubmitting) return;
+    onClose();
+  };
+
   const handleSubmit = async () => {
-    if (!exec) return;
+    if (!exec || isSubmitting) return;
+
+    setIsSubmitting(true);
 
     try {
-      if (!exec?.id) return;
+      if (!exec.id) return;
 
       const imageURL = exec.imageURL;
+
+      if (imageFile) {
+        await postImage(imageFile, exec.imageURL);
+      }
 
       const edited = await editExec(exec.id, {
         imageURL,
@@ -77,12 +92,13 @@ export default function Modal({
       });
       console.log("Exec updated successfully!", edited);
 
-      if (onEdited) onEdited();
+      onEdited?.();
+      onClose();
     } catch (error) {
       console.error("Error occurred while submitting the form:", error);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    onClose();
   };
 
   if (!exec || role !== "admin") {
@@ -96,8 +112,10 @@ export default function Modal({
       submitLabel="Confirm"
       values={form}
       onChange={updateForm}
-      onClose={onClose}
+      onClose={handleClose}
       onSubmit={handleSubmit}
+      onImageChange={setImageFile}
+      isSubmitting={isSubmitting}
     />
   );
 }

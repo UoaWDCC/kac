@@ -7,8 +7,7 @@ import { deleteExec } from "../api/execsApi";
 import { useAuth } from "../auth/useAuth";
 import { useState } from "react";
 import { ImageBlock } from "./image_block/ImageBlock";
-
-const EXEC_IMG = "exec-placeholder";
+import execPlaceholder from "../images/exec-placeholder.png";
 
 interface ExecProps {
   id: string;
@@ -41,9 +40,10 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
         <div className="executive-card__media image-block">
           <div onClick={onOpen} >
             <ImageBlock
-              pageKey={imageURL || EXEC_IMG}
+              pageKey={imageURL}
               alt={displayName}
               editable={false}
+              fallbackSrc={execPlaceholder}
             />
           </div>
           {role === "admin" && (

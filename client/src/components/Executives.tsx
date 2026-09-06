@@ -10,6 +10,7 @@ import EditExecModal from "./EditExecModal";
 import ExecCard from "./ExecCard";
 import api from "../api";
 import { ImageBlock } from "./image_block/ImageBlock";
+import execPlaceholder from "../images/exec-placeholder.png";
 
 interface Executive {
   id: string;
@@ -200,13 +201,14 @@ const Executives = () => {
               <ImageBlock
                 pageKey={selectedExec.imageURL}
                 alt={selectedExec.displayName}
+                fallbackSrc={execPlaceholder}
                 style={{
                   flex: 1,
                   borderRadius: "2rem",
                   height: "100%",
                   maxHeight: "64vh",
                 }}
-                editable={true}
+                editable={false}
                 onImageUpdated={() =>
                   setImageVersion((version) => version + 1)
                 }
@@ -233,7 +235,6 @@ const Executives = () => {
                       <strong>🌟 MBTI:</strong> {selectedExec.mbti}
                     </p>
                   </div>
-
                   <div>
                     <p className="text-md! 2xl:text-xl!">
                       <strong>🧩 Fun Fact:</strong> {selectedExec.fact}
@@ -263,7 +264,10 @@ const Executives = () => {
         <EditExecModal
           exec={editingExec}
           onClose={() => setEditingExec(null)}
-          onEdited={loadExecs}
+          onEdited={() => {
+            void loadExecs();
+            setImageVersion((version) => version + 1);
+          }}
         />
       )}
 

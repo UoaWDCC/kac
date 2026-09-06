@@ -5,11 +5,12 @@ import "../style/common.css";
 import "../style/about.css";
 
 import { useAuth } from "../auth/useAuth";
-import { createExec } from "../api/execsApi";
+import { createExec, deleteExec } from "../api/execsApi";
 import ExecFormModal, {
   emptyExecFormValues,
   type ExecFormValues,
 } from "./ExecFormModal";
+import { postImage } from "../api/imageApi";
 
 interface ModalProps {
   onCreated?: () => void;
@@ -19,30 +20,62 @@ export default function Modal({ onCreated }: Readonly<ModalProps>) {
   const { role } = useAuth();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [form, setForm] = useState<ExecFormValues>(emptyExecFormValues);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const openModal = (): void => setIsOpen(true);
-  const closeModal = (): void => setIsOpen(false);
+  const closeModal = (): void => {
+    if (isSubmitting) return;
+
+    setIsOpen(false);
+    setForm(emptyExecFormValues);
+    setImageFile(null);
+  };
 
   const updateForm = (field: keyof ExecFormValues, value: string): void => {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
-      const imageURL = "exec-image:" + form.displayName.toLowerCase().replace(/\s+/g, "-") + form.execRole.toLowerCase().replace(/\s+/g, "-");
-      // const imageURL = "exec-placeholder";
+      const imageURL = "exec-placeholder";
       const created = await createExec({
         imageURL,
         ...form,
       });
       console.log("Exec created successfully!", created);
 
-      if (onCreated) onCreated();
+      if (imageFile) {
+        try {
+          await postImage(imageFile, created.imageURL);
+        } catch (uploadError) {
+          const createdId = created.id ?? created._id;
+
+          if (createdId) {
+            try {
+              await deleteExec(createdId);
+            } catch (cleanupError) {
+              console.error("Failed to clean up executive:", cleanupError);
+            }
+          }
+
+          throw uploadError;
+        }
+      }
+
+      onCreated?.();
       setForm(emptyExecFormValues);
+      setImageFile(null);
+      setIsOpen(false);
     } catch (error) {
       console.error("Error occurred while submitting the form:", error);
+    } finally {
+      setIsSubmitting(false);
     }
-    closeModal();
   };
 
   return (
@@ -62,6 +95,8 @@ export default function Modal({ onCreated }: Readonly<ModalProps>) {
             onChange={updateForm}
             onClose={closeModal}
             onSubmit={handleSubmit}
+            onImageChange={setImageFile}
+            isSubmitting={isSubmitting}
           />
         </div>
       )}

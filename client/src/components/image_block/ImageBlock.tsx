@@ -18,6 +18,7 @@ interface ImageBlockProps {
   alt: string;
   editable?: boolean;
   onImageUpdated?: () => void;
+  fallbackSrc?: string;
 }
 
 export function ImageBlock({
@@ -26,6 +27,7 @@ export function ImageBlock({
   alt,
   editable,
   onImageUpdated,
+  fallbackSrc,
 }: Readonly<ImageBlockProps>) {
   const { role } = useAuth();
   const [imageData, setImageData] = useState<ImageData | null>(null);
@@ -57,7 +59,7 @@ export function ImageBlock({
   return (
     <>
       <div className="image-block" style={style}>
-        <img src={imageData?.signedUrl ?? placeholder} alt={alt} />
+        <img src={imageData?.signedUrl ?? fallbackSrc ?? placeholder} alt={alt} />
 
         {editable && role === "admin" && (
           <button

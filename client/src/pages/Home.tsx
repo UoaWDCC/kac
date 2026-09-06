@@ -33,8 +33,8 @@ const EVENT_PAGE_KEYS = [
 // 3.3rem }`, and unlayered rules beat Tailwind's layered utilities regardless of
 // specificity, so an unflagged text-* on an <h1> is silently dropped.
 const HERO_LETTER =
-  "text-[clamp(3.5rem,21vw,7rem)]! lg:text-[10rem]! 2xl:text-[12rem]! " +
-  "leading-[0.85]! lg:leading-[10%]! 2xl:leading-[60%]! font-bold " +
+  "text-[clamp(3.5rem,32.7vw,9rem)]! lg:text-[10rem]! 2xl:text-[12rem]! " +
+  "leading-[0.766]! lg:leading-[10%]! 2xl:leading-[60%]! font-bold " +
   "mt-0! mb-0! lg:mt-4! lg:mb-24!";
 
 const Home = () => {
@@ -81,16 +81,16 @@ const Home = () => {
   return (
     <div>
       {/** HERO */}
-      <section className="section bg-yellow-light flex items-center justify-center">
-        <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-8 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24">
+      <section className="section bg-yellow-light flex items-center justify-center max-lg:px-5!">
+        <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-8 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24 max-lg:w-full">
           <div className="w-full lg:w-auto">
-            <h2 className="px-2 lg:px-[2.4rem] 2xl:px-16 pb-4 lg:pb-12 2xl:pb-0 font-monospace text-[1.6rem] lg:text-[2.6rem] 2xl:text-[2.8rem] font-medium">
+            <h2 className="px-0 lg:px-[2.4rem] 2xl:px-16 pb-4 lg:pb-12 2xl:pb-0 font-monospace text-[clamp(1.5rem,7.55vw,2.2rem)] lg:text-[2.6rem]! 2xl:text-[2.8rem]! font-medium">
               Welcome to
             </h2>
             <div>
               <div className="flex uppercase">
                 <h1
-                  className={`${HERO_LETTER} pl-2 lg:pl-8 2xl:pl-12 text-blue-medium`}
+                  className={`${HERO_LETTER} pl-0 lg:pl-8 2xl:pl-12 text-blue-medium`}
                 >
                   K
                 </h1>
@@ -98,7 +98,7 @@ const Home = () => {
               </div>
               <div className="flex uppercase">
                 <h1
-                  className={`${HERO_LETTER} pl-2 lg:pl-8 2xl:pl-12 text-blue-medium`}
+                  className={`${HERO_LETTER} pl-0 lg:pl-8 2xl:pl-12 text-blue-medium`}
                 >
                   A
                 </h1>
@@ -106,7 +106,7 @@ const Home = () => {
               </div>
               <div className="flex uppercase lg:-mb-8 2xl:-mb-16">
                 <h1
-                  className={`${HERO_LETTER} pl-2 lg:pl-8 2xl:pl-12 text-blue-medium`}
+                  className={`${HERO_LETTER} pl-0 lg:pl-8 2xl:pl-12 text-blue-medium`}
                 >
                   C
                 </h1>
@@ -121,13 +121,21 @@ const Home = () => {
           </div>
 
           <div className="flex flex-row items-end">
-            <div className="shrink-0 w-[85vw] lg:w-[40vw]">
-              <ImageBlock
-                pageKey="home-mascot"
-                alt="Club Mascot"
-                style={{ width: "100%" }}
-                editable={true}
-              />
+            {/* Full-bleed via negative margins so the margin box still matches the
+                content box - w-screen here would widen the flex container and
+                drag the wordmark out with it. 2.5rem = the section's px-5 x2. */}
+            <div className="shrink-0 -mx-5 w-[calc(100%+2.5rem)] overflow-hidden lg:mx-0 lg:w-[40vw] lg:overflow-visible">
+              {/* Figma has the mascot at 545x445 inside a 390-wide frame, i.e.
+                  140% of the viewport. The -20% margin re-centres that width and
+                  the wrapper clips the overhang, so the wings crop at both edges. */}
+              <div className="w-[140%] -ml-[20%] lg:ml-0 lg:w-full">
+                <ImageBlock
+                  pageKey="home-mascot"
+                  alt="Club Mascot"
+                  style={{ width: "100%" }}
+                  editable={true}
+                />
+              </div>
             </div>
             <div className="hidden lg:block text-2xl ml-[-8vw] w-fit">
               {joinUsButton}
@@ -137,9 +145,13 @@ const Home = () => {
       </section>
 
       {/** WHAT WE DO */}
-      <section className="section bg-yellow-light h-auto lg:h-200 flex flex-col items-center justify-center gap-12 py-12 lg:py-0">
+      {/* On mobile the card rides up over the mascot, per the Figma. The section
+          background goes transparent so only the card itself clips the mascot -
+          an opaque background would cut it off in a straight line above the card.
+          The page behind is already the same cream. */}
+      <section className="section bg-yellow-light h-auto lg:h-200 flex flex-col items-center justify-center gap-12 py-12 lg:py-0 max-lg:-mt-48 max-lg:pt-0! max-lg:bg-transparent!">
         <div
-          className="bg-yellow-dark w-full lg:w-9/10 2xl:w-8/10 justify-self-center rounded-3xl lg:rounded-4xl h-auto pt-8 pb-8 px-6 lg:pt-14 lg:pb-12 lg:px-8"
+          className="relative bg-yellow-dark w-full lg:w-9/10 2xl:w-8/10 justify-self-center rounded-3xl lg:rounded-4xl h-auto pt-8 pb-8 px-6 lg:pt-14 lg:pb-12 lg:px-8"
           style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
         >
           <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8">
@@ -279,7 +291,7 @@ const Home = () => {
             ))}
           </div>
         </div>
-        <div className="text-2xl py-8 w-fit justify-self-center">
+        <div className="text-xl lg:text-2xl py-8 w-fit justify-self-center">
           <a href="/sponsors" className="button">
             Discover More
           </a>

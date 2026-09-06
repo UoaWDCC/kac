@@ -139,7 +139,7 @@ const Header = () => {
   }, [isProfileMenuOpen]);
 
   return (
-    <div className="header flex items-center gap-2 px-4 py-3 lg:p-6 bg-yellow-light w-full">
+    <div className="header flex items-center gap-2 px-[1.59rem] py-3 lg:p-6 bg-yellow-light w-full">
       {/** MOBILE ONLY - profile shortcut, balances the hamburger on the right */}
       <div className="flex flex-1 justify-start lg:hidden">
         {!loading &&
@@ -176,12 +176,14 @@ const Header = () => {
       {/** LOGO - centred on mobile, left-aligned from lg up */}
       <div className="shrink-0 lg:flex-1 lg:pl-2">
         <div className="flex items-center w-fit mx-auto lg:mx-0">
-          <ImageBlock
-            pageKey="logo"
-            alt="KAC Logo"
-            style={{ width: "64px", height: "64px" }}
-            editable={false}
-          />
+          <div className="h-[57px] w-[57px] lg:h-16 lg:w-16">
+            <ImageBlock
+              pageKey="logo"
+              alt="KAC Logo"
+              style={{ width: "100%", height: "100%" }}
+              editable={false}
+            />
+          </div>
           <div className="flex-col font-sans! uppercase font-bold whitespace-nowrap m-0">
             <p className="text-base! leading-none!">Kiwi</p>
             <p className="text-base! leading-none!">Asian</p>

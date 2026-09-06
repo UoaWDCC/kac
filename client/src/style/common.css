@@ -140,7 +140,9 @@ p {
   background-color: var(--color-blue-medium);
 }
 
-/* Hamburger / close toggle in the mobile header. */
+/* Hamburger / close toggle in the mobile header. `width: auto` is load-bearing:
+   about.css declares an unlayered `button { width: 100% }` that would otherwise
+   stretch this to its whole flex slot and float the icon away from the edge. */
 .header-menu-toggle {
   align-items: center;
   background-color: transparent;
@@ -150,6 +152,7 @@ p {
   display: inline-flex;
   justify-content: center;
   padding: 0.25rem;
+  width: auto;
 }
 
 .header-profile-menu-shell {

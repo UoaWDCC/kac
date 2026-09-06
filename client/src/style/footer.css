@@ -93,13 +93,10 @@ body {
     justify-items: start;
   }
 
+  /* The overhanging mascot is desktop-only - on a phone it crowds the footer
+     and its rotated bounding box pushes the page wider than the viewport. */
   .footer-wrapper > .image-block {
-    width: 160px !important;
-    top: -80px !important;
-    left: auto !important;
-    /* Inset far enough that the -15deg rotation's bounding box stays on screen. */
-    right: 18px !important;
-    transform: rotate(-15deg) !important;
+    display: none !important;
   }
 
   .footer-bottom {

@@ -54,13 +54,23 @@ const ImageSlider = ({ pageKeys }: ImageSliderProps) => {
 
   const imageVariants: Variants = {
     center: { x: "0%", y: isCompact ? "0%" : "24%", scale: 1.1, zIndex: 4 },
-    left: { x: "-90%", y: isCompact ? "-8%" : "-20%", scale: 0.6, zIndex: 3 },
-    right: { x: "90%", y: isCompact ? "-8%" : "-20%", scale: 0.6, zIndex: 3 },
+    left: {
+      x: isCompact ? "-85%" : "-90%",
+      y: isCompact ? "0%" : "-20%",
+      scale: isCompact ? 0.7 : 0.6,
+      zIndex: 3,
+    },
+    right: {
+      x: isCompact ? "85%" : "90%",
+      y: isCompact ? "0%" : "-20%",
+      scale: isCompact ? 0.7 : 0.6,
+      zIndex: 3,
+    },
   };
 
   return (
     <>
-      <div className="flex items-center flex-col justify-center h-[34vh] lg:h-screen">
+      <div className="flex items-center flex-col justify-center h-[70vw] lg:h-screen">
         {pageKeys.map((pageKey, index) => {
           return (
             <motion.div
@@ -71,6 +81,21 @@ const ImageSlider = ({ pageKeys }: ImageSliderProps) => {
               transition={{ duration: 0.5 }}
               style={{ position: "absolute" }}
               className="w-[68%] lg:w-[50%] rounded-xl overflow-hidden"
+              /* Mobile has no chevrons, so the slides are the control: tap a
+                 peeking card to bring it forward, or swipe the stack. */
+              drag={isCompact ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.12}
+              onDragEnd={(_, info) => {
+                if (!isCompact) return;
+                if (info.offset.x < -60) handleNext();
+                else if (info.offset.x > 60) handleBack();
+              }}
+              onClick={() => {
+                if (isCompact && positionIndexes[index] !== 0) {
+                  handleSelect(index);
+                }
+              }}
             >
               <div className="bg-white justify-self-left rounded-2xl px-4 pt-4 pb-1 lg:px-8 lg:pt-8 lg:pb-2 flex flex-col">
                 <div className="self-center">
@@ -107,7 +132,7 @@ const ImageSlider = ({ pageKeys }: ImageSliderProps) => {
       {/** Dot controls replace the chevrons on mobile, where the arrows would sit
        * outside the viewport. Kept in normal flow, below the absolutely
        * positioned cards, so they never land on top of a caption. */}
-      <div className="flex justify-center gap-2 pt-2 lg:hidden">
+      <div className="relative z-20 flex justify-center gap-3 lg:hidden">
         {pageKeys.map((pageKey, index) => (
           <button
             key={pageKey}

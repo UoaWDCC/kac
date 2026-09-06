@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 import ImageSlider from "../components/ImageSlider";
+import kacoVector from "../images/kaco-vector.png";
 import SponsorCard from "../components/SponsorCard";
 import { useAuth } from "../auth/useAuth.ts";
 import { getSponsors } from "../api/sponsorsApi";
@@ -184,13 +185,20 @@ const Home = () => {
       </section>
 
       {/** EVENTS */}
-      <section className="section relative w-full overflow-hidden bg-yellow-light p-0! pt-12 lg:pt-0">
+      <section className="section relative w-full overflow-hidden bg-yellow-light p-0! pt-20! pb-12! lg:pt-0! lg:pb-0!">
         {/**
-         * Desktop lays the mascot out in flow and floats the heading and slider
-         * on top of it. On mobile that would leave a 90vw-tall gap, so the
-         * mascot drops back to a watermark and the content flows normally.
+         * Desktop lays the CMS mascot out in flow and floats the heading and
+         * slider on top of it. On mobile that would leave a 90vw-tall gap, so
+         * the KACO silhouette sits behind the section as a watermark instead.
          */}
-        <div className="absolute inset-y-0 right-0 flex items-center opacity-40 pointer-events-none lg:static lg:opacity-100 lg:justify-self-end lg:pointer-events-auto">
+        <img
+          src={kacoVector}
+          alt=""
+          aria-hidden="true"
+          className="absolute left-1/2 top-1/2 h-[90%] w-auto max-w-none -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none lg:hidden"
+        />
+
+        <div className="hidden lg:block lg:justify-self-end lg:relative">
           <ImageBlock
             pageKey="mascot-bg"
             alt="Events"
@@ -207,7 +215,7 @@ const Home = () => {
           <ImageSlider pageKeys={EVENT_PAGE_KEYS} />
         </div>
 
-        <div className="relative pb-4 text-center text-xl lg:hidden">
+        <div className="relative pt-10 text-center text-xl lg:hidden">
           <Link to="/events" className="button">
             More Events
           </Link>

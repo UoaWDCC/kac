@@ -149,11 +149,8 @@ const Home = () => {
           background goes transparent so only the card itself clips the mascot -
           an opaque background would cut it off in a straight line above the card.
           The page behind is already the same cream. */}
-      <section className="section bg-yellow-light h-auto lg:h-200 flex flex-col items-center justify-center gap-12 py-12 lg:py-0 max-lg:-mt-48 max-lg:pt-0! max-lg:bg-transparent!">
-        <div
-          className="relative bg-yellow-dark w-full lg:w-9/10 2xl:w-8/10 justify-self-center rounded-3xl lg:rounded-4xl h-auto pt-8 pb-8 px-6 lg:pt-14 lg:pb-12 lg:px-8"
-          style={{ boxShadow: "10px 10px var(--color-yellow-medium)" }}
-        >
+      <section className="section bg-yellow-light h-auto lg:h-200 flex flex-col items-center justify-center gap-12 py-12 lg:py-0 max-lg:-mt-48 max-lg:px-5! max-lg:pt-0! max-lg:bg-transparent!">
+        <div className="card-shadow relative bg-yellow-dark w-full lg:w-9/10 2xl:w-8/10 justify-self-center rounded-[23px] lg:rounded-4xl h-auto pt-8 pb-8 px-6 lg:pt-14 lg:pb-12 lg:px-8">
           <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8">
             <div className="w-full lg:w-6/10 shrink-0 self-center">
               <ImageBlock

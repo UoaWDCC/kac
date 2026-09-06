@@ -122,6 +122,19 @@ p {
   }
 }
 
+/* The offset block shadow behind the big content cards. Figma offsets it by
+   5px on mobile (Rectangle 212 sits +5,+5 behind Rectangle 87) and 10px on
+   desktop. Inline styles cannot carry a breakpoint, hence the class. */
+.card-shadow {
+  box-shadow: 10px 10px var(--color-yellow-medium);
+}
+
+@media (max-width: 63.999rem) {
+  .card-shadow {
+    box-shadow: 5px 5px var(--color-yellow-medium);
+  }
+}
+
 /* Slider dot controls. Plain CSS rather than utilities: about.css defines an
    unlayered `button { width: 100% }`, and unlayered rules beat Tailwind's
    layered utilities, so `w-2.5` on a <button> is silently dropped. */

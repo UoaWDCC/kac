@@ -72,13 +72,10 @@ const MobileMenu = ({
             role="dialog"
             transition={{ type: "spring", bounce: 0, duration: 0.35 }}
           >
-            <div className="flex items-center justify-between">
-              <span className="text-lg lowercase text-blue-medium/45">
-                menu
-              </span>
+            <div className="flex items-center justify-end">
               <button
                 aria-label="Close menu"
-                className="cursor-pointer border-0 bg-transparent p-1 text-blue-medium"
+                className="header-menu-toggle"
                 onClick={onClose}
                 type="button"
               >
@@ -155,7 +152,7 @@ const MobileMenu = ({
               </div>
             )}
 
-            <div className="mt-auto pt-6">
+            <div className="mt-auto pt-6 pb-10">
               {!isSignedIn && (
                 <a className="button-navy" href="/api/auth/google">
                   Join Us!

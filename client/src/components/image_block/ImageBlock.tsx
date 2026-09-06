@@ -59,7 +59,10 @@ export function ImageBlock({
   return (
     <>
       <div className="image-block" style={style}>
-        <img src={imageData?.signedUrl ?? fallbackSrc ?? placeholder} alt={alt} />
+        <img
+          src={imageData?.signedUrl ?? fallbackSrc ?? placeholder}
+          alt={alt}
+        />
 
         {editable && role === "admin" && (
           <button

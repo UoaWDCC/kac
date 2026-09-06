@@ -38,7 +38,7 @@ const ExecCard: React.FC<ExecProps & ExecCardProps> = ({
     <div className="executive-card">
       <div className="executive-card__top z-10">
         <div className="executive-card__media image-block">
-          <div onClick={onOpen} >
+          <div onClick={onOpen}>
             <ImageBlock
               pageKey={imageURL}
               alt={displayName}

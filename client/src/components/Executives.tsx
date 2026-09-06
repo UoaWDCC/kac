@@ -72,8 +72,6 @@ const normaliseRoleKey = (value?: string) =>
     .toLowerCase()
     .replace(/[\s_-]+/g, " ");
 
-
-
 // const EXEC_IMG = "exec-placeholder";
 
 const Executives = () => {
@@ -209,9 +207,7 @@ const Executives = () => {
                   maxHeight: "64vh",
                 }}
                 editable={false}
-                onImageUpdated={() =>
-                  setImageVersion((version) => version + 1)
-                }
+                onImageUpdated={() => setImageVersion((version) => version + 1)}
               />
 
               <div className="flex flex-col gap-8 2xl:gap-10 px-4 py-2 h-full justify-center">

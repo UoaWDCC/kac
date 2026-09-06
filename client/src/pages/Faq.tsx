@@ -166,8 +166,8 @@ const Faq = () => {
       editingIndex === -1
         ? [...faqs, updatedFaq]
         : faqs.map((item, index) =>
-          index === editingIndex ? updatedFaq : item
-        );
+            index === editingIndex ? updatedFaq : item
+          );
 
     setIsSaving(true);
     try {

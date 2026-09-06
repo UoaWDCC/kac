@@ -122,6 +122,24 @@ p {
   }
 }
 
+/* Slider dot controls. Plain CSS rather than utilities: about.css defines an
+   unlayered `button { width: 100% }`, and unlayered rules beat Tailwind's
+   layered utilities, so `w-2.5` on a <button> is silently dropped. */
+.slider-dot {
+  background-color: rgba(11, 45, 74, 0.3);
+  border: 0;
+  border-radius: 9999px;
+  cursor: pointer;
+  height: 0.625rem;
+  padding: 0;
+  transition: background-color 0.2s ease;
+  width: 0.625rem;
+}
+
+.slider-dot.is-active {
+  background-color: var(--color-blue-medium);
+}
+
 /* Hamburger / close toggle in the mobile header. */
 .header-menu-toggle {
   align-items: center;

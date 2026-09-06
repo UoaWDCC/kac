@@ -16,6 +16,10 @@ import {
 
 const FEATURED_SPONSOR_COUNT = 8;
 
+// Mobile stacks the tiles into a staggered 2/3/2 diamond rather than a uniform
+// grid, so the wider middle row breaks out past the rows above and below it.
+const MOBILE_SPONSOR_ROW_SIZES = [2, 3, 2];
+
 const EVENT_PAGE_KEYS = [
   "A Night Out in Hongdae",
   "A Few Days Away",
@@ -58,6 +62,14 @@ const Home = () => {
     featuredSponsors.slice(0, FEATURED_SPONSOR_COUNT / 2),
     featuredSponsors.slice(FEATURED_SPONSOR_COUNT / 2),
   ];
+
+  const mobileSponsorRows = MOBILE_SPONSOR_ROW_SIZES.map((size, rowIndex) => {
+    const start = MOBILE_SPONSOR_ROW_SIZES.slice(0, rowIndex).reduce(
+      (total, count) => total + count,
+      0
+    );
+    return featuredSponsors.slice(start, start + size);
+  });
 
   const joinUsButton =
     !loading && !isSignedIn ? (
@@ -195,7 +207,7 @@ const Home = () => {
           src={kacoVector}
           alt=""
           aria-hidden="true"
-          className="absolute left-1/2 top-1/2 h-[90%] w-auto max-w-none -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none lg:hidden"
+          className="absolute left-1/2 top-0 h-full w-auto max-w-none -translate-x-1/2 pointer-events-none select-none lg:hidden"
         />
 
         <div className="hidden lg:block lg:justify-self-end lg:relative">
@@ -207,7 +219,7 @@ const Home = () => {
           />
         </div>
 
-        <h2 className="relative font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium text-center lg:absolute lg:inset-0 lg:justify-self-center lg:top-[20vh] 2xl:top-[22vh]">
+        <h2 className="relative uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium text-center lg:absolute lg:inset-0 lg:justify-self-center lg:top-[20vh] 2xl:top-[22vh]">
           Our Recent Events:
         </h2>
 
@@ -225,21 +237,24 @@ const Home = () => {
       {/** SPONSORS */}
       <section className="section bg-yellow-light">
         <div className="justify-self-center mt-8">
-          <h2 className="-mt-8! pl-4 font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium">
+          <h2 className="-mt-8! pl-4 uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium">
             Our Sponsors:
           </h2>
 
-          {/** Mobile - logo tiles in a centred wrap, so a short final row stays
-           * centred rather than left-aligned the way a grid would leave it */}
-          <div className="flex flex-wrap justify-center gap-4 py-8 lg:hidden">
-            {featuredSponsors.map((sponsor) => (
-              <div key={sponsor.name} className="w-[28%]">
-                <SponsorCard
-                  compact
-                  name={sponsor.name}
-                  description={formatSponsorDeal(sponsor)}
-                  location={formatSponsorLocation(sponsor)}
-                />
+          {/** Mobile - logo tiles in a staggered 2/3/2 stack, each row centred */}
+          <div className="flex flex-col items-center gap-4 py-8 lg:hidden">
+            {mobileSponsorRows.map((row, rowIndex) => (
+              <div key={rowIndex} className="flex justify-center gap-4">
+                {row.map((sponsor) => (
+                  <div key={sponsor.name} className="w-[25vw] max-w-[100px]">
+                    <SponsorCard
+                      compact
+                      name={sponsor.name}
+                      description={formatSponsorDeal(sponsor)}
+                      location={formatSponsorLocation(sponsor)}
+                    />
+                  </div>
+                ))}
               </div>
             ))}
           </div>

@@ -6,9 +6,11 @@ type Props = {
   name: string;
   description: string;
   location: string;
+  /** Logo tile only - drops the name and address beneath the card. */
+  compact?: boolean;
 };
 
-const SponsorCard = ({ name, description, location }: Props) => {
+const SponsorCard = ({ name, description, location, compact }: Props) => {
   const [hovered, setHovered] = useState(false);
   const pageKey = sponsorPageKey(name);
 
@@ -75,27 +77,31 @@ const SponsorCard = ({ name, description, location }: Props) => {
       </div>
 
       {/* NAME + LOCATION - outside the card */}
-      <h3
-        style={{
-          fontSize: "1rem",
-          fontWeight: "normal",
-          marginTop: "0.75rem",
-          marginBottom: "0.25rem",
-          color: "var(--color-blue-medium)",
-        }}
-      >
-        {name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
-      </h3>
-      <p
-        style={{
-          fontSize: "0.85rem",
-          color: "var(--color-grey-medium)",
-          margin: 0,
-          fontFamily: "Alan Sans, sans-serif",
-        }}
-      >
-        {location}
-      </p>
+      {compact ? null : (
+        <>
+          <h3
+            style={{
+              fontSize: "1rem",
+              fontWeight: "normal",
+              marginTop: "0.75rem",
+              marginBottom: "0.25rem",
+              color: "var(--color-blue-medium)",
+            }}
+          >
+            {name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+          </h3>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--color-grey-medium)",
+              margin: 0,
+              fontFamily: "Alan Sans, sans-serif",
+            }}
+          >
+            {location}
+          </p>
+        </>
+      )}
     </div>
   );
 };

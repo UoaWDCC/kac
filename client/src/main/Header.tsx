@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ChevronDown,
+  CircleUserRound,
   LogOut,
   Menu,
   ShieldCheck,
@@ -12,11 +13,18 @@ import { Link, useLocation } from "react-router-dom";
 import { getCurrentProfileImage } from "../api/imageApi.ts";
 import { useAuth } from "../auth/useAuth.ts";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
+import MobileMenu from "./MobileMenu.tsx";
 
 import "../style/common.css";
 
 const tabs = ["Home", "About", "Events", "Sponsors", "Contact", "Faq"];
 const profileImageUpdatedEvent = "profile-image-updated";
+
+// "Home" lives at "/" rather than "/home".
+const routeForTab = (tab: string) => {
+  const route = `/${tab.toLowerCase()}`;
+  return route === "/home" ? "/" : route;
+};
 
 const Header = () => {
   const location = useLocation();
@@ -27,6 +35,14 @@ const Header = () => {
     Set<string>
   >(() => new Set());
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [menuPath, setMenuPath] = useState(location.pathname);
+
+  // Navigating away (including via browser back/forward) closes the drawer.
+  if (menuPath !== location.pathname) {
+    setMenuPath(location.pathname);
+    setIsMobileMenuOpen(false);
+  }
 
   // User is only considered "signed in" to the club once they have a full account.
   // A Google-authed user mid-signup should still see the Sign In button.
@@ -123,15 +139,51 @@ const Header = () => {
   }, [isProfileMenuOpen]);
 
   return (
-    <div className="header flex items-center p-6 bg-yellow-light w-full">
-      <div className="pl-2 flex-1">
-        <div className="flex items-center w-fit">
-          <ImageBlock
-            pageKey="logo"
-            alt="KAC Logo"
-            style={{ width: "64px", height: "64px" }}
-            editable={false}
-          />
+    <div className="header flex items-center gap-2 px-[1.59rem] py-3 lg:p-6 bg-yellow-light w-full">
+      {/** MOBILE ONLY - profile shortcut, balances the hamburger on the right */}
+      <div className="flex flex-1 justify-start lg:hidden">
+        {!loading &&
+          (isSignedIn ? (
+            <Link
+              aria-label="Profile"
+              className="flex items-center text-decoration-none"
+              to="/profile"
+            >
+              {navbarProfileImage ? (
+                <img
+                  className="header-profile-avatar"
+                  src={navbarProfileImage}
+                  alt="profile"
+                  onError={handleProfileImageError}
+                />
+              ) : (
+                <span className="header-profile-avatar header-profile-avatar-fallback">
+                  {user.displayName?.charAt(0).toUpperCase() ?? "K"}
+                </span>
+              )}
+            </Link>
+          ) : (
+            <a
+              aria-label="Sign in"
+              className="flex items-center text-blue-medium/35"
+              href="/api/auth/google"
+            >
+              <CircleUserRound aria-hidden="true" size={38} strokeWidth={1.5} />
+            </a>
+          ))}
+      </div>
+
+      {/** LOGO - centred on mobile, left-aligned from lg up */}
+      <div className="shrink-0 lg:flex-1 lg:pl-2">
+        <div className="flex items-center w-fit mx-auto lg:mx-0">
+          <div className="h-[57px] w-[57px] lg:h-16 lg:w-16">
+            <ImageBlock
+              pageKey="logo"
+              alt="KAC Logo"
+              style={{ width: "100%", height: "100%" }}
+              editable={false}
+            />
+          </div>
           <div className="flex-col font-sans! uppercase font-bold whitespace-nowrap m-0">
             <p className="text-base! leading-none!">Kiwi</p>
             <p className="text-base! leading-none!">Asian</p>
@@ -140,20 +192,21 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 justify-center gap-2 w-fit rounded-full bg-yellow-medium">
+      <div className="hidden lg:flex flex-1 justify-center gap-1 xl:gap-2 w-fit rounded-full bg-yellow-medium">
         <AnimatePresence>
           {tabs.map((tab) => {
-            const route = `/${tab.toLowerCase()}`;
-            const actualRoute = route === "/home" ? "/" : route;
+            const actualRoute = routeForTab(tab);
             const isSelected = location.pathname === actualRoute;
 
             return (
               <Link
                 key={tab}
                 to={actualRoute}
-                className="px-8 py-3 rounded-full relative text-decoration-none col-blue-medium w-0.8"
+                className="px-4 xl:px-8 py-2 xl:py-3 rounded-full relative text-decoration-none col-blue-medium w-0.8"
               >
-                <span className="relative z-10 uppercase text-xl">{tab}</span>
+                <span className="relative z-10 uppercase text-base xl:text-xl">
+                  {tab}
+                </span>
                 {isSelected && (
                   <motion.span
                     layoutId="pill-tab"
@@ -167,7 +220,7 @@ const Header = () => {
         </AnimatePresence>
       </div>
 
-      <div className="flex-1 flex pr-2 justify-end">
+      <div className="hidden lg:flex flex-1 pr-2 justify-end">
         {!loading &&
           (isSignedIn ? (
             <div className="header-profile-menu-shell" ref={profileMenuRef}>
@@ -270,6 +323,30 @@ const Header = () => {
             </a>
           ))}
       </div>
+
+      {/** MOBILE ONLY - hamburger toggle */}
+      <div className="flex flex-1 justify-end lg:hidden">
+        <button
+          aria-expanded={isMobileMenuOpen}
+          aria-label="Open menu"
+          className="header-menu-toggle"
+          onClick={() => setIsMobileMenuOpen(true)}
+          type="button"
+        >
+          <Menu aria-hidden="true" size={32} strokeWidth={2.5} />
+        </button>
+      </div>
+
+      <MobileMenu
+        currentPath={location.pathname}
+        isAdmin={isAdmin}
+        isOpen={isMobileMenuOpen}
+        isSignedIn={isSignedIn}
+        logout={logout}
+        onClose={() => setIsMobileMenuOpen(false)}
+        routeFor={routeForTab}
+        tabs={tabs}
+      />
     </div>
   );
 };

@@ -35,6 +35,10 @@ body {
   gap: 2px;
 }
 
+.footer-social-row {
+  display: none;
+}
+
 .footer-column h3 {
   font-weight: 1000;
   margin: 0 0 10px;
@@ -77,4 +81,69 @@ body {
   width: 45px;
   height: 45px;
   object-fit: contain;
+}
+
+/* Mobile: the five-column grid at 60% width is far too cramped, and the mascot
+   overhanging the top-right corner pushes the page wider than the viewport. */
+@media (max-width: 63.999rem) {
+  .footer-content {
+    width: 85%;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 16px;
+    justify-items: start;
+  }
+
+  /* The overhanging mascot is desktop-only - on a phone it crowds the footer
+     and its rotated bounding box pushes the page wider than the viewport. */
+  .footer-wrapper > .image-block {
+    display: none !important;
+  }
+
+  /* The 100px top margin exists to clear that mascot. With it hidden the gap is
+     just dead space, so the footer sits close under Discover More as in Figma. */
+  .footer-wrapper {
+    margin-top: 8px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  /* The mock trades the "Connect With Us!" link column for a row of circles. */
+  .footer-column-social {
+    display: none;
+  }
+
+  .footer-social-row {
+    display: flex;
+    grid-column: 1 / -1;
+    gap: 18px;
+    justify-content: center;
+    padding-top: 8px;
+    width: 100%;
+  }
+
+  .footer-social-circle {
+    align-items: center;
+    aspect-ratio: 1;
+    background-color: #ffffff;
+    border-radius: 9999px;
+    color: var(--color-blue-medium);
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    width: 44px;
+  }
+
+  .footer-social-circle:hover {
+    background-color: var(--color-yellow-medium);
+  }
+
+  .footer-social-circle svg {
+    height: 22px;
+    width: 22px;
+  }
 }

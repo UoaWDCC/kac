@@ -21,7 +21,7 @@ import {
 import "../style/common.css";
 import "../style/signup.css";
 
-import silhouetteMascot from "../images/kaco-silhouette.png";
+import { ImageBlock } from "../components/image_block/ImageBlock";
 
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? ""
@@ -420,12 +420,13 @@ const SignUpForm = () => {
     <div className="signup-page-wrapper">
 
       <div className="signup-content-container">
-        <img
-          src={silhouetteMascot}
-          alt="KAC Silhouette Mascot"
-          className="signup-silhouette-mascot"
-        />
-
+        <div className="signup-silhouette-mascot">
+          <ImageBlock
+            pageKey="signup-silhouette-mascot"
+            alt="Mascot Silhouette"
+            editable={false}
+          />
+        </div>
         <div className="signup-hero-side mt-30">
           {currentStep === 4 ? (
             <h1 className="signup-hero-title">

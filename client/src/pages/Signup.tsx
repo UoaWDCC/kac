@@ -97,9 +97,9 @@ const SignUpForm = () => {
       const email = user?.emails?.[0]?.value ?? "";
       if (!user || !email) {
         navigate("/");
-      } else if (hasAccount) navigate("/profile");
+      } else if (hasAccount && currentStep !== 4) navigate("/");
     }
-  }, [user, hasAccount, loading, navigate]);
+  }, [user, hasAccount, loading, navigate, currentStep]);
 
   // Click outside to close multi-select faculty dropdown
   useEffect(() => {
@@ -358,9 +358,13 @@ const SignUpForm = () => {
         paymentIntentId: paymentIntent.id,
       });
 
-      await refresh();
+
       setCurrentStep(4);
-      setTimeout(() => navigate("/"), 1200);
+      setTimeout(async () => {
+        await refresh();
+        navigate("/profile");
+      }, 60000);
+
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setSubmitError(
@@ -415,12 +419,6 @@ const SignUpForm = () => {
           alt="KAC Silhouette Mascot"
           className="signup-silhouette-mascot"
         />
-
-        {/* <img
-          src={mainMascot}
-          alt="KAC Main Mascot"
-          className="signup-title-mascot"
-        /> */}
 
         <div className="signup-hero-side mt-30">
           {currentStep === 4 ? (
@@ -1158,12 +1156,6 @@ const SignUpForm = () => {
             {/* STEP 4 VIEW (SUCCESS / WELCOME) */}
             {currentStep === 4 && (
               <div className="signup-success-container">
-                {/* <img
-                  src={mainMascot}
-                  alt="KAC Mascot"
-                  className="signup-success-mascot"
-                /> */}
-
                 <h2 className="signup-success-title">
                   Thank you for your submission!
                 </h2>

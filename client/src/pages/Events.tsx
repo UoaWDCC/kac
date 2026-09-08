@@ -97,7 +97,7 @@ const Events = () => {
   );
 
   return (
-    <div className="events-page">
+    <div className="events-page mb-40">
       <title>Kiwi Asian Club - Events</title>
 
       {/** Title **/}

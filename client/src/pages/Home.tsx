@@ -79,7 +79,7 @@ const Home = () => {
     ) : null;
 
   return (
-    <div>
+    <div className="mb-40">
       {/** HERO */}
       <section className="section bg-yellow-light flex items-center justify-center max-lg:px-5! max-lg:pt-0!">
         <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-8 max-lg:gap-[3.15rem] 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24 max-lg:w-full">

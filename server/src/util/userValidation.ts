@@ -79,14 +79,14 @@ const STRING_RULES = {
     maxLength: 20,
     pattern: DIGITS_ONLY,
     patternMessage: "Student Number can only contain numbers.",
-    required: true,
+    required: false,
   },
   university: {
     label: "University",
     maxLength: 120,
     pattern: SAFE_TEXT,
     patternMessage: "University can only contain letters, numbers, and spaces.",
-    required: true,
+    required: false,
   },
   upi: {
     label: "Student Username / UPI",
@@ -94,7 +94,7 @@ const STRING_RULES = {
     pattern: SAFE_ID,
     patternMessage:
       "Student Username / UPI can only contain letters and numbers.",
-    required: true,
+    required: false,
   },
 } satisfies Record<string, ValidationRule>;
 
@@ -157,6 +157,14 @@ const validateStringField = (
     return;
   }
 
+  if (input[field] === null) {
+    if (shouldRequire) {
+      errors.push(`${rule.label} is required.`);
+    }
+
+    return;
+  }
+
   const value = getString(input, field, errors);
 
   if (value === null) {
@@ -166,9 +174,9 @@ const validateStringField = (
   if (!value) {
     if (shouldRequire) {
       errors.push(`${rule.label} is required.`);
+      values[field] = value;
     }
 
-    values[field] = value;
     return;
   }
 
@@ -196,6 +204,14 @@ const validateFaculties = (
       if (Array.isArray(faculties) && faculties.length === 0) {
         return;
       }
+    }
+
+    return;
+  }
+
+  if (input.faculties === null) {
+    if (requireAll) {
+      errors.push("Select at least one faculty.");
     }
 
     return;

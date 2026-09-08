@@ -364,18 +364,16 @@ const SignUpForm = () => {
         paymentIntentId: paymentIntent.id,
       });
 
-
       setCurrentStep(4);
       setTimeout(async () => {
         await refresh();
         navigate("/profile");
       }, 600000); // 1 minute delay before redirecting to profile page - can be adjusted
-
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setSubmitError(
           err.response?.data?.message ??
-          "Something went wrong. Please try again."
+            "Something went wrong. Please try again."
         );
       } else if (err instanceof Error) {
         setSubmitError(err.message);
@@ -418,7 +416,6 @@ const SignUpForm = () => {
 
   return (
     <div className="signup-page-wrapper">
-
       <div className="signup-content-container">
         <div className="signup-silhouette-mascot">
           <ImageBlock
@@ -486,11 +483,11 @@ const SignUpForm = () => {
 
             {((currentStep === 1 && hasStep1Errors) ||
               (currentStep === 2 && hasStep2Errors)) && (
-                <div className="signup-global-error">
-                  <span className="signup-error-icon-badge">!</span>
-                  <span>Please fill out all required sections</span>
-                </div>
-              )}
+              <div className="signup-global-error">
+                <span className="signup-error-icon-badge">!</span>
+                <span>Please fill out all required sections</span>
+              </div>
+            )}
 
             {submitError && currentStep === 3 && (
               <div className="signup-global-error">
@@ -714,8 +711,9 @@ const SignUpForm = () => {
                     ref={facultyDropdownRef}
                   >
                     <div
-                      className={`signup-multi-select-trigger${isFacultyDisabled ? " is-disabled" : ""
-                        }`}
+                      className={`signup-multi-select-trigger${
+                        isFacultyDisabled ? " is-disabled" : ""
+                      }`}
                       onClick={() => {
                         if (isFacultyDisabled) return;
                         setIsFacultyDropdownOpen(!isFacultyDropdownOpen);
@@ -732,8 +730,9 @@ const SignUpForm = () => {
                         </span>
                       )}
                       <span
-                        className={`signup-chevron-icon signup-faculty-chevron${isFacultyDropdownOpen ? " is-open" : ""
-                          }`}
+                        className={`signup-chevron-icon signup-faculty-chevron${
+                          isFacultyDropdownOpen ? " is-open" : ""
+                        }`}
                         aria-hidden="true"
                       >
                         {isFacultyDropdownOpen ? "▲" : "▼"}
@@ -1178,12 +1177,10 @@ const SignUpForm = () => {
                   <button
                     type="button"
                     className="signup-continue-btn"
-                    onClick={
-                      async () => {
-                        await refresh();
-                        navigate("/");
-                      }}
-
+                    onClick={async () => {
+                      await refresh();
+                      navigate("/");
+                    }}
                   >
                     Back Home &gt;
                   </button>
@@ -1193,7 +1190,7 @@ const SignUpForm = () => {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

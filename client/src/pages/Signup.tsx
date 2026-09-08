@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -100,6 +100,12 @@ const SignUpForm = () => {
       } else if (hasAccount && currentStep !== 4) navigate("/");
     }
   }, [user, hasAccount, loading, navigate, currentStep]);
+
+  useLayoutEffect(() => {
+    if (currentStep === 4) {
+      window.scrollTo(0, 0);
+    }
+  }, [currentStep]);
 
   // Click outside to close multi-select faculty dropdown
   useEffect(() => {
@@ -363,7 +369,7 @@ const SignUpForm = () => {
       setTimeout(async () => {
         await refresh();
         navigate("/profile");
-      }, 60000);
+      }, 600000); // 1 minute delay before redirecting to profile page - can be adjusted
 
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -440,7 +446,7 @@ const SignUpForm = () => {
           )}
         </div>
 
-        <div className="signup-card-side mt-20">
+        <div className="signup-card-side mt-25">
           <div className="signup-card">
             {currentStep > 1 && currentStep < 4 && (
               <button
@@ -1155,8 +1161,8 @@ const SignUpForm = () => {
 
             {/* STEP 4 VIEW (SUCCESS / WELCOME) */}
             {currentStep === 4 && (
-              <div className="signup-success-container">
-                <h2 className="signup-success-title">
+              <div className="signup-success-container  mt-10">
+                <h2 className="signup-success-title ">
                   Thank you for your submission!
                 </h2>
 
@@ -1171,7 +1177,12 @@ const SignUpForm = () => {
                   <button
                     type="button"
                     className="signup-continue-btn"
-                    onClick={() => navigate("/")}
+                    onClick={
+                      async () => {
+                        await refresh();
+                        navigate("/");
+                      }}
+
                   >
                     Back Home &gt;
                   </button>
@@ -1181,7 +1192,7 @@ const SignUpForm = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

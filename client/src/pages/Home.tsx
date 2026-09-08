@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 import ImageSlider from "../components/ImageSlider";
-import kacoVector from "../images/kaco-vector.png";
 import SponsorCard from "../components/SponsorCard";
 import { useAuth } from "../auth/useAuth.ts";
 import { getSponsors } from "../api/sponsorsApi";
@@ -212,12 +211,6 @@ const Home = () => {
          * slider on top of it. On mobile that would leave a 90vw-tall gap, so
          * the KACO silhouette sits behind the section as a watermark instead.
          */}
-        <img
-          src={kacoVector}
-          alt=""
-          aria-hidden="true"
-          className="absolute left-1/2 top-0 h-full w-auto max-w-none -translate-x-1/2 pointer-events-none select-none lg:hidden"
-        />
 
         <div className="hidden lg:block lg:justify-self-end lg:relative">
           <ImageBlock

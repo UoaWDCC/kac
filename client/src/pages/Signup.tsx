@@ -12,7 +12,6 @@ import {
 } from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
 import api from "../api/index";
-import Header from "../main/Header";
 import { FACULTIES } from "../constants/faculties";
 import {
   filterMemberFieldInput,
@@ -23,7 +22,6 @@ import "../style/common.css";
 import "../style/signup.css";
 
 import silhouetteMascot from "../images/kaco-silhouette.png";
-import mainMascot from "../images/kaco-title.png";
 
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? ""
@@ -362,12 +360,12 @@ const SignUpForm = () => {
 
       await refresh();
       setCurrentStep(4);
-      setTimeout(() => navigate("/profile"), 1200);
+      setTimeout(() => navigate("/"), 1200);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setSubmitError(
           err.response?.data?.message ??
-            "Something went wrong. Please try again."
+          "Something went wrong. Please try again."
         );
       } else if (err instanceof Error) {
         setSubmitError(err.message);
@@ -410,7 +408,6 @@ const SignUpForm = () => {
 
   return (
     <div className="signup-page-wrapper">
-      <Header />
 
       <div className="signup-content-container">
         <img
@@ -419,13 +416,13 @@ const SignUpForm = () => {
           className="signup-silhouette-mascot"
         />
 
-        <img
+        {/* <img
           src={mainMascot}
           alt="KAC Main Mascot"
           className="signup-title-mascot"
-        />
+        /> */}
 
-        <div className="signup-hero-side">
+        <div className="signup-hero-side mt-30">
           {currentStep === 4 ? (
             <h1 className="signup-hero-title">
               WELCOME TO
@@ -445,7 +442,7 @@ const SignUpForm = () => {
           )}
         </div>
 
-        <div className="signup-card-side">
+        <div className="signup-card-side mt-20">
           <div className="signup-card">
             {currentStep > 1 && currentStep < 4 && (
               <button
@@ -484,11 +481,11 @@ const SignUpForm = () => {
 
             {((currentStep === 1 && hasStep1Errors) ||
               (currentStep === 2 && hasStep2Errors)) && (
-              <div className="signup-global-error">
-                <span className="signup-error-icon-badge">!</span>
-                <span>Please fill out all required sections</span>
-              </div>
-            )}
+                <div className="signup-global-error">
+                  <span className="signup-error-icon-badge">!</span>
+                  <span>Please fill out all required sections</span>
+                </div>
+              )}
 
             {submitError && currentStep === 3 && (
               <div className="signup-global-error">
@@ -712,9 +709,8 @@ const SignUpForm = () => {
                     ref={facultyDropdownRef}
                   >
                     <div
-                      className={`signup-multi-select-trigger${
-                        isFacultyDisabled ? " is-disabled" : ""
-                      }`}
+                      className={`signup-multi-select-trigger${isFacultyDisabled ? " is-disabled" : ""
+                        }`}
                       onClick={() => {
                         if (isFacultyDisabled) return;
                         setIsFacultyDropdownOpen(!isFacultyDropdownOpen);
@@ -731,9 +727,8 @@ const SignUpForm = () => {
                         </span>
                       )}
                       <span
-                        className={`signup-chevron-icon signup-faculty-chevron${
-                          isFacultyDropdownOpen ? " is-open" : ""
-                        }`}
+                        className={`signup-chevron-icon signup-faculty-chevron${isFacultyDropdownOpen ? " is-open" : ""
+                          }`}
                         aria-hidden="true"
                       >
                         {isFacultyDropdownOpen ? "▲" : "▼"}
@@ -1163,11 +1158,11 @@ const SignUpForm = () => {
             {/* STEP 4 VIEW (SUCCESS / WELCOME) */}
             {currentStep === 4 && (
               <div className="signup-success-container">
-                <img
+                {/* <img
                   src={mainMascot}
                   alt="KAC Mascot"
                   className="signup-success-mascot"
-                />
+                /> */}
 
                 <h2 className="signup-success-title">
                   Thank you for your submission!

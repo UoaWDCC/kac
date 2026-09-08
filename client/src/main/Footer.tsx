@@ -119,7 +119,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          <div className="footer-logo">
+          <div className="footer-logo cursor-pointer" onClick={() => window.location.href = '/'}>
             <ImageBlock pageKey="logo" alt="KAC Logo" editable={false} />
             <span>KAC</span>
           </div>

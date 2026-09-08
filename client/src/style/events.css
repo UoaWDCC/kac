@@ -202,6 +202,8 @@
   min-width: 0;
   overflow: hidden;
   width: 100%;
+  color: inherit;
+  text-decoration: none;
 }
 
 .events-past-image {

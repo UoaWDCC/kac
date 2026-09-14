@@ -394,8 +394,9 @@
     padding-right: 1.5rem;
   }
 
-  .events-page .page-title-section {
-    text-align: center;
+  .events-page .page-title-wrap {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
   }
 
   .events-page .page-title-mascot {
@@ -403,7 +404,7 @@
   }
 
   .events-page .sponsors-title {
-    font-size: clamp(1.7rem, 8vw, 2.4rem) !important;
+    font-size: clamp(2.1rem, 11vw, 3rem) !important;
     padding-left: 0 !important;
     white-space: nowrap;
   }
@@ -461,21 +462,30 @@
 
   .events-section-title {
     font-family: var(--font-sans);
-    font-size: clamp(1.5rem, 6.5vw, 1.9rem);
-    font-weight: 800;
+    font-size: clamp(1.1rem, 4.5vw, 1.35rem);
+    font-weight: 400;
     margin-left: 0;
-    text-align: center;
+    text-align: left;
     text-transform: none;
+  }
+
+  .events-card-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 400;
+  }
+
+  .events-feature-title {
+    font-weight: 600;
   }
 
   .events-featured-grid,
   .events-past-grid {
-    grid-template-columns: 17rem;
-    justify-content: center;
+    grid-template-columns: minmax(0, 1fr);
+    justify-content: stretch;
   }
 
   .events-section {
-    margin-bottom: 5rem;
+    margin-bottom: 3.5rem;
   }
 
   .events-footer-links {
@@ -489,6 +499,11 @@
   .events-content {
     padding-left: 1.1rem;
     padding-right: 1.1rem;
+  }
+
+  .events-page .page-title-wrap {
+    padding-left: 1.1rem !important;
+    padding-right: 1.1rem !important;
   }
 
   .events-filters {

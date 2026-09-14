@@ -45,6 +45,8 @@ function groupPastEventsByYear(events: CreatedEvent[]): EventsByYear[] {
     });
 }
 
+type EventsFilter = "all" | "upcoming" | "past";
+
 const Events = () => {
   const { role } = useAuth();
   const [events, setEvents] = useState<EventsByTime>({
@@ -53,6 +55,7 @@ const Events = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<EventsFilter>("all");
 
   const loadEvents = () => {
     setLoading(true);
@@ -103,10 +106,32 @@ const Events = () => {
       {/** Title **/}
       <PageTitle title="OUR EVENTS" />
 
+      {/** Filters **/}
+      <div className="events-content events-filters">
+        {(
+          [
+            { key: "all", label: "All" },
+            { key: "upcoming", label: "Upcoming Events" },
+            { key: "past", label: "Past Events" },
+          ] as { key: EventsFilter; label: string }[]
+        ).map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            className={`events-filter-button${
+              filter === key ? " is-active" : ""
+            }`}
+            onClick={() => setFilter(key)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       {error && <p className="text-red-600">{error}</p>}
 
       {/** Upcoming Concerts **/}
-      {!loading && (
+      {!loading && filter !== "past" && (
         <section className="events-content events-section">
           <div className="flex flex-row justify-between items-center">
             {events.upcoming.length > 0 && (
@@ -114,6 +139,9 @@ const Events = () => {
             )}
             {role === "admin" && <CreateEventModal onCreated={handleCreated} />}
           </div>
+          {events.upcoming.length > 0 && (
+            <div className="events-section-divider" aria-hidden="true" />
+          )}
 
           <div className="events-featured-grid">
             {!loading &&
@@ -150,6 +178,7 @@ const Events = () => {
 
       {/** Past Concerts by Year**/}
       {!loading &&
+        filter !== "upcoming" &&
         pastByYear.map((section) => (
           <section
             className="events-content events-section"
@@ -160,6 +189,7 @@ const Events = () => {
                 ? `${section.year} Past Events:`
                 : "Past Events (Date Unknown):"}
             </h2>
+            <div className="events-section-divider" aria-hidden="true" />
             <div className="events-past-grid">
               {section.events.map((event) => (
                 <article className="events-past-card" key={event._id}>

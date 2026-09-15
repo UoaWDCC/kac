@@ -1,5 +1,8 @@
-import { Executive } from "../model/executive";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { RequestHandler } from "express";
+import { Executive } from "../model/executive";
+import { Image } from "../model/image";
+import { s3Client } from "../config/aws";
 
 const normaliseRoleGroup = (value?: string) =>
   (value || "other")
@@ -7,10 +10,40 @@ const normaliseRoleGroup = (value?: string) =>
     .toLowerCase()
     .replace(/[\s_-]+/g, "-");
 
+const deleteImagesForExecutive = async (imageTag?: string) => {
+  if (!imageTag?.startsWith("exec-image:")) return 0;
+
+  const images = await Image.find({ tag: imageTag }).lean();
+  const deletedImageIds = [];
+  let failedDeletes = 0;
+
+  for (const image of images) {
+    try {
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: image.bucket,
+          Key: image.s3Key,
+        })
+      );
+      deletedImageIds.push(image._id);
+    } catch (error) {
+      failedDeletes += 1;
+      console.error("Failed to delete executive image from S3:", error);
+    }
+  }
+
+  if (deletedImageIds.length > 0) {
+    await Image.deleteMany({ _id: { $in: deletedImageIds } });
+  }
+
+  return failedDeletes;
+};
+
 export const addExec: RequestHandler = async (req, res, next) => {
   try {
     req.body.roleGroup = normaliseRoleGroup(req.body.roleGroup);
     const newExec = new Executive(req.body);
+    newExec.imageURL = `exec-image:${newExec._id}`;
     const savedExec = await newExec.save();
     res.status(201).json(savedExec);
   } catch (err) {
@@ -50,15 +83,27 @@ export const editExec: RequestHandler = async (req, res, next) => {
 
 export const deleteExec: RequestHandler = async (req, res, next) => {
   try {
-    const deletedExec = await Executive.findByIdAndDelete(req.params.id);
-    if (!deletedExec) {
+    const executive = await Executive.findById(req.params.id);
+    if (!executive) {
       return res.status(404).json({ message: "Executive not found." });
     }
-    res.status(200).json({ message: "Executive deleted successfully." });
+
+    const failedImageDeletes = await deleteImagesForExecutive(
+      executive.imageURL
+    );
+    await executive.deleteOne();
+
+    res.status(200).json({
+      message: "Executive deleted successfully.",
+      imageCleanupWarning:
+        failedImageDeletes > 0
+          ? `${failedImageDeletes} image(s) could not be deleted from storage.`
+          : undefined,
+    });
   } catch (err) {
-    console.error("[!] Error deleting executive: ", err);
+    console.error("[!] Error deleting executive and image: ", err);
     res.status(500).json({
-      message: "Error deleting executive.",
+      message: "Error deleting executive and image.",
       error: err,
     });
   }

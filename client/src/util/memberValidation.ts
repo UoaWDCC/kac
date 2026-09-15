@@ -162,9 +162,13 @@ export const getMemberValidationErrors = (
 ) => {
   const normalized = normalizeMemberProfile(input);
   const errors: string[] = [];
-  const missingFields: string[] = REQUIRED_FIELDS.filter(
-    (field) => !normalized[field]
-  );
+  const isUoa = normalized.university === "The University of Auckland";
+  const missingFields: string[] = REQUIRED_FIELDS.filter((field) => {
+    if (!isUoa && (field === "studentId" || field === "upi")) {
+      return false;
+    }
+    return !normalized[field];
+  });
 
   if (options.requireYearOfStudy && !normalized.yearOfStudy) {
     missingFields.push("yearOfStudy");
@@ -232,7 +236,8 @@ export const getMemberValidationErrors = (
     errors.push("Email Address must be a valid email.");
   }
 
-  if (normalized.faculties.length === 0) {
+  const isNone = !normalized.university || normalized.university === "None";
+  if (!isNone && normalized.faculties.length === 0) {
     errors.push("Select at least one faculty.");
   } else if (
     normalized.faculties.some((faculty) => !FACULTIES.includes(faculty))

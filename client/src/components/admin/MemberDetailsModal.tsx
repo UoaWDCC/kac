@@ -101,7 +101,8 @@ export default function MemberDetailsModal({
       return;
     }
 
-    if (form.faculties.length === 0) {
+    const isNone = !form.university || form.university === "None";
+    if (!isNone && form.faculties.length === 0) {
       setError("Select at least one faculty.");
       return;
     }

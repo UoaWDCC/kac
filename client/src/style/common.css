@@ -91,6 +91,83 @@ p {
   color: var(--color-yellow-light);
 }
 
+/* Inverted pill — navy fill on a yellow surface (e.g. the mobile menu drawer). */
+.button-navy {
+  background-color: var(--color-blue-medium);
+  border: 0;
+  border-radius: 9999px;
+  box-shadow: 0.2rem 0.2rem rgba(11, 45, 74, 0.25);
+  color: var(--color-yellow-light);
+  cursor: pointer;
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  padding: 0.55rem 2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.button-navy:hover {
+  background-color: var(--color-blue-light);
+  color: var(--color-yellow-light);
+}
+
+/* Scroll lock while the mobile menu drawer is open. Scoped to the drawer's own
+   breakpoint so widening past lg releases the page even if the drawer's state
+   has not caught up yet. */
+@media (max-width: 63.999rem) {
+  body.mobile-menu-open {
+    overflow: hidden;
+  }
+}
+
+/* The offset block shadow behind the big content cards. Figma offsets it by
+   5px on mobile (Rectangle 212 sits +5,+5 behind Rectangle 87) and 10px on
+   desktop. Inline styles cannot carry a breakpoint, hence the class. */
+.card-shadow {
+  box-shadow: 10px 10px var(--color-yellow-medium);
+}
+
+@media (max-width: 63.999rem) {
+  .card-shadow {
+    box-shadow: 5px 5px var(--color-yellow-medium);
+  }
+}
+
+/* Slider dot controls. Plain CSS rather than utilities: about.css defines an
+   unlayered `button { width: 100% }`, and unlayered rules beat Tailwind's
+   layered utilities, so `w-2.5` on a <button> is silently dropped. */
+.slider-dot {
+  background-color: rgba(11, 45, 74, 0.3);
+  border: 0;
+  border-radius: 9999px;
+  cursor: pointer;
+  height: 0.625rem;
+  padding: 0;
+  transition: background-color 0.2s ease;
+  width: 0.625rem;
+}
+
+.slider-dot.is-active {
+  background-color: var(--color-blue-medium);
+}
+
+/* Hamburger / close toggle in the mobile header. `width: auto` is load-bearing:
+   about.css declares an unlayered `button { width: 100% }` that would otherwise
+   stretch this to its whole flex slot and float the icon away from the edge. */
+.header-menu-toggle {
+  align-items: center;
+  background-color: transparent;
+  border: 0;
+  color: var(--color-blue-medium);
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0.25rem;
+  width: auto;
+}
+
 .header-profile-menu-shell {
   align-items: center;
   display: flex;

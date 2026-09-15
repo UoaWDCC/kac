@@ -4,14 +4,14 @@ import SponsorCard from "../components/SponsorCard";
 import { getSponsors } from "../api/sponsorsApi";
 import "../style/sponsors.css";
 import { ImageBlock } from "../components/image_block/ImageBlock";
-
-interface Sponsor {
-  name: string;
-  deal: string;
-  address: string;
-  category: "cbd" | "newmarket" | "other";
-  code?: string;
-}
+import PageTitle from "../components/PageTitle";
+import {
+  dedupeSponsorsByName,
+  formatSponsorDeal,
+  formatSponsorLocation,
+  sponsorPageKey,
+  type Sponsor,
+} from "../util/sponsors";
 
 type Tab = "all" | "cbd" | "newmarket" | "other";
 
@@ -54,33 +54,18 @@ const Sponsors = () => {
     { label: "Other", value: "other" },
   ];
 
-  const uniqueSponsors = sorted.filter(
-    (s, index, self) => index === self.findIndex((t) => t.name === s.name)
-  );
+  const uniqueSponsors = dedupeSponsorsByName(sorted);
   const marqueeSponsors = [...uniqueSponsors, ...uniqueSponsors];
   return (
-    <div className="sponsors-page">
-      {/* HERO - centered */}
-      <div className="sponsors-centered-content">
-        <section className="sponsors-hero-section">
-          <div className="sponsors-hero-inner">
-            <img
-              src="src/images/kaco-title.png"
-              alt="Mascot"
-              className="sponsors-hero-mascot"
-            />
-            <h1 className="sponsors-title">OUR SPONSORS</h1>
-          </div>
-        </section>
-      </div>
+    <div className="sponsors-page mb-40">
+      <PageTitle title="OUR SPONSORS" />
 
       {/* MARQUEE + OVERLAPPING MEMBERSHIP CARD */}
       <div className="sponsors-marquee-shell">
         <div className="sponsors-marquee-track-wrap">
           <div className="sponsors-marquee-track">
             {marqueeSponsors.map((s, i) => {
-              const pageKey =
-                "sponsor-" + s.name.toLowerCase().replace(/\s+/g, "-");
+              const pageKey = sponsorPageKey(s.name);
               return (
                 <div
                   key={i}
@@ -107,6 +92,7 @@ const Sponsors = () => {
                       objectFit: "contain",
                       borderRadius: "8px",
                     }}
+                    editable={false}
                   />
                 </div>
               );
@@ -114,10 +100,21 @@ const Sponsors = () => {
           </div>
         </div>
 
-        <img
-          src="src/images/membership_card.png"
+        {/* CSS taken from sponsor.css formerly sponsors-membership-card */}
+        <ImageBlock
+          pageKey="membership-card"
           alt="Membership Card"
-          className="sponsors-membership-card"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            maxWidth: "130px",
+            zIndex: "2",
+            border: "3px solid var(--color-blue-medium)",
+            borderRadius: "12px",
+          }}
+          editable={false}
         />
       </div>
 
@@ -204,10 +201,8 @@ const Sponsors = () => {
                 <SponsorCard
                   key={s.name}
                   name={s.name}
-                  description={s.deal}
-                  location={s.address
-                    .replace(/, Auckland CBD$/i, "")
-                    .replace(/, Auckland City$/i, "")}
+                  description={formatSponsorDeal(s)}
+                  location={formatSponsorLocation(s)}
                 />
               ))}
             </div>
@@ -224,8 +219,8 @@ const Sponsors = () => {
                   <SponsorCard
                     key={s.name}
                     name={s.name}
-                    description={s.deal}
-                    location={s.address.replace(/, Newmarket$/i, "")}
+                    description={formatSponsorDeal(s)}
+                    location={formatSponsorLocation(s)}
                   />
                 ))}
               </div>
@@ -241,8 +236,8 @@ const Sponsors = () => {
                 <SponsorCard
                   key={index}
                   name={s.name}
-                  description={s.deal + (s.code ? ` (Code: ${s.code})` : "")}
-                  location={s.address}
+                  description={formatSponsorDeal(s)}
+                  location={formatSponsorLocation(s)}
                 />
               ))}
             </div>

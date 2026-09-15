@@ -59,17 +59,6 @@
   flex-shrink: 0;
 }
 
-.sponsors-membership-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 130px;
-  z-index: 2;
-  border: 3px solid var(--color-blue-medium);
-  border-radius: 12px;
-}
-
 .sponsors-blurb {
   padding: 6rem 2rem 2rem 2rem;
   text-align: center;
@@ -177,6 +166,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }

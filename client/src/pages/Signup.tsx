@@ -144,8 +144,9 @@ const SignUpForm = () => {
 
       const isStudentRequired = sanitized === "The University of Auckland";
       const isFacultyRequired = sanitized !== "None";
+      const isFacultyDisabled = !sanitized || sanitized === "None";
 
-      if (!isFacultyRequired || !sanitized) {
+      if (isFacultyDisabled) {
         setIsFacultyDropdownOpen(false);
       }
 
@@ -257,7 +258,8 @@ const SignUpForm = () => {
       }
     }
 
-    const isFacultyRequired = normalizedForm.university !== "None";
+    const isFacultyRequired =
+      normalizedForm.university && normalizedForm.university !== "None";
     if (isFacultyRequired && normalizedForm.faculties.length === 0) {
       missing.faculties = true;
     }
@@ -387,7 +389,7 @@ const SignUpForm = () => {
   const isStudentRequired = form.university === "The University of Auckland";
   const isStudentFieldsDisabled = !isStudentRequired;
 
-  const isFacultyRequired = form.university !== "None";
+  const isFacultyRequired = form.university && form.university !== "None";
   const isFacultyDisabled = !form.university || form.university === "None";
 
   const stripeElementOptions = {
@@ -651,7 +653,7 @@ const SignUpForm = () => {
                     )}
                   </div>
                   <p className="signup-field-subtext">
-                    E.g. UOA UPI Format: abcd123. Enter "N/A" if not applicable
+                    E.g. UOA UPI Format: abcd123.
                   </p>
                   <input
                     type="text"
@@ -679,9 +681,7 @@ const SignUpForm = () => {
                       <span className="signup-required-badge">Required</span>
                     )}
                   </div>
-                  <p className="signup-field-subtext">
-                    E.g. 123456789. If not applicable, please enter "N/A"
-                  </p>
+                  <p className="signup-field-subtext">E.g. 123456789.</p>
                   <input
                     type="text"
                     name="studentId"

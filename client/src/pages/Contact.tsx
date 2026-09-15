@@ -6,6 +6,7 @@ import "../style/common.css";
 import "../style/contact.css";
 
 import { sendContact } from "../api/contactApi";
+import { useAuth } from "../auth/useAuth";
 import kaco from "../images/kaco-title.png";
 
 /**
@@ -21,6 +22,8 @@ import kaco from "../images/kaco-title.png";
 type Status = "idle" | "sending" | "sent" | "error";
 
 const Contact = () => {
+  const { user } = useAuth();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -28,13 +31,16 @@ const Contact = () => {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setSubmitError] = useState<string | null>(null);
 
+  const contactName = name || user?.displayName || "";
+  const contactEmail = email || user?.emails?.[0]?.value || "";
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (status === "sending") return;
 
     const contactData = {
-      name: name.trim(),
-      email: email.trim(),
+      name: contactName.trim(),
+      email: contactEmail.trim(),
       message: message.trim(),
     };
 
@@ -121,7 +127,7 @@ const Contact = () => {
                     type="text"
                     id="contact-name"
                     required
-                    value={name}
+                    value={contactName}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Name Here"
                     className="contact-underline-input"
@@ -142,7 +148,7 @@ const Contact = () => {
                     type="email"
                     id="contact-email"
                     required
-                    value={email}
+                    value={contactEmail}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter Here"
                     className="contact-underline-input"

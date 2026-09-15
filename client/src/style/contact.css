@@ -25,6 +25,23 @@
   width: 100%;
 }
 
+.contact-textarea-shell {
+  display: flex;
+}
+
+.contact-textarea-shell textarea {
+  background: transparent;
+  border: none;
+  field-sizing: content;
+  max-block-size: 4lh;
+  min-block-size: 1lh;
+  outline: none;
+  overflow-y: auto;
+  padding: 0;
+  resize: none;
+  width: 100%;
+}
+
 @media (min-width: 64rem) {
   .contact-required-chip {
     font-size: 0.75rem;

@@ -541,11 +541,11 @@ p {
   color: #991b1b;
   display: flex;
   font-family: var(--font-alan-sans);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 600;
   justify-content: center;
   line-height: 1.35;
-  min-height: 2.4rem;
+  min-height: 2.2rem;
   text-align: center;
 }
 
@@ -582,11 +582,4 @@ p {
   background-color: var(--color-blue-medium);
   box-shadow: 2px 4px var(--color-grey-medium);
   color: var(--color-yellow-light);
-}
-
-@media (max-width: 64rem) {
-  .form-error {
-    font-size: 0.8rem;
-    min-height: 2.2rem;
-  }
 }

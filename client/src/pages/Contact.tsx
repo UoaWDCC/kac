@@ -78,22 +78,24 @@ const Contact = () => {
       <title>Kiwi Asian Club - Contact</title>
 
       <section className="section">
-        <h1 className="page-title !mb-4 lg:mb-6 lg:pl-24">Contact Us</h1>
+        <h1 className="page-title !mb-4 lg:!mb-6 lg:pl-[clamp(1rem,4vw,6rem)]">
+          Contact Us
+        </h1>
 
-        <div className="flex flex-col items-center lg:pb-12 lg:flex-row lg:pl-24 lg:pr-36 lg:pb-24">
+        <div className="flex flex-col items-center pb-12 lg:flex-row lg:pl-[clamp(1rem,4vw,6rem)] lg:pr-[clamp(1rem,6vw,9rem)] lg:pb-24">
           <img
             src={kaco}
             alt="KAC Mascot"
-            className="w-[34rem] shrink-0 relative z-0 -mb-41 lg:z-10 lg:-mr-10"
+            className="w-[82%] max-w-[22rem] shrink-0 relative z-0 -mb-25 lg:w-[clamp(17rem,34vw,37rem)] lg:max-w-none lg:mb-0 lg:z-10 lg:-mr-[clamp(1rem,2.5vw,2.5rem)]"
           />
 
-          <div className="relative z-10 bg-white rounded-2xl px-10 py-8 shadow-[8px_8px] shadow-yellow-medium lg:px-16 lg:py-12 flex-1 grid lg:rounded-4xl lg:z-0">
+          <div className="relative z-10 bg-white rounded-2xl px-10 py-8 shadow-[8px_8px] shadow-yellow-medium lg:px-[clamp(1.5rem,3.5vw,4rem)] lg:py-12 flex-1 grid lg:rounded-4xl lg:z-0">
             <div
               className={`col-start-1 row-start-1 font-alan-sans flex flex-col items-center justify-center gap-8 lg:gap-16 ${
                 status === "sent" ? "" : "invisible pointer-events-none"
               }`}
             >
-              <p className="text-base lg:text-lg font-bold text-blue-medium text-center text-balance">
+              <p className="!text-base lg:!text-lg font-bold text-blue-medium text-center text-balance">
                 Thank you for getting in touch with us!
                 <br />
                 Our team will get back to you as soon as we can.
@@ -109,18 +111,18 @@ const Contact = () => {
                 status === "sent" ? "invisible pointer-events-none" : ""
               }`}
             >
-              <p className="text-base lg:text-lg font-bold text-blue-medium text-center text-balance lg:pb-4">
+              <p className="!text-base lg:!text-lg font-bold text-blue-medium text-center text-balance lg:pb-4">
                 Feel free to let us know any questions you have.
                 <br />
                 We will get back to you as soon as we can!
               </p>
 
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-20">
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-[clamp(1.5rem,4vw,5rem)]">
                 <div className="flex flex-col">
                   <div className="contact-field-header">
                     <label
                       htmlFor="contact-name"
-                      className="text-base font-bold lg:text-lg"
+                      className="!text-base lg:!text-lg font-bold"
                     >
                       Your Name
                     </label>
@@ -172,15 +174,16 @@ const Contact = () => {
                   </label>
                   <span className="contact-required-chip">Required</span>
                 </div>
-                <textarea
-                  id="contact-message"
-                  required
-                  rows={1}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Write your message"
-                  className="contact-underline-input"
-                />
+                <div className="contact-underline-input contact-textarea-shell">
+                  <textarea
+                    id="contact-message"
+                    required
+                    rows={1}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Write your message"
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col items-center">

@@ -78,22 +78,22 @@ const Contact = () => {
       <title>Kiwi Asian Club - Contact</title>
 
       <section className="section">
-        <h1 className="page-title pl-24">Contact Us</h1>
+        <h1 className="page-title !mb-4 lg:mb-6 lg:pl-24">Contact Us</h1>
 
-        <div className="flex flex-row items-center pl-24 pr-36 pb-24">
+        <div className="flex flex-col items-center lg:pb-12 lg:flex-row lg:pl-24 lg:pr-36 lg:pb-24">
           <img
             src={kaco}
             alt="KAC Mascot"
-            className="w-[34rem] shrink-0 relative z-10 -mr-10"
+            className="w-[34rem] shrink-0 relative z-0 -mb-41 lg:z-10 lg:-mr-10"
           />
 
-          <div className="bg-white rounded-4xl shadow-[8px_8px] shadow-yellow-medium px-16 py-12 flex-1 grid">
+          <div className="relative z-10 bg-white rounded-2xl px-10 py-8 shadow-[8px_8px] shadow-yellow-medium lg:px-16 lg:py-12 flex-1 grid lg:rounded-4xl lg:z-0">
             <div
-              className={`col-start-1 row-start-1 font-alan-sans flex flex-col items-center justify-center gap-16 ${
+              className={`col-start-1 row-start-1 font-alan-sans flex flex-col items-center justify-center gap-8 lg:gap-16 ${
                 status === "sent" ? "" : "invisible pointer-events-none"
               }`}
             >
-              <p className="text-lg font-bold text-blue-medium text-center">
+              <p className="text-base lg:text-lg font-bold text-blue-medium text-center text-balance">
                 Thank you for getting in touch with us!
                 <br />
                 Our team will get back to you as soon as we can.
@@ -105,20 +105,23 @@ const Contact = () => {
 
             <form
               onSubmit={handleSubmit}
-              className={`col-start-1 row-start-1 flex flex-col gap-10 font-alan-sans ${
+              className={`col-start-1 row-start-1 flex flex-col gap-8 font-alan-sans lg:gap-10 ${
                 status === "sent" ? "invisible pointer-events-none" : ""
               }`}
             >
-              <p className="text-lg font-bold text-blue-medium text-center pb-4">
+              <p className="text-base lg:text-lg font-bold text-blue-medium text-center text-balance lg:pb-4">
                 Feel free to let us know any questions you have.
                 <br />
                 We will get back to you as soon as we can!
               </p>
 
-              <div className="grid grid-cols-2 gap-20">
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-20">
                 <div className="flex flex-col">
                   <div className="contact-field-header">
-                    <label htmlFor="contact-name" className="text-lg font-bold">
+                    <label
+                      htmlFor="contact-name"
+                      className="text-base font-bold lg:text-lg"
+                    >
                       Your Name
                     </label>
                     <span className="contact-required-chip">Required</span>
@@ -131,6 +134,7 @@ const Contact = () => {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Name Here"
                     className="contact-underline-input"
+                    autoComplete="name"
                   />
                 </div>
 
@@ -138,7 +142,7 @@ const Contact = () => {
                   <div className="contact-field-header">
                     <label
                       htmlFor="contact-email"
-                      className="text-lg font-bold"
+                      className="text-base font-bold lg:text-lg"
                     >
                       Email Address
                     </label>
@@ -150,8 +154,10 @@ const Contact = () => {
                     required
                     value={contactEmail}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter Here"
+                    placeholder="Email Here"
                     className="contact-underline-input"
+                    autoComplete="email"
+                    inputMode="email"
                   />
                 </div>
               </div>
@@ -160,7 +166,7 @@ const Contact = () => {
                 <div className="contact-field-header">
                   <label
                     htmlFor="contact-message"
-                    className="text-lg font-bold"
+                    className="text-base font-bold lg:text-lg"
                   >
                     Your Message
                   </label>
@@ -180,7 +186,7 @@ const Contact = () => {
               <div className="flex flex-col items-center">
                 <p
                   id="contact-error"
-                  className="form-error mb-4"
+                  className="form-error mb-1 lg:mb-4"
                   aria-live="polite"
                 >
                   {error}

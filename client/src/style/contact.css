@@ -7,9 +7,10 @@
 .contact-required-chip {
   background-color: var(--color-yellow-light);
   border-radius: 10000px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 0.15rem 0.65rem;
+  padding: 0.15rem 0.55rem;
+  flex-shrink: 0;
 }
 
 .contact-underline-input {
@@ -17,8 +18,23 @@
   border: none;
   border-bottom: 2px solid var(--color-yellow-dark);
   font-family: var(--font-alan-sans);
+  font-size: 1rem;
   outline: none;
-  padding: 0.5rem 0;
+  padding: 0.4rem 0;
   resize: none;
   width: 100%;
+}
+
+@media (min-width: 64rem) {
+  .contact-required-chip {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.65rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .contact-underline-input {
+    font-size: 1.125rem;
+    padding: 0.5rem 0;
+  }
 }

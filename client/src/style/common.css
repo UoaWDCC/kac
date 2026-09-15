@@ -549,6 +549,13 @@ p {
   text-align: center;
 }
 
+@media (min-width: 64rem) {
+  .form-error {
+    font-size: 0.75rem;
+    min-height: 1.6rem;
+  }
+}
+
 .pill-button {
   align-items: center;
   background-color: var(--color-yellow-dark);
@@ -575,4 +582,11 @@ p {
   background-color: var(--color-blue-medium);
   box-shadow: 2px 4px var(--color-grey-medium);
   color: var(--color-yellow-light);
+}
+
+@media (max-width: 64rem) {
+  .form-error {
+    font-size: 0.8rem;
+    min-height: 2.2rem;
+  }
 }

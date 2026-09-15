@@ -1,73 +1,24 @@
-.contact-page {
-  background-color: #faf3d1;
-  padding-top: 45px;
-  padding-bottom: 45px;
-  min-height: 85vh;
+.contact-field-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 
-.contact-title {
-  text-align: center;
-  text-decoration: underline;
-  text-decoration-thickness: 3px;
-  text-underline-offset: 10px;
-  color: black;
-  font-weight: bold;
-  font-size: 70px;
-  margin-bottom: 30px;
+.contact-required-chip {
+  background-color: var(--color-yellow-light);
+  border-radius: 10000px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.65rem;
 }
 
-.contact-intro {
-  text-align: center;
-  color: black;
-  font-weight: bold;
-  font-size: 20px;
-  margin-bottom: 80px;
-}
-
-.contact-form {
-  text-align: center;
-  background-color: #faf3d1;
-  color: black;
-}
-
-.contact-form input {
-  background-color: #faf3d1;
-  width: 600px;
-  height: 50px;
-  text-align: left;
-  margin: 3px;
-  border: 2px solid grey;
-  border-radius: 12px;
-  color: black;
-  font-size: 20px;
-  font-family:
-    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
-
-.contact-form textarea {
-  background-color: #faf3d1;
-  width: 600px;
-  height: 150px;
-  text-align: left;
-  margin: 2px;
-  border: 2px solid grey;
-  border-radius: 12px;
-  color: black;
-  font-size: 20px;
-  font-family:
-    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
-
-.contact-button {
-  text-align: center;
-  background-color: #faf3d1;
-  margin-top: 20px;
-  width: 100px;
-  border: 2px solid grey;
-  border-radius: 12px;
-  font-family:
-    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+.contact-underline-input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--color-yellow-dark);
+  font-family: var(--font-alan-sans);
+  outline: none;
+  padding: 0.5rem 0;
+  resize: none;
+  width: 100%;
 }

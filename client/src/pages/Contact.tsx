@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 import "../style/common.css";
+import "../style/contact.css";
 
 import { sendContact } from "../api/contactApi";
 import kaco from "../images/kaco-title.png";
@@ -74,7 +75,11 @@ const Contact = () => {
         <h1 className="page-title pl-24">Contact Us</h1>
 
         <div className="flex flex-row items-center pl-24 pr-36 pb-24">
-          <img src={kaco} className="w-[34rem] shrink-0 relative z-10 -mr-10" />
+          <img
+            src={kaco}
+            alt="KAC Mascot"
+            className="w-[34rem] shrink-0 relative z-10 -mr-10"
+          />
 
           <div className="bg-white rounded-4xl shadow-[8px_8px] shadow-yellow-medium px-16 py-12 flex-1 grid">
             <div
@@ -83,9 +88,9 @@ const Contact = () => {
               }`}
             >
               <p className="text-lg font-bold text-blue-medium text-center">
-                Feel free to let us know any questions you have.
+                Thank you for getting in touch with us!
                 <br />
-                We will get back to you as soon as we can!
+                Our team will get back to you as soon as we can.
               </p>
               <Link to="/" className="pill-button">
                 Back Home &gt;
@@ -106,57 +111,63 @@ const Contact = () => {
 
               <div className="grid grid-cols-2 gap-20">
                 <div className="flex flex-col">
-                  <div className="field-header">
+                  <div className="contact-field-header">
                     <label htmlFor="contact-name" className="text-lg font-bold">
                       Your Name
                     </label>
-                    <span className="required-chip">Required</span>
+                    <span className="contact-required-chip">Required</span>
                   </div>
                   <input
                     type="text"
+                    id="contact-name"
+                    required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Name Here"
-                    className="underline-input"
+                    className="contact-underline-input"
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <div className="field-header">
+                  <div className="contact-field-header">
                     <label
                       htmlFor="contact-email"
                       className="text-lg font-bold"
                     >
                       Email Address
                     </label>
-                    <span className="required-chip">Required</span>
+                    <span className="contact-required-chip">Required</span>
                   </div>
                   <input
                     type="email"
+                    id="contact-email"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter Here"
-                    className="underline-input"
+                    className="contact-underline-input"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col">
-                <div className="field-header">
+                <div className="contact-field-header">
                   <label
                     htmlFor="contact-message"
                     className="text-lg font-bold"
                   >
                     Your Message
                   </label>
-                  <span className="required-chip">Required</span>
+                  <span className="contact-required-chip">Required</span>
                 </div>
                 <textarea
+                  id="contact-message"
+                  required
                   rows={1}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Write your message"
-                  className="underline-input"
+                  className="contact-underline-input"
                 />
               </div>
 
@@ -175,12 +186,12 @@ const Contact = () => {
                   className="pill-button"
                 >
                   {status === "sending" ? (
-                    <div className="flex gap-2 items-center justify-center">
+                    <span className="flex gap-2 items-center justify-center">
                       <Loader2 className="w-4 h-4 animate-spin" />
                       Sending...
-                    </div>
+                    </span>
                   ) : (
-                    <div>Submit &gt;</div>
+                    <span>Submit &gt;</span>
                   )}
                 </button>
               </div>

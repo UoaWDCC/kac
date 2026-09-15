@@ -2,8 +2,14 @@ import { ImageBlock } from "./image_block/ImageBlock";
 
 const PageTitle = ({ title }: { title: string }) => {
   return (
-    <div className="page-title-wrap" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}>
-      <section className="page-title-section" style={{ padding: "6rem 0 2rem 0" }}>
+    <div
+      className="page-title-wrap"
+      style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}
+    >
+      <section
+        className="page-title-section"
+        style={{ padding: "6rem 0 2rem 0" }}
+      >
         <div style={{ position: "relative", display: "inline-block" }}>
           <div className="page-title-mascot">
             <ImageBlock

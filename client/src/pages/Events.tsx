@@ -162,7 +162,11 @@ const Events = () => {
             </h2>
             <div className="events-past-grid">
               {section.events.map((event) => (
-                <article className="events-past-card" key={event._id}>
+                <Link
+                  className="events-past-card"
+                  key={event._id}
+                  to={`/events/${event._id}`}
+                >
                   <div className="events-past-image">
                     <ImageBlock
                       pageKey={event.imageUrl}
@@ -177,7 +181,7 @@ const Events = () => {
                     </p>
                     <h3 className="events-past-title">{event.title}</h3>
                   </div>
-                </article>
+                </Link>
               ))}
             </div>
             <button className="events-more-button" type="button">

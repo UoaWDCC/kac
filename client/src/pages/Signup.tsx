@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -12,7 +12,6 @@ import {
 } from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
 import api from "../api/index";
-import Header from "../main/Header";
 import { FACULTIES } from "../constants/faculties";
 import {
   filterMemberFieldInput,
@@ -22,8 +21,7 @@ import {
 import "../style/common.css";
 import "../style/signup.css";
 
-import silhouetteMascot from "../images/kaco-silhouette.png";
-import mainMascot from "../images/kaco-title.png";
+import { ImageBlock } from "../components/image_block/ImageBlock";
 
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? ""
@@ -99,9 +97,15 @@ const SignUpForm = () => {
       const email = user?.emails?.[0]?.value ?? "";
       if (!user || !email) {
         navigate("/");
-      } else if (hasAccount) navigate("/profile");
+      } else if (hasAccount && currentStep !== 4) navigate("/");
     }
-  }, [user, hasAccount, loading, navigate]);
+  }, [user, hasAccount, loading, navigate, currentStep]);
+
+  useLayoutEffect(() => {
+    if (currentStep === 4) {
+      window.scrollTo(0, 0);
+    }
+  }, [currentStep]);
 
   // Click outside to close multi-select faculty dropdown
   useEffect(() => {
@@ -360,9 +364,11 @@ const SignUpForm = () => {
         paymentIntentId: paymentIntent.id,
       });
 
-      await refresh();
       setCurrentStep(4);
-      setTimeout(() => navigate("/profile"), 1200);
+      setTimeout(async () => {
+        await refresh();
+        navigate("/profile");
+      }, 600000); // 1 minute delay before redirecting to profile page - can be adjusted
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setSubmitError(
@@ -410,22 +416,15 @@ const SignUpForm = () => {
 
   return (
     <div className="signup-page-wrapper">
-      <Header />
-
       <div className="signup-content-container">
-        <img
-          src={silhouetteMascot}
-          alt="KAC Silhouette Mascot"
-          className="signup-silhouette-mascot"
-        />
-
-        <img
-          src={mainMascot}
-          alt="KAC Main Mascot"
-          className="signup-title-mascot"
-        />
-
-        <div className="signup-hero-side">
+        <div className="signup-silhouette-mascot">
+          <ImageBlock
+            pageKey="signup-silhouette-mascot"
+            alt="Mascot Silhouette"
+            editable={false}
+          />
+        </div>
+        <div className="signup-hero-side mt-30">
           {currentStep === 4 ? (
             <h1 className="signup-hero-title">
               WELCOME TO
@@ -445,7 +444,7 @@ const SignUpForm = () => {
           )}
         </div>
 
-        <div className="signup-card-side">
+        <div className="signup-card-side mt-25">
           <div className="signup-card">
             {currentStep > 1 && currentStep < 4 && (
               <button
@@ -1162,14 +1161,8 @@ const SignUpForm = () => {
 
             {/* STEP 4 VIEW (SUCCESS / WELCOME) */}
             {currentStep === 4 && (
-              <div className="signup-success-container">
-                <img
-                  src={mainMascot}
-                  alt="KAC Mascot"
-                  className="signup-success-mascot"
-                />
-
-                <h2 className="signup-success-title">
+              <div className="signup-success-container  mt-10">
+                <h2 className="signup-success-title ">
                   Thank you for your submission!
                 </h2>
 
@@ -1184,7 +1177,10 @@ const SignUpForm = () => {
                   <button
                     type="button"
                     className="signup-continue-btn"
-                    onClick={() => navigate("/")}
+                    onClick={async () => {
+                      await refresh();
+                      navigate("/");
+                    }}
                   >
                     Back Home &gt;
                   </button>

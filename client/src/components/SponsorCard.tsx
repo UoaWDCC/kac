@@ -44,7 +44,7 @@ const SponsorCard = ({ name, description, location, compact }: Props) => {
             objectFit: "contain",
             borderRadius: "1rem",
           }}
-          editable={true}
+          editable={false}
         />
 
         {/* DARK

@@ -170,7 +170,7 @@ const Sponsors = () => {
                 }}
                 className={`sponsors-tab-button ${
                   activeTab === tab.value ? "active" : ""
-                }`}
+                } ${tab.value === "all" ? "sponsors-tab-all" : ""}`}
               >
                 <span>{tab.label}</span>
                 {activeTab === tab.value && (

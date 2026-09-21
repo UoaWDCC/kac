@@ -16,7 +16,10 @@ import {
 type Tab = "all" | "cbd" | "newmarket" | "other";
 
 const getDefaultTab = (): Tab => {
-  if (typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches) {
+  if (
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 639px)").matches
+  ) {
     return "cbd";
   }
 

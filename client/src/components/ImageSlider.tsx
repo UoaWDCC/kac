@@ -70,7 +70,7 @@ const ImageSlider = ({ pageKeys }: ImageSliderProps) => {
 
   return (
     <>
-      <div className="flex items-center flex-col justify-center h-[70vw] lg:h-screen">
+      <div className="flex items-center flex-col justify-center aspect-[50/39] h-auto w-full lg:aspect-auto lg:h-screen">
         {pageKeys.map((pageKey, index) => {
           return (
             <motion.div

@@ -88,6 +88,7 @@ body {
 @media (max-width: 63.999rem) {
   .footer-content {
     width: 85%;
+    max-width: 480px;
     grid-template-columns: repeat(2, 1fr);
     gap: 28px 16px;
     justify-items: start;

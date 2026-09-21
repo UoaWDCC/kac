@@ -135,6 +135,19 @@ p {
   }
 }
 
+/* The mobile layout is a phone design. Left unconstrained it stretches all the
+   way to the lg breakpoint, so by 1023px the mascot is ~1400px wide and the
+   wordmark fills only 40% of the screen. Capping the content to a centred column
+   keeps the phone proportions and just letterboxes them on wider screens. */
+@media (max-width: 63.999rem) {
+  .mobile-shell {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 480px;
+    width: 100%;
+  }
+}
+
 /* Slider dot controls. Plain CSS rather than utilities: about.css defines an
    unlayered `button { width: 100% }`, and unlayered rules beat Tailwind's
    layered utilities, so `w-2.5` on a <button> is silently dropped. */

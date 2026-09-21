@@ -15,11 +15,19 @@ import {
 
 type Tab = "all" | "cbd" | "newmarket" | "other";
 
+const getDefaultTab = (): Tab => {
+  if (typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches) {
+    return "cbd";
+  }
+
+  return "all";
+};
+
 const Sponsors = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<Tab>("all");
+  const [activeTab, setActiveTab] = useState<Tab>(getDefaultTab);
 
   useEffect(() => {
     getSponsors()

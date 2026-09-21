@@ -31,13 +31,6 @@
   z-index: 2;
 }
 
-.sponsors-title {
-  font-weight: bold;
-  margin: 0;
-  font-size: 6rem;
-  padding-left: 2rem;
-}
-
 .sponsors-marquee-shell {
   position: relative;
   margin-top: 1.5rem;

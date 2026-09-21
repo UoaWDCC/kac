@@ -1,0 +1,47 @@
+.page-title-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.page-title-section {
+  padding: 6rem 0 2rem 0;
+}
+
+.page-title-inner {
+  position: relative;
+  display: inline-block;
+}
+
+.page-title-image .image-block {
+  position: absolute;
+  left: -95px;
+  bottom: 20px;
+  width: 200px;
+  z-index: 2;
+}
+
+.page-title-heading {
+  color: var(--color-blue-medium);
+  font-family: var(--font-sans);
+  font-weight: bold;
+  margin: 0;
+  font-size: 6rem;
+  padding-left: 2rem;
+  text-transform: uppercase;
+}
+
+@media (max-width: 639px) {
+  .page-title-image {
+    display: none;
+  }
+
+  .page-title-heading {
+    font-size: 2rem;
+    padding-left: 0;
+  }
+
+  .page-title-section {
+    padding: 1rem 0 2rem 0;
+  }
+}

@@ -7,7 +7,7 @@ body {
 
 .footer-wrapper {
   position: relative;
-  margin-top: 100px;
+  margin-top: 0;
   /* The mascot is positioned at left:90% and rotated -15deg, so its bounding box
      runs past the right edge and lets the page scroll sideways - 76px at iPad
      width, 34px at 1440. `clip` (not `hidden`) stops that without creating a
@@ -105,8 +105,7 @@ body {
     display: none !important;
   }
 
-  /* The 100px top margin exists to clear that mascot. With it hidden the gap is
-     just dead space, so the footer sits close under Discover More as in Figma. */
+  /* Nudge the footer down so the gap under Discover More matches the Figma (66px). */
   .footer-wrapper {
     margin-top: 8px;
   }

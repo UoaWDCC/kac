@@ -57,7 +57,7 @@ const Sponsors = () => {
   const uniqueSponsors = dedupeSponsorsByName(sorted);
   const marqueeSponsors = [...uniqueSponsors, ...uniqueSponsors];
   return (
-    <div className="sponsors-page">
+    <div className="sponsors-page mb-40">
       <PageTitle title="OUR SPONSORS" />
 
       {/* MARQUEE + OVERLAPPING MEMBERSHIP CARD */}

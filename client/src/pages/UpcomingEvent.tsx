@@ -101,7 +101,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
   };
 
   return (
-    <div className="bg-yellow-light">
+    <div className="bg-yellow-light mb-40">
       <div className="pt-8">
         <a
           href="/events"

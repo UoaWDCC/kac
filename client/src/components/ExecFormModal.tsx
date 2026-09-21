@@ -36,6 +36,8 @@ interface ExecFormModalProps {
   onChange: (field: keyof ExecFormValues, value: string) => void;
   onClose: () => void;
   onSubmit: () => void;
+  onImageChange: (file: File | null) => void;
+  isSubmitting?: boolean;
 }
 
 const inputClassName =
@@ -72,8 +74,10 @@ export default function ExecFormModal({
   submitLabel,
   values,
   onChange,
+  onImageChange,
   onClose,
   onSubmit,
+  isSubmitting = false,
 }: Readonly<ExecFormModalProps>) {
   if (!isOpen) return null;
 
@@ -92,6 +96,18 @@ export default function ExecFormModal({
         <div className="overflow-y-auto pl-12 pr-6">
           <h2 className="text-2xl! font-bold pb-6">{title}</h2>
           <form className="flex flex-col gap-8">
+            <div className="flex flex-col gap-1">
+              <h3 className="text-lg font-bold">Add Image</h3>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                className="cursor-pointer rounded-lg border-2 border-yellow-dark bg-yellow-light px-3 py-2 text-blue-medium transition-colors hover:border-blue-medium hover:bg-blue-medium hover:text-yellow-light disabled:cursor-not-allowed disabled:opacity-60 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-yellow-dark file:px-3 file:py-1 file:font-bold file:text-blue-medium file:transition-colors hover:file:bg-yellow-light disabled:file:cursor-not-allowed"
+                disabled={isSubmitting}
+                onChange={(event) =>
+                  onImageChange(event.target.files?.[0] ?? null)
+                }
+              />
+            </div>
             <div className="flex flex-row gap-10">
               {renderTextField("Display Name", "displayName", values, onChange)}
               {renderTextField("Executive Role", "execRole", values, onChange)}
@@ -157,8 +173,9 @@ export default function ExecFormModal({
             className="cursor-pointer px-12 w-fit! h-10 rounded-3xl font-bold text-lg text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
             type="button"
             onClick={onSubmit}
+            disabled={isSubmitting}
           >
-            {submitLabel}
+            {isSubmitting ? "Saving..." : submitLabel}
           </button>
         </div>
       </div>

@@ -15,7 +15,7 @@ const Profile = () => {
     <div className="profile-page">
       <title>User Profile</title>
       <section className="section relative min-h-screen w-full overflow-x-clip bg-yellow-light pr-0! p-0!">
-        <div className="absolute right-0 top-0 z-0 flex w-full justify-end">
+        <div className="absolute inset-0 z-0 flex justify-end overflow-hidden">
           <ImageBlock
             pageKey="mascot-bg"
             alt="Profile Background"
@@ -26,7 +26,7 @@ const Profile = () => {
         <div className="relative z-10 w-full pb-16">
           {/** Title **/}
           <PageTitle title="MY PROFILE" />
-          <div className="px-4 py-6 sm:px-6 lg:px-8 flex justify-center items-center">
+          <div className="mb-40 px-4 py-6 sm:px-6 lg:px-8 flex justify-center items-center">
             <div className="grid w-full max-w-240 gap-8 lg:grid-cols-[18.5rem_minmax(0,1fr)] lg:items-start lg:gap-14">
               <ProfileSidebar
                 activeSection={activeSection}

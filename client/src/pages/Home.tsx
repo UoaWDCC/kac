@@ -33,7 +33,7 @@ const EVENT_PAGE_KEYS = [
 // 3.3rem }`, and unlayered rules beat Tailwind's layered utilities regardless of
 // specificity, so an unflagged text-* on an <h1> is silently dropped.
 const HERO_LETTER =
-  "text-[clamp(3.5rem,32.7vw,10.93rem)]! lg:text-[10rem]! 2xl:text-[12rem]! " +
+  "text-[clamp(3.5rem,32.7vw,10.93rem)]! lg:text-[8rem]! xl:text-[10rem]! 2xl:text-[12rem]! " +
   "leading-[0.766]! lg:leading-[10%]! 2xl:leading-[60%]! font-bold " +
   "mt-0! mb-0! lg:mt-4! lg:mb-24!";
 
@@ -73,7 +73,7 @@ const Home = () => {
 
   const joinUsButton =
     !loading && !isSignedIn ? (
-      <a href="/api/auth/google" className="button">
+      <a href="/api/auth/google" className="button whitespace-nowrap">
         Join Us!
       </a>
     ) : null;
@@ -137,7 +137,7 @@ const Home = () => {
                 />
               </div>
             </div>
-            <div className="hidden lg:block text-2xl ml-[-8vw] w-fit">
+            <div className="hidden lg:block shrink-0 text-2xl ml-[-8vw] w-fit">
               {joinUsButton}
             </div>
           </div>
@@ -165,7 +165,7 @@ const Home = () => {
               />
             </div>
             <div className="w-full lg:w-4/10 flex flex-col justify-between h-full self-center">
-              <h2 className="mt-0! mb-0! font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium">
+              <h2 className="mt-0! mb-0! font-monospace text-[1.8rem] lg:text-[2rem] xl:text-[2.6rem] font-medium">
                 WHAT WE DO:
               </h2>
               <p className="py-1 font-alan-sans">
@@ -228,7 +228,7 @@ const Home = () => {
           />
         </div>
 
-        <h2 className="mobile-shell relative uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium text-center lg:absolute lg:inset-0 lg:justify-self-center lg:top-[20vh] 2xl:top-[22vh]">
+        <h2 className="mobile-shell relative uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium text-center lg:absolute lg:inset-0 lg:justify-self-center lg:top-[18%] 2xl:top-[20%]">
           Our Recent Events:
         </h2>
 

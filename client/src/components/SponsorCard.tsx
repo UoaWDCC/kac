@@ -22,7 +22,7 @@ const SponsorCard = ({ name, description, location, compact }: Props) => {
         onMouseLeave={() => setHovered(false)}
         style={{
           backgroundColor: "#ffffff",
-          borderRadius: "15px",
+          borderRadius: "10px",
           width: "100%",
           boxShadow: "5px 5px 0px var(--color-yellow-medium)",
           cursor: "pointer",
@@ -42,7 +42,7 @@ const SponsorCard = ({ name, description, location, compact }: Props) => {
             width: "100%",
             height: "100%",
             objectFit: "contain",
-            borderRadius: "1rem",
+            borderRadius: "0.5rem",
           }}
           editable={true}
         />
@@ -81,12 +81,12 @@ const SponsorCard = ({ name, description, location, compact }: Props) => {
         <>
           <h3
             style={{
-              fontSize: "1rem",
               fontWeight: "normal",
               marginTop: "0.75rem",
               marginBottom: "0.25rem",
               color: "var(--color-blue-medium)",
             }}
+            className="text-[0.8rem] sm:text-[1rem]"
           >
             {name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
           </h3>
@@ -97,6 +97,7 @@ const SponsorCard = ({ name, description, location, compact }: Props) => {
               margin: 0,
               fontFamily: "Alan Sans, sans-serif",
             }}
+            className="hidden sm:display-block"
           >
             {location}
           </p>

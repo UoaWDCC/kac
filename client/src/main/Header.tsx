@@ -175,7 +175,10 @@ const Header = () => {
 
       {/** LOGO - centred on mobile, left-aligned from lg up */}
       <div className="shrink-0 lg:flex-1 lg:pl-2">
-        <div className="flex items-center w-fit mx-auto lg:mx-0">
+        <div
+          className="flex items-center w-fit mx-auto lg:mx-0 cursor-pointer"
+          onClick={() => (window.location.href = "/")}
+        >
           <div className="h-[57px] w-[57px] lg:h-16 lg:w-16">
             <ImageBlock
               pageKey="logo"

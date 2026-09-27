@@ -186,16 +186,16 @@ const Executives = () => {
             aria-label="Close executive preview"
           />
 
-          <div className="relative w-[64vw] h-[80vh] max-h-150 max-w-254 bg-yellow-dark z-1 overflow-hidden flex rounded-4xl shadow-[10px_10px] shadow-yellow-medium">
+          <div className="exec-preview-dialog relative w-[64vw] h-[80vh] max-h-150 max-w-254 bg-yellow-dark z-1 overflow-hidden flex rounded-4xl shadow-[10px_10px] shadow-yellow-medium">
             <div
-              className="absolute right-8 top-10 z-10 flex size-10 items-center justify-center rounded-full text-blue-medium transition hover:scale-120 hover:cursor-pointer"
+              className="exec-preview-dialog__close absolute right-8 top-10 z-10 flex size-10 items-center justify-center rounded-full text-blue-medium transition hover:scale-120 hover:cursor-pointer"
               onClick={() => setSelectedExec(null)}
               aria-label="Close executive preview"
             >
               <X size={40} strokeWidth={2} />
             </div>
 
-            <div className="flex flex-row gap-8 text-blue-medium items-center w-full p-12">
+            <div className="exec-preview-dialog__layout flex flex-row gap-8 text-blue-medium items-center w-full p-12">
               <ImageBlock
                 pageKey={selectedExec.imageURL}
                 alt={selectedExec.displayName}

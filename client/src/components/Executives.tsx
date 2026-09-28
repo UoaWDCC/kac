@@ -210,8 +210,8 @@ const Executives = () => {
                 onImageUpdated={() => setImageVersion((version) => version + 1)}
               />
 
-              <div className="flex flex-col gap-8 2xl:gap-10 px-4 py-2 h-full justify-center">
-                <div className="flex flex-col gap-1">
+              <div className="exec-preview-dialog__copy flex flex-col gap-8 2xl:gap-10 px-4 py-2 h-full justify-center">
+                <div className="exec-preview-dialog__heading flex flex-col gap-1">
                   <h4 className="font-monospace font-semibold text-[20px] uppercase">
                     {selectedExec.execRole}
                   </h4>
@@ -219,7 +219,7 @@ const Executives = () => {
                     {selectedExec.displayName}
                   </h3>
                 </div>
-                <div className="flex flex-col gap-2 2xl:gap-8 font-alan-sans">
+                <div className="exec-preview-dialog__details flex flex-col gap-2 2xl:gap-8 font-alan-sans">
                   <div>
                     <p className="text-md! 2xl:text-xl!">
                       <strong>🌏 Ethnicity:</strong> {selectedExec.ethnicity}
@@ -231,7 +231,7 @@ const Executives = () => {
                       <strong>🌟 MBTI:</strong> {selectedExec.mbti}
                     </p>
                   </div>
-                  <div>
+                  <div className="pb-6 md:pb-0">
                     <p className="text-md! 2xl:text-xl!">
                       <strong>🧩 Fun Fact:</strong> {selectedExec.fact}
                     </p>

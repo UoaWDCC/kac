@@ -126,9 +126,12 @@ const Home = () => {
                 drag the wordmark out with it. 2.5rem = the section's px-5 x2. */}
             <div className="shrink-0 -mx-5 w-[calc(100%+2.5rem)] overflow-hidden lg:mx-0 lg:w-[40vw] lg:overflow-visible">
               {/* Figma has the mascot at 545x445 inside a 390-wide frame, i.e.
-                  140% of the viewport. The -20% margin re-centres that width and
-                  the wrapper clips the overhang, so the wings crop at both edges. */}
-              <div className="w-[140%] -ml-[20%] lg:ml-0 lg:w-full">
+                  140% of the viewport, so the wings crop at the screen edges.
+                  That overscale only reads as intentional while the crop lands on
+                  the edge - once .mobile-shell caps the column at 480 the cut
+                  moves inland and the wings look chopped, so above 520 the mascot
+                  sits at its natural width instead. */}
+              <div className="w-full max-[520px]:w-[140%] max-[520px]:-ml-[20%] lg:ml-0 lg:w-full">
                 <ImageBlock
                   pageKey="home-mascot"
                   alt="Club Mascot"
@@ -206,7 +209,11 @@ const Home = () => {
       </section>
 
       {/** EVENTS */}
-      <section className="section relative w-full overflow-hidden bg-yellow-light p-0! pt-20! pb-12! lg:pt-0! lg:pb-0!">
+      {/* The watermark is width-driven so the wings reach both edges, which makes
+          it 128.46vw tall (the PNG is 390x501). The section takes that as a
+          minimum so the silhouette is never clipped, and centres its content in
+          whatever slack is left - the same relationship the phone already has. */}
+      <section className="section relative w-full overflow-hidden bg-yellow-light p-0! pt-20! pb-12! max-lg:min-h-[128.46vw] max-lg:flex max-lg:flex-col max-lg:justify-center lg:pt-0! lg:pb-0!">
         {/**
          * Desktop lays the CMS mascot out in flow and floats the heading and
          * slider on top of it. On mobile that would leave a 90vw-tall gap, so
@@ -216,7 +223,7 @@ const Home = () => {
           src={kacoVector}
           alt=""
           aria-hidden="true"
-          className="absolute left-1/2 top-0 h-full w-auto max-w-none -translate-x-1/2 pointer-events-none select-none lg:hidden"
+          className="absolute inset-x-0 top-0 h-auto w-full max-w-none pointer-events-none select-none lg:hidden"
         />
 
         <div className="hidden lg:block lg:justify-self-end lg:relative">

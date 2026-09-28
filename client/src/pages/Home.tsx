@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 import ImageSlider from "../components/ImageSlider";
-import kacoVector from "../images/kaco-vector.png";
 import SponsorCard from "../components/SponsorCard";
 import { useAuth } from "../auth/useAuth.ts";
 import { getSponsors } from "../api/sponsorsApi";

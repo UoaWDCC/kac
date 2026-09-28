@@ -25,13 +25,6 @@
   z-index: 2;
 }
 
-.sponsors-title {
-  font-weight: bold;
-  margin: 0;
-  font-size: 6rem;
-  padding-left: 2rem;
-}
-
 .sponsors-marquee-shell {
   position: relative;
   margin-top: 1.5rem;
@@ -147,7 +140,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 1.5rem;
-  padding: 2rem 0;
+  padding-top: 2rem;
 }
 
 .sponsors-section-title {
@@ -160,6 +153,47 @@
 
 .sponsors-empty-state {
   padding: 2rem;
+}
+
+@media (max-width: 639px) {
+  .sponsors-centered-content {
+    padding: 0 1rem;
+  }
+
+  .sponsors-blurb {
+    padding: 0;
+    padding-top: 3rem;
+  }
+
+  .sponsors-blurb p {
+    font-size: 0.65rem;
+    font-family: "Alan Sans", sans-serif;
+    font-weight: 600;
+  }
+
+  .sponsors-tabs-section {
+    padding: 0;
+  }
+
+  .sponsors-tab-group {
+    gap: 0.4rem;
+    background: none;
+  }
+
+  .sponsors-tab-all {
+    display: none;
+  }
+
+  .sponsors-tab-button {
+    background-color: var(--color-yellow-medium);
+    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .sponsors-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
 }
 
 @keyframes sponsors-marquee {

@@ -186,16 +186,16 @@ const Executives = () => {
             aria-label="Close executive preview"
           />
 
-          <div className="relative w-[64vw] h-[80vh] max-h-150 max-w-254 bg-yellow-dark z-1 overflow-hidden flex rounded-4xl shadow-[10px_10px] shadow-yellow-medium">
+          <div className="exec-preview-dialog relative w-[64vw] h-[80vh] max-h-150 max-w-254 bg-yellow-dark z-1 overflow-hidden flex rounded-4xl shadow-[10px_10px] shadow-yellow-medium">
             <div
-              className="absolute right-8 top-10 z-10 flex size-10 items-center justify-center rounded-full text-blue-medium transition hover:scale-120 hover:cursor-pointer"
+              className="exec-preview-dialog__close absolute right-8 top-10 z-10 flex size-10 items-center justify-center rounded-full text-blue-medium transition hover:scale-120 hover:cursor-pointer"
               onClick={() => setSelectedExec(null)}
               aria-label="Close executive preview"
             >
               <X size={40} strokeWidth={2} />
             </div>
 
-            <div className="flex flex-row gap-8 text-blue-medium items-center w-full p-12">
+            <div className="exec-preview-dialog__layout flex flex-row gap-8 text-blue-medium items-center w-full p-12">
               <ImageBlock
                 pageKey={selectedExec.imageURL}
                 alt={selectedExec.displayName}
@@ -210,8 +210,8 @@ const Executives = () => {
                 onImageUpdated={() => setImageVersion((version) => version + 1)}
               />
 
-              <div className="flex flex-col gap-8 2xl:gap-10 px-4 py-2 h-full justify-center">
-                <div className="flex flex-col gap-1">
+              <div className="exec-preview-dialog__copy flex flex-col gap-8 2xl:gap-10 px-4 py-2 h-full justify-center">
+                <div className="exec-preview-dialog__heading flex flex-col gap-1">
                   <h4 className="font-monospace font-semibold text-[20px] uppercase">
                     {selectedExec.execRole}
                   </h4>
@@ -219,7 +219,7 @@ const Executives = () => {
                     {selectedExec.displayName}
                   </h3>
                 </div>
-                <div className="flex flex-col gap-2 2xl:gap-8 font-alan-sans">
+                <div className="exec-preview-dialog__details flex flex-col gap-2 2xl:gap-8 font-alan-sans">
                   <div>
                     <p className="text-md! 2xl:text-xl!">
                       <strong>🌏 Ethnicity:</strong> {selectedExec.ethnicity}
@@ -231,7 +231,7 @@ const Executives = () => {
                       <strong>🌟 MBTI:</strong> {selectedExec.mbti}
                     </p>
                   </div>
-                  <div>
+                  <div className="pb-6 md:pb-0">
                     <p className="text-md! 2xl:text-xl!">
                       <strong>🧩 Fun Fact:</strong> {selectedExec.fact}
                     </p>

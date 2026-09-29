@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 import ImageSlider from "../components/ImageSlider";
+import kacoVector from "../images/kaco-vector.png";
 import SponsorCard from "../components/SponsorCard";
 import { useAuth } from "../auth/useAuth.ts";
 import { getSponsors } from "../api/sponsorsApi";
@@ -219,7 +220,7 @@ const Home = () => {
          * the KACO silhouette sits behind the section as a watermark instead.
          */}
         <img
-          src={"kaco-vector.png"}
+          src={kacoVector}
           alt=""
           aria-hidden="true"
           className="absolute inset-x-0 top-0 h-auto w-full max-w-none pointer-events-none select-none lg:hidden"

@@ -219,7 +219,7 @@ const Home = () => {
          * the KACO silhouette sits behind the section as a watermark instead.
          */}
         <img
-          src={kacoVector}
+          src={"kaco-vector.png"}
           alt=""
           aria-hidden="true"
           className="absolute inset-x-0 top-0 h-auto w-full max-w-none pointer-events-none select-none lg:hidden"

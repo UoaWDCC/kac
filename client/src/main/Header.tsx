@@ -13,7 +13,7 @@ import { Link, useLocation } from "react-router-dom";
 import { getCurrentProfileImage } from "../api/imageApi.ts";
 import { useAuth } from "../auth/useAuth.ts";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
-import MobileMenu from "./MobileMenu.tsx";
+import MobileMenu from "../components/navigation/MobileMenu.tsx";
 
 import "../style/common.css";
 

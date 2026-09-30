@@ -136,16 +136,6 @@ export default function ResponsesSection() {
         })}
       </div>
 
-      <label className="flex w-fit items-center gap-2 text-sm font-semibold text-slate-700">
-        <input
-          checked={showUnresolvedOnly}
-          className="h-4 w-4 accent-blue-medium"
-          onChange={(event) => setShowUnresolvedOnly(event.target.checked)}
-          type="checkbox"
-        />
-        Show unresolved only
-      </label>
-
       <DataTable
         columns={columns}
         data={visibleResponses}
@@ -155,6 +145,17 @@ export default function ResponsesSection() {
         getRowId={(response) => response._id}
         isLoading={isLoading}
         searchPlaceholder="Search responses"
+        showUnresolvedButton={
+          <label className="flex w-fit items-center gap-2 text-sm font-semibold text-slate-700">
+            <input
+              checked={showUnresolvedOnly}
+              className="h-4 w-4 accent-blue-medium"
+              onChange={(event) => setShowUnresolvedOnly(event.target.checked)}
+              type="checkbox"
+            />
+            Show unresolved only
+          </label>
+        }
       />
 
       {selectedResponse ? (

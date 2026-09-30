@@ -139,11 +139,12 @@ export default function ResponseDetailsModal({
                     }
                     required
                     value={form.name}
+                    disabled
                   />
                 </label>
 
                 <label className="grid gap-1">
-                  <span className={labelClass}>Email (Cannot Edit)</span>
+                  <span className={labelClass}>Email</span>
                   <input
                     className={inputClass}
                     required
@@ -168,6 +169,7 @@ export default function ResponseDetailsModal({
                 onChange={(event) => updateField("message", event.target.value)}
                 required
                 value={form.message}
+                disabled
               />
             </section>
           </div>

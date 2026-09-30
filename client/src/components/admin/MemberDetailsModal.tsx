@@ -367,8 +367,8 @@ export default function MemberDetailsModal({
               <label
                 className={`flex items-center gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm font-semibold ${
                   adminChangeBlockedReason
-                    ? "bg-slate-50 text-slate-500"
-                    : "text-slate-700"
+                    ? "cursor-not-allowed bg-slate-50 text-slate-500"
+                    : "cursor-pointer text-slate-700"
                 }`}
               >
                 <input

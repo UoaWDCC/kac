@@ -172,7 +172,7 @@ export const getMemberColumns = (
   {
     cell: ({ row }) => (
       <button
-        className="admin-action-button"
+        className="admin-action-button cursor-pointer"
         onClick={() => onViewEdit(row.original)}
         type="button"
       >

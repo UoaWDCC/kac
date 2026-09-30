@@ -90,7 +90,9 @@ export default function DataTable<TData extends object>({
       case "actions":
         return "w-[12%]";
       case "message":
-        return "w-[50%]";
+        return "w-[45%]";
+      case "status":
+        return "w-[9%]";
       case "received":
         return "w-[16%]";
       default:

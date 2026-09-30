@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MailOpen, MessageSquareText, UsersRound } from "lucide-react";
-import { fetchContacts } from "../../api/contactApi";
+import { fetchContacts, setContactResolved } from "../../api/contactApi";
+import toast from "react-hot-toast";
 import DataTable from "./DataTable";
 import ResponseDetailsModal from "./ResponseDetailsModal";
 import { getResponseColumns, type ContactResponse } from "./ResponseColumns";
@@ -27,6 +28,7 @@ export default function ResponsesSection() {
   const [responses, setResponses] = useState<ContactResponse[]>([]);
   const [selectedResponse, setSelectedResponse] =
     useState<ContactResponse | null>(null);
+  const [showUnresolvedOnly, setShowUnresolvedOnly] = useState(false);
 
   const loadResponses = useCallback(async () => {
     setError(null);
@@ -42,9 +44,30 @@ export default function ResponsesSection() {
     }
   }, []);
 
-  const columns = useMemo(
-    () => getResponseColumns((response) => setSelectedResponse(response)),
+  const handleToggleResolved = useCallback(
+    async (response: ContactResponse) => {
+      try {
+        const updated = await setContactResolved(
+          response._id,
+          !response.resolved
+        );
+        setResponses((current) =>
+          current.map((item) => (item._id === updated._id ? updated : item))
+        );
+      } catch {
+        toast.error("Could not update status. Please try again.");
+      }
+    },
     []
+  );
+
+  const columns = useMemo(
+    () =>
+      getResponseColumns(
+        (response) => setSelectedResponse(response),
+        handleToggleResolved
+      ),
+    [handleToggleResolved]
   );
 
   useEffect(() => {
@@ -78,6 +101,14 @@ export default function ResponsesSection() {
     [responses]
   );
 
+  const visibleResponses = useMemo(
+    () =>
+      showUnresolvedOnly
+        ? responses.filter((response) => !response.resolved)
+        : responses,
+    [responses, showUnresolvedOnly]
+  );
+
   return (
     <section className="flex min-w-0 flex-col gap-4">
       <div className="grid gap-3 md:grid-cols-3">
@@ -105,9 +136,19 @@ export default function ResponsesSection() {
         })}
       </div>
 
+      <label className="flex w-fit items-center gap-2 text-sm font-semibold text-slate-700">
+        <input
+          checked={showUnresolvedOnly}
+          className="h-4 w-4 accent-blue-medium"
+          onChange={(event) => setShowUnresolvedOnly(event.target.checked)}
+          type="checkbox"
+        />
+        Show unresolved only
+      </label>
+
       <DataTable
         columns={columns}
-        data={responses}
+        data={visibleResponses}
         emptyDescription="Contact form submissions will appear here."
         emptyTitle="No responses found"
         error={error}

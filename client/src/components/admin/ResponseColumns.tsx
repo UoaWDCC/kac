@@ -6,6 +6,7 @@ export interface ContactResponse {
   name: string;
   email: string;
   message: string;
+  resolved?: boolean;
   createdAt?: string;
 }
 
@@ -32,7 +33,8 @@ const formatDateTime = (value?: string) => {
 };
 
 export const getResponseColumns = (
-  onViewEdit: (response: ContactResponse) => void
+  onViewEdit: (response: ContactResponse) => void,
+  onToggleResolved: (response: ContactResponse) => void
 ): ColumnDef<ContactResponse>[] => [
   {
     accessorKey: "name",
@@ -86,6 +88,30 @@ export const getResponseColumns = (
     header: "Received",
     id: "received",
     size: 180,
+  },
+  {
+    accessorFn: (response) => (response.resolved ? "Resolved" : "Unresolved"),
+    cell: ({ row }) => {
+      const isResolved = Boolean(row.original.resolved);
+
+      return (
+        <button
+          className={`inline-flex items-center rounded-full py-1 text-xs font-semibold transition ${
+            isResolved
+              ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+              : "bg-amber-50 text-amber-700 hover:bg-amber-100"
+          }`}
+          onClick={() => onToggleResolved(row.original)}
+          title={isResolved ? "Mark as unresolved" : "Mark as resolved"}
+          type="button"
+        >
+          {isResolved ? "Resolved" : "Unresolved"}
+        </button>
+      );
+    },
+    header: "Status",
+    id: "status",
+    size: 130,
   },
   {
     cell: ({ row }) => (

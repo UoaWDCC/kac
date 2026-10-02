@@ -3,6 +3,8 @@
 import Stripe from "stripe";
 import { RequestHandler } from "express";
 import { Payment } from "../model/payment";
+import { User } from "../model/user";
+import { getMembershipYear } from "../util/date";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -47,6 +49,25 @@ export const handleWebhook: RequestHandler = async (req, res) => {
               paidAt: new Date(),
             }
           );
+
+          // Renewals: roll the existing member on to the current membership
+          // year, which is what flips their role from "legacy" back to
+          // "member". At signup no User exists yet - payment happens before
+          // createUser - so this matches nothing and createUser sets the year
+          // itself. Safe to re-run, since Stripe retries webhooks.
+          const { googleUid } = paymentIntent.metadata;
+          if (googleUid) {
+            const renewed = await User.findOneAndUpdate(
+              { googleUid },
+              { latestMembershipYear: getMembershipYear() }
+            );
+            if (renewed) {
+              console.log(
+                `Membership renewed for googleUid ${googleUid} (${getMembershipYear()})`
+              );
+            }
+          }
+
           console.log(
             `Membership payment succeeded for paymentIntentId ${paymentIntent.id}`
           );

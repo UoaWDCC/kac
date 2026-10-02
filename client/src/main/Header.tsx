@@ -5,6 +5,7 @@ import {
   CircleUserRound,
   LogOut,
   Menu,
+  RefreshCw,
   ShieldCheck,
   UserRound,
 } from "lucide-react";
@@ -48,6 +49,8 @@ const Header = () => {
   // A Google-authed user mid-signup should still see the Sign In button.
   const isSignedIn = !!user && hasAccount;
   const isAdmin = role === "admin";
+  // "legacy" = has an account, but last paid for an earlier membership year.
+  const isExpiredMember = role === "legacy";
   const fallbackProfileImage =
     user?.photos?.find(
       (photo) => photo.value && !failedProfileImageUrls.has(photo.value)
@@ -292,6 +295,18 @@ const Header = () => {
                       Profile
                     </Link>
 
+                    {isExpiredMember ? (
+                      <Link
+                        className="header-profile-menu-item"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                        role="menuitem"
+                        to="/renew"
+                      >
+                        <RefreshCw aria-hidden="true" className="h-4 w-4" />
+                        Renew membership
+                      </Link>
+                    ) : null}
+
                     {isAdmin ? (
                       <Link
                         className="header-profile-menu-item"
@@ -343,6 +358,7 @@ const Header = () => {
       <MobileMenu
         currentPath={location.pathname}
         isAdmin={isAdmin}
+        isExpiredMember={isExpiredMember}
         isOpen={isMobileMenuOpen}
         isSignedIn={isSignedIn}
         logout={logout}

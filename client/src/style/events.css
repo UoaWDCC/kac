@@ -171,7 +171,6 @@
 .events-pill-button:focus-visible,
 .events-more-button:hover,
 .events-more-button:focus-visible {
-  background: var(--color-blue-medium);
   box-shadow: 0.28rem 0.28rem 0 var(--color-grey-medium);
   color: var(--color-yellow-light);
   transform: translateY(-2px);

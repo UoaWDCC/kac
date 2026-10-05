@@ -480,7 +480,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                           }
                           setCurrentStep(Math.min(4, currentStep + 1));
                         }}
-                        className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                        className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                       >
                         {currentStep == 4 && (
                           <a href="/Home" className="text-lg px-10">
@@ -533,7 +533,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                         handleSubmit(new Event("submit") as any);
                         setCurrentStep(Math.min(4, currentStep + 1));
                       }}
-                      className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                      className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                     >
                       <p className="py-2 px-12">Sign Up!</p>
                     </button>

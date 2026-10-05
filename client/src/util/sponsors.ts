@@ -1,4 +1,5 @@
 export interface Sponsor {
+  _id?: string;
   name: string;
   deal: string;
   address: string;

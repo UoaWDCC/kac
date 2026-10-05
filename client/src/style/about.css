@@ -493,3 +493,15 @@ button {
     font-size: clamp(1rem, 2vh, 2rem) !important;
   }
 }
+
+.past-execs-content {
+  background-color: white;
+  border-radius: 2rem;
+  padding: 4rem;
+  column-count: 2;
+  column-gap: 4rem;
+}
+
+.past-execs-content p {
+  margin-bottom: 2rem;
+}

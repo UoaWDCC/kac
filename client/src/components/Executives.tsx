@@ -12,6 +12,9 @@ import api from "../api";
 import { ImageBlock } from "./image_block/ImageBlock";
 import execPlaceholder from "../images/exec-placeholder.png";
 
+import { useAuth } from "../auth/useAuth";
+import RichTextEditor from "./RichTextEditor";
+
 interface Executive {
   id: string;
   imageURL: string;
@@ -60,10 +63,6 @@ const ROLE_GROUPS: RoleGroup[] = [
     id: "aesir-representative",
     label: "AESIR REPRESENTATIVE:",
   },
-  {
-    id: "past-exec",
-    label: "OUR PAST EXECS:",
-  },
 ];
 
 const normaliseRoleKey = (value?: string) =>
@@ -74,12 +73,54 @@ const normaliseRoleKey = (value?: string) =>
 
 // const EXEC_IMG = "exec-placeholder";
 
+interface PastExecsProps {
+  content: string;
+  onChange: (content: string) => void;
+}
+
+const PastExecsEditor = ({ content, onChange }: Readonly<PastExecsProps>) => {
+  const { role } = useAuth();
+  const [editing, setEditing] = useState(false);
+
+  return (
+    <section className="exec-role-section">
+      <div className="past-execs-card">
+        <h2 className="exec-role-title font-monospace">OUR PAST EXECS:</h2>
+
+        {editing ? (
+          <>
+            <RichTextEditor value={content} onChange={onChange} />
+
+            <button type="button" onClick={() => setEditing(false)}>
+              Save
+            </button>
+          </>
+        ) : (
+          <>
+            <div
+              className="past-execs-content"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+
+            {role === "admin" && (
+              <button type="button" onClick={() => setEditing(true)}>
+                Edit
+              </button>
+            )}
+          </>
+        )}
+      </div>
+    </section>
+  );
+};
+
 const Executives = () => {
   const [execs, setExecs] = useState<Executive[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedExec, setSelectedExec] = useState<Executive | null>(null);
   const [editingExec, setEditingExec] = useState<Executive | null>(null);
   const [imageVersion, setImageVersion] = useState(0);
+  const [pastExecsContent, setPastExecsContent] = useState("");
 
   const loadExecs = async () => {
     try {
@@ -268,6 +309,11 @@ const Executives = () => {
       )}
 
       <NewExecModal onCreated={loadExecs} />
+
+      <PastExecsEditor
+        content={pastExecsContent}
+        onChange={setPastExecsContent}
+      />
     </div>
   );
 };

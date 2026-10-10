@@ -382,3 +382,114 @@ button {
   min-height: 0;
   width: 26vw;
 }
+
+@media (max-width: 639px) {
+  .executives-container {
+    gap: 40px;
+    padding: 0 32px;
+  }
+
+  .exec-role-section {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .exec-role-title {
+    margin: 0 0 1rem;
+    padding-left: 1rem;
+    font-size: clamp(1.25rem, 6vw, 1.75rem);
+  }
+
+  .exec-role-grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 32px;
+  }
+
+  .executive-card,
+  .executive-card__top {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .executive-card__top {
+    height: auto;
+    aspect-ratio: 533 / 277;
+    border-radius: 18px;
+    box-shadow: 6px 6px 0 var(--color-yellow-medium);
+  }
+
+  .executive-card__identity {
+    min-width: 0;
+    padding: clamp(0.75rem, 4vw, 1.2rem);
+  }
+
+  .executive-card__role {
+    font-size: clamp(0.7rem, 3.5vw, 1rem);
+  }
+
+  .executive-card__name {
+    font-size: clamp(1.35rem, 6vw, 2rem);
+    overflow-wrap: anywhere;
+  }
+
+  .exec-preview-overlay {
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .exec-preview-overlay .exec-preview-dialog {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .exec-preview-dialog .exec-preview-dialog__close {
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+  }
+
+  .exec-preview-dialog .exec-preview-dialog__layout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    min-height: 0;
+    padding: max(3.5rem, calc(env(safe-area-inset-top) + 2.5rem)) 1.25rem
+      max(1.5rem, env(safe-area-inset-bottom));
+    overflow-y: auto;
+  }
+
+  .exec-preview-dialog .exec-preview-dialog__layout > :first-child {
+    align-self: center;
+    flex: 0 0 auto !important;
+    width: min(100%, 240px) !important;
+    height: min(30vh, 240px) !important;
+    max-height: none !important;
+    order: 2;
+  }
+
+  .exec-preview-dialog .exec-preview-dialog__copy {
+    display: contents;
+  }
+
+  .exec-preview-dialog .exec-preview-dialog__heading {
+    order: 1;
+    text-align: center;
+  }
+
+  .exec-preview-dialog .exec-preview-dialog__details {
+    order: 3;
+    min-height: 0;
+    padding: 0 4vh;
+    gap: 0;
+  }
+
+  .exec-preview-dialog .exec-preview-dialog__details p {
+    font-size: clamp(1rem, 2vh, 2rem) !important;
+  }
+}

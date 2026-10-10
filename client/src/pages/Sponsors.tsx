@@ -157,8 +157,6 @@ const Sponsors = () => {
 
       {/* REST OF CONTENT - centered */}
       <div className="sponsors-centered-content sponsors-content-shell">
-        {role === "admin" && <NewSponsorModal onCreated={loadSponsors} />}
-
         {/* SEARCH BAR */}
         <section className="sponsors-search-section">
           <div className="sponsors-search-wrap">
@@ -220,6 +218,8 @@ const Sponsors = () => {
             ))}
           </div>
         </section>
+
+        {role === "admin" && <NewSponsorModal onCreated={loadSponsors} />}
 
         {/* CBD */}
         {(activeTab === "all" || activeTab === "cbd") && cbd.length > 0 && (

@@ -74,13 +74,13 @@ export default function NewSponsorModal({ onCreated }: Readonly<ModalProps>) {
   if (role !== "admin") return null;
 
   return (
-    <div className="my-10 flex justify-center">
+    <div className="my-10 sm:my-0 flex justify-center">
       <button
-        className="flex cursor-pointer items-center gap-2 rounded-3xl bg-yellow-dark px-8 py-3 font-bold text-blue-medium shadow-[2px_4px] shadow-yellow-medium transition hover:bg-blue-medium hover:text-yellow-light hover:shadow-gray-400"
+        className="flex flex-col items-center justify-center cursor-pointer aspect-square max-w-[40vw] lg:max-w-[14vw] 2xl:max-w-[10vw] rounded-[10px] font-bold text-lg text-blue-medium border-4! border-dashed border-yellow-dark! opacity-70 hover:opacity-100 transition-opacity duration-200"
         type="button"
         onClick={() => setIsOpen(true)}
       >
-        <Plus className="size-5" />
+        <Plus className="size-[2.2rem] my-1" />
         <span>New Sponsor</span>
       </button>
 

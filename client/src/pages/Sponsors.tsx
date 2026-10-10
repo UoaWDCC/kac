@@ -162,7 +162,7 @@ const Sponsors = () => {
           <div className="sponsors-search-wrap">
             <input
               type="text"
-              placeholder="Search for your favourite sponsors..."
+              placeholder="Search For Your Favourite Sponsors...!"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="sponsors-search-input"
@@ -207,7 +207,7 @@ const Sponsors = () => {
                     className="sponsors-tab-pill"
                     style={{
                       position: "absolute",
-                      inset: "2px",
+                      inset: "0",
                       borderRadius: "999px",
                       backgroundColor: "var(--color-yellow-dark)",
                       zIndex: 0,

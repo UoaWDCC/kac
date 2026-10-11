@@ -1,4 +1,6 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
+import type { ChangeEvent, MouseEvent } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
@@ -11,14 +13,16 @@ import {
   User,
 } from "lucide-react";
 
-import createTicket from "../api/ticketsApi";
+import createTicket, { getMyTicket } from "../api/ticketsApi";
+import type { TicketRecord } from "../api/ticketsApi";
+import type { EventRecord } from "./EventPageWrapper";
 import { useAuth } from "../auth/useAuth.ts";
 
 import "../style/common.css";
 
 import { ImageBlock } from "../components/image_block/ImageBlock";
 
-const UpcomingEvent = ({ event }: { event: any }) => {
+const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
   const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
   const [cardIsOpen, setCardIsOpen] = useState(false);
@@ -31,72 +35,210 @@ const UpcomingEvent = ({ event }: { event: any }) => {
   const [groupBuddy, setGroupBuddy] = useState("");
   const [dietaryRequirements, setDietaryRequirements] = useState("");
 
-  const { hasAccount } = useAuth();
+  const { hasAccount, user } = useAuth();
+  const accountId = user?.id;
 
-  const handleCardNumberChange = (e: any) => {
+  const [registration, setRegistration] = useState<{
+    eventId: string;
+    accountId: string;
+    attempt: number;
+    ticket: TicketRecord | null;
+    error: string | null;
+  } | null>(null);
+  const [lookupRetry, setLookupRetry] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submissionInFlight = useRef(false);
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (!id || !hasAccount || !accountId) return;
+    let active = true;
+
+    getMyTicket(id)
+      .then((ticket) => {
+        if (active) {
+          setRegistration({
+            eventId: id,
+            accountId,
+            attempt: lookupRetry,
+            ticket,
+            error: null,
+          });
+        }
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        const message =
+          typeof error === "string" ? error : "Could not check registration.";
+        setRegistration({
+          eventId: id,
+          accountId,
+          attempt: lookupRetry,
+          ticket: null,
+          error: message,
+        });
+        toast.error(message);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [id, hasAccount, accountId, lookupRetry]);
+
+  useEffect(() => {
+    const clock = window.setInterval(() => setNow(Date.now()), 30_000);
+    return () => window.clearInterval(clock);
+  }, []);
+
+  const handleCardNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
     // Keep only digits, max 16, and insert spaces every 4 digits for readability
     const digits = e.target.value.replace(/\D/g, "").slice(0, 16);
     const parts = digits.match(/.{1,4}/g);
     setCardNumber(parts ? parts.join(" ") : "");
   };
 
-  const handleCardVerificationChange = (e: any) => {
+  const handleCardVerificationChange = (e: ChangeEvent<HTMLInputElement>) => {
     // Also only digits, max 3 for CVC/CVV
     const digits = e.target.value.replace(/\D/g, "").slice(0, 3);
     setCardVerification(digits);
   };
 
-  const handleCardExpiryChange = (e: any) => {
+  const handleCardExpiryChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCardExpiry(e.target.value);
     if (expiryRef.current) expiryRef.current.setCustomValidity("");
   };
 
   const validateExpiry = () => {
-    if (!expiryRef.current) return true;
-    const val = expiryRef.current.value;
+    const val = expiryRef.current?.value ?? cardExpiry;
     if (!val) {
-      expiryRef.current.setCustomValidity("");
+      expiryRef.current?.setCustomValidity("");
       return true;
     }
 
     const exp = new Date(val);
     const today = new Date();
-
-    // Consider expired if same date, disregard time of day
     today.setHours(0, 0, 0, 0);
     exp.setHours(0, 0, 0, 0);
 
-    if (exp <= today) {
-      expiryRef.current.setCustomValidity(
+    if (Number.isNaN(exp.getTime()) || exp <= today) {
+      expiryRef.current?.setCustomValidity(
         "Card has expired. Enter a valid expiry date."
       );
       return false;
     }
-    expiryRef.current.setCustomValidity("");
+
+    expiryRef.current?.setCustomValidity("");
     return true;
   };
 
-  if (!id || !event)
+  if (!id || !sourceEvent)
     return <div className="medium-content">Event not found!</div>;
 
-  let userSignedUp = false; // in future, check user's account for this
+  const currentRegistration =
+    registration?.eventId === id &&
+    registration.accountId === accountId &&
+    registration.attempt === lookupRetry
+      ? registration
+      : null;
+  const ticket = currentRegistration?.ticket ?? null;
+  const ticketLoaded = currentRegistration !== null;
+  const ticketLoadError = currentRegistration?.error ?? null;
+  const userSignedUp = ticket !== null;
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const startsAt = new Date(sourceEvent.datetime).getTime();
+  const releasesAt = sourceEvent.releaseDatetime
+    ? new Date(sourceEvent.releaseDatetime).getTime()
+    : 0;
+
+  const formatEventDate = (value: string, includeTime = false) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "N/A";
+    return new Intl.DateTimeFormat("en-NZ", {
+      dateStyle: "long",
+      ...(includeTime ? { timeStyle: "short" as const } : {}),
+      timeZone: "Pacific/Auckland",
+    }).format(date);
+  };
+
+  const event = {
+    ...sourceEvent,
+    location: sourceEvent.location || "N/A",
+    date: formatEventDate(sourceEvent.datetime),
+    time: Number.isFinite(startsAt)
+      ? new Intl.DateTimeFormat("en-NZ", {
+          timeStyle: "short",
+          timeZone: "Pacific/Auckland",
+        }).format(new Date(sourceEvent.datetime))
+      : "",
+    dateSignOpen: sourceEvent.releaseDatetime
+      ? formatEventDate(sourceEvent.releaseDatetime, true)
+      : "",
+    signUpStatus:
+      startsAt > now && releasesAt <= now
+        ? "Open"
+        : startsAt > now && releasesAt > now
+          ? "Waiting"
+          : "Closed",
+  };
+
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    try {
-      const submittedGroupBuddy = groupBuddy.trim() ? groupBuddy.trim() : "N/A";
-      const submittedDietaryRequirements = dietaryRequirements.trim();
+    if (
+      !accountId ||
+      currentStep !== 3 ||
+      !ticketLoaded ||
+      ticketLoadError ||
+      userSignedUp ||
+      event.signUpStatus !== "Open" ||
+      submissionInFlight.current
+    ) {
+      return;
+    }
 
-      await createTicket(
+    if (
+      !dietaryRequirements.trim() ||
+      !/^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$/.test(cardNumber) ||
+      !/^[0-9]{3}$/.test(cardVerification) ||
+      !cardExpiry ||
+      !validateExpiry()
+    ) {
+      setCurrentStep(2);
+      setCardIsOpen(true);
+      toast.error("Check your dietary requirements and card details.");
+      window.setTimeout(() => {
+        validateExpiry();
+        formRef.current?.reportValidity();
+      }, 10);
+      return;
+    }
+
+    submissionInFlight.current = true;
+    setIsSubmitting(true);
+
+    try {
+      const saved = await createTicket(
         id,
-        "dummyPaymentID",
-        submittedGroupBuddy,
-        submittedDietaryRequirements
+        "N/A",
+        groupBuddy.trim() || "N/A",
+        dietaryRequirements.trim()
       );
-      console.log("Ticket created successfully!");
+
+      setRegistration({
+        eventId: id,
+        accountId,
+        attempt: lookupRetry,
+        ticket: saved,
+        error: null,
+      });
+      setCurrentStep(4);
     } catch (error) {
-      console.error("Error occurred while submitting the form:", error);
+      toast.error(
+        typeof error === "string" ? error : "Could not save registration."
+      );
+    } finally {
+      submissionInFlight.current = false;
+      setIsSubmitting(false);
     }
   };
 
@@ -149,6 +291,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                   <div className="w-fit mb-6">
                     <button
                       type="button"
+                      disabled={isSubmitting}
                       onClick={() =>
                         setCurrentStep(Math.max(1, currentStep - 1))
                       }
@@ -229,7 +372,9 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                       <p className="text-[1rem]!">🕑 {event.time}</p>
                     )}
                     <p className="text-[1rem]!">📍 {event.location}</p>
-                    <p className="text-[1rem]!">💰 ${event.price}</p>
+                    <p className="text-[1rem]!">
+                      💰 {event.price != null ? "$" + event.price : "N/A"}
+                    </p>
                   </div>
                   <p className="text-[1rem]! text-justify">
                     {reactStringReplace(
@@ -379,7 +524,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                               style: "currency",
                               currency: "NZD",
                             }).format(event.price)
-                          : ""}
+                          : "N/A"}
                       </p>
                     </div>
                   </div>
@@ -399,7 +544,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
               )}
 
               {/* Step 4: Completion Message */}
-              {currentStep === 4 && (
+              {currentStep === 4 && userSignedUp && (
                 <div className="flex flex-col align-middle pt-6 pb-2 gap-4 items-center">
                   <ImageBlock
                     pageKey="mascot-small"
@@ -412,12 +557,13 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                     editable={true}
                   />
                   <p className="mt-2 font-alan-sans text-[1rem]! text-center w-[70%]">
-                    Thank you for signing up for this event, we look forward to
-                    seeing you there!
+                    {ticket?.status === "waitlisted"
+                      ? "Thank you for joining the waitlist. Your place is not confirmed yet."
+                      : "Thank you for signing up for this event, we look forward to seeing you there!"}
                   </p>
                   <p className="font-alan-sans text-[1rem]! text-center w-[80%]">
-                    You will receive a confirmation email once your spot has
-                    been confirmed, so make sure to check your email {":)"}
+                    Your registration is saved. Return to this page to check
+                    your status.
                   </p>
                 </div>
               )}
@@ -433,14 +579,25 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                   </div>
                 )}
                 {/* Can Sign Up - Show form with continue button */}
-                {event.signUpStatus == "Open" &&
-                  !userSignedUp &&
-                  hasAccount &&
-                  currentStep != 3 && (
+                {hasAccount &&
+                  ((currentStep === 4 && userSignedUp) ||
+                    (event.signUpStatus === "Open" &&
+                      !userSignedUp &&
+                      currentStep < 3)) && (
                     <div className="w-full flex justify-center">
                       <button
                         type="button"
+                        disabled={
+                          currentStep !== 4 && (!ticketLoaded || isSubmitting)
+                        }
                         onClick={() => {
+                          if (currentStep === 4) return;
+                          if (ticketLoadError) {
+                            setLookupRetry((value) => value + 1);
+                            return;
+                          }
+                          if (!ticketLoaded || isSubmitting || userSignedUp)
+                            return;
                           validateExpiry();
                           if (currentStep === 2) {
                             if (
@@ -450,7 +607,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                               const firstInvalid =
                                 formRef.current.querySelector(
                                   ":invalid"
-                                ) as HTMLElement | null;
+                                ) as HTMLInputElement | null;
                               if (
                                 firstInvalid &&
                                 cardContainerRef.current &&
@@ -464,9 +621,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                                 setTimeout(() => {
                                   try {
                                     firstInvalid.focus();
-                                    (firstInvalid as any).reportValidity
-                                      ? (firstInvalid as any).reportValidity()
-                                      : formRef.current?.reportValidity();
+                                    firstInvalid.reportValidity();
                                   } catch (e) {
                                     formRef.current?.reportValidity();
                                     console.error(e);
@@ -478,74 +633,56 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                               return;
                             }
                           }
-                          setCurrentStep(Math.min(4, currentStep + 1));
+                          setCurrentStep(Math.min(3, currentStep + 1));
                         }}
                         className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                       >
                         {currentStep == 4 && (
-                          <a href="/Home" className="text-lg px-10">
+                          <a href="/" className="text-lg px-10">
                             Back Home {">"}
                           </a>
                         )}
                         {currentStep < 3 && (
-                          <p className="py-2 px-12">Continue {">"}</p>
+                          <p className="py-2 px-12">
+                            {ticketLoadError
+                              ? "Retry"
+                              : !ticketLoaded
+                                ? "Checking…"
+                                : "Continue >"}
+                          </p>
                         )}
                       </button>
                     </div>
                   )}
                 {/* Handle form submission separately */}
-                {currentStep == 3 && (
-                  <div className="w-full flex justify-center">
-                    <button
-                      type="submit"
-                      onClick={() => {
-                        validateExpiry();
-                        if (
-                          formRef.current &&
-                          !formRef.current.checkValidity()
-                        ) {
-                          const firstInvalid = formRef.current.querySelector(
-                            ":invalid"
-                          ) as HTMLElement | null;
-                          if (
-                            firstInvalid &&
-                            cardContainerRef.current &&
-                            cardContainerRef.current.contains(firstInvalid) &&
-                            !cardIsOpen
-                          ) {
-                            setCardIsOpen(true);
-                            setTimeout(() => {
-                              try {
-                                firstInvalid.focus();
-                                (firstInvalid as any).reportValidity
-                                  ? (firstInvalid as any).reportValidity()
-                                  : formRef.current?.reportValidity();
-                              } catch (e) {
-                                formRef.current?.reportValidity();
-                                console.error(e);
-                              }
-                            }, 10);
-                            return;
-                          }
-                          formRef.current.reportValidity();
-                          return;
-                        }
-                        handleSubmit(new Event("submit") as any);
-                        setCurrentStep(Math.min(4, currentStep + 1));
-                      }}
-                      className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
-                    >
-                      <p className="py-2 px-12">Sign Up!</p>
-                    </button>
-                  </div>
-                )}
+                {currentStep === 3 &&
+                  event.signUpStatus === "Open" &&
+                  hasAccount &&
+                  !userSignedUp &&
+                  ticketLoaded &&
+                  !ticketLoadError && (
+                    <div className="w-full flex justify-center">
+                      <button
+                        type="button"
+                        disabled={isSubmitting}
+                        onClick={handleSubmit}
+                        className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                      >
+                        <p className="py-2 px-12">
+                          {isSubmitting ? "Saving…" : "Sign Up!"}
+                        </p>
+                      </button>
+                    </div>
+                  )}
 
                 {/* Already Signed Up */}
-                {userSignedUp && (
+                {userSignedUp && currentStep !== 4 && (
                   <div className="flex flex-row gap-4 justify-center items-center mt-10">
                     <CalendarCheck className="size-8" />
                     <h2 className="uppercase text-2xl text-center">
-                      You have signed up for {event.title}!
+                      {ticket?.status === "waitlisted"
+                        ? `You are on the waitlist for ${event.title}!`
+                        : `You have signed up for ${event.title}!`}
                     </h2>
                   </div>
                 )}

@@ -21,6 +21,7 @@ import {
 import { getMembershipYear } from "../util/membership";
 import "../style/common.css";
 import "../style/signup.css";
+import "../style/renew.css";
 
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? ""
@@ -170,13 +171,13 @@ const RenewForm = () => {
   };
 
   if (loading) {
-    return <p className="narrow-content">Loading...</p>;
+    return <p className="narrow-content renew-page">Loading...</p>;
   }
 
   if (role === "member" || role === "admin") {
     return (
-      <div className="narrow-content" style={{ padding: "4rem 2rem" }}>
-        <h2>You're all set</h2>
+      <div className="narrow-content renew-page">
+        <h1 className="renew-title">You&apos;re all set</h1>
         <p>Your {membershipYear} membership is already active.</p>
       </div>
     );
@@ -186,8 +187,8 @@ const RenewForm = () => {
   // to renew, and create-payment-intent would 401 on them anyway.
   if (role === "guest") {
     return (
-      <div className="narrow-content" style={{ padding: "4rem 2rem" }}>
-        <h2>Sign in to renew</h2>
+      <div className="narrow-content renew-page">
+        <h1 className="renew-title">Sign in to renew</h1>
         <p className="font-alan-sans">
           Renewing is for existing members. If you haven't joined yet, sign up
           for a {membershipYear} membership.
@@ -204,16 +205,16 @@ const RenewForm = () => {
   }
 
   return (
-    <div className="narrow-content" style={{ padding: "4rem 2rem" }}>
-      <h2>Renew your membership</h2>
-      <p className="font-alan-sans">
+    <div className="narrow-content renew-page">
+      <h1 className="renew-title">Renew your membership</h1>
+      <p className="renew-intro font-alan-sans">
         Your membership has expired. Renew for {membershipYear} to keep your
         sponsor discounts and member access to events.
       </p>
 
       <form onSubmit={handleSubmit}>
-        <h3>Your details</h3>
-        <p className="font-alan-sans">
+        <h2 className="renew-section-title">Your details</h2>
+        <p className="renew-section-hint font-alan-sans">
           Check these are still right — year of study in particular.
         </p>
 
@@ -243,7 +244,7 @@ const RenewForm = () => {
           ))}
         </div>
 
-        <h3>Payment</h3>
+        <h2 className="renew-section-title">Payment</h2>
 
         <div className="signup-field-group">
           <span className="signup-field-label">Card Number</span>
@@ -268,10 +269,10 @@ const RenewForm = () => {
           </div>
         </div>
 
-        <div className="signup-total-text">Total: $5.00</div>
+        <div className="renew-total">Total: $5.00</div>
 
         {error && (
-          <p role="alert" style={{ color: "#e53e3e" }}>
+          <p className="renew-error" role="alert">
             {error}
           </p>
         )}

@@ -18,12 +18,20 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       default: "N/A",
     },
-    status: { type: String, enum: ["confirmed", "waitlisted", "cancelled"], default: "confirmed" },
+    status: {
+      type: String,
+      enum: ["confirmed", "waitlisted", "cancelled"],
+      default: "confirmed",
+    },
     registeredAt: { type: Date, default: Date.now },
     waitlistedAt: { type: Date, default: null },
     attended: { type: Boolean, default: false },
     cancelledAt: { type: Date, default: null },
-    cancelledBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    cancelledBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
     groupBuddy: { type: String, default: "N/A" },
     dietaryRequirements: { type: String, default: "N/A" },
   },
@@ -42,6 +50,5 @@ ticketSchema.index({
   waitlistedAt: 1,
   _id: 1,
 });
-
 
 export const Ticket = model("Ticket", ticketSchema);

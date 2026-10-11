@@ -36,16 +36,18 @@ export default function AdminSidebar({
               key={item.value}
               type="button"
               onClick={() => onSectionChange(item.value)}
-              className={`group flex h-12 w-full items-center gap-3 rounded-md px-3 text-left text-sm font-semibold transition ${isActive
-                ? "bg-yellow-light text-blue-medium shadow-sm ring-1 ring-yellow-dark/40"
-                : "bg-white text-slate-700 hover:bg-slate-50 hover:text-blue-medium"
-                }`}
+              className={`group flex h-12 w-full items-center gap-3 rounded-md px-3 text-left text-sm font-semibold transition ${
+                isActive
+                  ? "bg-yellow-light text-blue-medium shadow-sm ring-1 ring-yellow-dark/40"
+                  : "bg-white text-slate-700 hover:bg-slate-50 hover:text-blue-medium"
+              }`}
             >
               <span
-                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition ${isActive
-                  ? "bg-blue-medium text-white"
-                  : "bg-slate-100 text-slate-500 group-hover:bg-yellow-light group-hover:text-blue-medium"
-                  }`}
+                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition ${
+                  isActive
+                    ? "bg-blue-medium text-white"
+                    : "bg-slate-100 text-slate-500 group-hover:bg-yellow-light group-hover:text-blue-medium"
+                }`}
               >
                 <Icon aria-hidden="true" className="h-4 w-4" />
               </span>

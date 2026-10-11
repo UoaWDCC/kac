@@ -41,9 +41,7 @@ export default async function createTicket(
 export async function getTicketsByEventID(
   eventId: string
 ): Promise<EventSignup[]> {
-  const response = await api.get<EventSignup[]>(
-    `/tickets/event/${eventId}`
-  );
+  const response = await api.get<EventSignup[]>(`/tickets/event/${eventId}`);
 
   return response.data;
 }
@@ -53,10 +51,9 @@ export async function updateTicketAttendance(
   ticketId: string,
   attended: boolean
 ): Promise<void> {
-  await api.patch(
-    `/tickets/event/${eventId}/${ticketId}/attendance`,
-    { attended }
-  );
+  await api.patch(`/tickets/event/${eventId}/${ticketId}/attendance`, {
+    attended,
+  });
 }
 
 export async function cancelTicket(

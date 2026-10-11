@@ -153,11 +153,9 @@ export const createTicket: RequestHandler = async (req, res) => {
         status: "waitlisted",
       }).session(session);
 
-      const hasSpace =
-        event.capacity == null || confirmed < event.capacity;
+      const hasSpace = event.capacity == null || confirmed < event.capacity;
 
-      const status =
-        hasSpace && !waiting ? "confirmed" : "waitlisted";
+      const status = hasSpace && !waiting ? "confirmed" : "waitlisted";
 
       const values = {
         ...details,
@@ -187,7 +185,6 @@ export const createTicket: RequestHandler = async (req, res) => {
     ticketError(res, error);
   }
 };
-
 
 // Retrieve tickets by event ID or user ID
 type SignupUser = {
@@ -222,20 +219,18 @@ export const getTicketsByEventID: RequestHandler = async (req, res) => {
         userID: ticket.userID?._id.toString() ?? null,
         eventID: ticket.eventID.toString(),
         status: ticket.status,
-        registeredAt: (
-          ticket.registeredAt ?? ticket.createdAt
-        ).toISOString(),
+        registeredAt: (ticket.registeredAt ?? ticket.createdAt).toISOString(),
         waitlistedAt: ticket.waitlistedAt?.toISOString() ?? null,
         attended: ticket.attended,
         groupBuddy: ticket.groupBuddy,
         dietaryRequirements: ticket.dietaryRequirements,
         user: ticket.userID
           ? {
-            _id: ticket.userID._id.toString(),
-            firstName: ticket.userID.firstName,
-            lastName: ticket.userID.lastName,
-            email: ticket.userID.email,
-          }
+              _id: ticket.userID._id.toString(),
+              firstName: ticket.userID.firstName,
+              lastName: ticket.userID.lastName,
+              email: ticket.userID.email,
+            }
           : null,
       }))
     );
@@ -348,10 +343,7 @@ export const promoteTicket: RequestHandler = async (req, res) => {
         event.datetime <= now ||
         (event.releaseDatetime && event.releaseDatetime > now)
       ) {
-        throw new TicketError(
-          409,
-          "This event is not open for promotion."
-        );
+        throw new TicketError(409, "This event is not open for promotion.");
       }
 
       const ticket = await Ticket.findOne({
@@ -376,10 +368,7 @@ export const promoteTicket: RequestHandler = async (req, res) => {
         .session(session);
 
       if (!first || !first._id.equals(ticket._id)) {
-        throw new TicketError(
-          409,
-          "Promote the first person on the waitlist."
-        );
+        throw new TicketError(409, "Promote the first person on the waitlist.");
       }
 
       if (

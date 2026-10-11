@@ -1,4 +1,6 @@
 import { useState } from "react";
+import type { ReactNode } from "react";
+import "../../style/admin.css";
 import {
   flexRender,
   getCoreRowModel,
@@ -29,6 +31,8 @@ type DataTableProps<TData extends object> = {
   isLoading?: boolean;
   searchPlaceholder: string;
   columnWidthClasses?: Record<string, string>;
+  initialPageSize?: number;
+  toolbar?: ReactNode;
 };
 
 const pageSizeOptions = [3, 10, 20, 50];
@@ -42,7 +46,9 @@ export default function DataTable<TData extends object>({
   error,
   getRowId,
   isLoading = false,
+  initialPageSize = pageSizeOptions[0],
   searchPlaceholder,
+  toolbar,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -59,7 +65,7 @@ export default function DataTable<TData extends object>({
     getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
-        pageSize: pageSizeOptions[0],
+        pageSize: initialPageSize,
       },
     },
     onGlobalFilterChange: setGlobalFilter,
@@ -104,19 +110,19 @@ export default function DataTable<TData extends object>({
     }
   };
   const isCenteredColumn = (columnId: string) =>
-    columnId === "actions" || columnId === "latestMembershipYear";
+    columnId === "actions" ||
+    columnId === "latestMembershipYear" ||
+    columnId === "attended";
 
   return (
-    <div className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-col gap-3 border-b border-slate-200 bg-slate-50/80 p-3 sm:flex-row sm:items-center sm:justify-between">
-        <label className="relative flex w-full items-center sm:max-w-md">
-          <span className="sr-only">Search records</span>
-          <Search
-            aria-hidden="true"
-            className="pointer-events-none absolute left-3 h-4 w-4 text-slate-500"
-          />
+    <div className="admin-theme admin-table-shell" aria-busy={isLoading}>
+      {toolbar}
+      <div className="admin-table-search-bar">
+        <label className="admin-search-field">
+          <span className="admin-visually-hidden">Search records</span>
+          <Search aria-hidden="true" className="admin-search-icon" />
           <input
-            className="h-10 w-full rounded-md border border-slate-300 bg-white pl-9 pr-9 text-sm text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/35"
+            className="admin-search-input"
             onChange={(event) => setGlobalFilter(event.target.value)}
             placeholder={searchPlaceholder}
             type="text"
@@ -125,24 +131,28 @@ export default function DataTable<TData extends object>({
           {globalFilter ? (
             <button
               aria-label="Clear search"
-              className="absolute right-1.5 inline-flex h-7 w-7 items-center justify-end pr-2 rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-blue-medium"
+              className="admin-clear-search"
               onClick={() => setGlobalFilter("")}
               title="Clear search"
               type="button"
             >
-              <X aria-hidden="true" className="h-4 w-4" />
+              <X aria-hidden="true" className="admin-small-icon" />
             </button>
           ) : null}
         </label>
 
-        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
-          <span className="inline-flex h-10 items-center rounded-md border border-slate-200 bg-white px-3">
-            {totalRows} {totalRows === 1 ? "record" : "records"}
+        <div className="admin-table-options">
+          <span className="admin-record-count">
+            {error
+              ? "Records unavailable"
+              : isLoading
+                ? "Loading records…"
+                : `${totalRows} ${totalRows === 1 ? "record" : "records"}`}
           </span>
-          <div className="relative">
+          <div className="admin-select-field">
             <select
               aria-label="Rows per page"
-              className="h-10 appearance-none rounded-md border border-slate-300 bg-white pl-3 pr-10 text-sm text-slate-950 outline-none focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/40"
+              className="admin-select"
               onChange={(event) =>
                 table.setPageSize(Number(event.target.value))
               }
@@ -154,17 +164,14 @@ export default function DataTable<TData extends object>({
                 </option>
               ))}
             </select>
-            <ChevronDown
-              aria-hidden="true"
-              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-950"
-            />
+            <ChevronDown aria-hidden="true" className="admin-select-icon" />
           </div>
         </div>
       </div>
 
       <div>
-        <table className="hidden w-full table-fixed border-collapse text-left text-sm lg:table">
-          <thead className="bg-slate-50 text-xs uppercase tracking-normal text-slate-600">
+        <table className="admin-desktop-table">
+          <thead className="admin-table-head">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -180,18 +187,18 @@ export default function DataTable<TData extends object>({
                             ? "descending"
                             : "none"
                       }
-                      className={`border-b border-slate-200 px-3 py-3 font-semibold ${isCenteredColumn(header.column.id) ? "text-center" : ""} ${getColumnWidthClass(
+                      className={`admin-table-header-cell ${isCenteredColumn(header.column.id) ? "admin-centered-cell" : ""} ${getColumnWidthClass(
                         header.column.id
                       )}`}
                       key={header.id}
                     >
                       {header.isPlaceholder ? null : canSort ? (
                         <button
-                          className={`inline-flex max-w-full items-center gap-2 whitespace-nowrap rounded-md transition hover:text-slate-950 ${isCenteredColumn(header.column.id) ? "w-full justify-center text-center" : "text-left"}`}
+                          className={`admin-sort-button ${isCenteredColumn(header.column.id) ? "admin-centered-sort" : ""}`}
                           onClick={header.column.getToggleSortingHandler()}
                           type="button"
                         >
-                          <span className="whitespace-nowrap">
+                          <span className="admin-column-label">
                             {flexRender(
                               header.column.columnDef.header,
                               header.getContext()
@@ -200,22 +207,22 @@ export default function DataTable<TData extends object>({
                           {sorted === "asc" ? (
                             <ArrowUp
                               aria-hidden="true"
-                              className="h-3.5 w-3.5"
+                              className="admin-sort-icon"
                             />
                           ) : sorted === "desc" ? (
                             <ArrowDown
                               aria-hidden="true"
-                              className="h-3.5 w-3.5"
+                              className="admin-sort-icon"
                             />
                           ) : (
                             <ChevronsUpDown
                               aria-hidden="true"
-                              className="h-3.5 w-3.5"
+                              className="admin-sort-icon"
                             />
                           )}
                         </button>
                       ) : (
-                        <span className="whitespace-nowrap">
+                        <span className="admin-column-label">
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext()
@@ -228,14 +235,14 @@ export default function DataTable<TData extends object>({
               </tr>
             ))}
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="admin-table-body">
             {isLoading ? (
               Array.from({ length: 6 }).map((_, index) => (
-                <tr className="animate-pulse" key={index}>
+                <tr className="admin-skeleton-row" key={index}>
                   {Array.from({ length: visibleColumnCount }).map(
                     (_cell, cellIndex) => (
-                      <td className="px-4 py-4" key={cellIndex}>
-                        <div className="h-4 rounded bg-slate-100" />
+                      <td className="admin-skeleton-cell" key={cellIndex}>
+                        <div className="admin-skeleton-line" />
                       </td>
                     )
                   )}
@@ -243,27 +250,19 @@ export default function DataTable<TData extends object>({
               ))
             ) : error ? (
               <tr>
-                <td
-                  className="px-4 py-12 text-center"
-                  colSpan={visibleColumnCount}
-                >
-                  <div className="mx-auto flex max-w-sm flex-col items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-4 py-5">
-                    <p className="text-base font-semibold text-red-700">
-                      Could not load records
-                    </p>
-                    <p className="text-sm leading-6 text-slate-600">{error}</p>
+                <td className="admin-state-cell" colSpan={visibleColumnCount}>
+                  <div className="admin-error-state">
+                    <p className="admin-error-title">Could not load records</p>
+                    <p className="admin-state-description">{error}</p>
                   </div>
                 </td>
               </tr>
             ) : rows.length ? (
               rows.map((row) => (
-                <tr
-                  className="align-middle transition hover:bg-yellow-light/45"
-                  key={row.id}
-                >
+                <tr className="admin-data-row" key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td
-                      className={`min-w-0 overflow-hidden px-3 py-4 text-slate-800 ${isCenteredColumn(cell.column.id) ? "text-center" : ""} ${getColumnWidthClass(
+                      className={`admin-table-cell ${isCenteredColumn(cell.column.id) ? "admin-centered-cell" : ""} ${getColumnWidthClass(
                         cell.column.id
                       )}`}
                       key={cell.id}
@@ -278,16 +277,11 @@ export default function DataTable<TData extends object>({
               ))
             ) : (
               <tr>
-                <td
-                  className="px-4 py-12 text-center"
-                  colSpan={visibleColumnCount}
-                >
-                  <div className="mx-auto max-w-sm rounded-lg border border-slate-200 bg-slate-50 px-4 py-6">
-                    <p className="text-base font-semibold text-slate-950">
-                      {emptyTitle}
-                    </p>
+                <td className="admin-state-cell" colSpan={visibleColumnCount}>
+                  <div className="admin-empty-state">
+                    <p className="admin-state-title">{emptyTitle}</p>
                     {emptyDescription ? (
-                      <p className="mt-1 text-sm leading-6 text-slate-600">
+                      <p className="admin-state-description">
                         {emptyDescription}
                       </p>
                     ) : null}
@@ -298,41 +292,33 @@ export default function DataTable<TData extends object>({
           </tbody>
         </table>
 
-        <div className="grid gap-3 p-3 lg:hidden">
+        <div className="admin-mobile-cards">
           {isLoading ? (
             Array.from({ length: 4 }).map((_, index) => (
-              <div
-                className="animate-pulse rounded-lg border border-slate-200 bg-white p-4"
-                key={index}
-              >
-                <div className="mb-4 h-5 w-2/3 rounded bg-slate-100" />
-                <div className="space-y-3">
-                  <div className="h-4 rounded bg-slate-100" />
-                  <div className="h-4 w-5/6 rounded bg-slate-100" />
-                  <div className="h-4 w-1/2 rounded bg-slate-100" />
+              <div className="admin-skeleton-card" key={index}>
+                <div className="admin-skeleton-heading" />
+                <div className="admin-skeleton-lines">
+                  <div className="admin-skeleton-line" />
+                  <div className="admin-skeleton-line" />
+                  <div className="admin-skeleton-line" />
                 </div>
               </div>
             ))
           ) : error ? (
-            <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-5 text-center">
-              <p className="text-base font-semibold text-red-700">
-                Could not load records
-              </p>
-              <p className="mt-1 text-sm leading-6 text-slate-600">{error}</p>
+            <div className="admin-error-state">
+              <p className="admin-error-title">Could not load records</p>
+              <p className="admin-state-description">{error}</p>
             </div>
           ) : rows.length ? (
             rows.map((row) => (
-              <article
-                className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
-                key={row.id}
-              >
-                <dl className="grid gap-4">
+              <article className="admin-mobile-card" key={row.id}>
+                <dl className="admin-mobile-details">
                   {row.getVisibleCells().map((cell) => (
-                    <div className="min-w-0" key={cell.id}>
-                      <dt className="mb-1 text-xs font-semibold uppercase tracking-normal text-slate-500">
+                    <div className="admin-mobile-detail" key={cell.id}>
+                      <dt className="admin-mobile-label">
                         {getColumnLabel(cell)}
                       </dt>
-                      <dd className="min-w-0 break-words text-sm text-slate-800">
+                      <dd className="admin-mobile-value">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -344,47 +330,43 @@ export default function DataTable<TData extends object>({
               </article>
             ))
           ) : (
-            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-6 text-center">
-              <p className="text-base font-semibold text-slate-950">
-                {emptyTitle}
-              </p>
+            <div className="admin-empty-state">
+              <p className="admin-state-title">{emptyTitle}</p>
               {emptyDescription ? (
-                <p className="mt-1 text-sm leading-6 text-slate-600">
-                  {emptyDescription}
-                </p>
+                <p className="admin-state-description">{emptyDescription}</p>
               ) : null}
             </div>
           )}
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-slate-200 bg-slate-50/80 p-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-        <span className="inline-flex h-9 items-center">
+      <div className="admin-table-footer">
+        <span className="admin-page-label">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {Math.max(table.getPageCount(), 1)}
         </span>
-        <div className="flex items-center gap-2">
+        <div className="admin-pagination">
           <button
             aria-label="Previous page"
-            className="inline-flex h-9 items-center gap-1 rounded-md border border-slate-300 bg-white px-3 text-slate-700 shadow-sm transition hover:enabled:!bg-blue-medium hover:enabled:text-white hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+            className="admin-page-button"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
             title="Previous page"
             type="button"
           >
-            <ChevronLeft aria-hidden="true" className="h-4 w-4" />
+            <ChevronLeft aria-hidden="true" className="admin-small-icon" />
             Previous
           </button>
           <button
             aria-label="Next page"
-            className="inline-flex h-9 items-center gap-1 rounded-md border border-slate-300 bg-white px-3 text-slate-700 shadow-sm transition hover:enabled:!bg-blue-medium hover:enabled:text-white hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+            className="admin-page-button"
             disabled={!table.getCanNextPage()}
             onClick={() => table.nextPage()}
             title="Next page"
             type="button"
           >
             Next
-            <ChevronRight aria-hidden="true" className="h-4 w-4" />
+            <ChevronRight aria-hidden="true" className="admin-small-icon" />
           </button>
         </div>
       </div>

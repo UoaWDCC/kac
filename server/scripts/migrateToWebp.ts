@@ -2,7 +2,11 @@ import dotenv from "dotenv";
 dotenv.config({ path: __dirname + "/../.env" });
 
 import mongoose from "mongoose";
-import { GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import sharp from "sharp";
 import { Image } from "../src/model/image";
 import { s3Client, s3BucketName } from "../src/config/aws";
@@ -33,12 +37,19 @@ async function run() {
 
   for (const image of images) {
     if (image.mimeType === "image/webp") {
-      console.log(`Skipping ${image.originalName} (${image.s3Key}) as it is already WebP.`);
+      console.log(
+        `Skipping ${image.originalName} (${image.s3Key}) as it is already WebP.`
+      );
       continue;
     }
 
-    if (!image.mimeType.startsWith("image/") || image.mimeType.includes("svg")) {
-      console.log(`Skipping ${image.originalName} (${image.s3Key}) because it is not a compressible image (mimeType: ${image.mimeType}).`);
+    if (
+      !image.mimeType.startsWith("image/") ||
+      image.mimeType.includes("svg")
+    ) {
+      console.log(
+        `Skipping ${image.originalName} (${image.s3Key}) because it is not a compressible image (mimeType: ${image.mimeType}).`
+      );
       continue;
     }
 
@@ -66,13 +77,19 @@ async function run() {
       const originalBuffer = Buffer.concat(chunks);
 
       // 2. Compress to WebP
-      const webpBuffer = await sharp(originalBuffer).webp({ quality: 80 }).toBuffer();
+      const webpBuffer = await sharp(originalBuffer)
+        .webp({ quality: 80 })
+        .toBuffer();
 
       // 3. Determine new names
       const oldKey = image.s3Key;
-      const newKey = oldKey.includes(".") ? oldKey.split(".").slice(0, -1).join(".") + ".webp" : oldKey + ".webp";
+      const newKey = oldKey.includes(".")
+        ? oldKey.split(".").slice(0, -1).join(".") + ".webp"
+        : oldKey + ".webp";
       const oldOriginalName = image.originalName;
-      const newOriginalName = oldOriginalName.includes(".") ? oldOriginalName.split(".").slice(0, -1).join(".") + ".webp" : oldOriginalName + ".webp";
+      const newOriginalName = oldOriginalName.includes(".")
+        ? oldOriginalName.split(".").slice(0, -1).join(".") + ".webp"
+        : oldOriginalName + ".webp";
 
       // 4. Upload to S3
       console.log(`Uploading to ${newKey}...`);

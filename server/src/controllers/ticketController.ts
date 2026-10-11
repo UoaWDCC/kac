@@ -188,6 +188,8 @@ export const createTicket: RequestHandler = async (req, res) => {
   }
 };
 
+
+// Retrieve tickets by event ID or user ID
 type SignupUser = {
   _id: mongoose.Types.ObjectId;
   firstName: string;
@@ -254,6 +256,158 @@ export const getTicketsByUserID: RequestHandler = async (req, res) => {
     }).lean();
 
     res.json(ticket);
+  } catch (error) {
+    ticketError(res, error);
+  }
+};
+
+// Attendance, removal and promotion handlers
+export const updateTicketAttendance: RequestHandler = async (req, res) => {
+  try {
+    const eventId = objectId(req.params.eventId, "event ID");
+    const ticketId = objectId(req.params.ticketId, "ticket ID");
+
+    if (typeof req.body?.attended !== "boolean") {
+      throw new TicketError(400, "attended must be a boolean.");
+    }
+
+    const ticket = await Ticket.findOneAndUpdate(
+      {
+        _id: ticketId,
+        eventID: eventId,
+        status: "confirmed",
+      },
+      {
+        $set: { attended: req.body.attended },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!ticket) {
+      throw new TicketError(
+        409,
+        "A confirmed registration could not be found."
+      );
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    ticketError(res, error);
+  }
+};
+
+export const cancelTicket: RequestHandler = async (req, res) => {
+  try {
+    const admin = await requestUser(req);
+    const eventId = objectId(req.params.eventId, "event ID");
+    const ticketId = objectId(req.params.ticketId, "ticket ID");
+
+    await withEventTransaction(eventId, async (session) => {
+      const ticket = await Ticket.findOne({
+        _id: ticketId,
+        eventID: eventId,
+      }).session(session);
+
+      if (!ticket) {
+        throw new TicketError(404, "Registration not found.");
+      }
+
+      if (ticket.status === "cancelled") return;
+
+      ticket.status = "cancelled";
+      ticket.cancelledAt = new Date();
+      ticket.cancelledBy = admin._id;
+
+      await ticket.save({ session });
+    });
+
+    res.sendStatus(204);
+  } catch (error) {
+    ticketError(res, error);
+  }
+};
+
+export const promoteTicket: RequestHandler = async (req, res) => {
+  try {
+    const eventId = objectId(req.params.eventId, "event ID");
+    const ticketId = objectId(req.params.ticketId, "ticket ID");
+
+    await withEventTransaction(eventId, async (session) => {
+      const event = await Event.findById(eventId).session(session);
+
+      if (!event) {
+        throw new TicketError(404, "Event not found.");
+      }
+
+      const now = new Date();
+
+      if (
+        event.datetime <= now ||
+        (event.releaseDatetime && event.releaseDatetime > now)
+      ) {
+        throw new TicketError(
+          409,
+          "This event is not open for promotion."
+        );
+      }
+
+      const ticket = await Ticket.findOne({
+        _id: ticketId,
+        eventID: eventId,
+        status: "waitlisted",
+      }).session(session);
+
+      if (!ticket) {
+        throw new TicketError(409, "Registration is not waitlisted.");
+      }
+
+      if (!(await User.exists({ _id: ticket.userID }).session(session))) {
+        throw new TicketError(409, "This member no longer exists.");
+      }
+
+      const first = await Ticket.findOne({
+        eventID: eventId,
+        status: "waitlisted",
+      })
+        .sort({ waitlistedAt: 1, _id: 1 })
+        .session(session);
+
+      if (!first || !first._id.equals(ticket._id)) {
+        throw new TicketError(
+          409,
+          "Promote the first person on the waitlist."
+        );
+      }
+
+      if (
+        event.capacity != null &&
+        (!Number.isInteger(event.capacity) || event.capacity < 1)
+      ) {
+        throw new TicketError(
+          409,
+          "This event needs a valid capacity before promotion."
+        );
+      }
+
+      const confirmed = await Ticket.countDocuments({
+        eventID: eventId,
+        status: "confirmed",
+      }).session(session);
+
+      if (event.capacity != null && confirmed >= event.capacity) {
+        throw new TicketError(409, "This event is full.");
+      }
+
+      ticket.status = "confirmed";
+      ticket.attended = false;
+
+      await ticket.save({ session });
+    });
+
+    res.sendStatus(204);
   } catch (error) {
     ticketError(res, error);
   }

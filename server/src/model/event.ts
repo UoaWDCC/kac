@@ -17,6 +17,7 @@ const eventSchema = new Schema(
         message: "Capacity must be a whole number.",
       },
     },
+    registrationVersion: { type: Number, default: 0 },
     releaseDatetime: { type: Date, required: false }, // if unset, event is released immediately
   },
   { versionKey: false }

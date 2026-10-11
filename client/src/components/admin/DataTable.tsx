@@ -28,11 +28,13 @@ type DataTableProps<TData extends object> = {
   getRowId?: (row: TData, index: number) => string;
   isLoading?: boolean;
   searchPlaceholder: string;
+  columnWidthClasses?: Record<string, string>;
 };
 
 const pageSizeOptions = [3, 10, 20, 50];
 
 export default function DataTable<TData extends object>({
+  columnWidthClasses,
   columns,
   data,
   emptyDescription,
@@ -76,6 +78,10 @@ export default function DataTable<TData extends object>({
     return typeof header === "string" ? header : cell.column.id;
   };
   const getColumnWidthClass = (columnId: string) => {
+    if (columnWidthClasses?.[columnId]) {
+      return columnWidthClasses[columnId];
+    }
+
     switch (columnId) {
       case "name":
         return "w-[17%]";

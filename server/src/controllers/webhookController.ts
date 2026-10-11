@@ -57,15 +57,10 @@ export const handleWebhook: RequestHandler = async (req, res) => {
           // itself. Safe to re-run, since Stripe retries webhooks.
           const { googleUid } = paymentIntent.metadata;
           if (googleUid) {
-            const renewed = await User.findOneAndUpdate(
+            await User.findOneAndUpdate(
               { googleUid },
               { latestMembershipYear: getMembershipYear() }
             );
-            if (renewed) {
-              console.log(
-                `Membership renewed for googleUid ${googleUid} (${getMembershipYear()})`
-              );
-            }
           }
 
           console.log(

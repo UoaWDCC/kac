@@ -5,7 +5,8 @@ import { getGalleryImages } from "../api/imageApi";
 import PastEventDetail from "./PastEventDetail";
 import UpcomingEvent from "./UpcomingEvent";
 
-type EventRecord = {
+export type EventRecord = {
+  _id: string;
   id: string;
   slug: string;
   title: string;
@@ -13,6 +14,9 @@ type EventRecord = {
   imageUrl: string;
   location: string;
   datetime: string;
+  capacity?: number;
+  releaseDatetime?: string;
+  price?: number;
   status?: string | null;
 };
 
@@ -70,7 +74,7 @@ const EventPageWrapper = () => {
   const eventDateTime = new Date(event.datetime);
 
   if (eventDateTime > now) {
-    return <UpcomingEvent event={event} />;
+    return <UpcomingEvent key={id} event={event} />;
   }
 
   return <PastEventDetail event={event} gallery={galleryImages} />;

@@ -505,3 +505,7 @@ button {
 .past-execs-content p {
   margin-bottom: 2rem;
 }
+
+button.past-execs-edit-button {
+  cursor: pointer;
+}

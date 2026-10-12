@@ -14,6 +14,7 @@ import execPlaceholder from "../images/exec-placeholder.png";
 
 import { useAuth } from "../auth/useAuth";
 import RichTextEditor from "./RichTextEditor";
+import { getContent, updateContent } from "../api/contentApi";
 
 interface Executive {
   id: string;
@@ -76,9 +77,14 @@ const normaliseRoleKey = (value?: string) =>
 interface PastExecsProps {
   content: string;
   onChange: (content: string) => void;
+  onSave: () => Promise<void>;
 }
 
-const PastExecsEditor = ({ content, onChange }: Readonly<PastExecsProps>) => {
+const PastExecsEditor = ({
+  content,
+  onChange,
+  onSave,
+}: Readonly<PastExecsProps>) => {
   const { role } = useAuth();
   const [editing, setEditing] = useState(false);
 
@@ -91,7 +97,21 @@ const PastExecsEditor = ({ content, onChange }: Readonly<PastExecsProps>) => {
           <>
             <RichTextEditor value={content} onChange={onChange} />
 
-            <button type="button" onClick={() => setEditing(false)}>
+            <button
+              type="button"
+              className="past-execs-edit-button"
+              onClick={async () => {
+                try {
+                  await onSave();
+                  setEditing(false);
+                } catch (error) {
+                  console.error(
+                    "Failed to save past executives content: ",
+                    error
+                  );
+                }
+              }}
+            >
               Save
             </button>
           </>
@@ -103,7 +123,11 @@ const PastExecsEditor = ({ content, onChange }: Readonly<PastExecsProps>) => {
             />
 
             {role === "admin" && (
-              <button type="button" onClick={() => setEditing(true)}>
+              <button
+                type="button"
+                className="past-execs-edit-button"
+                onClick={() => setEditing(true)}
+              >
                 Edit
               </button>
             )}
@@ -137,6 +161,25 @@ const Executives = () => {
   useEffect(() => {
     loadExecs();
   }, []);
+
+  const PAST_EXECS_CONTENT_ID = "past-execs";
+
+  useEffect(() => {
+    async function loadPastExecsContent() {
+      try {
+        const data = await getContent(PAST_EXECS_CONTENT_ID);
+        setPastExecsContent(data.content ?? "");
+      } catch (error) {
+        console.error("Error fetching past executives content:", error);
+      }
+    }
+
+    void loadPastExecsContent();
+  }, []);
+
+  const savePastExecsContent = async () => {
+    await updateContent(PAST_EXECS_CONTENT_ID, pastExecsContent);
+  };
 
   const groupedExecs = useMemo(() => {
     if (!execs) return [] as Array<[RoleGroup, Executive[]]>;
@@ -313,6 +356,7 @@ const Executives = () => {
       <PastExecsEditor
         content={pastExecsContent}
         onChange={setPastExecsContent}
+        onSave={savePastExecsContent}
       />
     </div>
   );

@@ -381,87 +381,56 @@ export default function ProfileDashboard({
         </section>
       )}
 
-      {activeSection === "attended" && (() => {
-        const now = new Date();
-        const validTickets = tickets.filter(
-          (t) => t.eventID && typeof t.eventID === "object"
-        );
-        const upcomingTickets = validTickets.filter((t) => {
-          if (!t.eventID?.datetime) return true;
-          const d = new Date(t.eventID.datetime);
-          return Number.isNaN(d.getTime()) || d > now;
-        });
-        const pastTickets = validTickets.filter((t) => {
-          if (!t.eventID?.datetime) return false;
-          const d = new Date(t.eventID.datetime);
-          return !Number.isNaN(d.getTime()) && d <= now;
-        });
-        const pastByYear = pastTickets.reduce(
-          (acc: Record<string, UserTicket[]>, t) => {
-            const d = new Date(t.eventID!.datetime!);
-            const year = String(d.getFullYear());
-            if (!acc[year]) acc[year] = [];
-            acc[year].push(t);
-            return acc;
-          },
-          {}
-        );
-        const sortedYears = Object.keys(pastByYear).sort((a, b) =>
-          b.localeCompare(a)
-        );
+      {activeSection === "attended" &&
+        (() => {
+          const now = new Date();
+          const validTickets = tickets.filter(
+            (t) => t.eventID && typeof t.eventID === "object"
+          );
+          const upcomingTickets = validTickets.filter((t) => {
+            if (!t.eventID?.datetime) return true;
+            const d = new Date(t.eventID.datetime);
+            return Number.isNaN(d.getTime()) || d > now;
+          });
+          const pastTickets = validTickets.filter((t) => {
+            if (!t.eventID?.datetime) return false;
+            const d = new Date(t.eventID.datetime);
+            return !Number.isNaN(d.getTime()) && d <= now;
+          });
+          const pastByYear = pastTickets.reduce(
+            (acc: Record<string, UserTicket[]>, t) => {
+              const d = new Date(t.eventID!.datetime!);
+              const year = String(d.getFullYear());
+              if (!acc[year]) acc[year] = [];
+              acc[year].push(t);
+              return acc;
+            },
+            {}
+          );
+          const sortedYears = Object.keys(pastByYear).sort((a, b) =>
+            b.localeCompare(a)
+          );
 
-        return (
-          <section className="rounded-[1.35rem] bg-white px-8 py-10 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:px-12 lg:min-h-[31rem]">
-            <h2 className="mb-9 mt-0 font-sans text-2xl font-bold text-blue-medium">
-              Events I have attended
-            </h2>
+          return (
+            <section className="rounded-[1.35rem] bg-white px-8 py-10 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:px-12 lg:min-h-[31rem]">
+              <h2 className="mb-9 mt-0 font-sans text-2xl font-bold text-blue-medium">
+                Events I have attended
+              </h2>
 
-            <div className="font-alan-sans text-blue-medium">
-              <h3 className="mb-4 mt-0 text-base font-bold">Upcoming:</h3>
+              <div className="font-alan-sans text-blue-medium">
+                <h3 className="mb-4 mt-0 text-base font-bold">Upcoming:</h3>
 
-              {isTicketsLoading ? (
-                <p className="text-sm font-semibold text-grey-medium italic">
-                  Loading events...
-                </p>
-              ) : upcomingTickets.length === 0 ? (
-                <p className="text-sm font-semibold text-grey-medium italic">
-                  No upcoming events signed up for yet.
-                </p>
-              ) : (
-                <div className="grid gap-4">
-                  {upcomingTickets.map((ticket) => {
-                    const event = ticket.eventID!;
-                    return (
-                      <div
-                        className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center"
-                        key={ticket._id}
-                      >
-                        <EventLabel
-                          date={formatEventDate(event.datetime)}
-                          icon={CalendarDays}
-                          name={event.title}
-                        />
-                        <a
-                          className="flex items-center text-base font-semibold text-yellow-dark hover:underline"
-                          href={`/events/${event._id}`}
-                        >
-                          view details
-                          <ChevronRight
-                            aria-hidden="true"
-                            className="ml-1 h-4 w-4"
-                          />
-                        </a>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {sortedYears.map((year) => (
-                <div key={year}>
-                  <h3 className="mb-4 mt-10 text-xl font-bold">{year}:</h3>
+                {isTicketsLoading ? (
+                  <p className="text-sm font-semibold text-grey-medium italic">
+                    Loading events...
+                  </p>
+                ) : upcomingTickets.length === 0 ? (
+                  <p className="text-sm font-semibold text-grey-medium italic">
+                    No upcoming events signed up for yet.
+                  </p>
+                ) : (
                   <div className="grid gap-4">
-                    {pastByYear[year].map((ticket) => {
+                    {upcomingTickets.map((ticket) => {
                       const event = ticket.eventID!;
                       return (
                         <div
@@ -470,14 +439,14 @@ export default function ProfileDashboard({
                         >
                           <EventLabel
                             date={formatEventDate(event.datetime)}
-                            icon={Images}
+                            icon={CalendarDays}
                             name={event.title}
                           />
                           <a
                             className="flex items-center text-base font-semibold text-yellow-dark hover:underline"
                             href={`/events/${event._id}`}
                           >
-                            view photos
+                            view details
                             <ChevronRight
                               aria-hidden="true"
                               className="ml-1 h-4 w-4"
@@ -487,25 +456,57 @@ export default function ProfileDashboard({
                       );
                     })}
                   </div>
-                </div>
-              ))}
-
-              {!isTicketsLoading &&
-                upcomingTickets.length === 0 &&
-                pastTickets.length === 0 && (
-                  <div className="mt-8">
-                    <a
-                      className="button inline-block text-center"
-                      href="/events"
-                    >
-                      Explore Events &gt;
-                    </a>
-                  </div>
                 )}
-            </div>
-          </section>
-        );
-      })()}
+
+                {sortedYears.map((year) => (
+                  <div key={year}>
+                    <h3 className="mb-4 mt-10 text-xl font-bold">{year}:</h3>
+                    <div className="grid gap-4">
+                      {pastByYear[year].map((ticket) => {
+                        const event = ticket.eventID!;
+                        return (
+                          <div
+                            className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center"
+                            key={ticket._id}
+                          >
+                            <EventLabel
+                              date={formatEventDate(event.datetime)}
+                              icon={Images}
+                              name={event.title}
+                            />
+                            <a
+                              className="flex items-center text-base font-semibold text-yellow-dark hover:underline"
+                              href={`/events/${event._id}`}
+                            >
+                              view photos
+                              <ChevronRight
+                                aria-hidden="true"
+                                className="ml-1 h-4 w-4"
+                              />
+                            </a>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+
+                {!isTicketsLoading &&
+                  upcomingTickets.length === 0 &&
+                  pastTickets.length === 0 && (
+                    <div className="mt-8">
+                      <a
+                        className="button inline-block text-center"
+                        href="/events"
+                      >
+                        Explore Events &gt;
+                      </a>
+                    </div>
+                  )}
+              </div>
+            </section>
+          );
+        })()}
     </main>
   );
 }

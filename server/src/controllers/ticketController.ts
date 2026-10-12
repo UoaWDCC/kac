@@ -3,7 +3,10 @@ import { Event } from "../model/event";
 import { Response } from "express";
 import { AuthenticatedRequest } from "../middlewares/authUser";
 
-export const createTicket = async (req: AuthenticatedRequest, res: Response) => {
+export const createTicket = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
   const userID = req.userID;
 
   const { eventID, paymentID, groupBuddy, dietaryRequirements } = req.body;
@@ -29,13 +32,14 @@ export const createTicket = async (req: AuthenticatedRequest, res: Response) => 
   }
 };
 
-export const getTicketsByUserId = async (req: AuthenticatedRequest, res: Response) => {
+export const getTicketsByUserId = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
   const userID = req.userID;
 
   if (!userID) {
-    return res
-      .status(400)
-      .json({ message: "userID are required." });
+    return res.status(400).json({ message: "userID are required." });
   }
 
   try {
@@ -45,7 +49,10 @@ export const getTicketsByUserId = async (req: AuthenticatedRequest, res: Respons
       .lean();
     res.status(200).json(tickets);
   } catch (ticketRetrievalError) {
-    console.error("[!] Error retrieving tickets for user: ", ticketRetrievalError);
+    console.error(
+      "[!] Error retrieving tickets for user: ",
+      ticketRetrievalError
+    );
     res.status(500).json({ message: "Internal server error" });
   }
 };

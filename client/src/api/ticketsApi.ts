@@ -21,4 +21,3 @@ export function getTicketsByUserId(userID?: string) {
   });
   return res.then((response: { data: any }) => response.data);
 }
-

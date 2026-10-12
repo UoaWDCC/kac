@@ -1,4 +1,5 @@
 import { Ticket } from "../model/ticket";
+import { Event } from "../model/event";
 import { Response } from "express";
 import { AuthenticatedRequest } from "../middlewares/authUser";
 
@@ -24,6 +25,7 @@ export const createTicket = async (req: AuthenticatedRequest, res: Response) => 
     res.status(201).json(newTicket);
   } catch (ticketCreationError) {
     console.error("[!] Error creating ticket: ", ticketCreationError);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -37,9 +39,13 @@ export const getTicketsByUserId = async (req: AuthenticatedRequest, res: Respons
   }
 
   try {
-    const tickets = await Ticket.find({userID: userID}).sort({createdAt: -1}).lean()
+    const tickets = await Ticket.find({ userID: userID })
+      .populate("eventID")
+      .sort({ createdAt: -1 })
+      .lean();
     res.status(200).json(tickets);
   } catch (ticketRetrievalError) {
     console.error("[!] Error retrieving tickets for user: ", ticketRetrievalError);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

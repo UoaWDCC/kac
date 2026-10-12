@@ -95,18 +95,16 @@ export const getResponseColumns = (
       const isResolved = Boolean(row.original.resolved);
 
       return (
-        <button
-          className={`inline-flex items-center rounded-full py-1 text-xs font-semibold transition ${
+        <div
+          className={`inline-flex items-center rounded-full py-1 px-2 text-xs font-semibold transition ${
             isResolved
-              ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-              : "bg-amber-50 text-amber-700 hover:bg-amber-100"
+              ? "bg-emerald-50 text-emerald-700"
+              : "bg-amber-50 text-amber-700"
           }`}
-          onClick={() => onToggleResolved(row.original)}
           title={isResolved ? "Mark as unresolved" : "Mark as resolved"}
-          type="button"
         >
           {isResolved ? "Resolved" : "Unresolved"}
-        </button>
+        </div>
       );
     },
     header: "Status",

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
@@ -11,7 +11,7 @@ import {
   User,
 } from "lucide-react";
 
-import createTicket from "../api/ticketsApi";
+import { createTicket, getTicketsByUserId } from "../api/ticketsApi";
 import { useAuth } from "../auth/useAuth.ts";
 
 import "../style/common.css";
@@ -30,8 +30,29 @@ const UpcomingEvent = ({ event }: { event: any }) => {
   const [cardExpiry, setCardExpiry] = useState("");
   const [groupBuddy, setGroupBuddy] = useState("");
   const [dietaryRequirements, setDietaryRequirements] = useState("");
+  const [userSignedUp, setUserSignedUp] = useState(false);
 
   const { hasAccount } = useAuth();
+
+  useEffect(() => {
+    if (!hasAccount || !id) return;
+
+    getTicketsByUserId()
+      .then((tickets: any) => {
+        if (!Array.isArray(tickets)) return;
+        const hasTicket = tickets.some((ticket: any) => {
+          const ticketEventId =
+            typeof ticket.eventID === "object" && ticket.eventID !== null
+              ? ticket.eventID._id
+              : ticket.eventID;
+          return String(ticketEventId) === String(id);
+        });
+        setUserSignedUp(hasTicket);
+      })
+      .catch((error) => {
+        console.error("Error fetching tickets for user:", error);
+      });
+  }, [hasAccount, id]);
 
   const handleCardNumberChange = (e: any) => {
     // Keep only digits, max 16, and insert spaces every 4 digits for readability
@@ -79,8 +100,6 @@ const UpcomingEvent = ({ event }: { event: any }) => {
   if (!id || !event)
     return <div className="medium-content">Event not found!</div>;
 
-  let userSignedUp = false; // in future, check user's account for this
-
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -95,6 +114,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
         submittedDietaryRequirements
       );
       console.log("Ticket created successfully!");
+      setUserSignedUp(true);
     } catch (error) {
       console.error("Error occurred while submitting the form:", error);
     }

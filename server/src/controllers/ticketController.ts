@@ -1,20 +1,9 @@
 import { Ticket } from "../model/ticket";
-import { Request, Response } from "express";
-import { User } from "../model/user";
+import { Response } from "express";
+import { AuthenticatedRequest } from "../middlewares/authUser";
 
-export const createTicket = async (req: Request, res: Response) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ message: "Not Authenticated." });
-  }
-
-  const profile = req.user as any;
-  const user = await User.findOne({ googleUid: profile.id });
-
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  const userID = user._id;
+export const createTicket = async (req: AuthenticatedRequest, res: Response) => {
+  const userID = req.userID;
 
   const { eventID, paymentID, groupBuddy, dietaryRequirements } = req.body;
 
@@ -38,4 +27,19 @@ export const createTicket = async (req: Request, res: Response) => {
   }
 };
 
-export const getTicketsByUserID = async (req: Request, res: Response) => {};
+export const getTicketsByUserId = async (req: AuthenticatedRequest, res: Response) => {
+  const userID = req.userID;
+
+  if (!userID) {
+    return res
+      .status(400)
+      .json({ message: "userID are required." });
+  }
+
+  try {
+    const tickets = await Ticket.find({userID: userID}).sort({createdAt: -1}).lean()
+    res.status(200).json(tickets);
+  } catch (ticketRetrievalError) {
+    console.error("[!] Error retrieving tickets for user: ", ticketRetrievalError);
+  }
+};

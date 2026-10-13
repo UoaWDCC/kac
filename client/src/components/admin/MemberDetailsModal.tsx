@@ -5,8 +5,6 @@ import { FACULTIES } from "../../constants/faculties";
 import {
   filterMemberFieldInput,
   getMemberInputProps,
-  getMemberValidationErrors,
-  normalizeMemberProfile,
 } from "../../util/memberValidation";
 import type { Member } from "./MemberColumns";
 
@@ -101,42 +99,11 @@ export default function MemberDetailsModal({
       return;
     }
 
-    const isNone = !form.university || form.university === "None";
-    if (!isNone && form.faculties.length === 0) {
-      setError("Select at least one faculty.");
-      return;
-    }
-
-    const normalizedForm = normalizeMemberProfile(form);
-    const validationErrors = getMemberValidationErrors(normalizedForm, {
-      allowEmail: true,
-      allowLatestMembershipYear: true,
-      requireYearOfStudy: true,
-    });
-
-    if (validationErrors.length > 0) {
-      setError(validationErrors.join(" "));
-      return;
-    }
-
     setIsSaving(true);
 
     try {
       const updatedMember = await updateMember(member._id, {
-        email: normalizedForm.email,
-        faculties: normalizedForm.faculties,
-        firstName: normalizedForm.firstName,
         isAdmin: form.isAdmin,
-        lastName: normalizedForm.lastName,
-        latestMembershipYear: normalizedForm.latestMembershipYear
-          ? Number(normalizedForm.latestMembershipYear)
-          : null,
-        mobileNumber: normalizedForm.mobileNumber,
-        pronouns: normalizedForm.pronouns,
-        studentId: normalizedForm.studentId,
-        university: normalizedForm.university,
-        upi: normalizedForm.upi,
-        yearOfStudy: Number(normalizedForm.yearOfStudy),
       });
 
       onSave(updatedMember);
@@ -234,6 +201,7 @@ export default function MemberDetailsModal({
                     }
                     required
                     value={form.firstName}
+                    disabled
                   />
                 </label>
 
@@ -247,6 +215,7 @@ export default function MemberDetailsModal({
                     }
                     required
                     value={form.lastName}
+                    disabled
                   />
                 </label>
 
@@ -272,6 +241,7 @@ export default function MemberDetailsModal({
                     }
                     required
                     value={form.mobileNumber}
+                    disabled
                   />
                 </label>
 
@@ -284,6 +254,7 @@ export default function MemberDetailsModal({
                       updateField("pronouns", event.target.value)
                     }
                     value={form.pronouns}
+                    disabled
                   />
                 </label>
               </div>
@@ -310,6 +281,7 @@ export default function MemberDetailsModal({
                     }
                     required
                     value={form.university}
+                    disabled
                   />
                 </label>
 
@@ -321,6 +293,7 @@ export default function MemberDetailsModal({
                     onChange={(event) => updateField("upi", event.target.value)}
                     required
                     value={form.upi}
+                    disabled
                   />
                 </label>
 
@@ -334,6 +307,7 @@ export default function MemberDetailsModal({
                     }
                     required
                     value={form.studentId}
+                    disabled
                   />
                 </label>
 
@@ -347,6 +321,7 @@ export default function MemberDetailsModal({
                     }
                     required
                     value={form.yearOfStudy}
+                    disabled
                   />
                 </label>
 
@@ -360,6 +335,7 @@ export default function MemberDetailsModal({
                     }
                     placeholder="No year"
                     value={form.latestMembershipYear}
+                    disabled
                   />
                 </label>
               </div>
@@ -377,6 +353,7 @@ export default function MemberDetailsModal({
                         className="h-4 w-4 accent-blue-medium"
                         onChange={() => toggleFaculty(faculty)}
                         type="checkbox"
+                        disabled
                       />
                       {faculty}
                     </label>
@@ -390,8 +367,8 @@ export default function MemberDetailsModal({
               <label
                 className={`flex items-center gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm font-semibold ${
                   adminChangeBlockedReason
-                    ? "bg-slate-50 text-slate-500"
-                    : "text-slate-700"
+                    ? "cursor-not-allowed bg-slate-50 text-slate-500"
+                    : "cursor-pointer text-slate-700"
                 }`}
               >
                 <input

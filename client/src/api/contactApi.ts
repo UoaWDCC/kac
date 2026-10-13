@@ -26,6 +26,11 @@ export async function updateContact(
   return res.then((response) => response.data);
 }
 
+export async function setContactResolved(id: string, resolved: boolean) {
+  const res = api.put(`/contacts/${id}`, { resolved });
+  return res.then((response) => response.data);
+}
+
 export async function deleteContact(id: string) {
   const res = api.delete(`/contacts/${id}`);
   return res.then((response) => response.data);

@@ -142,7 +142,7 @@ const Header = () => {
   }, [isProfileMenuOpen]);
 
   return (
-    <div className="header flex items-center gap-2 px-[1.59rem] py-3 lg:p-6 bg-yellow-light w-full">
+    <div className="header sticky top-0 z-50 flex items-center gap-2 px-[1.59rem] py-3 lg:p-6 bg-yellow-light w-full">
       {/** MOBILE ONLY - profile shortcut, balances the hamburger on the right */}
       <div className="flex flex-1 justify-start lg:hidden">
         {!loading &&

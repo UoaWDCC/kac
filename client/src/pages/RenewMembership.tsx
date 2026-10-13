@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   CardCvcElement,
@@ -11,13 +11,8 @@ import {
 } from "@stripe/react-stripe-js";
 
 import api from "../api";
-import { fetchCurrentMember, updateCurrentMember } from "../api/usersApi";
+import { renewCurrentMembership } from "../api/usersApi";
 import { useAuth } from "../auth/useAuth";
-import {
-  getMemberInputProps,
-  normalizeMemberProfile,
-  getMemberValidationErrors,
-} from "../util/memberValidation";
 import { getMembershipYear } from "../util/membership";
 import "../style/common.css";
 import "../style/signup.css";
@@ -47,54 +42,6 @@ const RenewForm = () => {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [profileLoading, setProfileLoading] = useState(true);
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    mobileNumber: "",
-    pronouns: "",
-    university: "",
-    studentId: "",
-    upi: "",
-    yearOfStudy: "",
-  });
-
-  // Renewal is annual, so details drift - year of study in particular. Prefill
-  // what we have and let them correct it on the way through.
-  useEffect(() => {
-    let active = true;
-
-    fetchCurrentMember()
-      .then((member) => {
-        if (!active || !member) return;
-        setForm({
-          firstName: member.firstName ?? "",
-          lastName: member.lastName ?? "",
-          mobileNumber: member.mobileNumber ?? "",
-          pronouns: member.pronouns ?? "",
-          university: member.university ?? "",
-          studentId: member.studentId ?? "",
-          upi: member.upi ?? "",
-          yearOfStudy:
-            member.yearOfStudy === null || member.yearOfStudy === undefined
-              ? ""
-              : String(member.yearOfStudy),
-        });
-      })
-      .catch(() => {
-        // Not fatal - they can still renew, the fields just start empty.
-      })
-      .finally(() => {
-        if (active) setProfileLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const updateField = (field: keyof typeof form, value: string) =>
-    setForm((current) => ({ ...current, [field]: value }));
 
   const membershipYear = getMembershipYear();
 
@@ -109,36 +56,10 @@ const RenewForm = () => {
       return;
     }
 
-    const normalizedForm = normalizeMemberProfile(form);
-    const validationErrors = getMemberValidationErrors(normalizedForm, {
-      requireYearOfStudy: true,
-    });
-
-    if (validationErrors.length > 0) {
-      setError(validationErrors.join(" "));
-      return;
-    }
-
     setSubmitting(true);
     setError(null);
 
     try {
-      // Save details first - if this fails we have not taken their money yet.
-      await updateCurrentMember({
-        faculties: undefined,
-        firstName: normalizedForm.firstName,
-        lastName: normalizedForm.lastName,
-        mobileNumber: normalizedForm.mobileNumber,
-        pronouns: normalizedForm.pronouns,
-        studentId: normalizedForm.studentId,
-        university: normalizedForm.university,
-        upi: normalizedForm.upi,
-        yearOfStudy: Number(normalizedForm.yearOfStudy || 1),
-      });
-
-      // Same intent the signup flow uses - the server stamps the googleUid into
-      // the PaymentIntent metadata, and the Stripe webhook rolls the membership
-      // year forward once the payment settles.
       const { data } = await api.post("/payments/create-payment-intent", {
         type: "membership",
       });
@@ -158,13 +79,19 @@ const RenewForm = () => {
         return;
       }
 
-      // The webhook does the write, so re-read the session to pick up the new
-      // role rather than assuming it locally.
+      // The server re-reads the intent from Stripe before granting the year, so
+      // this cannot be forged. The Stripe webhook also applies the renewal, as a
+      // backstop for anyone who closes the tab before this call lands.
+      await renewCurrentMembership(paymentIntent.id);
       await refresh();
       navigate("/profile");
     } catch (err) {
       console.error("Membership renewal failed:", err);
-      setError("Something went wrong. Please try again.");
+      setError(
+        typeof err === "string"
+          ? err
+          : "Your payment went through but we could not update your membership. Please contact us."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -178,7 +105,9 @@ const RenewForm = () => {
     return (
       <div className="narrow-content renew-page">
         <h1 className="renew-title">You&apos;re all set</h1>
-        <p>Your {membershipYear} membership is already active.</p>
+        <p className="renew-intro font-alan-sans">
+          Your {membershipYear} membership is already active.
+        </p>
       </div>
     );
   }
@@ -189,12 +118,10 @@ const RenewForm = () => {
     return (
       <div className="narrow-content renew-page">
         <h1 className="renew-title">Sign in to renew</h1>
-        <p className="font-alan-sans">
-          Renewing is for existing members. If you haven't joined yet, sign up
-          for a {membershipYear} membership.
+        <p className="renew-intro font-alan-sans">
+          Renewing is for existing members. If you haven&apos;t joined yet, sign
+          up for a {membershipYear} membership.
         </p>
-        {/* The anchor is inline, so it sits flush against the paragraph with no
-            gap of its own - the wrapper supplies the spacing and alignment. */}
         <div className="mt-8 text-right">
           <a className="button" href="/api/auth/google">
             Sign in
@@ -213,38 +140,11 @@ const RenewForm = () => {
       </p>
 
       <form onSubmit={handleSubmit}>
-        <h2 className="renew-section-title">Your details</h2>
-        <p className="renew-section-hint font-alan-sans">
-          Check these are still right — year of study in particular.
-        </p>
-
-        <div className="signup-form-grid">
-          {(
-            [
-              ["firstName", "First Name"],
-              ["lastName", "Last Name"],
-              ["mobileNumber", "Mobile Number"],
-              ["pronouns", "Pronouns"],
-              ["university", "University"],
-              ["yearOfStudy", "Year of Study"],
-              ["studentId", "Student ID"],
-              ["upi", "UPI"],
-            ] as const
-          ).map(([field, label]) => (
-            <div className="signup-field-group" key={field}>
-              <span className="signup-field-label">{label}</span>
-              <input
-                className="signup-input"
-                disabled={profileLoading}
-                onChange={(event) => updateField(field, event.target.value)}
-                value={form[field]}
-                {...getMemberInputProps(field)}
-              />
-            </div>
-          ))}
-        </div>
-
         <h2 className="renew-section-title">Payment</h2>
+        <p className="renew-section-hint font-alan-sans">
+          Need to change your details? Update them on your{" "}
+          <Link to="/profile">profile</Link>.
+        </p>
 
         <div className="signup-field-group">
           <span className="signup-field-label">Card Number</span>
@@ -280,7 +180,7 @@ const RenewForm = () => {
         <div className="signup-actions">
           <button
             className="signup-continue-btn"
-            disabled={!stripe || submitting || profileLoading}
+            disabled={!stripe || submitting}
             // about.css sets an unlayered `button { width: 100% }` that beats
             // .signup-continue-btn, which declares no width - without this the
             // pill stretches the full container.

@@ -78,3 +78,46 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Faculties. Required by getMemberValidationErrors, so the renewal form has to
+   offer it — without the field, submission was blocked by "Select at least one
+   faculty" with nothing on screen to fix it. */
+.renew-faculties {
+  margin-top: 8px;
+}
+
+.renew-faculty-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 8px;
+}
+
+.renew-faculty-option {
+  align-items: center;
+  border: 1px solid rgba(242, 183, 25, 0.7);
+  border-radius: 6px;
+  color: var(--color-blue-medium);
+  cursor: pointer;
+  display: flex;
+  font-size: 15px;
+  gap: 10px;
+  padding: 10px 12px;
+  transition: border-color 0.2s ease;
+}
+
+.renew-faculty-option:hover {
+  border-color: var(--color-blue-medium);
+}
+
+.renew-faculty-option input {
+  accent-color: var(--color-blue-medium);
+  height: 16px;
+  width: 16px;
+}
+
+@media (max-width: 40rem) {
+  .renew-faculty-grid {
+    grid-template-columns: 1fr;
+  }
+}

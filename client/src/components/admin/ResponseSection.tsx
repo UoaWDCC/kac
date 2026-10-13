@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MailOpen, MessageSquareText, UsersRound } from "lucide-react";
-import { fetchContacts, setContactResolved } from "../../api/contactApi";
-import toast from "react-hot-toast";
+import { fetchContacts } from "../../api/contactApi";
 import DataTable from "./DataTable";
 import ResponseDetailsModal from "./ResponseDetailsModal";
 import { getResponseColumns, type ContactResponse } from "./ResponseColumns";
@@ -44,30 +43,9 @@ export default function ResponsesSection() {
     }
   }, []);
 
-  const handleToggleResolved = useCallback(
-    async (response: ContactResponse) => {
-      try {
-        const updated = await setContactResolved(
-          response._id,
-          !response.resolved
-        );
-        setResponses((current) =>
-          current.map((item) => (item._id === updated._id ? updated : item))
-        );
-      } catch {
-        toast.error("Could not update status. Please try again.");
-      }
-    },
-    []
-  );
-
   const columns = useMemo(
-    () =>
-      getResponseColumns(
-        (response) => setSelectedResponse(response),
-        handleToggleResolved
-      ),
-    [handleToggleResolved]
+    () => getResponseColumns((response) => setSelectedResponse(response)),
+    []
   );
 
   useEffect(() => {

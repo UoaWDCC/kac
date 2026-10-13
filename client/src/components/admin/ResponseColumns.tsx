@@ -33,8 +33,7 @@ const formatDateTime = (value?: string) => {
 };
 
 export const getResponseColumns = (
-  onViewEdit: (response: ContactResponse) => void,
-  onToggleResolved: (response: ContactResponse) => void
+  onViewEdit: (response: ContactResponse) => void
 ): ColumnDef<ContactResponse>[] => [
   {
     accessorKey: "name",

@@ -82,10 +82,7 @@ const PastEventDetail = ({ event, gallery }: PastEventDetailProps) => {
         )}
 
         {showMorePhotosButton && (
-          <button
-            type="button"
-            className="button past-event-more-button"
-          >
+          <button type="button" className="button past-event-more-button">
             More Photos
           </button>
         )}

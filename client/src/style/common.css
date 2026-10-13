@@ -92,7 +92,9 @@ p {
   color: var(--color-blue-medium);
   background-color: var(--color-yellow-dark);
   box-shadow: 0.2rem 0.2rem var(--color-yellow-medium);
-  transition: color 0.35s ease, box-shadow 0.35s ease;
+  transition:
+    color 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 .button:where(button) {

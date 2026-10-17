@@ -9,8 +9,6 @@ import {
   Underline as UnderlineIcon,
   List,
   ListOrdered,
-  Undo,
-  Redo,
 } from "lucide-react";
 
 interface RichTextEditorProps {
@@ -87,25 +85,6 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           title="Numbered List"
         >
           <ListOrdered size={18} />
-        </button>
-
-        <div className="divider" />
-
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().undo()}
-          title="Undo"
-        >
-          <Undo size={18} />
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().redo()}
-          title="Redo"
-        >
-          <Redo size={18} />
         </button>
       </div>
       <EditorContent editor={editor} className="tiptap-content" />

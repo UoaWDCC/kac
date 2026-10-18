@@ -1,18 +1,13 @@
 export interface Sponsor {
   _id?: string;
   name: string;
-  deal: string;
+  description: string;
   category: "cbd" | "newmarket" | "other";
-  code?: string;
 }
 
 // The CMS image tag used by ImageBlock for a given sponsor.
 export function sponsorPageKey(name: string): string {
   return "sponsor-" + name.toLowerCase().replace(/\s+/g, "-");
-}
-
-export function formatSponsorDeal(sponsor: Sponsor): string {
-  return sponsor.deal + (sponsor.code ? ` (Code: ${sponsor.code})` : "");
 }
 
 export function dedupeSponsorsByName(sponsors: Sponsor[]): Sponsor[] {

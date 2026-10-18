@@ -10,7 +10,6 @@ import { ImageBlock } from "../components/image_block/ImageBlock";
 import PageTitle from "../components/PageTitle";
 import {
   dedupeSponsorsByName,
-  formatSponsorDeal,
   sponsorPageKey,
   type Sponsor,
 } from "../util/sponsors";
@@ -229,7 +228,7 @@ const Sponsors = () => {
                 <SponsorCard
                   key={s.name}
                   name={s.name}
-                  description={formatSponsorDeal(s)}
+                  description={s.description}
                   sponsorId={s._id}
                   imageVersion={imageVersion}
                   onEdit={() => {
@@ -252,7 +251,7 @@ const Sponsors = () => {
                   <SponsorCard
                     key={s.name}
                     name={s.name}
-                    description={formatSponsorDeal(s)}
+                    description={s.description}
                     sponsorId={s._id}
                     imageVersion={imageVersion}
                     onEdit={() => {
@@ -274,7 +273,7 @@ const Sponsors = () => {
                 <SponsorCard
                   key={index}
                   name={s.name}
-                  description={formatSponsorDeal(s)}
+                  description={s.description}
                   sponsorId={s._id}
                   imageVersion={imageVersion}
                   onEdit={() => {

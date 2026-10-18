@@ -35,9 +35,8 @@ export default function EditSponsorModal({
     setImageFile(null);
     setForm({
       name: sponsor.name ?? "",
-      deal: sponsor.deal ?? "",
+      description: sponsor.description ?? "",
       category: sponsor.category ?? "other",
-      code: sponsor.code ?? "",
     });
   }, [sponsor]);
 

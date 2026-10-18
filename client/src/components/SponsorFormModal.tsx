@@ -9,7 +9,7 @@ export interface SponsorFormValues {
 export const emptySponsorFormValues: SponsorFormValues = {
   name: "",
   description: "",
-  category: "other",
+  category: "cbd",
 };
 
 interface SponsorFormModalProps {

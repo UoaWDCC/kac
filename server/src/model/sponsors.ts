@@ -4,7 +4,6 @@ const sponsorSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     deal: { type: String, required: true },
-    address: { type: String, required: true },
     category: {
       type: String,
       enum: ["cbd", "newmarket", "other"],

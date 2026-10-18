@@ -11,7 +11,6 @@ import PageTitle from "../components/PageTitle";
 import {
   dedupeSponsorsByName,
   formatSponsorDeal,
-  formatSponsorLocation,
   sponsorPageKey,
   type Sponsor,
 } from "../util/sponsors";
@@ -231,7 +230,6 @@ const Sponsors = () => {
                   key={s.name}
                   name={s.name}
                   description={formatSponsorDeal(s)}
-                  location={formatSponsorLocation(s)}
                   sponsorId={s._id}
                   imageVersion={imageVersion}
                   onEdit={() => {
@@ -255,7 +253,6 @@ const Sponsors = () => {
                     key={s.name}
                     name={s.name}
                     description={formatSponsorDeal(s)}
-                    location={formatSponsorLocation(s)}
                     sponsorId={s._id}
                     imageVersion={imageVersion}
                     onEdit={() => {
@@ -278,7 +275,6 @@ const Sponsors = () => {
                   key={index}
                   name={s.name}
                   description={formatSponsorDeal(s)}
-                  location={formatSponsorLocation(s)}
                   sponsorId={s._id}
                   imageVersion={imageVersion}
                   onEdit={() => {

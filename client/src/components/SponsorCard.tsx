@@ -8,8 +8,6 @@ import { deleteSponsor } from "../api/sponsorsApi";
 type SponsorProps = {
   name: string;
   description: string;
-  location: string;
-  /** Logo tile only - drops the name and address beneath the card. */
   compact?: boolean;
   sponsorId?: string;
   imageVersion?: number;
@@ -20,7 +18,6 @@ type SponsorProps = {
 const SponsorCard = ({
   name,
   description,
-  location,
   compact,
   sponsorId,
   imageVersion,
@@ -129,32 +126,19 @@ const SponsorCard = ({
         </div>
       </div>
 
-      {/* NAME + LOCATION - outside the card */}
+      {/* NAME - outside the card */}
       {compact ? null : (
-        <>
-          <h3
-            style={{
-              fontWeight: "normal",
-              marginTop: "0.75rem",
-              marginBottom: "0.25rem",
-              color: "var(--color-blue-medium)",
-            }}
-            className="text-[0.8rem] sm:text-[1rem]"
-          >
-            {name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
-          </h3>
-          <p
-            style={{
-              fontSize: "0.85rem",
-              color: "var(--color-grey-medium)",
-              margin: 0,
-              fontFamily: "Alan Sans, sans-serif",
-            }}
-            className="hidden sm:display-block"
-          >
-            {location}
-          </p>
-        </>
+        <h3
+          style={{
+            fontWeight: "normal",
+            marginTop: "0.75rem",
+            marginBottom: "0.25rem",
+            color: "var(--color-blue-medium)",
+          }}
+          className="text-[0.8rem] sm:text-[1rem]"
+        >
+          {name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+        </h3>
       )}
     </div>
   );

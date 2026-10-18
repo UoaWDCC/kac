@@ -8,7 +8,6 @@ import { useAuth } from "../auth/useAuth.ts";
 import { getSponsors } from "../api/sponsorsApi";
 import {
   formatSponsorDeal,
-  formatSponsorLocation,
   pickRandomSponsors,
   type Sponsor,
 } from "../util/sponsors";
@@ -253,7 +252,6 @@ const Home = () => {
                       compact
                       name={sponsor.name}
                       description={formatSponsorDeal(sponsor)}
-                      location={formatSponsorLocation(sponsor)}
                     />
                   </div>
                 ))}
@@ -273,7 +271,6 @@ const Home = () => {
                     <SponsorCard
                       name={sponsor.name}
                       description={formatSponsorDeal(sponsor)}
-                      location={formatSponsorLocation(sponsor)}
                     />
                   </div>
                 ))}

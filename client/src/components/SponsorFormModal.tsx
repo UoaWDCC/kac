@@ -3,7 +3,6 @@ import type { MouseEvent } from "react";
 export interface SponsorFormValues {
   name: string;
   deal: string;
-  address: string;
   category: "cbd" | "newmarket" | "other";
   code?: string; // optional (only some sponsors have it)
 }
@@ -11,7 +10,6 @@ export interface SponsorFormValues {
 export const emptySponsorFormValues: SponsorFormValues = {
   name: "",
   deal: "",
-  address: "",
   category: "other",
   code: "",
 };
@@ -100,17 +98,6 @@ export default function SponsorFormModal({
             {renderTextField("Special Deal", "deal", values, onChange)}
 
             {renderTextField("Code", "code", values, onChange)}
-
-            <div className="flex flex-col gap-1 w-full">
-              <h3 className="text-lg font-bold">Address</h3>
-              <input
-                type="text"
-                id="address"
-                value={values.address}
-                onChange={(e) => onChange("address", e.target.value)}
-                className={inputClassName}
-              />
-            </div>
 
             <div className="flex flex-col gap-1 w-full">
               <h3 className="text-lg font-bold">Category</h3>

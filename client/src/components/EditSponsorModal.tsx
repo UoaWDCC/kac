@@ -36,7 +36,6 @@ export default function EditSponsorModal({
     setForm({
       name: sponsor.name ?? "",
       deal: sponsor.deal ?? "",
-      address: sponsor.address ?? "",
       category: sponsor.category ?? "other",
       code: sponsor.code ?? "",
     });

@@ -8,7 +8,6 @@ export function getSponsors() {
 export function createSponsor(sponsor: {
   name: string;
   deal: string;
-  address: string;
   category: "cbd" | "newmarket" | "other";
   code?: string;
 }) {
@@ -21,7 +20,6 @@ export function updateSponsor(
   sponsor: Partial<{
     name: string;
     deal: string;
-    address: string;
     category: "cbd" | "newmarket" | "other";
     code?: string;
   }>

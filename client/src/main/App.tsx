@@ -11,7 +11,7 @@ import { AuthProvider } from "../auth/AuthProvider.tsx";
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
 
-import { MemberRoute } from "../auth/MemberRoute.tsx";
+import { AccountRoute } from "../auth/AccountRoute.tsx";
 
 import Home from "../pages/Home.tsx";
 import Faq from "../pages/Faq.tsx";
@@ -24,6 +24,7 @@ import SignUp from "../pages/Signup.tsx";
 import Admin from "../pages/Admin.tsx";
 import Toast from "../components/Toast.tsx";
 import Profile from "../pages/Profile.tsx";
+import RenewMembership from "../pages/RenewMembership.tsx";
 
 const App = () => {
   return (
@@ -43,13 +44,14 @@ const App = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="faq" element={<Faq />} />
             <Route path="admin" element={<Admin />} />
+            <Route path="renew" element={<RenewMembership />} />
 
             <Route
               path="profile"
               element={
-                <MemberRoute>
+                <AccountRoute>
                   <Profile />
-                </MemberRoute>
+                </AccountRoute>
               }
             />
 

@@ -89,10 +89,10 @@ export default function ExecFormModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 flex items-center justify-center z-1000"
+      className="fixed inset-0 bg-black/70 flex items-end justify-center sm:items-center z-1000"
       onClick={handleOverlayClick}
     >
-      <div className="font-alan-sans text-sm bg-white rounded-2xl pr-6 pt-8 justify-center relative border-box min-w-[48vw] h-fit max-h-[90vh] flex flex-col gap-6">
+      <div className="font-alan-sans text-sm bg-white rounded-t-2xl sm:rounded-2xl pr-6 pt-8 justify-center relative border-box min-w-screen sm:min-w-[48vw] h-fit max-h-[70vh] lg:max-h-[90vh] flex flex-col gap-6">
         <div className="overflow-y-auto pl-12 pr-6">
           <h2 className="text-2xl! font-bold pb-6">{title}</h2>
           <form className="flex flex-col gap-8">
@@ -108,12 +108,12 @@ export default function ExecFormModal({
                 }
               />
             </div>
-            <div className="flex flex-row gap-10">
+            <div className="flex flex-col lg:flex-row gap-10">
               {renderTextField("Display Name", "displayName", values, onChange)}
               {renderTextField("Executive Role", "execRole", values, onChange)}
             </div>
 
-            <div className="flex flex-row gap-10">
+            <div className="flex flex-col lg:flex-row gap-10">
               <div className="flex flex-col gap-1 w-full">
                 <h3 className="text-lg font-bold">Role Group</h3>
                 <select
@@ -141,7 +141,7 @@ export default function ExecFormModal({
 
             {renderTextField("Degree", "degree", values, onChange)}
 
-            <div className="flex flex-row gap-10">
+            <div className="flex flex-col lg:flex-row gap-10">
               {renderTextField("Fun Fact", "fact", values, onChange)}
               {renderTextField("MBTI", "mbti", values, onChange)}
             </div>
@@ -153,7 +153,7 @@ export default function ExecFormModal({
               onChange
             )}
 
-            <div className="flex flex-row gap-10">
+            <div className="flex flex-col lg:flex-row gap-10">
               {renderTextField("Red Flag", "redFlag", values, onChange)}
               {renderTextField("Green Flag", "greenFlag", values, onChange)}
             </div>

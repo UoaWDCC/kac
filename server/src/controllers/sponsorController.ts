@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { RequestHandler } from "express";
 import { Sponsor } from "../model/sponsors";
+import { deleteImagesByTag } from "../util/imageCleanup";
 
 const sponsorCategories = ["cbd", "newmarket", "other"] as const;
 
@@ -12,6 +13,9 @@ type SponsorInput = {
 
 const isSponsorCategory = (value: string): value is SponsorInput["category"] =>
   sponsorCategories.includes(value as SponsorInput["category"]);
+
+const sponsorImageTag = (name: string) =>
+  `sponsor-${name.toLowerCase().replace(/\s+/g, "-")}`;
 
 const validateSponsorInput = (
   body: unknown,
@@ -143,7 +147,17 @@ export const deleteSponsor: RequestHandler = async (req, res) => {
       return;
     }
 
-    res.status(200).json({ message: "Sponsor deleted successfully." });
+    const failedImageDeletes = await deleteImagesByTag(
+      sponsorImageTag(sponsor.name)
+    );
+
+    res.status(200).json({
+      message: "Sponsor deleted successfully.",
+      imageCleanupWarning:
+        failedImageDeletes > 0
+          ? `${failedImageDeletes} image(s) could not be deleted from storage.`
+          : undefined,
+    });
   } catch (error) {
     sendSponsorError(res, "deleting", error);
   }

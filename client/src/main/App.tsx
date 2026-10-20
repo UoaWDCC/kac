@@ -11,7 +11,7 @@ import { AuthProvider } from "../auth/AuthProvider.tsx";
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
 
-import { MemberRoute } from "../auth/MemberRoute.tsx";
+import { AccountRoute } from "../auth/AccountRoute.tsx";
 
 import Home from "../pages/Home.tsx";
 import Faq from "../pages/Faq.tsx";
@@ -49,9 +49,9 @@ const App = () => {
             <Route
               path="profile"
               element={
-                <MemberRoute>
+                <AccountRoute>
                   <Profile />
-                </MemberRoute>
+                </AccountRoute>
               }
             />
 

@@ -1,5 +1,11 @@
-import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, animate, motion, useMotionValue } from "motion/react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   ChevronDown,
   CircleUserRound,
@@ -20,6 +26,7 @@ import "../style/common.css";
 
 const tabs = ["Home", "About", "Events", "Sponsors", "Contact", "Faq"];
 const profileImageUpdatedEvent = "profile-image-updated";
+const pillTransition = { type: "spring", bounce: 0, duration: 0.4 } as const;
 
 // "Home" lives at "/" rather than "/home".
 const routeForTab = (tab: string) => {
@@ -38,6 +45,14 @@ const Header = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [menuPath, setMenuPath] = useState(location.pathname);
+  const navRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const pillX = useMotionValue(0);
+  const pillWidth = useMotionValue(0);
+  const isPillPlaced = useRef(false);
+  const activeTabIndex = tabs.findIndex(
+    (tab) => routeForTab(tab) === location.pathname
+  );
 
   // Navigating away (including via browser back/forward) closes the drawer.
   if (menuPath !== location.pathname) {
@@ -114,6 +129,47 @@ const Header = () => {
     setFailedProfileImageUrls(new Set());
   }, [user?.id]);
 
+  // The nav pill is one persistent element positioned from the active link's
+  // offsetLeft/offsetWidth. Those are relative to the nav, so scroll position
+  // (which a sticky header's page offset depends on) never affects it. It
+  // slides only when the active link changes, and snaps into place on first
+  // paint, when re-appearing after a non-tab page, or on resize.
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    const activeTab = tabRefs.current[activeTabIndex];
+    if (!nav || !activeTab) {
+      isPillPlaced.current = false;
+      return;
+    }
+
+    let target = { left: -1, width: -1 };
+    const place = (shouldAnimate: boolean) => {
+      const left = activeTab.offsetLeft;
+      const width = activeTab.offsetWidth;
+      if (left === target.left && width === target.width) return;
+      target = { left, width };
+
+      if (shouldAnimate) {
+        animate(pillX, left, pillTransition);
+        animate(pillWidth, width, pillTransition);
+      } else {
+        pillX.jump(left);
+        pillWidth.jump(width);
+      }
+    };
+
+    place(isPillPlaced.current);
+    isPillPlaced.current = true;
+
+    const observer = new ResizeObserver(() => place(false));
+    observer.observe(nav);
+    for (const tab of tabRefs.current) {
+      if (tab) observer.observe(tab);
+    }
+
+    return () => observer.disconnect();
+  }, [activeTabIndex, pillX, pillWidth]);
+
   useEffect(() => {
     if (!isProfileMenuOpen) return;
 
@@ -142,7 +198,7 @@ const Header = () => {
   }, [isProfileMenuOpen]);
 
   return (
-    <div className="header flex items-center gap-2 px-[1.59rem] py-3 lg:p-6 bg-yellow-light w-full">
+    <div className="header sticky top-0 z-50 flex items-center gap-2 px-[1.59rem] py-3 lg:p-6 bg-yellow-light w-full">
       {/** MOBILE ONLY - profile shortcut, balances the hamburger on the right */}
       <div className="flex flex-1 justify-start lg:hidden">
         {!loading &&
@@ -198,32 +254,31 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="hidden lg:flex flex-1 justify-center gap-1 xl:gap-2 w-fit rounded-full bg-yellow-medium">
-        <AnimatePresence>
-          {tabs.map((tab) => {
-            const actualRoute = routeForTab(tab);
-            const isSelected = location.pathname === actualRoute;
-
-            return (
-              <Link
-                key={tab}
-                to={actualRoute}
-                className="px-4 xl:px-8 py-2 xl:py-3 rounded-full relative text-decoration-none col-blue-medium w-0.8"
-              >
-                <span className="relative z-10 uppercase text-base xl:text-xl">
-                  {tab}
-                </span>
-                {isSelected && (
-                  <motion.span
-                    layoutId="pill-tab"
-                    transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                    className="absolute inset-0 z-0 rounded-full bg-yellow-dark"
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </AnimatePresence>
+      <div
+        className="hidden lg:flex flex-1 justify-center gap-1 xl:gap-2 w-fit rounded-full bg-yellow-medium relative"
+        ref={navRef}
+      >
+        {activeTabIndex !== -1 && (
+          <motion.span
+            aria-hidden="true"
+            className="absolute inset-y-0 left-0 z-0 rounded-full bg-yellow-dark"
+            style={{ x: pillX, width: pillWidth }}
+          />
+        )}
+        {tabs.map((tab, index) => (
+          <Link
+            key={tab}
+            ref={(element) => {
+              tabRefs.current[index] = element;
+            }}
+            to={routeForTab(tab)}
+            className="px-4 xl:px-8 py-2 xl:py-3 rounded-full relative text-decoration-none col-blue-medium w-0.8"
+          >
+            <span className="relative z-10 uppercase text-base xl:text-xl">
+              {tab}
+            </span>
+          </Link>
+        ))}
       </div>
 
       <div className="hidden lg:flex flex-1 pr-2 justify-end">

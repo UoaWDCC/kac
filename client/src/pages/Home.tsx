@@ -7,12 +7,7 @@ import kacoVector from "../images/kaco-vector.png";
 import SponsorCard from "../components/SponsorCard";
 import { useAuth } from "../auth/useAuth.ts";
 import { getSponsors } from "../api/sponsorsApi";
-import {
-  formatSponsorDeal,
-  formatSponsorLocation,
-  pickRandomSponsors,
-  type Sponsor,
-} from "../util/sponsors";
+import { pickRandomSponsors, type Sponsor } from "../util/sponsors";
 
 const FEATURED_SPONSOR_COUNT = 8;
 
@@ -33,7 +28,7 @@ const EVENT_PAGE_KEYS = [
 // 3.3rem }`, and unlayered rules beat Tailwind's layered utilities regardless of
 // specificity, so an unflagged text-* on an <h1> is silently dropped.
 const HERO_LETTER =
-  "text-[clamp(3.5rem,32.7vw,9rem)]! lg:text-[10rem]! 2xl:text-[12rem]! " +
+  "text-[clamp(3.5rem,32.7vw,10.93rem)]! lg:text-[8rem]! xl:text-[10rem]! 2xl:text-[12rem]! " +
   "leading-[0.766]! lg:leading-[10%]! 2xl:leading-[60%]! font-bold " +
   "mt-0! mb-0! lg:mt-4! lg:mb-24!";
 
@@ -73,7 +68,7 @@ const Home = () => {
 
   const joinUsButton =
     !loading && !isSignedIn ? (
-      <a href="/api/auth/google" className="button">
+      <a href="/api/auth/google" className="button whitespace-nowrap">
         Join Us!
       </a>
     ) : null;
@@ -82,9 +77,9 @@ const Home = () => {
     <div className="mb-40">
       {/** HERO */}
       <section className="section bg-yellow-light flex items-center justify-center max-lg:px-5! max-lg:pt-0!">
-        <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-8 max-lg:gap-[3.15rem] 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24 max-lg:w-full">
+        <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-8 max-lg:gap-[3.15rem] 2xl:gap-16 pt-8 2xl:pt-16 2xl:pb-24 mobile-shell">
           <div className="w-full lg:w-auto">
-            <h2 className="px-0 lg:px-[2.4rem] 2xl:px-16 pb-0 max-lg:-mb-[7px] lg:pb-12 2xl:pb-0 font-monospace text-[clamp(1.5rem,7.55vw,2.2rem)] lg:text-[2.6rem]! 2xl:text-[2.8rem]! font-medium">
+            <h2 className="px-0 lg:px-[2.4rem] 2xl:px-16 pb-0 max-lg:-mb-[7px] lg:pb-12 2xl:pb-0 font-monospace text-[clamp(1.5rem,7.55vw,2.53rem)] lg:text-[2.6rem]! 2xl:text-[2.8rem]! font-medium">
               Welcome to
             </h2>
             <div>
@@ -126,9 +121,12 @@ const Home = () => {
                 drag the wordmark out with it. 2.5rem = the section's px-5 x2. */}
             <div className="shrink-0 -mx-5 w-[calc(100%+2.5rem)] overflow-hidden lg:mx-0 lg:w-[40vw] lg:overflow-visible">
               {/* Figma has the mascot at 545x445 inside a 390-wide frame, i.e.
-                  140% of the viewport. The -20% margin re-centres that width and
-                  the wrapper clips the overhang, so the wings crop at both edges. */}
-              <div className="w-[140%] -ml-[20%] lg:ml-0 lg:w-full">
+                  140% of the viewport, so the wings crop at the screen edges.
+                  That overscale only reads as intentional while the crop lands on
+                  the edge - once .mobile-shell caps the column at 480 the cut
+                  moves inland and the wings look chopped, so above 520 the mascot
+                  sits at its natural width instead. */}
+              <div className="w-full max-[520px]:w-[140%] max-[520px]:-ml-[20%] lg:ml-0 lg:w-full">
                 <ImageBlock
                   pageKey="home-mascot"
                   alt="Club Mascot"
@@ -137,7 +135,7 @@ const Home = () => {
                 />
               </div>
             </div>
-            <div className="hidden lg:block text-2xl ml-[-8vw] w-fit">
+            <div className="hidden lg:block shrink-0 text-2xl ml-[-8vw] w-fit">
               {joinUsButton}
             </div>
           </div>
@@ -150,7 +148,7 @@ const Home = () => {
           an opaque background would cut it off in a straight line above the card.
           The page behind is already the same cream. */}
       <section className="section bg-yellow-light h-auto lg:h-200 flex flex-col items-center justify-center gap-12 py-12 lg:py-0 max-lg:-mt-48 max-lg:px-5! max-lg:pt-0! max-lg:bg-transparent!">
-        <div className="card-shadow relative bg-yellow-dark w-full lg:w-9/10 2xl:w-8/10 justify-self-center rounded-[23px] lg:rounded-4xl h-auto pt-8 pb-8 px-6 lg:pt-14 lg:pb-12 lg:px-8">
+        <div className="card-shadow mobile-shell relative bg-yellow-dark w-full lg:w-9/10 2xl:w-8/10 justify-self-center rounded-[23px] lg:rounded-4xl h-auto pt-8 pb-8 px-6 lg:pt-14 lg:pb-12 lg:px-8">
           <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8">
             <div className="w-full lg:w-6/10 shrink-0 self-center">
               <ImageBlock
@@ -165,7 +163,7 @@ const Home = () => {
               />
             </div>
             <div className="w-full lg:w-4/10 flex flex-col justify-between h-full self-center">
-              <h2 className="mt-0! mb-0! font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium">
+              <h2 className="mt-0! mb-0! font-monospace text-[1.8rem] lg:text-[2rem] xl:text-[2.6rem] font-medium">
                 WHAT WE DO:
               </h2>
               <p className="py-1 font-alan-sans">
@@ -206,7 +204,11 @@ const Home = () => {
       </section>
 
       {/** EVENTS */}
-      <section className="section relative w-full overflow-hidden bg-yellow-light p-0! pt-20! pb-12! lg:pt-0! lg:pb-0!">
+      {/* The watermark is width-driven so the wings reach both edges, which makes
+          it 128.46vw tall (the PNG is 390x501). The section takes that as a
+          minimum so the silhouette is never clipped, and centres its content in
+          whatever slack is left - the same relationship the phone already has. */}
+      <section className="section relative w-full overflow-hidden bg-yellow-light p-0! pt-20! pb-12! max-lg:min-h-[128.46vw] max-lg:flex max-lg:flex-col max-lg:justify-center lg:pt-0! lg:pb-0!">
         {/**
          * Desktop lays the CMS mascot out in flow and floats the heading and
          * slider on top of it. On mobile that would leave a 90vw-tall gap, so
@@ -216,7 +218,7 @@ const Home = () => {
           src={kacoVector}
           alt=""
           aria-hidden="true"
-          className="absolute left-1/2 top-0 h-full w-auto max-w-none -translate-x-1/2 pointer-events-none select-none lg:hidden"
+          className="absolute inset-x-0 top-0 h-auto w-full max-w-none pointer-events-none select-none lg:hidden"
         />
 
         <div className="hidden lg:block lg:justify-self-end lg:relative">
@@ -228,15 +230,15 @@ const Home = () => {
           />
         </div>
 
-        <h2 className="relative uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium text-center lg:absolute lg:inset-0 lg:justify-self-center lg:top-[20vh] 2xl:top-[22vh]">
+        <h2 className="mobile-shell relative uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium text-center lg:absolute lg:inset-0 lg:justify-self-center lg:top-[18%] 2xl:top-[20%]">
           Our Recent Events:
         </h2>
 
-        <div className="relative lg:absolute lg:inset-0 lg:top-[4vh]">
+        <div className="mobile-shell relative lg:absolute lg:inset-0 lg:top-[4vh]">
           <ImageSlider pageKeys={EVENT_PAGE_KEYS} />
         </div>
 
-        <div className="relative pt-10 text-center text-xl lg:hidden">
+        <div className="mobile-shell relative pt-10 text-center text-xl lg:hidden">
           <Link to="/events" className="button">
             More Events
           </Link>
@@ -245,7 +247,7 @@ const Home = () => {
 
       {/** SPONSORS */}
       <section className="section bg-yellow-light">
-        <div className="justify-self-center mt-8">
+        <div className="mobile-shell justify-self-center mt-8">
           <h2 className="-mt-8! max-lg:-mt-[45px]! pl-4 uppercase font-monospace text-[1.8rem] lg:text-[2.6rem] font-medium">
             Our Sponsors:
           </h2>
@@ -255,12 +257,11 @@ const Home = () => {
             {mobileSponsorRows.map((row, rowIndex) => (
               <div key={rowIndex} className="flex justify-center gap-[14px]">
                 {row.map((sponsor) => (
-                  <div key={sponsor.name} className="w-[27.2vw] max-w-[106px]">
+                  <div key={sponsor.name} className="w-[27.2vw] max-w-[145px]">
                     <SponsorCard
                       compact
                       name={sponsor.name}
-                      description={formatSponsorDeal(sponsor)}
-                      location={formatSponsorLocation(sponsor)}
+                      description={sponsor.description}
                     />
                   </div>
                 ))}
@@ -279,8 +280,7 @@ const Home = () => {
                   <div key={sponsor.name} className="w-[15vw]">
                     <SponsorCard
                       name={sponsor.name}
-                      description={formatSponsorDeal(sponsor)}
-                      location={formatSponsorLocation(sponsor)}
+                      description={sponsor.description}
                     />
                   </div>
                 ))}
@@ -288,7 +288,7 @@ const Home = () => {
             ))}
           </div>
         </div>
-        <div className="text-xl lg:text-2xl py-8 max-lg:pt-[47px] max-lg:pb-8 w-fit justify-self-center">
+        <div className="mobile-shell text-xl lg:text-2xl py-8 max-lg:pt-[47px] max-lg:pb-8 max-lg:text-center w-fit justify-self-center">
           <a href="/sponsors" className="button">
             Discover More
           </a>

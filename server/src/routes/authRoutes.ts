@@ -28,7 +28,7 @@ router.get(
   (req, res) => {
     const profile = req.user as any;
     if (profile?.hasAccount) {
-      res.redirect(`${process.env.CLIENT_URL!}/profile`);
+      res.redirect(`${process.env.CLIENT_URL!}/`);
     } else {
       res.redirect(`${process.env.CLIENT_URL!}/signup`);
     }

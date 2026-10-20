@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
@@ -11,7 +11,7 @@ import {
   User,
 } from "lucide-react";
 
-import createTicket from "../api/ticketsApi";
+import { createTicket, getTicketsByUserId } from "../api/ticketsApi";
 import { useAuth } from "../auth/useAuth.ts";
 
 import "../style/common.css";
@@ -30,8 +30,31 @@ const UpcomingEvent = ({ event }: { event: any }) => {
   const [cardExpiry, setCardExpiry] = useState("");
   const [groupBuddy, setGroupBuddy] = useState("");
   const [dietaryRequirements, setDietaryRequirements] = useState("");
+  const [userSignedUp, setUserSignedUp] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { hasAccount } = useAuth();
+
+  useEffect(() => {
+    if (!hasAccount || !id) return;
+
+    getTicketsByUserId()
+      .then((tickets: any) => {
+        if (!Array.isArray(tickets)) return;
+        const hasTicket = tickets.some((ticket: any) => {
+          const ticketEventId =
+            typeof ticket.eventID === "object" && ticket.eventID !== null
+              ? ticket.eventID._id
+              : ticket.eventID;
+          return String(ticketEventId) === String(id);
+        });
+        setUserSignedUp(hasTicket);
+      })
+      .catch((error) => {
+        console.error("Error fetching tickets for user:", error);
+      });
+  }, [hasAccount, id]);
 
   const handleCardNumberChange = (e: any) => {
     // Keep only digits, max 16, and insert spaces every 4 digits for readability
@@ -79,24 +102,36 @@ const UpcomingEvent = ({ event }: { event: any }) => {
   if (!id || !event)
     return <div className="medium-content">Event not found!</div>;
 
-  let userSignedUp = false; // in future, check user's account for this
-
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (
+    e?: React.MouseEvent<HTMLButtonElement> | Event | React.FormEvent
+  ) => {
+    e?.preventDefault?.();
+    setSubmitError(null);
+    setIsSubmitting(true);
 
     try {
+      const eventId = id || event?._id || event?.id;
       const submittedGroupBuddy = groupBuddy.trim() ? groupBuddy.trim() : "N/A";
-      const submittedDietaryRequirements = dietaryRequirements.trim();
+      const submittedDietaryRequirements = dietaryRequirements.trim() || "N/A";
 
       await createTicket(
-        id,
+        eventId,
         "dummyPaymentID",
         submittedGroupBuddy,
         submittedDietaryRequirements
       );
       console.log("Ticket created successfully!");
-    } catch (error) {
+      setUserSignedUp(true);
+      setCurrentStep(4);
+    } catch (error: any) {
       console.error("Error occurred while submitting the form:", error);
+      setSubmitError(
+        typeof error === "string"
+          ? error
+          : error?.message || "Failed to create ticket. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -495,47 +530,23 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                   )}
                 {/* Handle form submission separately */}
                 {currentStep == 3 && (
-                  <div className="w-full flex justify-center">
+                  <div className="w-full flex flex-col items-center justify-center">
+                    {submitError && (
+                      <p className="text-red-500 text-sm font-semibold mb-2 text-center">
+                        {submitError}
+                      </p>
+                    )}
                     <button
-                      type="submit"
-                      onClick={() => {
-                        validateExpiry();
-                        if (
-                          formRef.current &&
-                          !formRef.current.checkValidity()
-                        ) {
-                          const firstInvalid = formRef.current.querySelector(
-                            ":invalid"
-                          ) as HTMLElement | null;
-                          if (
-                            firstInvalid &&
-                            cardContainerRef.current &&
-                            cardContainerRef.current.contains(firstInvalid) &&
-                            !cardIsOpen
-                          ) {
-                            setCardIsOpen(true);
-                            setTimeout(() => {
-                              try {
-                                firstInvalid.focus();
-                                (firstInvalid as any).reportValidity
-                                  ? (firstInvalid as any).reportValidity()
-                                  : formRef.current?.reportValidity();
-                              } catch (e) {
-                                formRef.current?.reportValidity();
-                                console.error(e);
-                              }
-                            }, 10);
-                            return;
-                          }
-                          formRef.current.reportValidity();
-                          return;
-                        }
-                        handleSubmit(new Event("submit") as any);
-                        setCurrentStep(Math.min(4, currentStep + 1));
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={async () => {
+                        await handleSubmit();
                       }}
-                      className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                      className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400 disabled:opacity-50"
                     >
-                      <p className="py-2 px-12">Sign Up!</p>
+                      <p className="py-2 px-12">
+                        {isSubmitting ? "Signing Up..." : "Sign Up!"}
+                      </p>
                     </button>
                   </div>
                 )}

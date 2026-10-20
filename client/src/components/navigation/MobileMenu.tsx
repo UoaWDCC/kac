@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
-import { LogOut, ShieldCheck, UserRound, X } from "lucide-react";
+import { LogOut, RefreshCw, ShieldCheck, UserRound, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
   currentPath: string;
   isSignedIn: boolean;
   isAdmin: boolean;
+  isExpiredMember: boolean;
   logout: () => void;
 };
 
@@ -22,6 +23,7 @@ const MobileMenu = ({
   currentPath,
   isSignedIn,
   isAdmin,
+  isExpiredMember,
   logout,
 }: Props) => {
   // Close on Escape, and stop the page behind the drawer from scrolling.
@@ -126,6 +128,17 @@ const MobileMenu = ({
                   <UserRound aria-hidden="true" size={18} />
                   Profile
                 </Link>
+
+                {isExpiredMember && (
+                  <Link
+                    className="flex w-full items-center gap-3 rounded-full px-4 py-2 text-decoration-none text-base uppercase text-blue-medium"
+                    onClick={onClose}
+                    to="/renew"
+                  >
+                    <RefreshCw aria-hidden="true" size={18} />
+                    Renew
+                  </Link>
+                )}
 
                 {isAdmin && (
                   <Link

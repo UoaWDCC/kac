@@ -6,9 +6,30 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { RequestHandler } from "express";
 import { randomUUID } from "node:crypto";
+import sharp from "sharp";
 import { Image } from "../model/image";
 import { User } from "../model/user";
 import { s3BucketName, s3Client } from "../config/aws";
+
+const compressImageIfPossible = async (file: Express.Multer.File) => {
+  let fileBuffer = file.buffer;
+  let mimeType = file.mimetype;
+  let originalName = file.originalname;
+
+  if (mimeType.startsWith("image/") && !mimeType.includes("svg")) {
+    try {
+      fileBuffer = await sharp(file.buffer).webp({ quality: 80 }).toBuffer();
+      mimeType = "image/webp";
+      const nameWithoutExt = originalName.includes(".")
+        ? originalName.split(".").slice(0, -1).join(".")
+        : originalName;
+      originalName = `${nameWithoutExt}.webp`;
+    } catch (err) {
+      console.error("Error compressing image with sharp:", err);
+    }
+  }
+  return { fileBuffer, mimeType, originalName };
+};
 
 const signedUrlExpirySeconds = 60 * 15;
 
@@ -51,15 +72,18 @@ const replaceImageForTag = async (
 ) => {
   const existing = tag ? await Image.findOne({ tag }) : null;
 
-  const fileExtension = file.originalname.includes(".")
-    ? file.originalname.split(".").pop()
+  const { fileBuffer, mimeType, originalName } =
+    await compressImageIfPossible(file);
+
+  const fileExtension = originalName.includes(".")
+    ? originalName.split(".").pop()
     : "";
   const s3Key = `images/${randomUUID()}${fileExtension ? `.${fileExtension}` : ""}`;
 
   const image = await Image.create({
-    originalName: file.originalname,
-    mimeType: file.mimetype,
-    size: file.size,
+    originalName: originalName,
+    mimeType: mimeType,
+    size: fileBuffer.length,
     s3Key,
     bucket: s3BucketName,
     tag,
@@ -70,8 +94,8 @@ const replaceImageForTag = async (
       new PutObjectCommand({
         Bucket: s3BucketName,
         Key: s3Key,
-        Body: file.buffer,
-        ContentType: file.mimetype,
+        Body: fileBuffer,
+        ContentType: mimeType,
       })
     );
   } catch (s3Error) {
@@ -146,16 +170,19 @@ export const uploadImage: RequestHandler = async (req, res) => {
       }
     }
 
-    const fileExtension = req.file.originalname.includes(".")
-      ? req.file.originalname.split(".").pop()
+    const { fileBuffer, mimeType, originalName } =
+      await compressImageIfPossible(req.file);
+
+    const fileExtension = originalName.includes(".")
+      ? originalName.split(".").pop()
       : "";
     const fileSuffix = fileExtension ? `.${fileExtension}` : "";
     const s3Key = `images/${randomUUID()}${fileSuffix}`;
 
     const newImage = await Image.create({
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-      size: req.file.size,
+      originalName: originalName,
+      mimeType: mimeType,
+      size: fileBuffer.length,
       s3Key,
       bucket: s3BucketName,
       tag,
@@ -167,8 +194,8 @@ export const uploadImage: RequestHandler = async (req, res) => {
         new PutObjectCommand({
           Bucket: s3BucketName,
           Key: s3Key,
-          Body: req.file.buffer,
-          ContentType: req.file.mimetype,
+          Body: fileBuffer,
+          ContentType: mimeType,
         })
       );
     } catch (s3Error) {

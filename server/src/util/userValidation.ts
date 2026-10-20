@@ -79,14 +79,14 @@ const STRING_RULES = {
     maxLength: 20,
     pattern: DIGITS_ONLY,
     patternMessage: "Student Number can only contain numbers.",
-    required: true,
+    required: false,
   },
   university: {
     label: "University",
     maxLength: 120,
     pattern: SAFE_TEXT,
     patternMessage: "University can only contain letters, numbers, and spaces.",
-    required: true,
+    required: false,
   },
   upi: {
     label: "Student Username / UPI",
@@ -94,7 +94,7 @@ const STRING_RULES = {
     pattern: SAFE_ID,
     patternMessage:
       "Student Username / UPI can only contain letters and numbers.",
-    required: true,
+    required: false,
   },
 } satisfies Record<string, ValidationRule>;
 
@@ -105,6 +105,20 @@ const hasOwn = (input: Record<string, unknown>, field: string) =>
 
 const normalizeWhitespace = (value: string) =>
   value.trim().replace(/\s+/g, " ");
+
+const isStudentDetailsRequired = (input: Record<string, unknown>) => {
+  const university =
+    typeof input.university === "string" ? input.university.trim() : "";
+
+  return university === "The University of Auckland";
+};
+
+const requiresFacultySelection = (input: Record<string, unknown>) => {
+  const university =
+    typeof input.university === "string" ? input.university.trim() : "";
+
+  return !!university && university !== "None";
+};
 
 const getString = (
   input: Record<string, unknown>,
@@ -130,9 +144,21 @@ const validateStringField = (
 ) => {
   const rule = STRING_RULES[field];
   const isRequired = "required" in rule && rule.required === true;
+  const shouldRequire =
+    field === "studentId" || field === "upi"
+      ? isStudentDetailsRequired(input)
+      : isRequired || requireAll;
 
   if (!hasOwn(input, field)) {
-    if (requireAll && isRequired) {
+    if (shouldRequire) {
+      errors.push(`${rule.label} is required.`);
+    }
+
+    return;
+  }
+
+  if (input[field] === null) {
+    if (shouldRequire) {
       errors.push(`${rule.label} is required.`);
     }
 
@@ -146,11 +172,11 @@ const validateStringField = (
   }
 
   if (!value) {
-    if (isRequired || requireAll) {
+    if (shouldRequire) {
       errors.push(`${rule.label} is required.`);
+      values[field] = value;
     }
 
-    values[field] = value;
     return;
   }
 
@@ -171,6 +197,26 @@ const validateFaculties = (
   errors: string[],
   requireAll: boolean
 ) => {
+  if (!requiresFacultySelection(input)) {
+    if (requireAll && hasOwn(input, "faculties")) {
+      const faculties = input.faculties;
+
+      if (Array.isArray(faculties) && faculties.length === 0) {
+        return;
+      }
+    }
+
+    return;
+  }
+
+  if (input.faculties === null) {
+    if (requireAll) {
+      errors.push("Select at least one faculty.");
+    }
+
+    return;
+  }
+
   if (!hasOwn(input, "faculties")) {
     if (requireAll) {
       errors.push("Select at least one faculty.");

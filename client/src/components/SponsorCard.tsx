@@ -1,17 +1,32 @@
 import { useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import { ImageBlock } from "./image_block/ImageBlock.tsx";
 import { sponsorPageKey } from "../util/sponsors";
+import { useAuth } from "../auth/useAuth";
+import { deleteSponsor } from "../api/sponsorsApi";
 
-type Props = {
+type SponsorProps = {
   name: string;
   description: string;
-  location: string;
-  /** Logo tile only - drops the name and address beneath the card. */
   compact?: boolean;
+  sponsorId?: string;
+  imageVersion?: number;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
-const SponsorCard = ({ name, description, location, compact }: Props) => {
+const SponsorCard = ({
+  name,
+  description,
+  compact,
+  sponsorId,
+  imageVersion,
+  onEdit,
+  onDelete,
+}: SponsorProps) => {
+  const { role } = useAuth();
   const [hovered, setHovered] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const pageKey = sponsorPageKey(name);
 
   return (
@@ -22,7 +37,7 @@ const SponsorCard = ({ name, description, location, compact }: Props) => {
         onMouseLeave={() => setHovered(false)}
         style={{
           backgroundColor: "#ffffff",
-          borderRadius: "15px",
+          borderRadius: "10px",
           width: "100%",
           boxShadow: "5px 5px 0px var(--color-yellow-medium)",
           cursor: "pointer",
@@ -36,16 +51,51 @@ const SponsorCard = ({ name, description, location, compact }: Props) => {
         }}
       >
         <ImageBlock
+          key={imageVersion}
           pageKey={pageKey}
           alt={name}
           style={{
             width: "100%",
             height: "100%",
             objectFit: "contain",
-            borderRadius: "1rem",
+            borderRadius: "0.5rem",
           }}
-          editable={true}
+          editable={false}
         />
+        {role === "admin" && onEdit && (
+          <button
+            type="button"
+            className="image-block__edit-btn"
+            onClick={onEdit}
+            title="Edit Sponsor"
+            aria-label={`Edit ${name}`}
+          >
+            <Pencil size={17} />
+          </button>
+        )}
+
+        {role === "admin" && sponsorId && onDelete && (
+          <button
+            type="button"
+            className="image-block__delete-btn"
+            onClick={async () => {
+              if (deleting) return;
+              setDeleting(true);
+              try {
+                await deleteSponsor(sponsorId);
+                onDelete?.();
+              } catch (err) {
+                console.error("Failed to delete sponsor:", err);
+              } finally {
+                setDeleting(false);
+              }
+            }}
+            title={deleting ? "Deleting..." : "Delete Sponsor"}
+            disabled={deleting}
+          >
+            <Trash2 size={17} />
+          </button>
+        )}
 
         {/* DARK
          BLUE OVERLAY ON HOVER */}
@@ -76,31 +126,19 @@ const SponsorCard = ({ name, description, location, compact }: Props) => {
         </div>
       </div>
 
-      {/* NAME + LOCATION - outside the card */}
+      {/* NAME - outside the card */}
       {compact ? null : (
-        <>
-          <h3
-            style={{
-              fontSize: "1rem",
-              fontWeight: "normal",
-              marginTop: "0.75rem",
-              marginBottom: "0.25rem",
-              color: "var(--color-blue-medium)",
-            }}
-          >
-            {name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
-          </h3>
-          <p
-            style={{
-              fontSize: "0.85rem",
-              color: "var(--color-grey-medium)",
-              margin: 0,
-              fontFamily: "Alan Sans, sans-serif",
-            }}
-          >
-            {location}
-          </p>
-        </>
+        <h3
+          style={{
+            fontWeight: "normal",
+            marginTop: "0.75rem",
+            marginBottom: "0.25rem",
+            color: "var(--color-blue-medium)",
+          }}
+          className="text-[0.8rem] sm:text-[1rem]"
+        >
+          {name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+        </h3>
       )}
     </div>
   );

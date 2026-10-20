@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { AuthContext } from "./AuthContext";
 import type { Role } from "./AuthContext";
@@ -17,24 +17,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<GoogleUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     try {
       const res = await getCurrentUser();
-      setUser(res);
+      setUser(res ?? null);
     } catch {
       setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchUser();
+  }, [fetchUser]);
+
+  const refresh = async () => {
+    setLoading(true);
+
+    try {
+      const res = await getCurrentUser();
+      setUser(res ?? null);
+    } catch {
+      setUser(null);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchUser().finally(() => setLoading(false));
-  }, []);
-
-  const refresh = async () => {
-    await fetchUser();
-  };
-
   const logout = () => {
+    setUser(null);
     globalThis.location.href = "/api/auth/logout";
   };
 

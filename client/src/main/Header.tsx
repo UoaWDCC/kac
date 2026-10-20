@@ -5,6 +5,7 @@ import {
   CircleUserRound,
   LogOut,
   Menu,
+  RefreshCw,
   ShieldCheck,
   UserRound,
 } from "lucide-react";
@@ -13,7 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import { getCurrentProfileImage } from "../api/imageApi.ts";
 import { useAuth } from "../auth/useAuth.ts";
 import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
-import MobileMenu from "./MobileMenu.tsx";
+import MobileMenu from "../components/navigation/MobileMenu.tsx";
 
 import "../style/common.css";
 
@@ -48,6 +49,8 @@ const Header = () => {
   // A Google-authed user mid-signup should still see the Sign In button.
   const isSignedIn = !!user && hasAccount;
   const isAdmin = role === "admin";
+  // "legacy" = has an account, but last paid for an earlier membership year.
+  const isExpiredMember = role === "legacy";
   const fallbackProfileImage =
     user?.photos?.find(
       (photo) => photo.value && !failedProfileImageUrls.has(photo.value)
@@ -175,7 +178,10 @@ const Header = () => {
 
       {/** LOGO - centred on mobile, left-aligned from lg up */}
       <div className="shrink-0 lg:flex-1 lg:pl-2">
-        <div className="flex items-center w-fit mx-auto lg:mx-0">
+        <div
+          className="flex items-center w-fit mx-auto lg:mx-0 cursor-pointer"
+          onClick={() => (window.location.href = "/")}
+        >
           <div className="h-[57px] w-[57px] lg:h-16 lg:w-16">
             <ImageBlock
               pageKey="logo"
@@ -289,6 +295,18 @@ const Header = () => {
                       Profile
                     </Link>
 
+                    {isExpiredMember ? (
+                      <Link
+                        className="header-profile-menu-item"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                        role="menuitem"
+                        to="/renew"
+                      >
+                        <RefreshCw aria-hidden="true" className="h-4 w-4" />
+                        Renew membership
+                      </Link>
+                    ) : null}
+
                     {isAdmin ? (
                       <Link
                         className="header-profile-menu-item"
@@ -340,6 +358,7 @@ const Header = () => {
       <MobileMenu
         currentPath={location.pathname}
         isAdmin={isAdmin}
+        isExpiredMember={isExpiredMember}
         isOpen={isMobileMenuOpen}
         isSignedIn={isSignedIn}
         logout={logout}

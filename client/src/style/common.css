@@ -74,19 +74,39 @@ p {
 }
 
 .button {
+  -webkit-tap-highlight-color: transparent;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: inherit;
+  isolation: isolate;
+  overflow: hidden;
   padding: 0.5rem 2rem;
-  border-radius: 1.4rem;
+  border-radius: 9999px;
   position: relative;
   text-decoration: none;
   color: var(--color-blue-medium);
   background-color: var(--color-yellow-dark);
   box-shadow: 0.2rem 0.2rem var(--color-yellow-medium);
-  width: 80%;
-  transition: 0.3s;
+  transition:
+    color 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
-.button:hover {
-  background-color: var(--color-blue-medium);
+.button:where(button) {
+  width: 80%;
+}
+
+.button:where(a) {
+  width: auto;
+}
+
+.button:hover,
+.button:focus-visible {
   box-shadow: 0.2rem 0.2rem var(--color-grey-medium);
   color: var(--color-yellow-light);
 }
@@ -109,8 +129,81 @@ p {
 }
 
 .button-navy:hover {
-  background-color: var(--color-blue-light);
   color: var(--color-yellow-light);
+}
+
+.button,
+.button-navy,
+.pill-button,
+.events-pill-button,
+.events-more-button,
+.admin-action-button,
+.admin-modal-save-button,
+.admin-modal-delete-button,
+.shadow-reveal-button {
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+}
+
+.button::before,
+.button-navy::before,
+.pill-button::before,
+.events-pill-button::before,
+.events-more-button::before,
+.admin-action-button::before,
+.admin-modal-save-button::before,
+.admin-modal-delete-button::before,
+.shadow-reveal-button::before {
+  background-color: var(--color-blue-medium);
+  border-radius: inherit;
+  clip-path: circle(0 at 50% 100%);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: clip-path 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: -1;
+}
+
+.button-navy::before,
+.admin-modal-save-button::before {
+  background-color: var(--color-blue-light);
+}
+
+.button:hover::before,
+.button:focus-visible::before,
+.button-navy:hover::before,
+.button-navy:focus-visible::before,
+.pill-button:not(:disabled):hover::before,
+.pill-button:focus-visible::before,
+.events-pill-button:hover::before,
+.events-pill-button:focus-visible::before,
+.events-more-button:not(:disabled):hover::before,
+.events-more-button:focus-visible::before,
+.admin-action-button:hover::before,
+.admin-action-button:focus-visible::before,
+.admin-modal-save-button:not(:disabled):hover::before,
+.admin-modal-save-button:focus-visible::before,
+.admin-modal-delete-button:not(:disabled):hover::before,
+.admin-modal-delete-button:focus-visible::before,
+.shadow-reveal-button:not(:disabled):hover::before,
+.shadow-reveal-button:focus-visible::before {
+  clip-path: circle(150% at 50% 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button::before,
+  .button-navy::before,
+  .pill-button::before,
+  .events-pill-button::before,
+  .events-more-button::before,
+  .admin-action-button::before,
+  .admin-modal-save-button::before,
+  .admin-modal-delete-button::before,
+  .shadow-reveal-button::before {
+    transition-duration: 0.01ms;
+  }
 }
 
 /* Scroll lock while the mobile menu drawer is open. Scoped to the drawer's own
@@ -349,7 +442,6 @@ p {
 
 .admin-action-button:hover,
 .admin-action-button:focus-visible {
-  background-color: var(--color-blue-medium);
   border-color: var(--color-blue-medium);
   box-shadow: 0 4px 10px rgba(11, 45, 74, 0.2);
   color: #ffffff;
@@ -419,8 +511,7 @@ p {
 
 .admin-modal-save-button:hover,
 .admin-modal-save-button:focus-visible {
-  background-color: #000000;
-  border-color: #000000;
+  border-color: var(--color-blue-light);
   box-shadow: 0 4px 10px rgba(11, 45, 74, 0.2);
 }
 
@@ -458,10 +549,9 @@ p {
 
 .admin-modal-delete-button:not(:disabled):hover,
 .admin-modal-delete-button:focus-visible {
-  background-color: rgba(220, 38, 38, 0.16);
-  border-color: #dc2626;
+  border-color: var(--color-blue-medium);
   box-shadow: 0 4px 10px rgba(220, 38, 38, 0.16);
-  color: #991b1b;
+  color: #ffffff;
 }
 
 .admin-modal-delete-button:focus-visible {
@@ -592,7 +682,6 @@ p {
 }
 
 .pill-button:not(:disabled):hover {
-  background-color: var(--color-blue-medium);
   box-shadow: 2px 4px var(--color-grey-medium);
   color: var(--color-yellow-light);
 }

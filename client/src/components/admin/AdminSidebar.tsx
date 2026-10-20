@@ -17,7 +17,7 @@ export default function AdminSidebar({
   ];
 
   return (
-    <aside className="w-full shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:sticky lg:top-4 lg:w-64 lg:self-start">
+    <aside className="w-full shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:w-64 lg:self-start">
       <div className="border-b border-slate-100 bg-blue-medium px-4 py-4 text-white">
         <p className="text-xs font-semibold uppercase tracking-normal text-yellow-dark">
           KAC

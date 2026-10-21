@@ -1,43 +1,12 @@
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { RequestHandler } from "express";
 import { Executive } from "../model/executive";
-import { Image } from "../model/image";
-import { s3Client } from "../config/aws";
+import { deleteImagesByTag } from "../util/imageCleanup";
 
 const normaliseRoleGroup = (value?: string) =>
   (value || "other")
     .trim()
     .toLowerCase()
     .replace(/[\s_-]+/g, "-");
-
-const deleteImagesForExecutive = async (imageTag?: string) => {
-  if (!imageTag?.startsWith("exec-image:")) return 0;
-
-  const images = await Image.find({ tag: imageTag }).lean();
-  const deletedImageIds = [];
-  let failedDeletes = 0;
-
-  for (const image of images) {
-    try {
-      await s3Client.send(
-        new DeleteObjectCommand({
-          Bucket: image.bucket,
-          Key: image.s3Key,
-        })
-      );
-      deletedImageIds.push(image._id);
-    } catch (error) {
-      failedDeletes += 1;
-      console.error("Failed to delete executive image from S3:", error);
-    }
-  }
-
-  if (deletedImageIds.length > 0) {
-    await Image.deleteMany({ _id: { $in: deletedImageIds } });
-  }
-
-  return failedDeletes;
-};
 
 export const addExec: RequestHandler = async (req, res, next) => {
   try {
@@ -88,9 +57,9 @@ export const deleteExec: RequestHandler = async (req, res, next) => {
       return res.status(404).json({ message: "Executive not found." });
     }
 
-    const failedImageDeletes = await deleteImagesForExecutive(
-      executive.imageURL
-    );
+    const failedImageDeletes = executive.imageURL?.startsWith("exec-image:")
+      ? await deleteImagesByTag(executive.imageURL)
+      : 0;
     await executive.deleteOne();
 
     res.status(200).json({

@@ -141,7 +141,7 @@ export const updateSponsor: RequestHandler = async (req, res) => {
 
 export const deleteSponsor: RequestHandler = async (req, res) => {
   try {
-    const sponsor = await Sponsor.findByIdAndDelete(req.params.id);
+    const sponsor = await Sponsor.findById(req.params.id);
     if (!sponsor) {
       res.status(404).json({ message: "Sponsor not found." });
       return;
@@ -150,6 +150,7 @@ export const deleteSponsor: RequestHandler = async (req, res) => {
     const failedImageDeletes = await deleteImagesByTag(
       sponsorImageTag(sponsor.name)
     );
+    await sponsor.deleteOne();
 
     res.status(200).json({
       message: "Sponsor deleted successfully.",

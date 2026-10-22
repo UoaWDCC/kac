@@ -1,0 +1,123 @@
+/* Membership renewal page. Borrows the signup form controls (.signup-input,
+   .signup-field-group, .signup-continue-btn) and only adds the page framing
+   those don't cover: title scale and the gaps between sections. */
+
+.renew-page {
+  padding: 4rem 2rem 6rem;
+}
+
+.renew-title {
+  color: var(--color-blue-medium);
+  font-family: var(--font-sans, "Amaranth", sans-serif);
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  /* The global h1 carries a 6rem bottom margin - far too much here. */
+  margin: 0 0 12px;
+}
+
+.renew-intro {
+  font-size: 17px;
+  margin: 0 0 40px;
+  max-width: 46ch;
+}
+
+.renew-section-title {
+  border-top: 1px solid rgba(11, 45, 74, 0.12);
+  color: var(--color-blue-medium);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  padding-top: 28px;
+}
+
+/* First section sits directly under the intro, so it needs no divider. */
+.renew-page form > .renew-section-title:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.renew-section-hint {
+  color: var(--color-grey-medium);
+  font-size: 15px;
+  margin: 0 0 20px;
+}
+
+/* Breathing room between the detail fields and the payment block. */
+.renew-page .signup-form-grid + .renew-section-title {
+  margin-top: 36px;
+}
+
+.renew-page .signup-field-group {
+  margin-bottom: 20px;
+}
+
+.renew-total {
+  font-weight: 700;
+  margin-top: 24px;
+  text-align: right;
+}
+
+.renew-error {
+  color: #e53e3e;
+  margin: 16px 0 0;
+}
+
+@media (max-width: 40rem) {
+  .renew-page {
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  .renew-title {
+    font-size: 34px;
+  }
+
+  /* Two columns is too cramped for name/phone fields on a phone. */
+  .renew-page .signup-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Faculties. Required by getMemberValidationErrors, so the renewal form has to
+   offer it — without the field, submission was blocked by "Select at least one
+   faculty" with nothing on screen to fix it. */
+.renew-faculties {
+  margin-top: 8px;
+}
+
+.renew-faculty-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 8px;
+}
+
+.renew-faculty-option {
+  align-items: center;
+  border: 1px solid rgba(242, 183, 25, 0.7);
+  border-radius: 6px;
+  color: var(--color-blue-medium);
+  cursor: pointer;
+  display: flex;
+  font-size: 15px;
+  gap: 10px;
+  padding: 10px 12px;
+  transition: border-color 0.2s ease;
+}
+
+.renew-faculty-option:hover {
+  border-color: var(--color-blue-medium);
+}
+
+.renew-faculty-option input {
+  accent-color: var(--color-blue-medium);
+  height: 16px;
+  width: 16px;
+}
+
+@media (max-width: 40rem) {
+  .renew-faculty-grid {
+    grid-template-columns: 1fr;
+  }
+}

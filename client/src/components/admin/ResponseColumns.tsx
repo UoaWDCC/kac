@@ -6,6 +6,7 @@ export interface ContactResponse {
   name: string;
   email: string;
   message: string;
+  resolved?: boolean;
   createdAt?: string;
 }
 
@@ -88,9 +89,31 @@ export const getResponseColumns = (
     size: 180,
   },
   {
+    accessorFn: (response) => (response.resolved ? "Resolved" : "Unresolved"),
+    cell: ({ row }) => {
+      const isResolved = Boolean(row.original.resolved);
+
+      return (
+        <div
+          className={`inline-flex items-center rounded-full py-1 px-2 text-xs font-semibold transition ${
+            isResolved
+              ? "bg-emerald-50 text-emerald-700"
+              : "bg-amber-50 text-amber-700"
+          }`}
+          title={isResolved ? "Mark as unresolved" : "Mark as resolved"}
+        >
+          {isResolved ? "Resolved" : "Unresolved"}
+        </div>
+      );
+    },
+    header: "Status",
+    id: "status",
+    size: 130,
+  },
+  {
     cell: ({ row }) => (
       <button
-        className="admin-action-button"
+        className="admin-action-button cursor-pointer"
         onClick={() => onViewEdit(row.original)}
         type="button"
       >

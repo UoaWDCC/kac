@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Trash2, X } from "lucide-react";
-import { deleteContact, updateContact } from "../../api/contactApi";
+import { deleteContact, setContactResolved } from "../../api/contactApi";
 import type { ContactResponse } from "./ResponseColumns";
 
 type ResponseDetailsModalProps = {
@@ -30,21 +30,10 @@ export default function ResponseDetailsModal({
   const formRef = useRef<HTMLFormElement>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState({
-    email: response.email,
-    message: response.message,
-    name: response.name,
-  });
+  const [resolved, setResolved] = useState(Boolean(response.resolved));
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  const updateField = (field: keyof typeof form, value: string) => {
-    setForm((current) => ({
-      ...current,
-      [field]: value,
-    }));
-  };
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,9 +41,9 @@ export default function ResponseDetailsModal({
     setIsSaving(true);
 
     try {
-      const updatedResponse = await updateContact(response._id, form);
+      const updatedResponse = await setContactResolved(response._id, !resolved);
+      setResolved(Boolean(updatedResponse.resolved));
       onSave(updatedResponse);
-      onClose();
     } catch (requestError) {
       setError(getErrorMessage(requestError));
     } finally {
@@ -91,7 +80,7 @@ export default function ResponseDetailsModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4">
       <section
-        aria-label={`Edit response from ${response.name}`}
+        aria-label={`Response from ${response.name}`}
         aria-modal="true"
         className="relative flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-lg bg-white shadow-2xl"
         role="dialog"
@@ -120,13 +109,31 @@ export default function ResponseDetailsModal({
             ) : null}
 
             <section className="grid gap-4 rounded-lg border border-slate-200 bg-slate-50/60 p-4">
-              <div>
-                <h3 className="text-base font-bold text-slate-950">
-                  Sender details
-                </h3>
-                <p className="!m-0 mt-1 !text-sm text-slate-500">
-                  Contact information attached to this response.
-                </p>
+              <div className="flex flex-row justify-between gap-4">
+                <div>
+                  <h3 className="text-base font-bold text-slate-950">
+                    Sender details
+                  </h3>
+                  <p className="!m-0 mt-1 !text-sm text-slate-500">
+                    Contact information attached to this response.
+                  </p>
+                </div>
+                <div>
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                      resolved
+                        ? "bg-emerald-50 text-emerald-700"
+                        : "bg-amber-50 text-amber-700"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        resolved ? "bg-emerald-500" : "bg-amber-500"
+                      }`}
+                    />
+                    {resolved ? "Resolved" : "Unresolved"}
+                  </span>
+                </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
@@ -134,21 +141,19 @@ export default function ResponseDetailsModal({
                   <span className={labelClass}>Name</span>
                   <input
                     className={inputClass}
-                    onChange={(event) =>
-                      updateField("name", event.target.value)
-                    }
                     required
-                    value={form.name}
+                    value={response.name}
+                    disabled
                   />
                 </label>
 
                 <label className="grid gap-1">
-                  <span className={labelClass}>Email (Cannot Edit)</span>
+                  <span className={labelClass}>Email</span>
                   <input
                     className={inputClass}
                     required
                     type="email"
-                    value={form.email}
+                    value={response.email}
                     disabled
                   />
                 </label>
@@ -165,9 +170,9 @@ export default function ResponseDetailsModal({
 
               <textarea
                 className="min-h-64 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm leading-6 text-slate-950 outline-none transition focus:border-blue-medium focus:ring-2 focus:ring-yellow-dark/40"
-                onChange={(event) => updateField("message", event.target.value)}
                 required
-                value={form.message}
+                value={response.message}
+                disabled
               />
             </section>
           </div>
@@ -216,7 +221,11 @@ export default function ResponseDetailsModal({
             onClick={handleManualSave}
             type="button"
           >
-            {isSaving ? "Saving..." : "Save changes"}
+            {isSaving
+              ? "Saving..."
+              : resolved
+                ? "Marked as Unresolved"
+                : "Marked as Resolved"}
           </button>
           <button
             className="admin-modal-delete-button w-full"

@@ -33,6 +33,7 @@ type DataTableProps<TData extends object> = {
   columnWidthClasses?: Record<string, string>;
   initialPageSize?: number;
   toolbar?: ReactNode;
+  showUnresolvedButton?: ReactNode;
 };
 
 const pageSizeOptions = [3, 10, 20, 50];
@@ -49,6 +50,7 @@ export default function DataTable<TData extends object>({
   initialPageSize = pageSizeOptions[0],
   searchPlaceholder,
   toolbar,
+  showUnresolvedButton,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -102,7 +104,9 @@ export default function DataTable<TData extends object>({
       case "actions":
         return "w-[12%]";
       case "message":
-        return "w-[50%]";
+        return "w-[45%]";
+      case "status":
+        return "w-[9%]";
       case "received":
         return "w-[16%]";
       default:
@@ -142,6 +146,7 @@ export default function DataTable<TData extends object>({
         </label>
 
         <div className="admin-table-options">
+          {showUnresolvedButton}
           <span className="admin-record-count">
             {error
               ? "Records unavailable"

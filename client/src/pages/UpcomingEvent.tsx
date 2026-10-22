@@ -34,6 +34,7 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
   const [cardExpiry, setCardExpiry] = useState("");
   const [groupBuddy, setGroupBuddy] = useState("");
   const [dietaryRequirements, setDietaryRequirements] = useState("");
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { hasAccount, user } = useAuth();
   const accountId = user?.id;
@@ -214,6 +215,7 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
     }
 
     submissionInFlight.current = true;
+    setSubmitError(null);
     setIsSubmitting(true);
 
     try {
@@ -233,9 +235,10 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
       });
       setCurrentStep(4);
     } catch (error) {
-      toast.error(
-        typeof error === "string" ? error : "Could not save registration."
-      );
+      const message =
+        typeof error === "string" ? error : "Could not save registration.";
+      setSubmitError(message);
+      toast.error(message);
     } finally {
       submissionInFlight.current = false;
       setIsSubmitting(false);
@@ -661,7 +664,12 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
                   !userSignedUp &&
                   ticketLoaded &&
                   !ticketLoadError && (
-                    <div className="w-full flex justify-center">
+                    <div className="w-full flex flex-col items-center justify-center">
+                      {submitError && (
+                        <p className="text-red-500 text-sm font-semibold mb-2 text-center">
+                          {submitError}
+                        </p>
+                      )}
                       <button
                         type="button"
                         disabled={isSubmitting}

@@ -3,6 +3,7 @@ import { Request, RequestHandler, Response } from "express";
 import { Ticket } from "../model/ticket";
 import { User } from "../model/user";
 import { Event } from "../model/event";
+import { AuthenticatedRequest } from "../middlewares/authUser";
 
 class TicketError extends Error {
   status: number;
@@ -253,6 +254,31 @@ export const getTicketsByUserID: RequestHandler = async (req, res) => {
     res.json(ticket);
   } catch (error) {
     ticketError(res, error);
+  }
+};
+
+export const getTicketsByUserId = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const userID = req.userID;
+
+  if (!userID) {
+    return res.status(400).json({ message: "userID are required." });
+  }
+
+  try {
+    const tickets = await Ticket.find({ userID: userID })
+      .populate("eventID")
+      .sort({ createdAt: -1 })
+      .lean();
+    res.status(200).json(tickets);
+  } catch (ticketRetrievalError) {
+    console.error(
+      "[!] Error retrieving tickets for user: ",
+      ticketRetrievalError
+    );
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

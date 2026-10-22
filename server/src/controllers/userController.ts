@@ -388,3 +388,128 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+/**
+ * Renews an existing member's membership for the current year.
+ *
+ * Signup collects a full profile; renewal only needs proof of payment, so the
+ * details form lives on /profile instead. Verification mirrors createUser: the
+ * PaymentIntent is re-read from Stripe rather than trusted from the client, so
+ * this cannot be called to grant a free membership.
+ *
+ * Body: { paymentIntentId: string }
+ */
+export const renewCurrentUser = async (req: Request, res: Response) => {
+  if (!req.isAuthenticated()) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  const profile = req.user as { id?: string };
+  const googleUid = profile?.id;
+  const { paymentIntentId } = req.body;
+
+  if (!googleUid) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  if (!paymentIntentId || typeof paymentIntentId !== "string") {
+    res.status(400).json({ message: "Payment details are required." });
+    return;
+  }
+
+  const currentUser = await User.findOne({ googleUid });
+
+  if (!currentUser) {
+    res
+      .status(404)
+      .json({ message: "No account found. Please sign up instead." });
+    return;
+  }
+
+  // Re-read the intent from Stripe — never trust the client that it succeeded.
+  let intent: Stripe.PaymentIntent;
+  try {
+    intent = await stripe.paymentIntents.retrieve(paymentIntentId);
+  } catch (err) {
+    console.error("Error verifying renewal payment intent:", err);
+    res
+      .status(400)
+      .json({ message: "Could not verify payment. Please contact support." });
+    return;
+  }
+
+  if (intent.status !== "succeeded") {
+    res.status(402).json({ message: "Payment has not been completed." });
+    return;
+  }
+
+  if (intent.metadata?.type !== "membership") {
+    res.status(400).json({ message: "Invalid payment type for membership." });
+    return;
+  }
+
+  if (intent.metadata?.googleUid !== googleUid) {
+    res
+      .status(403)
+      .json({ message: "Payment Intent does not belong to this user." });
+    return;
+  }
+
+  const payment = await Payment.findOne({
+    stripePaymentIntentId: paymentIntentId,
+  });
+
+  if (!payment) {
+    res
+      .status(404)
+      .json({ message: "Payment record not found. Please contact support." });
+    return;
+  }
+
+  if (payment.googleUid !== googleUid) {
+    res
+      .status(403)
+      .json({ message: "Payment record does not belong to this user." });
+    return;
+  }
+
+  if (payment.amount !== intent.amount) {
+    res.status(400).json({ message: "Payment amount mismatch." });
+    return;
+  }
+
+  if (payment.type !== "membership") {
+    res
+      .status(400)
+      .json({ message: "Existing payment record is not for a membership." });
+    return;
+  }
+
+  // userId is the "already consumed" marker, same as signup uses it — without
+  // this an old succeeded intent could be replayed to renew again next year.
+  if (payment.userId) {
+    res.status(409).json({ message: "This payment has already been used." });
+    return;
+  }
+
+  try {
+    const updated = await User.findByIdAndUpdate(
+      currentUser._id,
+      { latestMembershipYear: getMembershipYear() },
+      { new: true }
+    );
+
+    await Payment.findByIdAndUpdate(payment._id, {
+      userId: currentUser._id,
+      status: "succeeded",
+      paidAt: payment.paidAt ?? new Date(),
+    });
+
+    res.json(updated);
+  } catch (error) {
+    console.error("Error renewing membership:", error);
+    res.status(500).json({ message: "Failed to renew membership." });
+  }
+};

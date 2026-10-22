@@ -22,7 +22,7 @@ export interface EventSignup extends TicketRecord {
   waitlistPosition?: number;
 }
 
-export default async function createTicket(
+export async function createTicket(
   eventID: string,
   paymentID = "N/A",
   groupBuddy = "N/A",
@@ -37,6 +37,8 @@ export default async function createTicket(
 
   return response.data;
 }
+
+export default createTicket;
 
 export async function getTicketsByEventID(
   eventId: string
@@ -78,4 +80,11 @@ export async function getMyTicket(
   });
 
   return response.data;
+}
+
+export function getTicketsByUserId(userID?: string) {
+  const res = api.get("/tickets/", {
+    params: userID ? { userID } : undefined,
+  });
+  return res.then((response: { data: any }) => response.data);
 }

@@ -4,15 +4,18 @@ import {
   createTicket,
   getTicketsByEventID,
   getTicketsByUserID,
+  getTicketsByUserId,
   promoteTicket,
   updateTicketAttendance,
 } from "../controllers/ticketController";
 import { adminGuard } from "../middlewares/adminGuard";
+import { requireUser } from "../middlewares/authUser";
 
 const router = express.Router();
 
-router.post("/", createTicket);
-router.get("/me", getTicketsByUserID);
+router.post("/", requireUser, createTicket);
+router.get("/", requireUser, getTicketsByUserId);
+router.get("/me", requireUser, getTicketsByUserID);
 
 router.get("/event/:eventId", adminGuard, getTicketsByEventID);
 

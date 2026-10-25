@@ -102,6 +102,12 @@ const UpcomingEvent = ({ event }: { event: any }) => {
   if (!id || !event)
     return <div className="medium-content">Event not found!</div>;
 
+  const signUpsOpenBanner = event.signUpStatus == "Open" && (
+    <h2 className="uppercase text-[1.6rem] lg:text-[3rem] text-center font-monospace font-medium mb-4">
+      Sign-ups Open!!
+    </h2>
+  );
+
   const handleSubmit = async (
     e?: React.MouseEvent<HTMLButtonElement> | Event | React.FormEvent
   ) => {
@@ -136,24 +142,30 @@ const UpcomingEvent = ({ event }: { event: any }) => {
   };
 
   return (
-    <div className="bg-yellow-light mb-40">
-      <div className="pt-8">
+    <div className="bg-yellow-light mb-16 lg:mb-40">
+      {/* Below lg this is the phone design; mobile-shell caps each block to a
+          centred column so tablets get phone proportions, not stretched ones.
+          It is unlayered CSS, so its auto margins beat any margin utility on the
+          same element - the row gutter has to be padding, not mx-*. */}
+      <div className="pt-8 mobile-shell">
         <a
           href="/events"
-          className="flex w-fit mx-8 duration-200 hover:scale-108"
+          className="flex w-fit mx-4 lg:mx-8 duration-200 hover:scale-108"
         >
-          <ChevronLeft className="size-8" />
-          <h3 className="text-2xl mb-2">Back to Events</h3>
+          <ChevronLeft className="size-7 lg:size-8" />
+          <h3 className="text-xl lg:text-2xl mb-2">Back to Events</h3>
         </a>
 
-        <h2 className="text-[4.2rem] font-sans font-bold uppercase mx-10">
+        <h2 className="text-[2.8rem] lg:text-[4.2rem] font-sans font-bold uppercase mx-10 break-words">
           {event.title}
         </h2>
       </div>
 
-      <div className="flex flex-row gap-22 justify-center mx-16 -my-24 py-10">
+      <div className="mobile-shell flex flex-col items-center gap-6 px-7 lg:px-0 max-lg:mt-6 lg:flex-row lg:items-stretch lg:gap-22 lg:justify-center lg:mx-16 lg:-my-24 lg:py-10">
+        {/* Mobile only - the banner sits above the poster in the phone design */}
+        <div className="w-full lg:hidden">{signUpsOpenBanner}</div>
         {/* Left - Image and Details */}
-        <div className="pt-10 mt-24">
+        <div className="w-[72%] mx-auto lg:w-96 lg:mx-0 lg:pt-10 lg:mt-24">
           <ImageBlock
             pageKey={event.imageUrl}
             alt={event.title}
@@ -168,13 +180,11 @@ const UpcomingEvent = ({ event }: { event: any }) => {
           />
         </div>
         {/* Right - Description & Form */}
-        <div className="flex flex-col w-full min-w-190 2xl:max-w-[48vw]">
-          {event.signUpStatus == "Open" && (
-            <h2 className="uppercase text-[3rem] text-center font-monospace font-medium mb-4">
-              Sign-ups Open!!
-            </h2>
-          )}
-          <div className="bg-white rounded-4xl px-18 pb-10 pt-10 shadow-[8px_8px] shadow-yellow-medium">
+        {/* The 760px floor only leaves room for the poster past ~1280; applying
+            it from lg squashed the poster to ~30px on iPad landscape. */}
+        <div className="flex flex-col w-full min-w-0 xl:min-w-190 2xl:max-w-[48vw]">
+          <div className="max-lg:hidden">{signUpsOpenBanner}</div>
+          <div className="bg-white rounded-3xl lg:rounded-4xl px-6 lg:px-10 xl:px-18 pb-8 pt-7 lg:pb-10 lg:pt-10 shadow-[6px_6px] lg:shadow-[8px_8px] shadow-yellow-medium">
             <div>
               {/* Top-left Back Button for Form Steps */}
               {event.signUpStatus == "Open" &&
@@ -197,7 +207,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
               {currentStep != 4 &&
                 event.signUpStatus == "Open" &&
                 !userSignedUp && (
-                  <div className="flex flex-row gap-16 justify-center mb-4">
+                  <div className="flex flex-row gap-8 lg:gap-16 justify-center mb-4">
                     <div className="flex flex-col gap-2 items-center">
                       <div
                         className={`${
@@ -211,7 +221,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                           currentStep == 1
                             ? "text-blue-medium"
                             : "text-gray-400"
-                        } font-alan-sans text-[0.8rem]!`}
+                        } font-alan-sans text-[0.7rem]! lg:text-[0.8rem]!`}
                       >
                         Event Info
                       </p>
@@ -229,7 +239,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                           currentStep == 2
                             ? "text-blue-medium"
                             : "text-gray-400"
-                        } font-alan-sans text-[0.8rem]!`}
+                        } font-alan-sans text-[0.7rem]! lg:text-[0.8rem]!`}
                       >
                         Details
                       </p>
@@ -247,7 +257,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                           currentStep == 3
                             ? "text-blue-medium"
                             : "text-gray-400"
-                        } font-alan-sans text-[0.8rem]!`}
+                        } font-alan-sans text-[0.7rem]! lg:text-[0.8rem]!`}
                       >
                         Confirmation
                       </p>
@@ -258,15 +268,27 @@ const UpcomingEvent = ({ event }: { event: any }) => {
               {/* Step 1: Event Info */}
               {currentStep === 1 && (
                 <div className="flex flex-col gap-8 font-alan-sans">
-                  <div className="flex flex-row mt-6 font-bold justify-between">
-                    <p className="text-[1rem]!">📆 {event.date}</p>
-                    {event.time != "" && (
-                      <p className="text-[1rem]!">🕑 {event.time}</p>
-                    )}
-                    <p className="text-[1rem]!">📍 {event.location}</p>
-                    <p className="text-[1rem]!">💰 ${event.price}</p>
+                  <div className="flex flex-col gap-3 mt-6 font-bold xl:flex-row xl:gap-0 xl:justify-between">
+                    <div className="flex flex-row justify-between gap-3 xl:contents">
+                      <p className="text-[0.95rem]! lg:text-[1rem]!">
+                        📆 {event.date}
+                      </p>
+                      {event.time != "" && (
+                        <p className="text-[0.95rem]! lg:text-[1rem]! text-right">
+                          🕑 {event.time}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex flex-row justify-between gap-3 xl:contents">
+                      <p className="text-[0.95rem]! lg:text-[1rem]!">
+                        📍 {event.location}
+                      </p>
+                      <p className="text-[0.95rem]! lg:text-[1rem]! text-right">
+                        💰 ${event.price}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-[1rem]! text-justify">
+                  <p className="text-[0.95rem]! lg:text-[1rem]! text-left lg:text-justify">
                     {reactStringReplace(
                       event.description,
                       "\n",
@@ -285,8 +307,8 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                   onSubmit={(e) => e.preventDefault()}
                   className="font-alan-sans flex flex-col gap-10"
                 >
-                  <div className="flex flex-row gap-8 justify-between">
-                    <div className="flex flex-col gap-1 w-[50%]">
+                  <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
+                    <div className="flex flex-col gap-1 w-full lg:w-[50%]">
                       <div>
                         <h2 className="text-lg font-bold">Group Buddy</h2>
                         <p className="text-xs! text-gray-400">
@@ -302,7 +324,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                         className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                       />
                     </div>
-                    <div className="flex flex-col gap-1 w-[50%]">
+                    <div className="flex flex-col gap-1 w-full lg:w-[50%]">
                       <div>
                         <div className="flex flex-row justify-between">
                           <h2 className="text-lg font-bold">
@@ -330,7 +352,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                     </div>
                   </div>
                   <div className="flex flex-col">
-                    <div className="flex flex-row justify-between w-[80%] py-2">
+                    <div className="flex flex-row justify-between w-full lg:w-[80%] py-2">
                       <h2 className="text-lg font-bold">Payment Information</h2>
                       <div className="bg-yellow-light rounded-full justify-center">
                         <p className="text-xs! font-bold px-2 pt-1.5">
@@ -338,7 +360,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                         </p>
                       </div>
                     </div>
-                    <div className="w-[80%]">
+                    <div className="w-full lg:w-[80%]">
                       {/* Almost but not quite same as Collapsible component, diff style */}
                       <button
                         onClick={() => setCardIsOpen(!cardIsOpen)}
@@ -355,7 +377,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                       </button>
                       <div
                         ref={cardContainerRef}
-                        className="border-yellow-dark border-2 rounded-xl px-8 py-8 mt-4"
+                        className="border-yellow-dark border-2 rounded-xl px-5 py-6 lg:px-8 lg:py-8 mt-4"
                         style={{ display: cardIsOpen ? "block" : "none" }}
                       >
                         <div className="flex flex-col gap-8">
@@ -373,8 +395,8 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                               className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                             />
                           </div>
-                          <div className="flex flex-row gap-12 pb-4">
-                            <div className="flex flex-col w-[50%]">
+                          <div className="flex flex-row gap-4 lg:gap-12 pb-4">
+                            <div className="flex flex-col min-w-0 w-[56%] lg:w-[50%]">
                               <h2 className="text-lg font-bold">Expiry Date</h2>
                               <input
                                 required
@@ -386,7 +408,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                                 className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                               />
                             </div>
-                            <div className="flex flex-col w-[50%]">
+                            <div className="flex flex-col min-w-0 w-[44%] lg:w-[50%]">
                               <div>
                                 <div className="flex flex-row justify-between">
                                   <h2 className="text-lg font-bold">
@@ -440,17 +462,17 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                     pageKey="mascot-small"
                     alt="Small Mascot"
                     style={{
-                      maxWidth: "20%",
+                      maxWidth: "min(9rem, 35%)",
                       height: "auto",
                       rotate: "-10deg",
                     }}
                     editable={true}
                   />
-                  <p className="mt-2 font-alan-sans text-[1rem]! text-center w-[70%]">
+                  <p className="mt-2 font-alan-sans text-[0.95rem]! lg:text-[1rem]! text-center w-[90%] lg:w-[70%]">
                     Thank you for signing up for this event, we look forward to
                     seeing you there!
                   </p>
-                  <p className="font-alan-sans text-[1rem]! text-center w-[80%]">
+                  <p className="font-alan-sans text-[0.95rem]! lg:text-[1rem]! text-center w-[90%] lg:w-[80%]">
                     You will receive a confirmation email once your spot has
                     been confirmed, so make sure to check your email {":)"}
                   </p>
@@ -518,12 +540,17 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                         className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                       >
                         {currentStep == 4 && (
-                          <a href="/Home" className="text-lg px-10">
+                          <a
+                            href="/Home"
+                            className="text-base lg:text-lg px-6 lg:px-10"
+                          >
                             Back Home {">"}
                           </a>
                         )}
                         {currentStep < 3 && (
-                          <p className="py-2 px-12">Continue {">"}</p>
+                          <p className="py-2 px-6 lg:px-12 text-[0.95rem]! lg:text-lg!">
+                            Continue {">"}
+                          </p>
                         )}
                       </button>
                     </div>
@@ -544,7 +571,7 @@ const UpcomingEvent = ({ event }: { event: any }) => {
                       }}
                       className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400 disabled:opacity-50"
                     >
-                      <p className="py-2 px-12">
+                      <p className="py-2 px-6 lg:px-12 text-[0.95rem]! lg:text-lg!">
                         {isSubmitting ? "Signing Up..." : "Sign Up!"}
                       </p>
                     </button>

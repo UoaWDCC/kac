@@ -5,7 +5,8 @@ import { getGalleryImages } from "../api/imageApi";
 import PastEventDetail from "./PastEventDetail";
 import UpcomingEvent from "./UpcomingEvent";
 
-type EventRecord = {
+export type EventRecord = {
+  _id: string;
   id: string;
   slug: string;
   title: string;
@@ -13,6 +14,9 @@ type EventRecord = {
   imageUrl: string;
   location: string;
   datetime: string;
+  capacity?: number;
+  releaseDatetime?: string;
+  price?: number;
   status?: string | null;
 };
 
@@ -31,7 +35,14 @@ const EventPageWrapper = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let active = true;
+
     const load = async () => {
+      setLoading(true);
+      setError(null);
+      setEvent(null);
+      setGalleryImages([]);
+
       if (!id) {
         setError("Event not found");
         setLoading(false);
@@ -39,26 +50,38 @@ const EventPageWrapper = () => {
       }
 
       try {
-        setLoading(true);
         const eventData: EventRecord = await getEventById(id);
+        if (!active) return;
         setEvent(eventData);
 
-        const now = new Date();
         const eventDateTime = new Date(eventData.datetime);
 
-        if (eventDateTime <= now) {
+        if (eventDateTime <= new Date()) {
           const year = eventDateTime.getFullYear();
           const images = await getGalleryImages(eventData.title, year);
+          if (!active) return;
           setGalleryImages(Array.isArray(images) ? images : []);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Event not found");
+        if (active) {
+          setError(
+            typeof err === "string"
+              ? err
+              : err instanceof Error
+                ? err.message
+                : "Event not found"
+          );
+        }
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
 
-    load();
+    void load();
+
+    return () => {
+      active = false;
+    };
   }, [id]);
 
   if (loading) return <div className="medium-content">Loading...</div>;
@@ -66,11 +89,15 @@ const EventPageWrapper = () => {
     return <div className="medium-content">{error ?? "Event not found"}</div>;
   }
 
+  if (event._id.toLowerCase() !== id?.toLowerCase()) {
+    return <div className="medium-content">Loading...</div>;
+  }
+
   const now = new Date();
   const eventDateTime = new Date(event.datetime);
 
   if (eventDateTime > now) {
-    return <UpcomingEvent event={event} />;
+    return <UpcomingEvent key={id} event={event} />;
   }
 
   return <PastEventDetail event={event} gallery={galleryImages} />;

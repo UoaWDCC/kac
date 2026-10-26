@@ -16,12 +16,8 @@ const paymentSchema = new Schema(
       required: true,
       enum: ["membership", "event_ticket"],
     },
-    // TODO: when events are implemented, eventId will reference the specific event being purchased
-    // eventId: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "Event",
-    //   default: null,
-    // },
+    eventId: { type: Schema.Types.ObjectId, ref: "Event", default: null },
+    ticketId: { type: Schema.Types.ObjectId, ref: "Ticket", default: null },
     amount: { type: Number, required: true }, // in cents
     currency: { type: String, required: true, default: "nzd" },
     status: {

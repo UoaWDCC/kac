@@ -1,29 +1,39 @@
 import type { AdminSection } from "../../pages/Admin.tsx";
 import MembersSection from "./MembersSection.tsx";
 import ResponsesSection from "./ResponseSection.tsx";
-import { Inbox, UserRoundCheck } from "lucide-react";
+import { CalendarDays, Inbox, UserRoundCheck } from "lucide-react";
+import EventSignupsSection from "./EventSignupsSection.tsx";
 
 type AdminDashboardProps = {
   activeSection: AdminSection;
 };
 
 export default function AdminDashboard({ activeSection }: AdminDashboardProps) {
-  const section =
-    activeSection === "members"
-      ? {
-          description:
-            "Search membership records, check payment year, and find student details quickly.",
-          icon: UserRoundCheck,
-          label: "Members",
-          title: "Member Details",
-        }
-      : {
-          description:
-            "Review contact form messages and reply to recent enquiries.",
-          icon: Inbox,
-          label: "Inbox",
-          title: "Contact Form Responses",
-        };
+  const sections = {
+    members: {
+      description:
+        "Search membership records, check payment year, and find student details quickly.",
+      icon: UserRoundCheck,
+      label: "Members",
+      title: "Member Details",
+    },
+    responses: {
+      description:
+        "Review contact form messages and reply to recent enquiries.",
+      icon: Inbox,
+      label: "Inbox",
+      title: "Contact Form Responses",
+    },
+    events: {
+      description:
+        "Review signups, manage the waitlist, and record attendance.",
+      icon: CalendarDays,
+      label: "Events",
+      title: "Event Sign Ups",
+    },
+  };
+
+  const section = sections[activeSection];
 
   const Icon = section.icon;
 
@@ -65,6 +75,8 @@ export default function AdminDashboard({ activeSection }: AdminDashboardProps) {
       {activeSection === "members" && <MembersSection />}
 
       {activeSection === "responses" && <ResponsesSection />}
+
+      {activeSection === "events" && <EventSignupsSection />}
     </main>
   );
 }

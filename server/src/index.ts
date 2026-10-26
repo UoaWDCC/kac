@@ -17,6 +17,7 @@ import contactRoutes from "./routes/contactRoutes";
 import ticketRoutes from "./routes/ticketRoutes";
 import userRoutes from "./routes/userRoutes";
 import { User } from "./model/user";
+import { Ticket } from "./model/ticket";
 
 // app config
 dotenv.config({ quiet: true });
@@ -136,8 +137,11 @@ app.use("/api/tickets", ticketRoutes);
 
 // Connect to MongoDB and start the server
 connectToMongo()
-  .then(() => {
+  .then(async () => {
     console.log("Connected to MongoDB");
+
+    await Ticket.createIndexes();
+
     app.listen(port, "0.0.0.0", () => {
       console.log(`Server application listening on port ${port}`);
     });

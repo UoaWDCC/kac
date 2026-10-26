@@ -67,9 +67,12 @@ export const handleWebhook: RequestHandler = async (req, res) => {
             `Membership payment succeeded for paymentIntentId ${paymentIntent.id}`
           );
         } else if (type === "event_ticket") {
-          // TODO: event ticket handling when Event/Ticket model exists
+          await Payment.findOneAndUpdate(
+            { stripePaymentIntentId: paymentIntent.id, status: "pending" },
+            { status: "succeeded", paidAt: new Date() }
+          );
           console.log(
-            `Event ticket payment received: ${paymentIntent.id} (handler pending)`
+            `Event ticket payment succeeded for paymentIntentId ${paymentIntent.id}`
           );
         } else {
           console.warn(

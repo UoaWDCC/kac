@@ -1,5 +1,14 @@
 import { useEffect, useState, useRef } from "react";
-import type { ChangeEvent, MouseEvent } from "react";
+import type { MouseEvent } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+  Elements,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
@@ -17,21 +26,41 @@ import createTicket, { getMyTicket } from "../api/ticketsApi";
 import type { TicketRecord } from "../api/ticketsApi";
 import type { EventRecord } from "./EventPageWrapper";
 import { useAuth } from "../auth/useAuth.ts";
+import api from "../api";
 
 import "../style/common.css";
 
 import { ImageBlock } from "../components/image_block/ImageBlock";
 
-const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? ""
+);
+
+const stripeElementOptions = {
+  style: {
+    base: {
+      fontSize: "15px",
+      fontFamily: "'Alan Sans', sans-serif",
+      color: "#2d3748",
+      "::placeholder": { color: "#a0aec0" },
+    },
+    invalid: { color: "#e53e3e" },
+  },
+};
+
+const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
   const { id } = useParams<{ id: string }>();
+  const stripe = useStripe();
+  const elements = useElements();
   const [currentStep, setCurrentStep] = useState(1);
-  const [cardIsOpen, setCardIsOpen] = useState(false);
+  const [cardIsOpen, setCardIsOpen] = useState(true);
   const formRef = useRef<HTMLFormElement | null>(null);
-  const cardContainerRef = useRef<HTMLDivElement | null>(null);
-  const expiryRef = useRef<HTMLInputElement | null>(null);
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardVerification, setCardVerification] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardComplete, setCardComplete] = useState({
+    number: false,
+    expiry: false,
+    cvc: false,
+  });
+  const completedPaymentId = useRef<string | null>(null);
   const [groupBuddy, setGroupBuddy] = useState("");
   const [dietaryRequirements, setDietaryRequirements] = useState("");
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -91,47 +120,6 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
     return () => window.clearInterval(clock);
   }, []);
 
-  const handleCardNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // Keep only digits, max 16, and insert spaces every 4 digits for readability
-    const digits = e.target.value.replace(/\D/g, "").slice(0, 16);
-    const parts = digits.match(/.{1,4}/g);
-    setCardNumber(parts ? parts.join(" ") : "");
-  };
-
-  const handleCardVerificationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // Also only digits, max 3 for CVC/CVV
-    const digits = e.target.value.replace(/\D/g, "").slice(0, 3);
-    setCardVerification(digits);
-  };
-
-  const handleCardExpiryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCardExpiry(e.target.value);
-    if (expiryRef.current) expiryRef.current.setCustomValidity("");
-  };
-
-  const validateExpiry = () => {
-    const val = expiryRef.current?.value ?? cardExpiry;
-    if (!val) {
-      expiryRef.current?.setCustomValidity("");
-      return true;
-    }
-
-    const exp = new Date(val);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    exp.setHours(0, 0, 0, 0);
-
-    if (Number.isNaN(exp.getTime()) || exp <= today) {
-      expiryRef.current?.setCustomValidity(
-        "Card has expired. Enter a valid expiry date."
-      );
-      return false;
-    }
-
-    expiryRef.current?.setCustomValidity("");
-    return true;
-  };
-
   if (!id || !sourceEvent)
     return <div className="medium-content">Event not found!</div>;
 
@@ -145,6 +133,29 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
   const ticketLoaded = currentRegistration !== null;
   const ticketLoadError = currentRegistration?.error ?? null;
   const userSignedUp = ticket !== null;
+  const requiresPayment = (sourceEvent.price ?? 0) > 0;
+
+  const validateDetails = () => {
+    if (!dietaryRequirements.trim()) {
+      setSubmitError("Please enter your dietary requirements, or N/A.");
+      return false;
+    }
+    if (requiresPayment && !completedPaymentId.current) {
+      if (!stripe || !elements) {
+        setSubmitError("Payment processor is not ready yet. Please try again.");
+        return false;
+      }
+      if (!cardComplete.number || !cardComplete.expiry || !cardComplete.cvc) {
+        setCardIsOpen(true);
+        setSubmitError(
+          "Please complete your card number, expiry date and CVC."
+        );
+        return false;
+      }
+    }
+    setSubmitError(null);
+    return true;
+  };
 
   const startsAt = new Date(sourceEvent.datetime).getTime();
   const releasesAt = sourceEvent.releaseDatetime
@@ -197,20 +208,8 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
       return;
     }
 
-    if (
-      !dietaryRequirements.trim() ||
-      !/^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$/.test(cardNumber) ||
-      !/^[0-9]{3}$/.test(cardVerification) ||
-      !cardExpiry ||
-      !validateExpiry()
-    ) {
+    if (!validateDetails()) {
       setCurrentStep(2);
-      setCardIsOpen(true);
-      toast.error("Check your dietary requirements and card details.");
-      window.setTimeout(() => {
-        validateExpiry();
-        formRef.current?.reportValidity();
-      }, 10);
       return;
     }
 
@@ -219,9 +218,43 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
     setIsSubmitting(true);
 
     try {
+      if (requiresPayment && !completedPaymentId.current) {
+        const { data } = await api.post<{
+          clientSecret: string;
+          paymentIntentId: string;
+          status: string;
+        }>("/payments/create-payment-intent", {
+          type: "event_ticket",
+          eventId: id,
+        });
+
+        if (data.status === "succeeded") {
+          completedPaymentId.current = data.paymentIntentId;
+        } else {
+          const cardNumberElement = elements?.getElement(CardNumberElement);
+          if (!stripe || !cardNumberElement) {
+            throw new Error(
+              "Card details are not ready. Please return to Details."
+            );
+          }
+          const { error, paymentIntent } = await stripe.confirmCardPayment(
+            data.clientSecret,
+            { payment_method: { card: cardNumberElement } }
+          );
+          if (error)
+            throw new Error(
+              error.message ?? "Payment failed. Please try again."
+            );
+          if (!paymentIntent || paymentIntent.status !== "succeeded") {
+            throw new Error("Payment has not been completed yet.");
+          }
+          completedPaymentId.current = paymentIntent.id;
+        }
+      }
+
       const saved = await createTicket(
         id,
-        "N/A",
+        completedPaymentId.current ?? "N/A",
         groupBuddy.trim() || "N/A",
         dietaryRequirements.trim()
       );
@@ -235,8 +268,15 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
       });
       setCurrentStep(4);
     } catch (error) {
-      const message =
-        typeof error === "string" ? error : "Could not save registration.";
+      const reason =
+        typeof error === "string"
+          ? error
+          : error instanceof Error
+            ? error.message
+            : "Could not save registration.";
+      const message = completedPaymentId.current
+        ? `Your payment was completed. ${reason} Retry to save your registration without paying again.`
+        : reason;
       setSubmitError(message);
       toast.error(message);
     } finally {
@@ -376,7 +416,7 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
                     )}
                     <p className="text-[1rem]!">📍 {event.location}</p>
                     <p className="text-[1rem]!">
-                      💰 {event.price != null ? "$" + event.price : "N/A"}
+                      💰 {requiresPayment ? "$" + event.price : "Free"}
                     </p>
                   </div>
                   <p className="text-[1rem]! text-justify">
@@ -392,11 +432,13 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
               )}
 
               {/* Step 2: Details */}
-              {currentStep === 2 && (
+              {/* Keep Stripe Elements mounted while reviewing confirmation. */}
+              {currentStep < 4 && !userSignedUp && (
                 <form
                   ref={formRef}
                   onSubmit={(e) => e.preventDefault()}
                   className="font-alan-sans flex flex-col gap-10"
+                  style={{ display: currentStep === 2 ? undefined : "none" }}
                 >
                   <div className="flex flex-row gap-8 justify-between">
                     <div className="flex flex-col gap-1 w-[50%]">
@@ -442,95 +484,121 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col">
-                    <div className="flex flex-row justify-between w-[80%] py-2">
-                      <h2 className="text-lg font-bold">Payment Information</h2>
-                      <div className="bg-yellow-light rounded-full justify-center">
-                        <p className="text-xs! font-bold px-2 pt-1.5">
-                          Required
+                  {requiresPayment && (
+                    <div className="flex flex-col">
+                      <div className="flex flex-row justify-between w-[80%] py-2">
+                        <h2 className="text-lg font-bold">
+                          Payment Information
+                        </h2>
+                        <div className="bg-yellow-light rounded-full justify-center">
+                          <p className="text-xs! font-bold px-2 pt-1.5">
+                            Required
+                          </p>
+                        </div>
+                      </div>
+                      <div className="w-[80%]">
+                        {/* Almost but not quite same as Collapsible component, diff style */}
+                        <button
+                          onClick={() => setCardIsOpen(!cardIsOpen)}
+                          type="button"
+                        >
+                          <div className="flex flex-row justify-between pb-2 border-l-0 border-r-0 border-t-0 border-b-yellow-dark border-2">
+                            <h2 className="w-full text-left">
+                              Please enter your card details
+                            </h2>
+                            <span>
+                              {cardIsOpen ? <ChevronUp /> : <ChevronDown />}
+                            </span>
+                          </div>
+                        </button>
+                        <div
+                          className="border-yellow-dark border-2 rounded-xl px-8 py-8 mt-4"
+                          style={{ display: cardIsOpen ? "block" : "none" }}
+                        >
+                          <div className="flex flex-col gap-8">
+                            <div>
+                              <h2 className="text-lg font-bold">Card Number</h2>
+                              <div className="w-full py-1 border-b-yellow-dark border-b-2">
+                                <CardNumberElement
+                                  options={stripeElementOptions}
+                                  onChange={(event) => {
+                                    setCardComplete((value) => ({
+                                      ...value,
+                                      number: event.complete,
+                                    }));
+                                    setSubmitError(
+                                      event.error?.message ?? null
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex flex-row gap-12 pb-4">
+                              <div className="flex flex-col w-[50%]">
+                                <h2 className="text-lg font-bold">
+                                  Expiry Date
+                                </h2>
+                                <div className="w-full py-1 border-b-yellow-dark border-b-2">
+                                  <CardExpiryElement
+                                    options={stripeElementOptions}
+                                    onChange={(event) => {
+                                      setCardComplete((value) => ({
+                                        ...value,
+                                        expiry: event.complete,
+                                      }));
+                                      setSubmitError(
+                                        event.error?.message ?? null
+                                      );
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex flex-col w-[50%]">
+                                <div>
+                                  <div className="flex flex-row justify-between">
+                                    <h2 className="text-lg font-bold">
+                                      CVC / CVV
+                                    </h2>
+                                  </div>
+                                </div>
+                                <div className="w-full py-1 border-b-yellow-dark border-b-2">
+                                  <CardCvcElement
+                                    options={stripeElementOptions}
+                                    onChange={(event) => {
+                                      setCardComplete((value) => ({
+                                        ...value,
+                                        cvc: event.complete,
+                                      }));
+                                      setSubmitError(
+                                        event.error?.message ?? null
+                                      );
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-md! text-right py-4">
+                          Total:{" "}
+                          {event.price != null
+                            ? new Intl.NumberFormat("en-NZ", {
+                                style: "currency",
+                                currency: "NZD",
+                              }).format(event.price)
+                            : "N/A"}
                         </p>
                       </div>
                     </div>
-                    <div className="w-[80%]">
-                      {/* Almost but not quite same as Collapsible component, diff style */}
-                      <button
-                        onClick={() => setCardIsOpen(!cardIsOpen)}
-                        type="button"
-                      >
-                        <div className="flex flex-row justify-between pb-2 border-l-0 border-r-0 border-t-0 border-b-yellow-dark border-2">
-                          <h2 className="w-full text-left">
-                            Please enter your card details
-                          </h2>
-                          <span>
-                            {cardIsOpen ? <ChevronUp /> : <ChevronDown />}
-                          </span>
-                        </div>
-                      </button>
-                      <div
-                        ref={cardContainerRef}
-                        className="border-yellow-dark border-2 rounded-xl px-8 py-8 mt-4"
-                        style={{ display: cardIsOpen ? "block" : "none" }}
-                      >
-                        <div className="flex flex-col gap-8">
-                          <div>
-                            <h2 className="text-lg font-bold">Card Number</h2>
-                            <input
-                              required
-                              type="text"
-                              inputMode="numeric"
-                              autoComplete="cc-number"
-                              placeholder="0000 0000 0000 0000"
-                              value={cardNumber}
-                              onChange={handleCardNumberChange}
-                              pattern="[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}"
-                              className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
-                            />
-                          </div>
-                          <div className="flex flex-row gap-12 pb-4">
-                            <div className="flex flex-col w-[50%]">
-                              <h2 className="text-lg font-bold">Expiry Date</h2>
-                              <input
-                                required
-                                ref={expiryRef}
-                                type="date"
-                                value={cardExpiry}
-                                onChange={handleCardExpiryChange}
-                                placeholder="dd/mm/yy"
-                                className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
-                              />
-                            </div>
-                            <div className="flex flex-col w-[50%]">
-                              <div>
-                                <div className="flex flex-row justify-between">
-                                  <h2 className="text-lg font-bold">
-                                    CVC / CVV
-                                  </h2>
-                                </div>
-                              </div>
-                              <input
-                                required
-                                type="text"
-                                placeholder="000"
-                                pattern="[0-9]{3}"
-                                value={cardVerification}
-                                onChange={handleCardVerificationChange}
-                                className="w-full py-1 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-md! text-right py-4">
-                        Total:{" "}
-                        {event.price != null
-                          ? new Intl.NumberFormat("en-NZ", {
-                              style: "currency",
-                              currency: "NZD",
-                            }).format(event.price)
-                          : "N/A"}
-                      </p>
-                    </div>
-                  </div>
+                  )}
+                  {submitError && (
+                    <p
+                      role="alert"
+                      className="text-red-500 text-sm font-semibold"
+                    >
+                      {submitError}
+                    </p>
+                  )}
                 </form>
               )}
 
@@ -601,38 +669,11 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
                           }
                           if (!ticketLoaded || isSubmitting || userSignedUp)
                             return;
-                          validateExpiry();
                           if (currentStep === 2) {
                             if (
-                              formRef.current &&
-                              !formRef.current.checkValidity()
+                              !formRef.current?.reportValidity() ||
+                              !validateDetails()
                             ) {
-                              const firstInvalid =
-                                formRef.current.querySelector(
-                                  ":invalid"
-                                ) as HTMLInputElement | null;
-                              if (
-                                firstInvalid &&
-                                cardContainerRef.current &&
-                                cardContainerRef.current.contains(
-                                  firstInvalid
-                                ) &&
-                                !cardIsOpen
-                              ) {
-                                // Open the card so the invalid field becomes visible, then focus & show validation
-                                setCardIsOpen(true);
-                                setTimeout(() => {
-                                  try {
-                                    firstInvalid.focus();
-                                    firstInvalid.reportValidity();
-                                  } catch (e) {
-                                    formRef.current?.reportValidity();
-                                    console.error(e);
-                                  }
-                                }, 10);
-                                return;
-                              }
-                              formRef.current.reportValidity();
                               return;
                             }
                           }
@@ -666,18 +707,21 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
                   !ticketLoadError && (
                     <div className="w-full flex flex-col items-center justify-center">
                       {submitError && (
-                        <p className="text-red-500 text-sm font-semibold mb-2 text-center">
+                        <p
+                          role="alert"
+                          className="text-red-500 text-sm font-semibold mb-2 text-center"
+                        >
                           {submitError}
                         </p>
                       )}
                       <button
                         type="button"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || (requiresPayment && !stripe)}
                         onClick={handleSubmit}
                         className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                       >
                         <p className="py-2 px-12">
-                          {isSubmitting ? "Saving…" : "Sign Up!"}
+                          {isSubmitting ? "Processing…" : "Sign Up!"}
                         </p>
                       </button>
                     </div>
@@ -711,5 +755,11 @@ const UpcomingEvent = ({ event: sourceEvent }: { event: EventRecord }) => {
     </div>
   );
 };
+
+const UpcomingEvent = ({ event }: { event: EventRecord }) => (
+  <Elements stripe={stripePromise}>
+    <EventSignupForm event={event} />
+  </Elements>
+);
 
 export default UpcomingEvent;

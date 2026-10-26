@@ -1,9 +1,18 @@
 import mongoose, { ClientSession } from "mongoose";
+import Stripe from "stripe";
 import { Request, RequestHandler, Response } from "express";
 import { Ticket } from "../model/ticket";
 import { User } from "../model/user";
 import { Event } from "../model/event";
+import { Payment } from "../model/payment";
 import { AuthenticatedRequest } from "../middlewares/authUser";
+import {
+  EventPaymentError,
+  getEventTicketAmount,
+  verifyEventTicketPayment,
+} from "../util/eventPayment";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 class TicketError extends Error {
   status: number;
@@ -53,7 +62,7 @@ async function requestUser(req: Request) {
 }
 
 function ticketError(res: Response, error: unknown) {
-  if (error instanceof TicketError) {
+  if (error instanceof TicketError || error instanceof EventPaymentError) {
     res.status(error.status).json({ message: error.message });
   } else if (error instanceof mongoose.Error.ValidationError) {
     res.status(400).json({ message: error.message });
@@ -106,6 +115,18 @@ export const createTicket: RequestHandler = async (req, res) => {
       dietaryRequirements: text(body.dietaryRequirements),
     };
 
+    let intent: Stripe.PaymentIntent | null = null;
+    if (details.paymentID !== "N/A") {
+      try {
+        intent = await stripe.paymentIntents.retrieve(details.paymentID);
+      } catch {
+        throw new TicketError(
+          400,
+          "Could not verify payment. Please try again."
+        );
+      }
+    }
+
     const ticket = await withEventTransaction(eventId, async (session) => {
       const event = await Event.findById(eventId).session(session);
 
@@ -128,10 +149,39 @@ export const createTicket: RequestHandler = async (req, res) => {
       }).session(session);
 
       if (existing && existing.status !== "cancelled") {
+        if (intent && existing.paymentID === intent.id) return existing;
         throw new TicketError(
           409,
           "You are already registered for this event."
         );
+      }
+
+      const amount = getEventTicketAmount(event.price);
+      if (amount > 0 || intent) {
+        if (!intent) {
+          throw new TicketError(402, "Payment is required for this event.");
+        }
+        verifyEventTicketPayment(
+          intent,
+          event._id.toString(),
+          user.googleUid,
+          amount
+        );
+        const payment = await Payment.findOne({
+          stripePaymentIntentId: intent.id,
+          googleUid: user.googleUid,
+          eventId,
+          type: "event_ticket",
+          amount,
+          currency: "nzd",
+          ticketId: null,
+        }).session(session);
+        if (!payment) {
+          throw new TicketError(
+            409,
+            "Payment is missing or has already been used."
+          );
+        }
       }
 
       if (
@@ -177,6 +227,24 @@ export const createTicket: RequestHandler = async (req, res) => {
 
       registration.set(values);
       await registration.save({ session });
+
+      if (intent) {
+        const payment = await Payment.findOneAndUpdate(
+          { stripePaymentIntentId: intent.id, ticketId: null },
+          {
+            $set: {
+              userId: user._id,
+              ticketId: registration._id,
+              status: "succeeded",
+              paidAt: new Date(),
+            },
+          },
+          { session, new: true }
+        );
+        if (!payment) {
+          throw new TicketError(409, "This payment has already been used.");
+        }
+      }
 
       return registration;
     });

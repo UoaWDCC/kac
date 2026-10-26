@@ -8,6 +8,7 @@ export interface Event {
   description: string;
   datetime: string;
   capacity?: number;
+  price?: number;
   releaseDatetime?: string;
 }
 

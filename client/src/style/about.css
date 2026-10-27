@@ -502,8 +502,30 @@ button {
   column-gap: 4rem;
 }
 
-.past-execs-content p {
-  margin-bottom: 2rem;
+.past-execs-content ul,
+.past-execs-content ol {
+  display: block;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.past-execs-content li {
+  display: list-item;
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.past-execs-content li p {
+  display: inline;
+  margin: 0;
+}
+
+.past-execs-content {
+  display: block;
+}
+
+.past-execs-content ul li {
+  list-style-type: disc;
 }
 
 button.past-execs-edit-button {

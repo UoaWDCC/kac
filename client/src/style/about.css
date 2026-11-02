@@ -497,9 +497,8 @@ button {
 .past-execs-content {
   background-color: white;
   border-radius: 2rem;
-  padding: 4rem;
-  column-count: 2;
-  column-gap: 4rem;
+  padding: 2rem;
+  column-count: 1;
 }
 
 .past-execs-content ul,
@@ -512,7 +511,6 @@ button {
 .past-execs-content li {
   display: list-item;
   width: 100%;
-  margin-bottom: 0.25rem;
 }
 
 .past-execs-content li p {

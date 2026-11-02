@@ -1,5 +1,5 @@
 import type { AdminSection } from "../../pages/Admin.tsx";
-import { Inbox, UsersRound } from "lucide-react";
+import { CalendarDays, Inbox, UsersRound } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type AdminSidebarProps = {
@@ -14,6 +14,7 @@ export default function AdminSidebar({
   const navItems: { icon: LucideIcon; label: string; value: AdminSection }[] = [
     { icon: UsersRound, label: "Members", value: "members" },
     { icon: Inbox, label: "Form Responses", value: "responses" },
+    { icon: CalendarDays, label: "Events", value: "events" },
   ];
 
   return (

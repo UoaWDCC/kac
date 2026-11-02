@@ -4,7 +4,7 @@ import AdminDashboard from "../components/admin/AdminDashboard.tsx";
 import { AdminRoute } from "../auth/AdminRoute.tsx";
 import { useState } from "react";
 
-export type AdminSection = "members" | "responses";
+export type AdminSection = "members" | "responses" | "events";
 
 const Admin = () => {
   const [activeSection, setActiveSection] = useState<AdminSection>("members");

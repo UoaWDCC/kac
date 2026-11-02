@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../auth/useAuth";
 import RichTextEditor from "../RichTextEditor";
+import { purifyHtml } from "../../util/htmlFormat";
 
 interface PastExecsProps {
   content: string;
@@ -47,7 +48,7 @@ const PastExecsEditor = ({
           <>
             <div
               className="past-execs-content"
-              dangerouslySetInnerHTML={{ __html: content }}
+              dangerouslySetInnerHTML={{ __html: purifyHtml(content) }}
             />
 
             {role === "admin" && (

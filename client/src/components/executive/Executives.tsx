@@ -8,13 +8,13 @@ import NewExecModal from "./NewExecModal";
 import EditExecModal from "./EditExecModal";
 
 import ExecCard from "./ExecCard";
-import api from "../api";
-import { ImageBlock } from "./image_block/ImageBlock";
-import execPlaceholder from "../images/exec-placeholder.png";
+import api from "../../api";
+import { ImageBlock } from "../image_block/ImageBlock";
+import execPlaceholder from "../../images/exec-placeholder.png";
 
-import { useAuth } from "../auth/useAuth";
-import RichTextEditor from "./RichTextEditor";
-import { getContent, updateContent } from "../api/contentApi";
+import { useAuth } from "../../auth/useAuth";
+import RichTextEditor from "../RichTextEditor";
+import { getContent, updateContent } from "../../api/contentApi";
 
 interface Executive {
   id: string;

@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import "../style/common.css";
 import "../style/about.css";
 
-import { useAuth } from "../auth/useAuth";
-import { editExec } from "../api/execsApi";
+import { useAuth } from "../../auth/useAuth";
+import { editExec } from "../../api/execsApi";
 import ExecFormModal, {
   emptyExecFormValues,
   type ExecFormValues,
 } from "./ExecFormModal";
-import { postImage } from "../api/imageApi";
+import { postImage } from "../../api/imageApi";
 
 interface Executive {
   id: string;

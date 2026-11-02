@@ -4,13 +4,13 @@ import { Plus } from "lucide-react";
 import "../style/common.css";
 import "../style/about.css";
 
-import { useAuth } from "../auth/useAuth";
-import { createExec, deleteExec } from "../api/execsApi";
+import { useAuth } from "../../auth/useAuth";
+import { createExec, deleteExec } from "../../api/execsApi";
 import ExecFormModal, {
   emptyExecFormValues,
   type ExecFormValues,
 } from "./ExecFormModal";
-import { postImage } from "../api/imageApi";
+import { postImage } from "../../api/imageApi";
 
 interface ModalProps {
   onCreated?: () => void;

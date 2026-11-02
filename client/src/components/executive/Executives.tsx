@@ -12,9 +12,8 @@ import api from "../../api";
 import { ImageBlock } from "../image_block/ImageBlock";
 import execPlaceholder from "../../images/exec-placeholder.png";
 
-import { useAuth } from "../../auth/useAuth";
-import RichTextEditor from "../RichTextEditor";
 import { getContent, updateContent } from "../../api/contentApi";
+import PastExecsEditor from "./PastExecsEditor";
 
 interface Executive {
   id: string;
@@ -71,72 +70,6 @@ const normaliseRoleKey = (value?: string) =>
     .trim()
     .toLowerCase()
     .replace(/[\s_-]+/g, " ");
-
-// const EXEC_IMG = "exec-placeholder";
-
-interface PastExecsProps {
-  content: string;
-  onChange: (content: string) => void;
-  onSave: () => Promise<void>;
-}
-
-const PastExecsEditor = ({
-  content,
-  onChange,
-  onSave,
-}: Readonly<PastExecsProps>) => {
-  const { role } = useAuth();
-  const [editing, setEditing] = useState(false);
-
-  return (
-    <section className="exec-role-section">
-      <div className="past-execs-card">
-        <h2 className="exec-role-title font-monospace">OUR PAST EXECS:</h2>
-
-        {editing ? (
-          <>
-            <RichTextEditor value={content} onChange={onChange} />
-
-            <button
-              type="button"
-              className="past-execs-edit-button"
-              onClick={async () => {
-                try {
-                  await onSave();
-                  setEditing(false);
-                } catch (error) {
-                  console.error(
-                    "Failed to save past executives content: ",
-                    error
-                  );
-                }
-              }}
-            >
-              Save
-            </button>
-          </>
-        ) : (
-          <>
-            <div
-              className="past-execs-content"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-
-            {role === "admin" && (
-              <button
-                type="button"
-                className="past-execs-edit-button"
-                onClick={() => setEditing(true)}
-              >
-                Edit
-              </button>
-            )}
-          </>
-        )}
-      </div>
-    </section>
-  );
-};
 
 const Executives = () => {
   const [execs, setExecs] = useState<Executive[] | null>(null);

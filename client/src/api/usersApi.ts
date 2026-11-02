@@ -10,6 +10,11 @@ export async function updateCurrentMember(member: object) {
   return response.data;
 }
 
+export async function renewCurrentMembership(paymentIntentId: string) {
+  const response = await api.post("/users/me/renew", { paymentIntentId });
+  return response.data;
+}
+
 export async function fetchMembers() {
   const response = await api.get("/users");
   return response.data;

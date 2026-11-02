@@ -30,15 +30,25 @@ export const getContacts: RequestHandler = async (req, res) => {
 
 export const updateContact: RequestHandler = async (req, res) => {
   try {
-    const contact = await Contact.findByIdAndUpdate(
-      req.params.id,
-      {
-        email: req.body.email,
-        message: req.body.message,
-        name: req.body.name,
-      },
-      { new: true, runValidators: true }
-    );
+    const updates: Record<string, unknown> = {};
+
+    if (typeof req.body.name === "string") {
+      updates.name = req.body.name;
+    }
+    if (typeof req.body.email === "string") {
+      updates.email = req.body.email;
+    }
+    if (typeof req.body.message === "string") {
+      updates.message = req.body.message;
+    }
+    if (typeof req.body.resolved === "boolean") {
+      updates.resolved = req.body.resolved;
+    }
+
+    const contact = await Contact.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!contact) {
       res.status(404).json({ message: "Contact response not found" });

@@ -7,12 +7,7 @@ import kacoVector from "../images/kaco-vector.png";
 import SponsorCard from "../components/SponsorCard";
 import { useAuth } from "../auth/useAuth.ts";
 import { getSponsors } from "../api/sponsorsApi";
-import {
-  formatSponsorDeal,
-  formatSponsorLocation,
-  pickRandomSponsors,
-  type Sponsor,
-} from "../util/sponsors";
+import { pickRandomSponsors, type Sponsor } from "../util/sponsors";
 
 const FEATURED_SPONSOR_COUNT = 8;
 
@@ -266,8 +261,7 @@ const Home = () => {
                     <SponsorCard
                       compact
                       name={sponsor.name}
-                      description={formatSponsorDeal(sponsor)}
-                      location={formatSponsorLocation(sponsor)}
+                      description={sponsor.description}
                     />
                   </div>
                 ))}
@@ -286,8 +280,7 @@ const Home = () => {
                   <div key={sponsor.name} className="w-[15vw]">
                     <SponsorCard
                       name={sponsor.name}
-                      description={formatSponsorDeal(sponsor)}
-                      location={formatSponsorLocation(sponsor)}
+                      description={sponsor.description}
                     />
                   </div>
                 ))}

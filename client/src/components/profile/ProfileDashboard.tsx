@@ -2,6 +2,7 @@ import type { ProfileSection } from "../../pages/Profile.tsx";
 import { CalendarDays, ChevronRight, Images } from "lucide-react";
 import { useEffect, useState } from "react";
 import { fetchCurrentMember, updateCurrentMember } from "../../api/usersApi";
+import { getTicketsByUserId } from "../../api/ticketsApi";
 import { FACULTIES } from "../../constants/faculties";
 import {
   filterMemberFieldInput,
@@ -131,12 +132,32 @@ const getErrorMessage = (error: unknown) => {
   return "Something went wrong.";
 };
 
-const attendedEvents = [
-  "Event Name Here",
-  "Event Name Here",
-  "Event Name Here",
-  "Event Name Here",
-];
+type TicketEvent = {
+  _id: string;
+  title: string;
+  datetime?: string;
+  location?: string;
+  imageUrl?: string;
+};
+
+type UserTicket = {
+  _id: string;
+  userID: string;
+  eventID: TicketEvent | null;
+  paymentID?: string;
+  groupBuddy?: string;
+  dietaryRequirements?: string;
+  createdAt?: string;
+};
+
+const formatEventDate = (datetime?: string) => {
+  if (!datetime) return "";
+  const d = new Date(datetime);
+  if (Number.isNaN(d.getTime())) return "";
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  return `${day}/${month}`;
+};
 
 export default function ProfileDashboard({
   activeSection,
@@ -146,9 +167,27 @@ export default function ProfileDashboard({
   const [form, setForm] = useState<ProfileForm>(emptyProfileForm);
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [tickets, setTickets] = useState<UserTicket[]>([]);
+  const [isTicketsLoading, setIsTicketsLoading] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
+    setIsTicketsLoading(true);
+
+    getTicketsByUserId()
+      .then((data: any) => {
+        if (isMounted && Array.isArray(data)) {
+          setTickets(data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load user tickets:", err);
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsTicketsLoading(false);
+        }
+      });
 
     const loadCurrentUser = async () => {
       try {
@@ -342,56 +381,143 @@ export default function ProfileDashboard({
         </section>
       )}
 
-      {activeSection === "attended" && (
-        <section className="rounded-[1.35rem] bg-white px-8 py-10 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:px-12 lg:min-h-[31rem]">
-          <h2 className="mb-9 mt-0 font-sans text-2xl font-bold text-blue-medium">
-            Events I have attended
-          </h2>
+      {activeSection === "attended" &&
+        (() => {
+          const now = new Date();
+          const validTickets = tickets.filter(
+            (t) => t.eventID && typeof t.eventID === "object"
+          );
+          const upcomingTickets = validTickets.filter((t) => {
+            if (!t.eventID?.datetime) return true;
+            const d = new Date(t.eventID.datetime);
+            return Number.isNaN(d.getTime()) || d > now;
+          });
+          const pastTickets = validTickets.filter((t) => {
+            if (!t.eventID?.datetime) return false;
+            const d = new Date(t.eventID.datetime);
+            return !Number.isNaN(d.getTime()) && d <= now;
+          });
+          const pastByYear = pastTickets.reduce(
+            (acc: Record<string, UserTicket[]>, t) => {
+              const d = new Date(t.eventID!.datetime!);
+              const year = String(d.getFullYear());
+              if (!acc[year]) acc[year] = [];
+              acc[year].push(t);
+              return acc;
+            },
+            {}
+          );
+          const sortedYears = Object.keys(pastByYear).sort((a, b) =>
+            b.localeCompare(a)
+          );
 
-          <div className="font-alan-sans text-blue-medium">
-            <h3 className="mb-4 mt-0 text-base font-bold">Upcoming:</h3>
-            <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
-              <EventLabel icon={CalendarDays} name="Event Name Here" />
-              <span className="flex items-center text-base font-semibold text-yellow-dark">
-                view details
-                <ChevronRight aria-hidden="true" className="ml-1 h-4 w-4" />
-              </span>
-            </div>
+          return (
+            <section className="rounded-[1.35rem] bg-white px-8 py-10 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:px-12 lg:min-h-[31rem]">
+              <h2 className="mb-9 mt-0 font-sans text-2xl font-bold text-blue-medium">
+                Events I have attended
+              </h2>
 
-            <h3 className="mb-4 mt-10 text-xl font-bold">2026:</h3>
-            <div className="grid gap-4">
-              {attendedEvents.map((eventName, index) => (
-                <div
-                  className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center"
-                  key={`${eventName}-${index}`}
-                >
-                  <EventLabel icon={Images} name={eventName} />
-                  <span className="flex items-center text-base font-semibold text-yellow-dark">
-                    view photos
-                    <ChevronRight aria-hidden="true" className="ml-1 h-4 w-4" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+              <div className="font-alan-sans text-blue-medium">
+                <h3 className="mb-4 mt-0 text-base font-bold">Upcoming:</h3>
 
-          <div className="mt-12 flex justify-center">
-            <button className="button" type="button">
-              Load more
-            </button>
-          </div>
-        </section>
-      )}
+                {isTicketsLoading ? (
+                  <p className="text-sm font-semibold text-grey-medium italic">
+                    Loading events...
+                  </p>
+                ) : upcomingTickets.length === 0 ? (
+                  <p className="text-sm font-semibold text-grey-medium italic">
+                    No upcoming events signed up for yet.
+                  </p>
+                ) : (
+                  <div className="grid gap-4">
+                    {upcomingTickets.map((ticket) => {
+                      const event = ticket.eventID!;
+                      return (
+                        <div
+                          className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center"
+                          key={ticket._id}
+                        >
+                          <EventLabel
+                            date={formatEventDate(event.datetime)}
+                            icon={CalendarDays}
+                            name={event.title}
+                          />
+                          <a
+                            className="flex items-center text-base font-semibold text-yellow-dark hover:underline"
+                            href={`/events/${event._id}`}
+                          >
+                            view details
+                            <ChevronRight
+                              aria-hidden="true"
+                              className="ml-1 h-4 w-4"
+                            />
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {sortedYears.map((year) => (
+                  <div key={year}>
+                    <h3 className="mb-4 mt-10 text-xl font-bold">{year}:</h3>
+                    <div className="grid gap-4">
+                      {pastByYear[year].map((ticket) => {
+                        const event = ticket.eventID!;
+                        return (
+                          <div
+                            className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center"
+                            key={ticket._id}
+                          >
+                            <EventLabel
+                              date={formatEventDate(event.datetime)}
+                              icon={Images}
+                              name={event.title}
+                            />
+                            <a
+                              className="flex items-center text-base font-semibold text-yellow-dark hover:underline"
+                              href={`/events/${event._id}`}
+                            >
+                              view photos
+                              <ChevronRight
+                                aria-hidden="true"
+                                className="ml-1 h-4 w-4"
+                              />
+                            </a>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+
+                {!isTicketsLoading &&
+                  upcomingTickets.length === 0 &&
+                  pastTickets.length === 0 && (
+                    <div className="mt-8">
+                      <a
+                        className="button inline-block text-center"
+                        href="/events"
+                      >
+                        Explore Events &gt;
+                      </a>
+                    </div>
+                  )}
+              </div>
+            </section>
+          );
+        })()}
     </main>
   );
 }
 
 type EventLabelProps = {
+  date?: string;
   icon: typeof CalendarDays;
   name: string;
 };
 
-function EventLabel({ icon: Icon, name }: EventLabelProps) {
+function EventLabel({ icon: Icon, name, date }: EventLabelProps) {
   return (
     <div className="flex min-w-0 items-center gap-2">
       <Icon
@@ -402,9 +528,11 @@ function EventLabel({ icon: Icon, name }: EventLabelProps) {
       <span className="truncate text-base font-semibold text-blue-medium">
         {name}
       </span>
-      <span className="shrink-0 text-[0.7rem] font-semibold text-grey-medium">
-        (DD/MM)
-      </span>
+      {date ? (
+        <span className="shrink-0 text-[0.7rem] font-semibold text-grey-medium">
+          ({date})
+        </span>
+      ) : null}
     </div>
   );
 }

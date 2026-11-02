@@ -217,12 +217,7 @@ const Executives = () => {
                 pageKey={selectedExec.imageURL}
                 alt={selectedExec.displayName}
                 fallbackSrc={execPlaceholder}
-                style={{
-                  flex: 1,
-                  borderRadius: "2rem",
-                  height: "100%",
-                  maxHeight: "64vh",
-                }}
+                className="exec-preview-dialog__image"
                 editable={false}
                 onImageUpdated={() => setImageVersion((version) => version + 1)}
               />

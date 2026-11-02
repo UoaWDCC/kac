@@ -1,29 +1,17 @@
 import express from "express";
-import { Sponsor } from "../model/sponsors";
+import {
+  createSponsor,
+  deleteSponsor,
+  getSponsors,
+  updateSponsor,
+} from "../controllers/sponsorController";
+import { adminGuard } from "../middlewares/adminGuard";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  const sponsor = await Sponsor.create(req.body);
-  res.json(sponsor);
-});
-
-router.get("/", async (req, res) => {
-  const sponsors = await Sponsor.find().lean();
-  res.json(sponsors);
-});
-
-router.put("/:id", async (req, res) => {
-  const updated = await Sponsor.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    lean: true,
-  });
-  res.json(updated);
-});
-
-router.delete("/:id", async (req, res) => {
-  await Sponsor.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
-});
+router.post("/", adminGuard, createSponsor);
+router.get("/", getSponsors);
+router.put("/:id", adminGuard, updateSponsor);
+router.delete("/:id", adminGuard, deleteSponsor);
 
 export default router;

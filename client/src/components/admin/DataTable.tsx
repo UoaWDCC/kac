@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -28,6 +28,7 @@ type DataTableProps<TData extends object> = {
   getRowId?: (row: TData, index: number) => string;
   isLoading?: boolean;
   searchPlaceholder: string;
+  showUnresolvedButton?: ReactNode;
 };
 
 const pageSizeOptions = [3, 10, 20, 50];
@@ -41,6 +42,7 @@ export default function DataTable<TData extends object>({
   getRowId,
   isLoading = false,
   searchPlaceholder,
+  showUnresolvedButton,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -90,7 +92,9 @@ export default function DataTable<TData extends object>({
       case "actions":
         return "w-[12%]";
       case "message":
-        return "w-[50%]";
+        return "w-[45%]";
+      case "status":
+        return "w-[9%]";
       case "received":
         return "w-[16%]";
       default:
@@ -129,7 +133,8 @@ export default function DataTable<TData extends object>({
           ) : null}
         </label>
 
-        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
+          {showUnresolvedButton}
           <span className="inline-flex h-10 items-center rounded-md border border-slate-200 bg-white px-3">
             {totalRows} {totalRows === 1 ? "record" : "records"}
           </span>
@@ -158,7 +163,7 @@ export default function DataTable<TData extends object>({
 
       <div>
         <table className="hidden w-full table-fixed border-collapse text-left text-sm lg:table">
-          <thead className="bg-slate-50 text-xs uppercase tracking-normal text-slate-600">
+          <thead className="bg-slate-50 text-xs tracking-normal text-slate-600">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import SponsorCard from "../components/SponsorCard";
 import { getSponsors } from "../api/sponsorsApi";
+import { useAuth } from "../auth/useAuth";
+import EditSponsorModal from "../components/EditSponsorModal";
+import NewSponsorModal from "../components/NewSponsorModal";
 import "../style/sponsors.css";
 import { ImageBlock } from "../components/image_block/ImageBlock";
 import PageTitle from "../components/PageTitle";
 import {
   dedupeSponsorsByName,
-  formatSponsorDeal,
-  formatSponsorLocation,
   sponsorPageKey,
   type Sponsor,
 } from "../util/sponsors";
@@ -27,17 +28,30 @@ const getDefaultTab = (): Tab => {
 };
 
 const Sponsors = () => {
+  const { role } = useAuth();
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>(getDefaultTab);
+  const [editingSponsor, setEditingSponsor] = useState<
+    (Sponsor & { _id: string }) | null
+  >(null);
+  const [imageVersion, setImageVersion] = useState(0);
+
+  const loadSponsors = useCallback(async () => {
+    try {
+      const data = await getSponsors();
+      setSponsors(data);
+    } catch (err) {
+      console.error("Error loading sponsors:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    getSponsors()
-      .then((data) => setSponsors(data))
-      .catch((err) => console.error("Error loading sponsors:", err))
-      .finally(() => setLoading(false));
-  }, []);
+    void loadSponsors();
+  }, [loadSponsors]);
 
   if (loading) {
     return (
@@ -75,11 +89,11 @@ const Sponsors = () => {
       <div className="sponsors-marquee-shell">
         <div className="sponsors-marquee-track-wrap">
           <div className="sponsors-marquee-track">
-            {marqueeSponsors.map((s, i) => {
+            {marqueeSponsors.map((s, index) => {
               const pageKey = sponsorPageKey(s.name);
               return (
                 <div
-                  key={i}
+                  key={index}
                   style={{
                     backgroundColor: "#ffffff",
                     borderRadius: "15px",
@@ -146,7 +160,7 @@ const Sponsors = () => {
           <div className="sponsors-search-wrap">
             <input
               type="text"
-              placeholder="Search for your favourite sponsors..."
+              placeholder="Search For Your Favourite Sponsors...!"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="sponsors-search-input"
@@ -191,7 +205,7 @@ const Sponsors = () => {
                     className="sponsors-tab-pill"
                     style={{
                       position: "absolute",
-                      inset: "2px",
+                      inset: "0",
                       borderRadius: "999px",
                       backgroundColor: "var(--color-yellow-dark)",
                       zIndex: 0,
@@ -203,6 +217,8 @@ const Sponsors = () => {
           </div>
         </section>
 
+        {role === "admin" && <NewSponsorModal onCreated={loadSponsors} />}
+
         {/* CBD */}
         {(activeTab === "all" || activeTab === "cbd") && cbd.length > 0 && (
           <section id="cbd">
@@ -212,8 +228,13 @@ const Sponsors = () => {
                 <SponsorCard
                   key={s.name}
                   name={s.name}
-                  description={formatSponsorDeal(s)}
-                  location={formatSponsorLocation(s)}
+                  description={s.description}
+                  sponsorId={s._id}
+                  imageVersion={imageVersion}
+                  onEdit={() => {
+                    if (s._id) setEditingSponsor({ ...s, _id: s._id });
+                  }}
+                  onDelete={loadSponsors}
                 />
               ))}
             </div>
@@ -230,8 +251,13 @@ const Sponsors = () => {
                   <SponsorCard
                     key={s.name}
                     name={s.name}
-                    description={formatSponsorDeal(s)}
-                    location={formatSponsorLocation(s)}
+                    description={s.description}
+                    sponsorId={s._id}
+                    imageVersion={imageVersion}
+                    onEdit={() => {
+                      if (s._id) setEditingSponsor({ ...s, _id: s._id });
+                    }}
+                    onDelete={loadSponsors}
                   />
                 ))}
               </div>
@@ -247,8 +273,13 @@ const Sponsors = () => {
                 <SponsorCard
                   key={index}
                   name={s.name}
-                  description={formatSponsorDeal(s)}
-                  location={formatSponsorLocation(s)}
+                  description={s.description}
+                  sponsorId={s._id}
+                  imageVersion={imageVersion}
+                  onEdit={() => {
+                    if (s._id) setEditingSponsor({ ...s, _id: s._id });
+                  }}
+                  onDelete={loadSponsors}
                 />
               ))}
             </div>
@@ -260,6 +291,17 @@ const Sponsors = () => {
           <p className="sponsors-empty-state">No sponsors found.</p>
         )}
       </div>
+
+      {editingSponsor && (
+        <EditSponsorModal
+          sponsor={editingSponsor}
+          onClose={() => setEditingSponsor(null)}
+          onEdited={() => {
+            void loadSponsors();
+            setImageVersion((version) => version + 1);
+          }}
+        />
+      )}
     </div>
   );
 };

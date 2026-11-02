@@ -14,6 +14,7 @@ interface ImageData {
 
 interface ImageBlockProps {
   pageKey: string;
+  className?: string;
   style?: React.CSSProperties;
   alt: string;
   editable?: boolean;
@@ -23,6 +24,7 @@ interface ImageBlockProps {
 
 export function ImageBlock({
   pageKey,
+  className,
   style,
   alt,
   editable,
@@ -58,7 +60,10 @@ export function ImageBlock({
 
   return (
     <>
-      <div className="image-block" style={style}>
+      <div
+        className={className ? `image-block ${className}` : "image-block"}
+        style={style}
+      >
         <img
           src={imageData?.signedUrl ?? fallbackSrc ?? placeholder}
           alt={alt}

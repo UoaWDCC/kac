@@ -7,10 +7,8 @@ export function getSponsors() {
 
 export function createSponsor(sponsor: {
   name: string;
-  deal: string;
-  address: string;
+  description: string;
   category: "cbd" | "newmarket" | "other";
-  code?: string;
 }) {
   const res = api.post("/sponsors", sponsor);
   return res.then((response) => response.data);
@@ -20,10 +18,8 @@ export function updateSponsor(
   id: string,
   sponsor: Partial<{
     name: string;
-    deal: string;
-    address: string;
+    description: string;
     category: "cbd" | "newmarket" | "other";
-    code?: string;
   }>
 ) {
   const res = api.put(`/sponsors/${id}`, sponsor);

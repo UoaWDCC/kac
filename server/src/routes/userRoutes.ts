@@ -4,6 +4,7 @@ import {
   deleteUser,
   getCurrentUser,
   getUsers,
+  renewCurrentUser,
   updateCurrentUser,
   updateUser,
 } from "../controllers/userController";
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.get("/me", getCurrentUser);
 router.put("/me", updateCurrentUser);
+router.post("/me/renew", renewCurrentUser);
 router.get("/", adminGuard, getUsers);
 router.put("/:id", adminGuard, updateUser);
 router.delete("/:id", adminGuard, deleteUser);

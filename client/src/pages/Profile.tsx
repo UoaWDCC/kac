@@ -26,7 +26,7 @@ const Profile = () => {
         <div className="relative z-10 w-full pb-16">
           {/** Title **/}
           <PageTitle title="MY PROFILE" />
-          <div className="mb-40 px-4 py-6 sm:px-6 lg:px-8 flex justify-center items-center">
+          <div className="mb-40 px-4 py-6 sm:px-6 lg:px-8 flex justify-center items-start">
             <div className="grid w-full max-w-240 gap-8 lg:grid-cols-[18.5rem_minmax(0,1fr)] lg:items-start lg:gap-14">
               <ProfileSidebar
                 activeSection={activeSection}

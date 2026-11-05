@@ -30,3 +30,12 @@ export const deleteImagesByTag = async (tag: string): Promise<number> => {
 
   return failedDeletes;
 };
+
+export const renameImagesByTag = async (
+  fromTag: string,
+  toTag: string
+): Promise<void> => {
+  if (fromTag === toTag) return;
+
+  await Image.updateMany({ tag: fromTag }, { $set: { tag: toTag } });
+};

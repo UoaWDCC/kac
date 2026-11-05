@@ -1,5 +1,5 @@
 import type { AdminSection } from "../../pages/Admin.tsx";
-import { Inbox, UsersRound } from "lucide-react";
+import { CalendarDays, Inbox, UsersRound } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type AdminSidebarProps = {
@@ -14,10 +14,11 @@ export default function AdminSidebar({
   const navItems: { icon: LucideIcon; label: string; value: AdminSection }[] = [
     { icon: UsersRound, label: "Members", value: "members" },
     { icon: Inbox, label: "Form Responses", value: "responses" },
+    { icon: CalendarDays, label: "Events", value: "events" },
   ];
 
   return (
-    <aside className="w-full shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:sticky lg:top-4 lg:w-64 lg:self-start">
+    <aside className="w-full shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:w-64 lg:self-start">
       <div className="border-b border-slate-100 bg-blue-medium px-4 py-4 text-white">
         <p className="text-xs font-semibold uppercase tracking-normal text-yellow-dark">
           KAC

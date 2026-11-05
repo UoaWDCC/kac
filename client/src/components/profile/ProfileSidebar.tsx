@@ -90,7 +90,7 @@ export default function ProfileSidebar({
   }, [imageUrl]);
 
   return (
-    <aside className="w-full shrink-0 rounded-[1.35rem] bg-white px-8 py-7 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:w-[18.5rem] lg:sticky lg:top-8 lg:self-start">
+    <aside className="w-full shrink-0 rounded-[1.35rem] bg-white px-8 py-7 shadow-[6px_6px_0_var(--color-yellow-medium)] sm:w-[18.5rem] lg:self-start">
       <div className="flex justify-center">
         <div className="relative h-45 w-45">
           <div className="h-full w-full overflow-hidden rounded-full bg-yellow-light ring-4 ring-yellow-medium">

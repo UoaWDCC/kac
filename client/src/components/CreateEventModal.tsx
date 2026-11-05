@@ -11,6 +11,7 @@ const emptyForm = {
   description: "",
   datetime: "",
   capacity: "",
+  price: "0",
   releaseDatetime: "",
 };
 
@@ -67,6 +68,7 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
       title,
       description,
       datetime: new Date(form.datetime).toISOString(),
+      price: Number(form.price),
     };
 
     if (form.releaseDatetime.trim() !== "") {
@@ -118,7 +120,7 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
           onMouseUp={handleOverlayMouseUp}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
         >
-          <div className="w-full max-w-md rounded-4xl bg-white p-10 shadow-[10px_10px] shadow-yellow-medium">
+          <div className="w-full max-w-md max-h-[calc(100vh-2rem)] overflow-y-auto rounded-4xl bg-white p-10 shadow-[10px_10px] shadow-yellow-medium">
             <h2 className="text-2xl font-bold text-blue-medium mb-6">
               New Event
             </h2>
@@ -173,6 +175,26 @@ export default function CreateEventModal({ onCreated }: CreateEventModalProps) {
                   onChange={handleChange}
                   className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                 />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label htmlFor="eventPrice" className="text-lg font-bold">
+                  Ticket Price (NZD)
+                </label>
+                <input
+                  id="eventPrice"
+                  required
+                  type="number"
+                  name="price"
+                  min={0}
+                  step="0.01"
+                  value={form.price}
+                  onChange={handleChange}
+                  className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
+                />
+                <span className="text-xs text-gray-400">
+                  Use 0 for a free event.
+                </span>
               </div>
 
               <div>

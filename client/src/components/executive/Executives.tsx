@@ -1,5 +1,5 @@
-import "../style/common.css";
-import "../style/about.css";
+import "../../style/common.css";
+import "../../style/about.css";
 
 import { useMemo, useEffect, useState } from "react";
 import { X } from "lucide-react";

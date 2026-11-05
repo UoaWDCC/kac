@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import "../style/common.css";
-import "../style/about.css";
+import "../../style/common.css";
+import "../../style/about.css";
 
 import { useAuth } from "../../auth/useAuth";
 import { editExec } from "../../api/execsApi";

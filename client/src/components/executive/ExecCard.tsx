@@ -1,5 +1,5 @@
-import "../style/common.css";
-import "../style/image_block/ImageBlock.css";
+import "../../style/common.css";
+import "../../style/image_block/ImageBlock.css";
 
 import { Pencil, Trash2 } from "lucide-react";
 

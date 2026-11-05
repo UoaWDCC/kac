@@ -14,6 +14,7 @@ import {
 import mockFaqs from "../placeholders/faqs.json";
 import { useAuth } from "../auth/useAuth";
 import PageTitle from "../components/PageTitle";
+import { renderAnswerHtml } from "../util/htmlFormat";
 
 interface Faq {
   question: string;
@@ -72,21 +73,6 @@ function parseFaqContent(content: string): Faq[] {
 
 function serializeFaqContent(faqs: Faq[]): string {
   return JSON.stringify(faqs, null, 2);
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function renderAnswerHtml(answer: string): string {
-  const containsHtml = /<[^>]+>/.test(answer);
-  if (containsHtml) return answer;
-  return escapeHtml(answer).replaceAll("\n", "<br />");
 }
 
 const Faq = () => {

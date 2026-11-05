@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc",
+    "test": "node --test -r ts-node/register tests/*.test.cjs",
     "start": "node build/index.js"
   },
   "keywords": [],

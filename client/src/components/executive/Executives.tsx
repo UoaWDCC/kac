@@ -1,5 +1,5 @@
-import "../style/common.css";
-import "../style/about.css";
+import "../../style/common.css";
+import "../../style/about.css";
 
 import { useMemo, useEffect, useState } from "react";
 import { X } from "lucide-react";
@@ -8,9 +8,12 @@ import NewExecModal from "./NewExecModal";
 import EditExecModal from "./EditExecModal";
 
 import ExecCard from "./ExecCard";
-import api from "../api";
-import { ImageBlock } from "./image_block/ImageBlock";
-import execPlaceholder from "../images/exec-placeholder.png";
+import api from "../../api";
+import { ImageBlock } from "../image_block/ImageBlock";
+import execPlaceholder from "../../images/exec-placeholder.png";
+
+import { getContent, updateContent } from "../../api/contentApi";
+import PastExecsEditor from "./PastExecsEditor";
 
 interface Executive {
   id: string;
@@ -60,10 +63,6 @@ const ROLE_GROUPS: RoleGroup[] = [
     id: "aesir-representative",
     label: "AESIR REPRESENTATIVE:",
   },
-  {
-    id: "past-exec",
-    label: "OUR PAST EXECS:",
-  },
 ];
 
 const normaliseRoleKey = (value?: string) =>
@@ -72,14 +71,13 @@ const normaliseRoleKey = (value?: string) =>
     .toLowerCase()
     .replace(/[\s_-]+/g, " ");
 
-// const EXEC_IMG = "exec-placeholder";
-
 const Executives = () => {
   const [execs, setExecs] = useState<Executive[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedExec, setSelectedExec] = useState<Executive | null>(null);
   const [editingExec, setEditingExec] = useState<Executive | null>(null);
   const [imageVersion, setImageVersion] = useState(0);
+  const [pastExecsContent, setPastExecsContent] = useState("");
 
   const loadExecs = async () => {
     try {
@@ -96,6 +94,25 @@ const Executives = () => {
   useEffect(() => {
     loadExecs();
   }, []);
+
+  const PAST_EXECS_CONTENT_ID = "past-execs";
+
+  useEffect(() => {
+    async function loadPastExecsContent() {
+      try {
+        const data = await getContent(PAST_EXECS_CONTENT_ID);
+        setPastExecsContent(data.content ?? "");
+      } catch (error) {
+        console.error("Error fetching past executives content:", error);
+      }
+    }
+
+    void loadPastExecsContent();
+  }, []);
+
+  const savePastExecsContent = async () => {
+    await updateContent(PAST_EXECS_CONTENT_ID, pastExecsContent);
+  };
 
   const groupedExecs = useMemo(() => {
     if (!execs) return [] as Array<[RoleGroup, Executive[]]>;
@@ -263,6 +280,12 @@ const Executives = () => {
       )}
 
       <NewExecModal onCreated={loadExecs} />
+
+      <PastExecsEditor
+        content={pastExecsContent}
+        onChange={setPastExecsContent}
+        onSave={savePastExecsContent}
+      />
     </div>
   );
 };

@@ -170,7 +170,7 @@ export default function ExecFormModal({
 
         <div className="flex justify-center pb-8">
           <button
-            className="cursor-pointer px-12 w-fit! h-10 rounded-3xl font-bold text-lg text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+            className="shadow-reveal-button cursor-pointer px-12 w-fit! h-10 rounded-3xl font-bold text-lg text-blue-medium hover:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
             type="button"
             onClick={onSubmit}
             disabled={isSubmitting}

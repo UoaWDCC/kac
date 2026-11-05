@@ -353,7 +353,7 @@ export default function DataTable<TData extends object>({
         <div className="admin-pagination">
           <button
             aria-label="Previous page"
-            className="admin-page-button"
+            className="inline-flex h-9 items-center gap-1 rounded-md border border-slate-300 bg-white px-3 text-slate-700 shadow-sm transition hover:enabled:!bg-blue-medium hover:enabled:text-white hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
             title="Previous page"
@@ -364,7 +364,7 @@ export default function DataTable<TData extends object>({
           </button>
           <button
             aria-label="Next page"
-            className="admin-page-button"
+            className="inline-flex h-9 items-center gap-1 rounded-md border border-slate-300 bg-white px-3 text-slate-700 shadow-sm transition hover:enabled:!bg-blue-medium hover:enabled:text-white hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!table.getCanNextPage()}
             onClick={() => table.nextPage()}
             title="Next page"

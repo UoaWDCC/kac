@@ -679,7 +679,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
                           }
                           setCurrentStep(Math.min(3, currentStep + 1));
                         }}
-                        className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                        className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
                       >
                         {currentStep == 4 && (
                           <a href="/" className="text-lg px-10">
@@ -699,33 +699,25 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
                     </div>
                   )}
                 {/* Handle form submission separately */}
-                {currentStep === 3 &&
-                  event.signUpStatus === "Open" &&
-                  hasAccount &&
-                  !userSignedUp &&
-                  ticketLoaded &&
-                  !ticketLoadError && (
-                    <div className="w-full flex flex-col items-center justify-center">
-                      {submitError && (
-                        <p
-                          role="alert"
-                          className="text-red-500 text-sm font-semibold mb-2 text-center"
-                        >
-                          {submitError}
-                        </p>
-                      )}
-                      <button
-                        type="button"
-                        disabled={isSubmitting || (requiresPayment && !stripe)}
-                        onClick={handleSubmit}
-                        className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
-                      >
-                        <p className="py-2 px-12">
-                          {isSubmitting ? "Processing…" : "Sign Up!"}
-                        </p>
-                      </button>
-                    </div>
-                  )}
+                {currentStep == 3 && (
+                  <div className="w-full flex flex-col items-center justify-center">
+                    {submitError && (
+                      <p className="text-red-500 text-sm font-semibold mb-2 text-center">
+                        {submitError}
+                      </p>
+                    )}
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={handleSubmit}
+                      className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400 disabled:opacity-50"
+                    >
+                      <p className="py-2 px-12">
+                        {isSubmitting ? "Signing Up..." : "Sign Up!"}
+                      </p>
+                    </button>
+                  </div>
+                )}
 
                 {/* Already Signed Up */}
                 {userSignedUp && currentStep !== 4 && (

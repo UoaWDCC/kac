@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 import { RequestHandler } from "express";
 import { Sponsor } from "../model/sponsors";
-import {
-  deleteImagesByTag,
-  renameImagesByTag,
-} from "../util/imageCleanup";
+import { deleteImagesByTag, renameImagesByTag } from "../util/imageCleanup";
 
 const sponsorCategories = ["cbd", "newmarket", "other"] as const;
 

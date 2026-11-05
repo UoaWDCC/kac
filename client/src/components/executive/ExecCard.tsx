@@ -3,11 +3,11 @@ import "../style/image_block/ImageBlock.css";
 
 import { Pencil, Trash2 } from "lucide-react";
 
-import { deleteExec } from "../api/execsApi";
-import { useAuth } from "../auth/useAuth";
+import { deleteExec } from "../../api/execsApi";
+import { useAuth } from "../../auth/useAuth";
 import { useState } from "react";
-import { ImageBlock } from "./image_block/ImageBlock";
-import execPlaceholder from "../images/exec-placeholder.png";
+import { ImageBlock } from "../image_block/ImageBlock";
+import execPlaceholder from "../../images/exec-placeholder.png";
 
 interface ExecProps {
   id: string;

@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import { RequestHandler } from "express";
 import { Sponsor } from "../model/sponsors";
-import { deleteImagesByTag } from "../util/imageCleanup";
+import {
+  deleteImagesByTag,
+  renameImagesByTag,
+} from "../util/imageCleanup";
 
 const sponsorCategories = ["cbd", "newmarket", "other"] as const;
 
@@ -123,6 +126,12 @@ export const updateSponsor: RequestHandler = async (req, res) => {
   }
 
   try {
+    const existingSponsor = await Sponsor.findById(req.params.id).lean();
+    if (!existingSponsor) {
+      res.status(404).json({ message: "Sponsor not found." });
+      return;
+    }
+
     const sponsor = await Sponsor.findByIdAndUpdate(req.params.id, data, {
       returnDocument: "after",
       runValidators: true,
@@ -131,6 +140,13 @@ export const updateSponsor: RequestHandler = async (req, res) => {
     if (!sponsor) {
       res.status(404).json({ message: "Sponsor not found." });
       return;
+    }
+
+    if (existingSponsor.name !== sponsor.name) {
+      await renameImagesByTag(
+        sponsorImageTag(existingSponsor.name),
+        sponsorImageTag(sponsor.name)
+      );
     }
 
     res.status(200).json(sponsor);

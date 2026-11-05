@@ -1,4 +1,4 @@
-import Executives from "../components/Executives.tsx";
+import Executives from "../components/executive/Executives.tsx";
 
 import "../style/common.css";
 import "../style/about.css";

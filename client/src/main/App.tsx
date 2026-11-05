@@ -6,7 +6,7 @@ import {
   Outlet,
   useLocation,
 } from "react-router-dom";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { AuthProvider } from "../auth/AuthProvider.tsx";
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
@@ -67,8 +67,9 @@ const Layout = () => {
   const { pathname } = useLocation();
 
   // Reset scroll position on every route change - BrowserRouter doesn't do
-  // this automatically the way a full-page navigation would.
-  useEffect(() => {
+  // this automatically the way a full-page navigation would. A layout effect
+  // runs before paint, so the new page never flashes at the old scroll offset.
+  useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 

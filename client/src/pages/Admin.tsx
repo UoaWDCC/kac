@@ -11,7 +11,7 @@ const Admin = () => {
 
   return (
     <AdminRoute>
-      <div className="min-h-screen bg-slate-100 px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-slate-100 px-4 pt-6 pb-40 text-slate-900 sm:px-6 lg:px-8">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 lg:flex-row">
           <AdminSidebar
             activeSection={activeSection}

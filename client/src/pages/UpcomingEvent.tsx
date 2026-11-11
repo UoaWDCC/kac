@@ -692,7 +692,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
                           }
                           setCurrentStep(Math.min(3, currentStep + 1));
                         }}
-                        className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                        className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium pointer-fine:hover:text-yellow-light active:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium pointer-fine:hover:shadow-gray-400"
                       >
                         {currentStep == 4 && (
                           <a
@@ -726,7 +726,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
                       type="button"
                       disabled={isSubmitting}
                       onClick={handleSubmit}
-                      className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400 disabled:opacity-50"
+                      className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium pointer-fine:hover:text-yellow-light active:text-yellow-light bg-yellow-dark! pointer-fine:hover:bg-blue-medium! active:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium pointer-fine:hover:shadow-gray-400 disabled:opacity-50"
                     >
                       <p className="py-2 px-6 lg:px-12 text-[0.95rem]! lg:text-lg!">
                         {isSubmitting ? "Signing Up..." : "Sign Up!"}

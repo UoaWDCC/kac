@@ -171,24 +171,39 @@ p {
   background-color: var(--color-blue-light);
 }
 
-.button:hover::before,
 .button:focus-visible::before,
-.button-navy:hover::before,
 .button-navy:focus-visible::before,
-.pill-button:not(:disabled):hover::before,
 .pill-button:focus-visible::before,
-.events-pill-button:hover::before,
 .events-pill-button:focus-visible::before,
-.events-more-button:not(:disabled):hover::before,
 .events-more-button:focus-visible::before,
-.admin-action-button:hover::before,
 .admin-action-button:focus-visible::before,
-.admin-modal-save-button:not(:disabled):hover::before,
 .admin-modal-save-button:focus-visible::before,
-.admin-modal-delete-button:not(:disabled):hover::before,
 .admin-modal-delete-button:focus-visible::before,
-.shadow-reveal-button:not(:disabled):hover::before,
 .shadow-reveal-button:focus-visible::before {
+  clip-path: circle(150% at 50% 100%);
+}
+
+/* Hover effects only on devices with a real hover-capable pointer. Touch
+   devices (and DevTools touch emulation, which reports a coarse pointer)
+   otherwise keep :hover stuck on the tapped button until something else is
+   tapped, leaving the fill permanently visible. */
+@media (hover: hover) and (pointer: fine) {
+  .button:hover::before,
+  .button-navy:hover::before,
+  .pill-button:not(:disabled):hover::before,
+  .events-pill-button:hover::before,
+  .events-more-button:not(:disabled):hover::before,
+  .admin-action-button:hover::before,
+  .admin-modal-save-button:not(:disabled):hover::before,
+  .admin-modal-delete-button:not(:disabled):hover::before,
+  .shadow-reveal-button:not(:disabled):hover::before {
+    clip-path: circle(150% at 50% 100%);
+  }
+}
+
+/* Touch devices get the same fill while the button is actually pressed, then
+   it clears on release. */
+.shadow-reveal-button:not(:disabled):active::before {
   clip-path: circle(150% at 50% 100%);
 }
 

@@ -15,6 +15,18 @@ const compressImageIfPossible = async (file: Express.Multer.File) => {
   let fileBuffer = file.buffer;
   let mimeType = file.mimetype;
   let originalName = file.originalname;
+  let width: number | null = null;
+  let height: number | null = null;
+
+  if (mimeType.startsWith("image/")) {
+    try {
+      const metadata = await sharp(file.buffer).metadata();
+      width = metadata.width ?? null;
+      height = metadata.height ?? null;
+    } catch (err) {
+      console.error("Error reading image dimensions with sharp:", err);
+    }
+  }
 
   if (mimeType.startsWith("image/") && !mimeType.includes("svg")) {
     try {
@@ -28,7 +40,7 @@ const compressImageIfPossible = async (file: Express.Multer.File) => {
       console.error("Error compressing image with sharp:", err);
     }
   }
-  return { fileBuffer, mimeType, originalName };
+  return { fileBuffer, mimeType, originalName, width, height };
 };
 
 const signedUrlExpirySeconds = 60 * 15;
@@ -58,6 +70,8 @@ const buildSignedImageResponse = async (image: any) => {
     originalName: image.originalName,
     mimeType: image.mimeType,
     size: image.size,
+    width: image.width,
+    height: image.height,
     s3Key: image.s3Key,
     uploadedAt: image.uploadedAt,
     tag: image.tag,
@@ -72,7 +86,7 @@ const replaceImageForTag = async (
 ) => {
   const existing = tag ? await Image.findOne({ tag }) : null;
 
-  const { fileBuffer, mimeType, originalName } =
+  const { fileBuffer, mimeType, originalName, width, height } =
     await compressImageIfPossible(file);
 
   const fileExtension = originalName.includes(".")
@@ -84,6 +98,8 @@ const replaceImageForTag = async (
     originalName: originalName,
     mimeType: mimeType,
     size: fileBuffer.length,
+    width,
+    height,
     s3Key,
     bucket: s3BucketName,
     tag,
@@ -170,7 +186,7 @@ export const uploadImage: RequestHandler = async (req, res) => {
       }
     }
 
-    const { fileBuffer, mimeType, originalName } =
+    const { fileBuffer, mimeType, originalName, width, height } =
       await compressImageIfPossible(req.file);
 
     const fileExtension = originalName.includes(".")
@@ -183,6 +199,8 @@ export const uploadImage: RequestHandler = async (req, res) => {
       originalName: originalName,
       mimeType: mimeType,
       size: fileBuffer.length,
+      width,
+      height,
       s3Key,
       bucket: s3BucketName,
       tag,
@@ -299,6 +317,8 @@ export const getGalleryImagesByTagAndYear: RequestHandler = async (
         return {
           id: image._id,
           originalName: image.originalName,
+          width: image.width,
+          height: image.height,
           uploadedAt: image.uploadedAt,
           signedUrl,
         };

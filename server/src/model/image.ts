@@ -8,6 +8,8 @@ const imageSchema = new Schema(
     originalName: { type: String, required: true },
     mimeType: { type: String, required: true },
     size: { type: Number, required: true },
+    width: { type: Number, default: null },
+    height: { type: Number, default: null },
     s3Key: { type: String, required: true, unique: true },
     bucket: { type: String, required: true },
     uploadedAt: { type: Date, default: Date.now },

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import type { MouseEvent } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   CardCvcElement,
@@ -48,7 +48,13 @@ const stripeElementOptions = {
   },
 };
 
-const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
+const EventSignupForm = ({
+  event: sourceEvent,
+  adminActions,
+}: {
+  event: EventRecord;
+  adminActions?: ReactNode;
+}) => {
   const { id } = useParams<{ id: string }>();
   const stripe = useStripe();
   const elements = useElements();
@@ -304,9 +310,12 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
           <h3 className="text-xl lg:text-2xl mb-2">Back to Events</h3>
         </a>
 
-        <h2 className="text-[2.8rem] lg:text-[4.2rem] font-sans font-bold uppercase mx-10 break-words">
-          {event.title}
-        </h2>
+        <div className="mx-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <h2 className="text-[2.8rem] lg:text-[4.2rem] font-sans font-bold uppercase break-words">
+            {event.title}
+          </h2>
+          {adminActions && <div className="shrink-0">{adminActions}</div>}
+        </div>
       </div>
 
       <div className="mobile-shell flex flex-col items-center gap-6 px-7 lg:px-0 max-lg:mt-6 lg:flex-row lg:items-stretch lg:gap-22 lg:justify-center lg:mx-16 lg:-my-24 lg:py-10">
@@ -767,9 +776,15 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
   );
 };
 
-const UpcomingEvent = ({ event }: { event: EventRecord }) => (
+const UpcomingEvent = ({
+  event,
+  adminActions,
+}: {
+  event: EventRecord;
+  adminActions?: ReactNode;
+}) => (
   <Elements stripe={stripePromise}>
-    <EventSignupForm event={event} />
+    <EventSignupForm event={event} adminActions={adminActions} />
   </Elements>
 );
 

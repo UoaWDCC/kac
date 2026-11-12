@@ -30,7 +30,8 @@ const eventSchema = new Schema(
       required: false,
       min: [1, "Capacity must be at least 1."],
       validate: {
-        validator: Number.isInteger,
+        validator: (capacity: number | null) =>
+          capacity == null || Number.isInteger(capacity),
         message: "Capacity must be a whole number.",
       },
     },

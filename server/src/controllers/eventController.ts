@@ -26,6 +26,52 @@ export const addEvent: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const updateEvent: RequestHandler = async (req, res, _next) => {
+  try {
+    const allowedFields = [
+      "title",
+      "description",
+      "datetime",
+      "price",
+      "capacity",
+      "releaseDatetime",
+      "registrationRequired",
+    ] as const;
+
+    const updates: Record<string, unknown> = {};
+    for (const field of allowedFields) {
+      if (field in req.body) {
+        updates[field] = req.body[field];
+      }
+    }
+
+    if ("status" in req.body) {
+      updates.status = normaliseStatus(req.body.status);
+    }
+
+    if ("registrationRequired" in req.body) {
+      updates.registrationRequired = req.body.registrationRequired !== false;
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, updates, {
+      returnDocument: "after",
+      runValidators: true,
+    }).lean();
+
+    if (!updatedEvent) {
+      return res.status(404).json({ message: "Event not found." });
+    }
+
+    res.status(200).json(updatedEvent);
+  } catch (err) {
+    console.error("[!] Error updating event: ", err);
+    res.status(500).json({
+      message: "Error updating event.",
+      error: err,
+    });
+  }
+};
+
 export const deleteEvent: RequestHandler = async (req, res, _next) => {
   try {
     const deletedEvent = await Event.findByIdAndDelete(req.params.id);

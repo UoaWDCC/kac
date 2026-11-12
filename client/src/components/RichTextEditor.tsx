@@ -31,7 +31,6 @@ const RichTextEditor = ({
     extensions: [
       StarterKit.configure({
         link: {
-          openOnClick: false,
           HTMLAttributes: {
             target: "_blank",
             rel: "noopener noreferrer",
@@ -75,12 +74,11 @@ const RichTextEditor = ({
       return;
     }
 
-    editor
-      .chain()
-      .focus()
-      .extendMarkRange("link")
-      .setLink({ href: trimmed })
-      .run();
+    const hasProtocol = /^[a-z][a-z0-9+.-]*:/i.test(trimmed);
+    const isRelative = trimmed.startsWith("/") || trimmed.startsWith("#");
+    const href = hasProtocol || isRelative ? trimmed : `https://${trimmed}`;
+
+    editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
   };
 
   return (

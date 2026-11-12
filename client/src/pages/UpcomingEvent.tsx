@@ -437,7 +437,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
                     </div>
                   </div>
                   <div
-                    className="text-[0.95rem]! lg:text-[1rem]! text-left lg:text-justify"
+                    className="text-[0.95rem]! lg:text-[1rem]! text-left lg:text-justify [&_a]:text-blue-medium [&_a]:underline [&_a]:underline-offset-2 [&_a]:break-words"
                     dangerouslySetInnerHTML={{
                       __html: renderAnswerHtml(event.description),
                     }}

@@ -19,6 +19,16 @@ html {
   background-color: var(--color-yellow-light);
 }
 
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-layout > main {
+  flex: 1 0 auto;
+}
+
 body {
   color: var(--color-blue-medium);
   font-family: var(--font-sans);

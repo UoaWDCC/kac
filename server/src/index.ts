@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import authRoutes from "./routes/authRoutes";
@@ -68,6 +69,10 @@ const connectToMongo = async () => {
   }
 };
 
+const mongoClientPromise = connectToMongo().then(() =>
+  mongoose.connection.getClient()
+);
+
 // CORS configuration
 const allowedOrigin = process.env.CLIENT_URL;
 
@@ -87,12 +92,25 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.set("trust proxy", 1);
 
 app.use(
   session({
     secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      clientPromise: mongoClientPromise,
+      collectionName: "sessions",
+      ttl: 14 * 24 * 60 * 60,
+      touchAfter: 24 * 3600,
+    }),
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+    },
   })
 );
 app.use(passport.initialize());
@@ -136,7 +154,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/tickets", ticketRoutes);
 
 // Connect to MongoDB and start the server
-connectToMongo()
+mongoClientPromise
   .then(async () => {
     console.log("Connected to MongoDB");
 

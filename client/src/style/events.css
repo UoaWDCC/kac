@@ -191,6 +191,41 @@
   outline-offset: 3px;
 }
 
+.events-pill-button--outline,
+.events-pill-button--danger {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.events-pill-button--outline::before,
+.events-pill-button--danger::before {
+  display: none;
+}
+
+.events-pill-button--outline {
+  border: 1px solid rgba(11, 45, 74, 0.35);
+  color: var(--color-blue-medium);
+}
+
+.events-pill-button--outline:hover,
+.events-pill-button--outline:focus-visible {
+  background-color: rgba(11, 45, 74, 0.08);
+  box-shadow: none;
+  color: var(--color-blue-medium);
+}
+
+.events-pill-button--danger {
+  border: 1px solid rgba(153, 27, 27, 0.45);
+  color: #991b1b;
+}
+
+.events-pill-button--danger:hover,
+.events-pill-button--danger:focus-visible {
+  background-color: rgba(153, 27, 27, 0.08);
+  box-shadow: none;
+  color: #7f1d1d;
+}
+
 .events-past-grid {
   display: grid;
   column-gap: 1.5rem;

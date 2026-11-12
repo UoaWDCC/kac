@@ -30,11 +30,13 @@ const eventSchema = new Schema(
       required: false,
       min: [1, "Capacity must be at least 1."],
       validate: {
-        validator: Number.isInteger,
+        validator: (capacity: number | null) =>
+          capacity == null || Number.isInteger(capacity),
         message: "Capacity must be a whole number.",
       },
     },
     registrationVersion: { type: Number, default: 0 },
+    registrationRequired: { type: Boolean, default: true }, // false for events with no website sign-up
     releaseDatetime: { type: Date, required: false }, // if unset, event is released immediately
   },
   { versionKey: false }

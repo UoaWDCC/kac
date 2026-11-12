@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import type { MouseEvent } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   CardCvcElement,
@@ -11,7 +11,7 @@ import {
 } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
-import reactStringReplace from "react-string-replace";
+import { renderAnswerHtml } from "../util/htmlFormat";
 
 import {
   LockKeyhole,
@@ -48,7 +48,13 @@ const stripeElementOptions = {
   },
 };
 
-const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
+const EventSignupForm = ({
+  event: sourceEvent,
+  adminActions,
+}: {
+  event: EventRecord;
+  adminActions?: ReactNode;
+}) => {
   const { id } = useParams<{ id: string }>();
   const stripe = useStripe();
   const elements = useElements();
@@ -67,6 +73,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
 
   const { hasAccount, user } = useAuth();
   const accountId = user?.id;
+  const registrationRequired = sourceEvent.registrationRequired !== false;
 
   const [registration, setRegistration] = useState<{
     eventId: string;
@@ -81,7 +88,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (!id || !hasAccount || !accountId) return;
+    if (!registrationRequired || !id || !hasAccount || !accountId) return;
     let active = true;
 
     getMyTicket(id)
@@ -113,7 +120,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
     return () => {
       active = false;
     };
-  }, [id, hasAccount, accountId, lookupRetry]);
+  }, [id, hasAccount, accountId, lookupRetry, registrationRequired]);
 
   useEffect(() => {
     const clock = window.setInterval(() => setNow(Date.now()), 30_000);
@@ -193,11 +200,12 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
           : "Closed",
   };
 
-  const signUpsOpenBanner = event.signUpStatus === "Open" && (
-    <h2 className="uppercase text-[1.6rem] lg:text-[3rem] text-center font-monospace font-medium mb-4">
-      Sign-ups Open!!
-    </h2>
-  );
+  const signUpsOpenBanner = registrationRequired &&
+    event.signUpStatus === "Open" && (
+      <h2 className="uppercase text-[1.6rem] lg:text-[3rem] text-center font-monospace font-medium mb-4">
+        Sign-ups Open!!
+      </h2>
+    );
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -302,9 +310,12 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
           <h3 className="text-xl lg:text-2xl mb-2">Back to Events</h3>
         </a>
 
-        <h2 className="text-[2.8rem] lg:text-[4.2rem] font-sans font-bold uppercase mx-10 break-words">
-          {event.title}
-        </h2>
+        <div className="mx-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <h2 className="text-[2.8rem] lg:text-[4.2rem] font-sans font-bold uppercase break-words">
+            {event.title}
+          </h2>
+          {adminActions && <div className="shrink-0">{adminActions}</div>}
+        </div>
       </div>
 
       <div className="mobile-shell flex flex-col items-center gap-6 px-7 lg:px-0 max-lg:mt-6 lg:flex-row lg:items-stretch lg:gap-22 lg:justify-center lg:mx-16 lg:-my-24 lg:py-10">
@@ -330,7 +341,8 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
           <div className="bg-white rounded-3xl lg:rounded-4xl px-6 lg:px-10 xl:px-18 pb-8 pt-7 lg:pb-10 lg:pt-10 shadow-[6px_6px] lg:shadow-[8px_8px] shadow-yellow-medium">
             <div>
               {/* Top-left Back Button for Form Steps */}
-              {event.signUpStatus == "Open" &&
+              {registrationRequired &&
+                event.signUpStatus == "Open" &&
                 !userSignedUp &&
                 currentStep > 1 &&
                 currentStep < 4 && (
@@ -348,7 +360,8 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
                   </div>
                 )}
               {/* Stepper Progress */}
-              {currentStep != 4 &&
+              {registrationRequired &&
+                currentStep != 4 &&
                 event.signUpStatus == "Open" &&
                 !userSignedUp && (
                   <div className="flex flex-row gap-8 lg:gap-16 justify-center mb-4">
@@ -432,21 +445,18 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
                       </p>
                     </div>
                   </div>
-                  <p className="text-[0.95rem]! lg:text-[1rem]! text-left lg:text-justify">
-                    {reactStringReplace(
-                      event.description,
-                      "\n",
-                      (_match, i) => (
-                        <br key={i} />
-                      )
-                    )}
-                  </p>
+                  <div
+                    className="text-[0.95rem]! lg:text-[1rem]! text-left lg:text-justify [&_a]:text-blue-medium [&_a]:underline [&_a]:underline-offset-2 [&_a]:break-words"
+                    dangerouslySetInnerHTML={{
+                      __html: renderAnswerHtml(event.description),
+                    }}
+                  />
                 </div>
               )}
 
               {/* Step 2: Details */}
               {/* Keep Stripe Elements mounted while reviewing confirmation. */}
-              {currentStep < 4 && !userSignedUp && (
+              {registrationRequired && currentStep < 4 && !userSignedUp && (
                 <form
                   ref={formRef}
                   onSubmit={(e) => e.preventDefault()}
@@ -616,7 +626,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
               )}
 
               {/* Step 3: Confirmation */}
-              {currentStep === 3 && (
+              {registrationRequired && currentStep === 3 && (
                 <div className="font-alan-sans">
                   <h3 className="text-lg font-bold my-6 border-b-2 border-b-yellow-dark">
                     Please Read Before Confirming:
@@ -628,7 +638,7 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
               )}
 
               {/* Step 4: Completion Message */}
-              {currentStep === 4 && userSignedUp && (
+              {registrationRequired && currentStep === 4 && userSignedUp && (
                 <div className="flex flex-col align-middle pt-6 pb-2 gap-4 items-center">
                   <ImageBlock
                     pageKey="mascot-small"
@@ -652,110 +662,112 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
                 </div>
               )}
 
-              <div className="flex flex-1 items-center justify-center">
-                {/* Opening Later - No form if sign-ups not open yet */}
-                {event.signUpStatus == "Waiting" && (
-                  <div className="flex flex-row gap-4 justify-center items-center mt-10">
-                    <LockKeyhole className="size-8" />
-                    <h2 className="uppercase text-2xl text-center">
-                      Sign-ups open on {event.dateSignOpen}
-                    </h2>
-                  </div>
-                )}
-                {/* Can Sign Up - Show form with continue button */}
-                {hasAccount &&
-                  ((currentStep === 4 && userSignedUp) ||
-                    (event.signUpStatus === "Open" &&
-                      !userSignedUp &&
-                      currentStep < 3)) && (
-                    <div className="w-full flex justify-center">
-                      <button
-                        type="button"
-                        disabled={
-                          currentStep !== 4 && (!ticketLoaded || isSubmitting)
-                        }
-                        onClick={() => {
-                          if (currentStep === 4) return;
-                          if (ticketLoadError) {
-                            setLookupRetry((value) => value + 1);
-                            return;
+              {registrationRequired && (
+                <div className="flex flex-1 items-center justify-center">
+                  {/* Opening Later - No form if sign-ups not open yet */}
+                  {event.signUpStatus == "Waiting" && (
+                    <div className="flex flex-row gap-4 justify-center items-center mt-10">
+                      <LockKeyhole className="size-8" />
+                      <h2 className="uppercase text-2xl text-center">
+                        Sign-ups open on {event.dateSignOpen}
+                      </h2>
+                    </div>
+                  )}
+                  {/* Can Sign Up - Show form with continue button */}
+                  {hasAccount &&
+                    ((currentStep === 4 && userSignedUp) ||
+                      (event.signUpStatus === "Open" &&
+                        !userSignedUp &&
+                        currentStep < 3)) && (
+                      <div className="w-full flex justify-center">
+                        <button
+                          type="button"
+                          disabled={
+                            currentStep !== 4 && (!ticketLoaded || isSubmitting)
                           }
-                          if (!ticketLoaded || isSubmitting || userSignedUp)
-                            return;
-                          if (currentStep === 2) {
-                            if (
-                              !formRef.current?.reportValidity() ||
-                              !validateDetails()
-                            ) {
+                          onClick={() => {
+                            if (currentStep === 4) return;
+                            if (ticketLoadError) {
+                              setLookupRetry((value) => value + 1);
                               return;
                             }
-                          }
-                          setCurrentStep(Math.min(3, currentStep + 1));
-                        }}
-                        className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
+                            if (!ticketLoaded || isSubmitting || userSignedUp)
+                              return;
+                            if (currentStep === 2) {
+                              if (
+                                !formRef.current?.reportValidity() ||
+                                !validateDetails()
+                              ) {
+                                return;
+                              }
+                            }
+                            setCurrentStep(Math.min(3, currentStep + 1));
+                          }}
+                          className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium pointer-fine:hover:text-yellow-light active:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium pointer-fine:hover:shadow-gray-400"
+                        >
+                          {currentStep == 4 && (
+                            <a
+                              href="/"
+                              className="text-base lg:text-lg px-6 lg:px-10"
+                            >
+                              Back Home {">"}
+                            </a>
+                          )}
+                          {currentStep < 3 && (
+                            <p className="py-2 px-6 lg:px-12 text-[0.95rem]! lg:text-lg!">
+                              {ticketLoadError
+                                ? "Retry"
+                                : !ticketLoaded
+                                  ? "Checking…"
+                                  : "Continue >"}
+                            </p>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  {/* Handle form submission separately */}
+                  {currentStep == 3 && (
+                    <div className="w-full flex flex-col items-center justify-center">
+                      {submitError && (
+                        <p className="text-red-500 text-sm font-semibold mb-2 text-center">
+                          {submitError}
+                        </p>
+                      )}
+                      <button
+                        type="button"
+                        disabled={isSubmitting}
+                        onClick={handleSubmit}
+                        className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium pointer-fine:hover:text-yellow-light active:text-yellow-light bg-yellow-dark! pointer-fine:hover:bg-blue-medium! active:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium pointer-fine:hover:shadow-gray-400 disabled:opacity-50"
                       >
-                        {currentStep == 4 && (
-                          <a
-                            href="/"
-                            className="text-base lg:text-lg px-6 lg:px-10"
-                          >
-                            Back Home {">"}
-                          </a>
-                        )}
-                        {currentStep < 3 && (
-                          <p className="py-2 px-6 lg:px-12 text-[0.95rem]! lg:text-lg!">
-                            {ticketLoadError
-                              ? "Retry"
-                              : !ticketLoaded
-                                ? "Checking…"
-                                : "Continue >"}
-                          </p>
-                        )}
+                        <p className="py-2 px-6 lg:px-12 text-[0.95rem]! lg:text-lg!">
+                          {isSubmitting ? "Signing Up..." : "Sign Up!"}
+                        </p>
                       </button>
                     </div>
                   )}
-                {/* Handle form submission separately */}
-                {currentStep == 3 && (
-                  <div className="w-full flex flex-col items-center justify-center">
-                    {submitError && (
-                      <p className="text-red-500 text-sm font-semibold mb-2 text-center">
-                        {submitError}
-                      </p>
-                    )}
-                    <button
-                      type="button"
-                      disabled={isSubmitting}
-                      onClick={handleSubmit}
-                      className="cursor-pointer w-fit! h-10 mt-8! rounded-3xl text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400 disabled:opacity-50"
-                    >
-                      <p className="py-2 px-6 lg:px-12 text-[0.95rem]! lg:text-lg!">
-                        {isSubmitting ? "Signing Up..." : "Sign Up!"}
-                      </p>
-                    </button>
-                  </div>
-                )}
 
-                {/* Already Signed Up */}
-                {userSignedUp && currentStep !== 4 && (
-                  <div className="flex flex-row gap-4 justify-center items-center mt-10">
-                    <CalendarCheck className="size-8" />
-                    <h2 className="uppercase text-2xl text-center">
-                      {ticket?.status === "waitlisted"
-                        ? `You are on the waitlist for ${event.title}!`
-                        : `You have signed up for ${event.title}!`}
-                    </h2>
-                  </div>
-                )}
-                {/* Not Signed In */}
-                {!hasAccount && event.signUpStatus == "Open" && (
-                  <div className="flex flex-row gap-4 justify-center items-center mt-10">
-                    <User className="size-8" />
-                    <h2 className="uppercase text-2xl text-center">
-                      Log in to sign up for {event.title}!
-                    </h2>
-                  </div>
-                )}
-              </div>
+                  {/* Already Signed Up */}
+                  {userSignedUp && currentStep !== 4 && (
+                    <div className="flex flex-row gap-4 justify-center items-center mt-10">
+                      <CalendarCheck className="size-8" />
+                      <h2 className="uppercase text-2xl text-center">
+                        {ticket?.status === "waitlisted"
+                          ? `You are on the waitlist for ${event.title}!`
+                          : `You have signed up for ${event.title}!`}
+                      </h2>
+                    </div>
+                  )}
+                  {/* Not Signed In */}
+                  {!hasAccount && event.signUpStatus == "Open" && (
+                    <div className="flex flex-row gap-4 justify-center items-center mt-10">
+                      <User className="size-8" />
+                      <h2 className="uppercase text-2xl text-center">
+                        Log in to sign up for {event.title}!
+                      </h2>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -764,9 +776,15 @@ const EventSignupForm = ({ event: sourceEvent }: { event: EventRecord }) => {
   );
 };
 
-const UpcomingEvent = ({ event }: { event: EventRecord }) => (
+const UpcomingEvent = ({
+  event,
+  adminActions,
+}: {
+  event: EventRecord;
+  adminActions?: ReactNode;
+}) => (
   <Elements stripe={stripePromise}>
-    <EventSignupForm event={event} />
+    <EventSignupForm event={event} adminActions={adminActions} />
   </Elements>
 );
 

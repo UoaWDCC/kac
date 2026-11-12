@@ -1,6 +1,7 @@
 import { Event } from "../model/event";
 import { RequestHandler } from "express";
 import { isAdminRequest } from "../middlewares/adminGuard";
+import { deleteImagesByTag } from "../util/imageCleanup";
 
 const normaliseStatus = (value?: string) => {
   if (!value) return null;
@@ -11,6 +12,7 @@ const normaliseStatus = (value?: string) => {
 export const addEvent: RequestHandler = async (req, res, next) => {
   try {
     req.body.status = normaliseStatus(req.body.status);
+    req.body.registrationRequired = req.body.registrationRequired !== false;
 
     const newEvent = new Event(req.body);
     newEvent.imageUrl = `event-image:${newEvent._id}`;
@@ -25,17 +27,75 @@ export const addEvent: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const deleteEvent: RequestHandler = async (req, res, _next) => {
+export const updateEvent: RequestHandler = async (req, res, _next) => {
   try {
-    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
-    if (!deletedEvent) {
+    const allowedFields = [
+      "title",
+      "description",
+      "datetime",
+      "price",
+      "capacity",
+      "releaseDatetime",
+      "registrationRequired",
+    ] as const;
+
+    const updates: Record<string, unknown> = {};
+    for (const field of allowedFields) {
+      if (field in req.body) {
+        updates[field] = req.body[field];
+      }
+    }
+
+    if ("status" in req.body) {
+      updates.status = normaliseStatus(req.body.status);
+    }
+
+    if ("registrationRequired" in req.body) {
+      updates.registrationRequired = req.body.registrationRequired !== false;
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, updates, {
+      returnDocument: "after",
+      runValidators: true,
+    }).lean();
+
+    if (!updatedEvent) {
       return res.status(404).json({ message: "Event not found." });
     }
-    res.status(200).json({ message: "Event deleted successfully." });
+
+    res.status(200).json(updatedEvent);
   } catch (err) {
-    console.error("[!] Error deleting event: ", err);
+    console.error("[!] Error updating event: ", err);
     res.status(500).json({
-      message: "Error deleting event.",
+      message: "Error updating event.",
+      error: err,
+    });
+  }
+};
+
+export const deleteEvent: RequestHandler = async (req, res, _next) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found." });
+    }
+
+    const failedImageDeletes = event.imageUrl?.startsWith("event-image:")
+      ? await deleteImagesByTag(event.imageUrl)
+      : 0;
+    await event.deleteOne();
+
+    res.status(200).json({
+      message: "Event deleted successfully.",
+      imageCleanupWarning:
+        failedImageDeletes > 0
+          ? `${failedImageDeletes} image(s) could not be deleted from storage.`
+          : undefined,
+    });
+  } catch (err) {
+    console.error("[!] Error deleting event and image: ", err);
+    res.status(500).json({
+      message: "Error deleting event and image.",
       error: err,
     });
   }

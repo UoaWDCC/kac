@@ -74,13 +74,13 @@ const Layout = () => {
   }, [pathname]);
 
   return (
-    <>
+    <div className="app-layout">
       <Header />
       <main>
         <Outlet />
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 

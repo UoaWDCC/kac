@@ -10,6 +10,7 @@ export interface Event {
   capacity?: number;
   price?: number;
   releaseDatetime?: string;
+  registrationRequired?: boolean;
 }
 
 // Persisted event, as returned by the server
@@ -23,6 +24,11 @@ export interface EventsByTime {
   upcoming: CreatedEvent[];
   past: CreatedEvent[];
 }
+
+export type EventUpdate = Omit<Event, "capacity" | "releaseDatetime"> & {
+  capacity?: number | null;
+  releaseDatetime?: string | null;
+};
 
 export function getAllEvents(): Promise<EventsByTime> {
   const res = api.get("/events");
@@ -38,4 +44,16 @@ export const getEventById = async (
 export const createEvent = async (event: Event): Promise<CreatedEvent> => {
   const res = await api.post("/events", event);
   return res.data;
+};
+
+export const updateEvent = async (
+  id: string,
+  event: EventUpdate
+): Promise<CreatedEvent> => {
+  const res = await api.put(`/events/${id}`, event);
+  return res.data;
+};
+
+export const deleteEvent = async (id: string): Promise<void> => {
+  await api.delete(`/events/${id}`);
 };

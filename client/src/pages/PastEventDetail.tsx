@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { PastEventLightbox } from "../components/PastEventLightbox";
 import "../style/common.css";
@@ -29,9 +30,14 @@ type GalleryImage = {
 interface PastEventDetailProps {
   event: EventRecord;
   gallery: GalleryImage[];
+  adminActions?: ReactNode;
 }
 
-const PastEventDetail = ({ event, gallery }: PastEventDetailProps) => {
+const PastEventDetail = ({
+  event,
+  gallery,
+  adminActions,
+}: PastEventDetailProps) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const visiblePhotos = gallery.slice(0, MAX_VISIBLE_IMAGES);
@@ -49,9 +55,12 @@ const PastEventDetail = ({ event, gallery }: PastEventDetailProps) => {
   return (
     <div className="past-event-page">
       <div className="past-event-content">
-        <Link to="/events" className="past-event-back-link">
-          {"<"} Back to all events
-        </Link>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Link to="/events" className="past-event-back-link">
+            {"<"} Back to all events
+          </Link>
+          {adminActions}
+        </div>
         <p className="past-event-subtitle">{formattedDate}</p>
         <h1 className="past-event-title">{event.title}</h1>
 

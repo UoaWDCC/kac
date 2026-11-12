@@ -85,3 +85,14 @@
 .tiptap-content .ProseMirror li {
   margin-bottom: 0.5em;
 }
+
+.tiptap-content .ProseMirror a {
+  color: var(--color-blue-medium);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tiptap-editor-container--compact .tiptap-content,
+.tiptap-editor-container--compact .tiptap-content .ProseMirror {
+  min-height: 7.5rem;
+}

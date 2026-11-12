@@ -10,6 +10,7 @@ export interface Event {
   capacity?: number;
   price?: number;
   releaseDatetime?: string;
+  registrationRequired?: boolean;
 }
 
 // Persisted event, as returned by the server

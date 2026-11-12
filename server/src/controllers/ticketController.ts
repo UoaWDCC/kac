@@ -134,6 +134,10 @@ export const createTicket: RequestHandler = async (req, res) => {
         throw new TicketError(404, "Event not found.");
       }
 
+      if (event.registrationRequired === false) {
+        throw new TicketError(409, "This event does not use website sign-ups.");
+      }
+
       const now = new Date();
 
       if (

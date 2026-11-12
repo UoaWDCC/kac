@@ -18,6 +18,7 @@ export type EventRecord = {
   releaseDatetime?: string;
   price?: number;
   status?: string | null;
+  registrationRequired?: boolean;
 };
 
 type GalleryImage = {

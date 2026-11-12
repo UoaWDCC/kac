@@ -11,6 +11,7 @@ const normaliseStatus = (value?: string) => {
 export const addEvent: RequestHandler = async (req, res, next) => {
   try {
     req.body.status = normaliseStatus(req.body.status);
+    req.body.registrationRequired = req.body.registrationRequired !== false;
 
     const newEvent = new Event(req.body);
     newEvent.imageUrl = `event-image:${newEvent._id}`;

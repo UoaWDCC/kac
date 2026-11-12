@@ -7,6 +7,7 @@ import {
   Bold,
   Italic,
   Underline as UnderlineIcon,
+  Link2,
   List,
   ListOrdered,
 } from "lucide-react";
@@ -14,14 +15,37 @@ import {
 interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
+  compact?: boolean;
+  ariaLabel?: string;
 }
 
-const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
+const RichTextEditor = ({
+  value,
+  onChange,
+  compact = false,
+  ariaLabel,
+}: RichTextEditorProps) => {
   const [, setUpdateCount] = useState(0);
 
   const editor = useEditor({
-    extensions: [StarterKit, Underline],
+    extensions: [
+      StarterKit.configure({
+        link: {
+          openOnClick: false,
+          HTMLAttributes: {
+            target: "_blank",
+            rel: "noopener noreferrer",
+          },
+        },
+      }),
+      Underline,
+    ],
     content: value,
+    editorProps: {
+      attributes: {
+        "aria-label": ariaLabel ?? "Rich text editor",
+      },
+    },
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
@@ -40,8 +64,31 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
     return null;
   }
 
+  const handleLink = () => {
+    const previousUrl = editor.getAttributes("link").href as string | undefined;
+    const url = window.prompt("Link URL", previousUrl ?? "");
+    if (url === null) return;
+
+    const trimmed = url.trim();
+    if (trimmed === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: trimmed })
+      .run();
+  };
+
   return (
-    <div className="tiptap-editor-container">
+    <div
+      className={`tiptap-editor-container${
+        compact ? " tiptap-editor-container--compact" : ""
+      }`}
+    >
       <div className="editor-toolbar">
         <button
           type="button"
@@ -66,6 +113,14 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           title="Underline (Ctrl+U)"
         >
           <UnderlineIcon size={18} />
+        </button>
+        <button
+          type="button"
+          onClick={handleLink}
+          className={editor.isActive("link") ? "is-active" : ""}
+          title="Add Link"
+        >
+          <Link2 size={18} />
         </button>
 
         <div className="divider" />

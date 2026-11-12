@@ -11,8 +11,8 @@ export function escapeHtml(text: string): string {
 
 export function purifyHtml(html: string): string {
   return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "ul", "ol", "li"],
-    ALLOWED_ATTR: [],
+    ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "ul", "ol", "li", "a"],
+    ALLOWED_ATTR: ["href", "target", "rel"],
   });
 }
 

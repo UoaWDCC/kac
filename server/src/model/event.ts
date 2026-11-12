@@ -35,6 +35,7 @@ const eventSchema = new Schema(
       },
     },
     registrationVersion: { type: Number, default: 0 },
+    registrationRequired: { type: Boolean, default: true }, // false for events with no website sign-up
     releaseDatetime: { type: Date, required: false }, // if unset, event is released immediately
   },
   { versionKey: false }

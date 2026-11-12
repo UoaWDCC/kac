@@ -1,5 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Mail, Pencil, Phone, ShieldCheck } from "lucide-react";
+import type { CsvColumn } from "../../util/csv";
 
 export interface Member {
   _id: string;
@@ -25,6 +26,25 @@ export const getCurrentMembershipYear = () => {
 };
 
 const currentMembershipYear = getCurrentMembershipYear();
+
+export const memberCsvColumns: CsvColumn<Member>[] = [
+  { header: "First name", value: (member) => member.firstName },
+  { header: "Last name", value: (member) => member.lastName },
+  { header: "Pronouns", value: (member) => member.pronouns },
+  { header: "Email", value: (member) => member.email },
+  { header: "Mobile number", value: (member) => member.mobileNumber },
+  { header: "University", value: (member) => member.university },
+  { header: "UPI", value: (member) => member.upi },
+  { header: "Student ID", value: (member) => member.studentId },
+  { header: "Year of study", value: (member) => member.yearOfStudy },
+  { header: "Faculties", value: (member) => member.faculties.join("; ") },
+  {
+    header: "Membership year",
+    value: (member) => member.latestMembershipYear,
+  },
+  { header: "Admin", value: (member) => (member.isAdmin ? "Yes" : "No") },
+  { header: "Joined", value: (member) => member.createdAt },
+];
 
 export const getMemberColumns = (
   onViewEdit: (member: Member) => void

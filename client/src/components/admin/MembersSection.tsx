@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BadgeCheck, ShieldCheck, UsersRound } from "lucide-react";
+import { BadgeCheck, Download, ShieldCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../../auth/useAuth";
 import { fetchMembers } from "../../api/usersApi";
+import { downloadCsv, toCsv } from "../../util/csv";
 import DataTable from "./DataTable";
 import MemberDetailsModal from "./MemberDetailsModal";
 import {
   getCurrentMembershipYear,
   getMemberColumns,
+  memberCsvColumns,
   type Member,
 } from "./MemberColumns";
 
@@ -75,6 +77,11 @@ export default function MembersSection() {
     ];
   }, [adminCount, members]);
 
+  const handleDownload = () => {
+    const date = new Date().toISOString().slice(0, 10);
+    downloadCsv(`members-${date}.csv`, toCsv(members, memberCsvColumns));
+  };
+
   return (
     <section className="flex min-w-0 flex-col gap-4">
       <div className="grid gap-3 md:grid-cols-3">
@@ -111,6 +118,18 @@ export default function MembersSection() {
         getRowId={(member) => member._id}
         isLoading={isLoading}
         searchPlaceholder="Search members"
+        showUnresolvedButton={
+          <button
+            className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:enabled:!bg-blue-medium hover:enabled:text-white hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isLoading || Boolean(error) || members.length === 0}
+            onClick={handleDownload}
+            title="Download all members as CSV"
+            type="button"
+          >
+            <Download aria-hidden="true" className="h-4 w-4 shrink-0" />
+            Download CSV
+          </button>
+        }
       />
 
       {selectedMember ? (

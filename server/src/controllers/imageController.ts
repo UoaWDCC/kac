@@ -128,11 +128,10 @@ const replaceImageForTag = async (
           Key: existing.s3Key,
         })
       );
+      await existing.deleteOne();
     } catch (s3Error) {
       console.error("Failed to delete old S3 object:", s3Error);
     }
-
-    await existing.deleteOne();
   }
 
   return buildSignedImageResponse(image);
@@ -178,11 +177,12 @@ export const uploadImage: RequestHandler = async (req, res) => {
               Key: existing.s3Key,
             })
           );
+          await Image.deleteOne({ _id: existing._id });
         } catch (s3Error) {
+          // Keep the Mongo record so the orphaned S3 object stays tracked and
+          // a future upload can retry deleting it.
           console.error("Failed to delete old S3 object:", s3Error);
         }
-
-        await Image.deleteOne({ _id: existing._id });
       }
     }
 

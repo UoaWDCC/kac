@@ -1,6 +1,7 @@
 import { Event } from "../model/event";
 import { RequestHandler } from "express";
 import { isAdminRequest } from "../middlewares/adminGuard";
+import { deleteImagesByTag } from "../util/imageCleanup";
 
 const normaliseStatus = (value?: string) => {
   if (!value) return null;
@@ -74,15 +75,27 @@ export const updateEvent: RequestHandler = async (req, res, _next) => {
 
 export const deleteEvent: RequestHandler = async (req, res, _next) => {
   try {
-    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
-    if (!deletedEvent) {
+    const event = await Event.findById(req.params.id);
+    if (!event) {
       return res.status(404).json({ message: "Event not found." });
     }
-    res.status(200).json({ message: "Event deleted successfully." });
+
+    const failedImageDeletes = event.imageUrl?.startsWith("event-image:")
+      ? await deleteImagesByTag(event.imageUrl)
+      : 0;
+    await event.deleteOne();
+
+    res.status(200).json({
+      message: "Event deleted successfully.",
+      imageCleanupWarning:
+        failedImageDeletes > 0
+          ? `${failedImageDeletes} image(s) could not be deleted from storage.`
+          : undefined,
+    });
   } catch (err) {
-    console.error("[!] Error deleting event: ", err);
+    console.error("[!] Error deleting event and image: ", err);
     res.status(500).json({
-      message: "Error deleting event.",
+      message: "Error deleting event and image.",
       error: err,
     });
   }

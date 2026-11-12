@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { User } from "../model/user";
 import { Payment } from "../model/payment";
 import { getMembershipYear } from "../util/date";
+import { deleteImagesByTag } from "../util/imageCleanup";
 import { validateUserInput } from "../util/userValidation";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -380,11 +381,20 @@ export const deleteUser = async (req: Request, res: Response) => {
       }
     }
 
+    const failedImageDeletes = await deleteImagesByTag(
+      `profile-image:${String(targetUser._id)}`
+    );
     await targetUser.deleteOne();
 
-    res.status(200).json({ message: "User deleted" });
+    res.status(200).json({
+      message: "User deleted",
+      imageCleanupWarning:
+        failedImageDeletes > 0
+          ? `${failedImageDeletes} image(s) could not be deleted from storage.`
+          : undefined,
+    });
   } catch (err) {
-    console.error("Error deleting user:", err);
+    console.error("Error deleting user and image:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };

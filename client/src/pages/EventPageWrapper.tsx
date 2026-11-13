@@ -4,6 +4,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { getEventById } from "../api/eventApi";
 import { deleteEvent } from "../api/eventsApi";
+import type { EventQuestion } from "../api/eventsApi";
 import { getGalleryImages } from "../api/imageApi";
 import { useAuth } from "../auth/useAuth";
 import EventFormModal from "../components/EventFormModal";
@@ -26,6 +27,9 @@ export type EventRecord = {
   price?: number;
   status?: string | null;
   registrationRequired?: boolean;
+  groupBuddyEnabled?: boolean;
+  dietaryRequirementsEnabled?: boolean;
+  customQuestions?: EventQuestion[];
 };
 
 type GalleryImage = {

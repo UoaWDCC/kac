@@ -69,11 +69,20 @@ const EventSignupForm = ({
   const completedPaymentId = useRef<string | null>(null);
   const [groupBuddy, setGroupBuddy] = useState("");
   const [dietaryRequirements, setDietaryRequirements] = useState("");
+  const [customAnswers, setCustomAnswers] = useState<Record<string, string>>(
+    {}
+  );
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { hasAccount, user } = useAuth();
   const accountId = user?.id;
   const registrationRequired = sourceEvent.registrationRequired !== false;
+  const groupBuddyEnabled = sourceEvent.groupBuddyEnabled !== false;
+  const dietaryRequirementsEnabled =
+    sourceEvent.dietaryRequirementsEnabled !== false;
+  const customQuestions = (sourceEvent.customQuestions ?? []).filter(
+    (question) => question.enabled
+  );
 
   const [registration, setRegistration] = useState<{
     eventId: string;
@@ -143,8 +152,16 @@ const EventSignupForm = ({
   const requiresPayment = (sourceEvent.price ?? 0) > 0;
 
   const validateDetails = () => {
-    if (!dietaryRequirements.trim()) {
+    if (dietaryRequirementsEnabled && !dietaryRequirements.trim()) {
       setSubmitError("Please enter your dietary requirements, or N/A.");
+      return false;
+    }
+    if (
+      customQuestions.some(
+        (question) => question.required && !customAnswers[question.id]?.trim()
+      )
+    ) {
+      setSubmitError("Please answer all required questions.");
       return false;
     }
     if (requiresPayment && !completedPaymentId.current) {
@@ -269,8 +286,12 @@ const EventSignupForm = ({
       const saved = await createTicket(
         id,
         completedPaymentId.current ?? "N/A",
-        groupBuddy.trim() || "N/A",
-        dietaryRequirements.trim()
+        groupBuddyEnabled ? groupBuddy.trim() || "N/A" : "N/A",
+        dietaryRequirementsEnabled ? dietaryRequirements.trim() : "N/A",
+        customQuestions.map((question) => ({
+          questionId: question.id,
+          answer: customAnswers[question.id]?.trim() ?? "",
+        }))
       );
 
       setRegistration({
@@ -464,49 +485,97 @@ const EventSignupForm = ({
                   style={{ display: currentStep === 2 ? undefined : "none" }}
                 >
                   <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
-                    <div className="flex flex-col gap-1 w-full lg:w-[50%]">
-                      <div>
-                        <h2 className="text-lg font-bold">Group Buddy</h2>
-                        <p className="text-xs! text-gray-400">
-                          Who is ONE person you would like in your team?
-                        </p>
-                      </div>
-                      <input
-                        id="groupBuddy"
-                        type="text"
-                        value={groupBuddy}
-                        onChange={(e) => setGroupBuddy(e.target.value)}
-                        placeholder="Name Here"
-                        className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 w-full lg:w-[50%]">
-                      <div>
-                        <div className="flex flex-row justify-between">
-                          <h2 className="text-lg font-bold">
-                            Dietary Requirements
-                          </h2>
-                          <div className="bg-yellow-light rounded-full justify-center">
-                            <p className="text-xs! font-bold px-2 pt-1.5">
-                              Required
-                            </p>
-                          </div>
+                    {groupBuddyEnabled && (
+                      <div className="flex flex-col gap-1 w-full lg:w-[50%]">
+                        <div>
+                          <label
+                            htmlFor="groupBuddy"
+                            className="text-lg font-bold"
+                          >
+                            Group Buddy
+                          </label>
+                          <p className="text-xs! text-gray-400">
+                            Who is ONE person you would like in your team?
+                          </p>
                         </div>
-                        <p className="text-xs! text-gray-400">
-                          Please put N/A if not applicable.
-                        </p>
+                        <input
+                          id="groupBuddy"
+                          type="text"
+                          maxLength={2000}
+                          value={groupBuddy}
+                          onChange={(e) => setGroupBuddy(e.target.value)}
+                          placeholder="Name Here"
+                          className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
+                        />
+                      </div>
+                    )}
+                    {dietaryRequirementsEnabled && (
+                      <div className="flex flex-col gap-1 w-full lg:w-[50%]">
+                        <div>
+                          <div className="flex flex-row justify-between">
+                            <label
+                              htmlFor="dietaryRequirements"
+                              className="text-lg font-bold"
+                            >
+                              Dietary Requirements
+                            </label>
+                            <div className="bg-yellow-light rounded-full justify-center">
+                              <p className="text-xs! font-bold px-2 pt-1.5">
+                                Required
+                              </p>
+                            </div>
+                          </div>
+                          <p className="text-xs! text-gray-400">
+                            Please put N/A if not applicable.
+                          </p>
+                        </div>
+                        <input
+                          required
+                          id="dietaryRequirements"
+                          type="text"
+                          maxLength={2000}
+                          value={dietaryRequirements}
+                          onChange={(e) =>
+                            setDietaryRequirements(e.target.value)
+                          }
+                          placeholder="Enter Here"
+                          className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {customQuestions.map((question) => (
+                    <div key={question.id} className="flex flex-col gap-1">
+                      <div className="flex items-center justify-between gap-3">
+                        <label
+                          htmlFor={`answer-${question.id}`}
+                          className="text-lg font-bold break-words"
+                        >
+                          {question.label}
+                        </label>
+                        {question.required && (
+                          <span className="rounded-full bg-yellow-light px-2 py-1 text-xs font-bold">
+                            Required
+                          </span>
+                        )}
                       </div>
                       <input
-                        required
-                        id="dietaryRequirements"
+                        id={`answer-${question.id}`}
                         type="text"
-                        value={dietaryRequirements}
-                        onChange={(e) => setDietaryRequirements(e.target.value)}
-                        placeholder="Enter Here"
+                        required={question.required}
+                        maxLength={2000}
+                        value={customAnswers[question.id] ?? ""}
+                        onChange={(e) =>
+                          setCustomAnswers((previous) => ({
+                            ...previous,
+                            [question.id]: e.target.value,
+                          }))
+                        }
+                        placeholder="Enter your answer"
                         className="w-full py-2 border-t-0 border-l-0 border-r-0 border-b-yellow-dark border-2 outline-none"
                       />
                     </div>
-                  </div>
+                  ))}
                   {requiresPayment && (
                     <div className="flex flex-col">
                       <div className="flex flex-row justify-between w-full lg:w-[80%] py-2">

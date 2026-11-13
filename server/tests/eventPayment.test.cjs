@@ -63,7 +63,11 @@ function response() {
 }
 
 function request(body) {
-  return { body, user: { id: user.googleUid }, isAuthenticated: () => true };
+  return {
+    body: { dietaryRequirements: "N/A", ...body },
+    user: { id: user.googleUid },
+    isAuthenticated: () => true,
+  };
 }
 
 function stubModels({

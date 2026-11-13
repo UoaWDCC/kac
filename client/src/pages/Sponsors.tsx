@@ -139,7 +139,7 @@ const Sponsors = () => {
             border: "3px solid var(--color-blue-medium)",
             borderRadius: "12px",
           }}
-          editable={false}
+          editable={true}
         />
       </div>
 
@@ -193,9 +193,8 @@ const Sponsors = () => {
                 onClick={() => {
                   setActiveTab(tab.value);
                 }}
-                className={`sponsors-tab-button ${
-                  activeTab === tab.value ? "active" : ""
-                } ${tab.value === "all" ? "sponsors-tab-all" : ""}`}
+                className={`sponsors-tab-button ${activeTab === tab.value ? "active" : ""
+                  } ${tab.value === "all" ? "sponsors-tab-all" : ""}`}
               >
                 <span>{tab.label}</span>
                 {activeTab === tab.value && (

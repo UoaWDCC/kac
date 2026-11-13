@@ -1,5 +1,11 @@
 import api from "./index";
 
+export interface QuestionAnswer {
+  questionId: string;
+  label: string;
+  answer: string;
+}
+
 export interface TicketRecord {
   _id: string;
   userID: string | null;
@@ -10,6 +16,7 @@ export interface TicketRecord {
   attended: boolean;
   groupBuddy: string;
   dietaryRequirements: string;
+  customAnswers?: QuestionAnswer[];
 }
 
 export interface EventSignup extends TicketRecord {
@@ -26,13 +33,15 @@ export async function createTicket(
   eventID: string,
   paymentID = "N/A",
   groupBuddy = "N/A",
-  dietaryRequirements = "N/A"
+  dietaryRequirements = "N/A",
+  customAnswers: Pick<QuestionAnswer, "questionId" | "answer">[] = []
 ): Promise<TicketRecord> {
   const response = await api.post<TicketRecord>("/tickets", {
     eventID,
     paymentID,
     groupBuddy,
     dietaryRequirements,
+    customAnswers,
   });
 
   return response.data;

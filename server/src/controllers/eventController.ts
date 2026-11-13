@@ -2,6 +2,10 @@ import { Event } from "../model/event";
 import { RequestHandler } from "express";
 import { isAdminRequest } from "../middlewares/adminGuard";
 import { deleteImagesByTag } from "../util/imageCleanup";
+import {
+  EventQuestionError,
+  validateQuestionSettings,
+} from "../util/eventQuestions";
 
 const normaliseStatus = (value?: string) => {
   if (!value) return null;
@@ -11,6 +15,7 @@ const normaliseStatus = (value?: string) => {
 
 export const addEvent: RequestHandler = async (req, res, next) => {
   try {
+    validateQuestionSettings(req.body);
     req.body.status = normaliseStatus(req.body.status);
     req.body.registrationRequired = req.body.registrationRequired !== false;
 
@@ -19,6 +24,8 @@ export const addEvent: RequestHandler = async (req, res, next) => {
     const savedEvent = await newEvent.save();
     res.status(201).json(savedEvent);
   } catch (err) {
+    if (err instanceof EventQuestionError)
+      return res.status(400).json({ message: err.message });
     console.error("[!] Error adding event: ", err);
     res.status(500).json({
       message: "Error adding event.",
@@ -29,6 +36,7 @@ export const addEvent: RequestHandler = async (req, res, next) => {
 
 export const updateEvent: RequestHandler = async (req, res, _next) => {
   try {
+    validateQuestionSettings(req.body);
     const allowedFields = [
       "title",
       "description",
@@ -37,6 +45,9 @@ export const updateEvent: RequestHandler = async (req, res, _next) => {
       "capacity",
       "releaseDatetime",
       "registrationRequired",
+      "groupBuddyEnabled",
+      "dietaryRequirementsEnabled",
+      "customQuestions",
     ] as const;
 
     const updates: Record<string, unknown> = {};
@@ -65,6 +76,8 @@ export const updateEvent: RequestHandler = async (req, res, _next) => {
 
     res.status(200).json(updatedEvent);
   } catch (err) {
+    if (err instanceof EventQuestionError)
+      return res.status(400).json({ message: err.message });
     console.error("[!] Error updating event: ", err);
     res.status(500).json({
       message: "Error updating event.",

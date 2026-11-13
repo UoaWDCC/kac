@@ -139,7 +139,7 @@ const Sponsors = () => {
             border: "3px solid var(--color-blue-medium)",
             borderRadius: "12px",
           }}
-          editable={false}
+          editable={true}
         />
       </div>
 

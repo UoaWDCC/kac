@@ -21,7 +21,12 @@ import { dirname, join } from "node:path";
 // Resolve .env next to this file, so the script works from any directory.
 dotenv.config({ path: join(dirname(fileURLToPath(import.meta.url)), ".env") });
 
-for (const key of ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "MONGODB_USER", "MONGODB_PASSWORD"]) {
+for (const key of [
+  "STRIPE_SECRET_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+  "MONGODB_USER",
+  "MONGODB_PASSWORD",
+]) {
   if (!process.env[key]) {
     console.error(`Missing ${key} — expected it in server/.env`);
     process.exit(1);

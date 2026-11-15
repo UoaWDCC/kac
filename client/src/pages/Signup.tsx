@@ -12,12 +12,14 @@ import {
 } from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
 import api from "../api/index";
+import { getMembershipPrice } from "../api/membershipPriceApi";
 import { FACULTIES } from "../constants/faculties";
 import {
   filterMemberFieldInput,
   getMemberValidationErrors,
   normalizeMemberProfile,
 } from "../util/memberValidation";
+import { formatMembershipPrice } from "../util/membership";
 import "../style/common.css";
 import "../style/signup.css";
 
@@ -88,6 +90,7 @@ const SignUpForm = () => {
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [membershipAmountCents, setMembershipAmountCents] = useState(500);
 
   const [isFacultyDropdownOpen, setIsFacultyDropdownOpen] = useState(false);
   const facultyDropdownRef = useRef<HTMLDivElement>(null);
@@ -100,6 +103,22 @@ const SignUpForm = () => {
       } else if (hasAccount && currentStep !== 4) navigate("/");
     }
   }, [user, hasAccount, loading, navigate, currentStep]);
+
+  useEffect(() => {
+    let active = true;
+
+    getMembershipPrice()
+      .then((price) => {
+        if (active) setMembershipAmountCents(price.amountCents);
+      })
+      .catch(() => {
+        // Keep the default price; the server still controls the charged amount.
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useLayoutEffect(() => {
     if (currentStep === 4) {
@@ -886,7 +905,9 @@ const SignUpForm = () => {
                     </div>
                   </div>
 
-                  <div className="signup-total-text">Total: $5.00</div>
+                  <div className="signup-total-text">
+                    Total: {formatMembershipPrice(membershipAmountCents)}
+                  </div>
                 </div>
               </div>
 

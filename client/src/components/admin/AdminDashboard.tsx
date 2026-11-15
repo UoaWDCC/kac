@@ -1,7 +1,8 @@
 import type { AdminSection } from "../../pages/Admin.tsx";
 import MembersSection from "./MembersSection.tsx";
+import MembershipPriceSection from "./MembershipPriceSection.tsx";
 import ResponsesSection from "./ResponseSection.tsx";
-import { CalendarDays, Inbox, UserRoundCheck } from "lucide-react";
+import { CalendarDays, DollarSign, Inbox, UserRoundCheck } from "lucide-react";
 import EventSignupsSection from "./EventSignupsSection.tsx";
 
 type AdminDashboardProps = {
@@ -30,6 +31,13 @@ export default function AdminDashboard({ activeSection }: AdminDashboardProps) {
       icon: CalendarDays,
       label: "Events",
       title: "Event Sign Ups",
+    },
+    pricing: {
+      description:
+        "Set the amount charged for new memberships and annual renewals.",
+      icon: DollarSign,
+      label: "Pricing",
+      title: "Membership Price",
     },
   };
 
@@ -77,6 +85,8 @@ export default function AdminDashboard({ activeSection }: AdminDashboardProps) {
       {activeSection === "responses" && <ResponsesSection />}
 
       {activeSection === "events" && <EventSignupsSection />}
+
+      {activeSection === "pricing" && <MembershipPriceSection />}
     </main>
   );
 }

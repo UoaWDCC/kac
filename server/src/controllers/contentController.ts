@@ -45,11 +45,10 @@ export const updateContent: RequestHandler = async (req, res) => {
     const id = String(req.params.id);
     const updated = await Content.findByIdAndUpdate(id, req.body, {
       returnDocument: "after",
+      upsert: true,
+      runValidators: true,
+      setDefaultsOnInsert: true,
     }).lean();
-    if (!updated) {
-      res.status(404).json({ message: "Content not found" });
-      return;
-    }
     contentCache[id] = { data: updated, ts: Date.now() };
     res.json(updated);
   } catch (error) {

@@ -25,10 +25,6 @@ A membership registration and event management website created by the University
 1. Open a terminal and navigate into the KAC project root directory
 2. Run `npm run dev`
 
-## Documentation
-
-TBD
-
 ## Contributors
 
 <table>

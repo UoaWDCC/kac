@@ -147,8 +147,8 @@ const Sponsors = () => {
       <section className="sponsors-blurb">
         <div className="sponsors-centered-content">
           <p>
-            Present your 2026 KAC membership card to our sponsors and receive
-            these amazing deals!
+            Present your KAC membership card to our sponsors and receive these
+            amazing deals!
           </p>
         </div>
       </section>

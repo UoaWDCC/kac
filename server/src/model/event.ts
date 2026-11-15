@@ -37,6 +37,22 @@ const eventSchema = new Schema(
     },
     registrationVersion: { type: Number, default: 0 },
     registrationRequired: { type: Boolean, default: true }, // false for events with no website sign-up
+    groupBuddyEnabled: { type: Boolean, default: true },
+    dietaryRequirementsEnabled: { type: Boolean, default: true },
+    customQuestions: {
+      type: [
+        new Schema(
+          {
+            id: { type: String, required: true, maxlength: 100 },
+            label: { type: String, required: true, trim: true, maxlength: 300 },
+            enabled: { type: Boolean, default: true },
+            required: { type: Boolean, default: false },
+          },
+          { _id: false }
+        ),
+      ],
+      default: [],
+    },
     releaseDatetime: { type: Date, required: false }, // if unset, event is released immediately
   },
   { versionKey: false }

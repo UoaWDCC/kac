@@ -1,5 +1,12 @@
 import api from "./index";
 
+export interface EventQuestion {
+  id: string;
+  label: string;
+  enabled: boolean;
+  required: boolean;
+}
+
 // Payload for creating new event, doesn't include imageUrl or _id
 // imageUrl: server-derived lookup tag (see addEvent in eventController.ts)
 // _id: doesn't exist until the event is saved
@@ -11,6 +18,9 @@ export interface Event {
   price?: number;
   releaseDatetime?: string;
   registrationRequired?: boolean;
+  groupBuddyEnabled?: boolean;
+  dietaryRequirementsEnabled?: boolean;
+  customQuestions?: EventQuestion[];
 }
 
 // Persisted event, as returned by the server

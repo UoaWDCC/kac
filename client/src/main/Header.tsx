@@ -243,7 +243,7 @@ const Header = () => {
               pageKey="logo"
               alt="KAC Logo"
               style={{ width: "100%", height: "100%" }}
-              editable={false}
+              editable={true}
             />
           </div>
           <div className="flex-col font-sans! uppercase font-bold whitespace-nowrap m-0">

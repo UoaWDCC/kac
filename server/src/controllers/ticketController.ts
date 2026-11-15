@@ -1,5 +1,9 @@
 import mongoose, { ClientSession } from "mongoose";
 import Stripe from "stripe";
+import {
+  EventQuestionError,
+  registrationAnswers,
+} from "../util/eventQuestions";
 import { Request, RequestHandler, Response } from "express";
 import { Ticket } from "../model/ticket";
 import { User } from "../model/user";
@@ -62,7 +66,12 @@ async function requestUser(req: Request) {
 }
 
 function ticketError(res: Response, error: unknown) {
-  if (error instanceof TicketError || error instanceof EventPaymentError) {
+  if (error instanceof EventQuestionError) {
+    res.status(400).json({ message: error.message });
+  } else if (
+    error instanceof TicketError ||
+    error instanceof EventPaymentError
+  ) {
     res.status(error.status).json({ message: error.message });
   } else if (error instanceof mongoose.Error.ValidationError) {
     res.status(400).json({ message: error.message });
@@ -111,8 +120,6 @@ export const createTicket: RequestHandler = async (req, res) => {
 
     const details = {
       paymentID: text(body.paymentID),
-      groupBuddy: text(body.groupBuddy),
-      dietaryRequirements: text(body.dietaryRequirements),
     };
 
     let intent: Stripe.PaymentIntent | null = null;
@@ -214,6 +221,7 @@ export const createTicket: RequestHandler = async (req, res) => {
 
       const values = {
         ...details,
+        ...registrationAnswers(event, body),
         status,
         registeredAt: now,
         waitlistedAt: status === "waitlisted" ? now : null,
@@ -297,6 +305,7 @@ export const getTicketsByEventID: RequestHandler = async (req, res) => {
         attended: ticket.attended,
         groupBuddy: ticket.groupBuddy,
         dietaryRequirements: ticket.dietaryRequirements,
+        customAnswers: ticket.customAnswers,
         user: ticket.userID
           ? {
               _id: ticket.userID._id.toString(),

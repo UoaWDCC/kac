@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { createEvent, updateEvent } from "../api/eventsApi";
-import type { CreatedEvent, Event, EventUpdate } from "../api/eventsApi";
+import type {
+  CreatedEvent,
+  Event,
+  EventUpdate,
+  EventQuestion,
+} from "../api/eventsApi";
 import RichTextEditor from "./RichTextEditor";
 
 import "../style/common.css";
@@ -15,6 +20,9 @@ const emptyForm = {
   price: "0",
   releaseDatetime: "",
   registrationRequired: true,
+  groupBuddyEnabled: true,
+  dietaryRequirementsEnabled: true,
+  customQuestions: [] as EventQuestion[],
 };
 
 const inputClass =
@@ -25,6 +33,33 @@ const RequiredChip = () => (
     Required
   </span>
 );
+
+function QuestionToggle({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <label className="flex cursor-pointer items-center justify-between gap-4 py-1">
+      <span className="font-bold">{label}</span>
+      <span className="relative inline-flex shrink-0">
+        <input
+          type="checkbox"
+          role="switch"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+          className="peer sr-only"
+        />
+        <span className="h-7 w-12 rounded-full bg-gray-300 transition-colors peer-checked:bg-blue-medium peer-focus-visible:ring-2 peer-focus-visible:ring-blue-medium peer-focus-visible:ring-offset-2" />
+        <span className="pointer-events-none absolute left-1 top-1 size-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
+      </span>
+    </label>
+  );
+}
 
 const toDateTimeLocal = (value?: string | null) => {
   if (!value) return "";
@@ -46,6 +81,11 @@ const toFormState = (event?: CreatedEvent | null) =>
         price: String(event.price ?? 0),
         releaseDatetime: toDateTimeLocal(event.releaseDatetime),
         registrationRequired: event.registrationRequired !== false,
+        groupBuddyEnabled: event.groupBuddyEnabled !== false,
+        dietaryRequirementsEnabled: event.dietaryRequirementsEnabled !== false,
+        customQuestions: (event.customQuestions ?? []).map((question) => ({
+          ...question,
+        })),
       }
     : emptyForm;
 
@@ -65,6 +105,7 @@ export default function EventFormModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mouseDownOnOverlay, setMouseDownOnOverlay] = useState(false);
+  const [activeTab, setActiveTab] = useState<"info" | "details">("info");
 
   const closeModal = () => {
     if (submitting) return;
@@ -110,7 +151,14 @@ export default function EventFormModal({
       .trim();
 
     if (!title || !descriptionText || !form.datetime) {
+      setActiveTab("info");
       setError("Please fill out all required fields.");
+      return;
+    }
+
+    if (form.customQuestions.some((question) => !question.label.trim())) {
+      setActiveTab("details");
+      setError("Please enter text for each question.");
       return;
     }
 
@@ -141,6 +189,12 @@ export default function EventFormModal({
       datetime: new Date(form.datetime).toISOString(),
       price: Number(form.price),
       registrationRequired: form.registrationRequired,
+      groupBuddyEnabled: form.groupBuddyEnabled,
+      dietaryRequirementsEnabled: form.dietaryRequirementsEnabled,
+      customQuestions: form.customQuestions.map((question) => ({
+        ...question,
+        label: question.label.trim(),
+      })),
     };
 
     setSubmitting(true);
@@ -207,90 +261,38 @@ export default function EventFormModal({
 
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
           <div className="font-alan-sans flex flex-col gap-5 overflow-y-auto px-6 py-6 [scrollbar-gutter:stable] sm:px-10">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-3">
-                <label htmlFor="eventTitle" className="text-lg font-bold">
-                  Title
-                </label>
-                <RequiredChip />
-              </div>
-              <input
-                id="eventTitle"
-                required
-                type="text"
-                name="title"
-                placeholder="e.g., Sparring Night"
-                value={form.title}
-                onChange={handleChange}
-                className={inputClass}
-              />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-3">
-                <label className="text-lg font-bold">Description</label>
-                <RequiredChip />
-              </div>
-              <RichTextEditor
-                value={form.description}
-                onChange={handleDescriptionChange}
-                compact
-                ariaLabel="Event description"
-              />
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center justify-between gap-3">
-                  <label htmlFor="eventDatetime" className="text-lg font-bold">
-                    Date &amp; Time
-                  </label>
-                  <RequiredChip />
-                </div>
-                <input
-                  id="eventDatetime"
-                  required
-                  type="datetime-local"
-                  name="datetime"
-                  value={form.datetime}
-                  onChange={handleChange}
-                  className={inputClass}
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="eventReleaseDatetime"
-                  className="text-lg font-bold"
+            <div className="flex gap-3" aria-label="Event editor views">
+              {(["info", "details"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  aria-pressed={activeTab === tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`flex-1 cursor-pointer rounded-full px-4 py-2 font-bold ${activeTab === tab ? "bg-blue-medium! text-white" : "bg-yellow-light! text-blue-medium"}`}
                 >
-                  Release Date &amp; Time
-                </label>
-                <input
-                  id="eventReleaseDatetime"
-                  type="datetime-local"
-                  name="releaseDatetime"
-                  value={form.releaseDatetime}
-                  onChange={handleChange}
-                  className={inputClass}
-                />
-                <span className="text-xs text-gray-400">
-                  Leave blank to publish immediately.
-                </span>
-              </div>
+                  {tab === "info" ? "Event Info" : "Details"}
+                </button>
+              ))}
             </div>
-
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div
+              className="flex flex-col gap-5"
+              style={{ display: activeTab === "info" ? undefined : "none" }}
+              onInvalidCapture={() => setActiveTab("info")}
+            >
               <div className="flex flex-col gap-1">
-                <label htmlFor="eventCapacity" className="text-lg font-bold">
-                  Capacity
-                </label>
+                <div className="flex items-center justify-between gap-3">
+                  <label htmlFor="eventTitle" className="text-lg font-bold">
+                    Title
+                  </label>
+                  <RequiredChip />
+                </div>
                 <input
-                  id="eventCapacity"
-                  type="number"
-                  name="capacity"
-                  min={1}
-                  placeholder="Number of participants (optional)"
-                  value={form.capacity}
+                  id="eventTitle"
+                  required
+                  type="text"
+                  name="title"
+                  placeholder="e.g., Sparring Night"
+                  value={form.title}
                   onChange={handleChange}
                   className={inputClass}
                 />
@@ -298,51 +300,246 @@ export default function EventFormModal({
 
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between gap-3">
-                  <label htmlFor="eventPrice" className="text-lg font-bold">
-                    Ticket Price (NZD)
-                  </label>
+                  <label className="text-lg font-bold">Description</label>
                   <RequiredChip />
                 </div>
-                <input
-                  id="eventPrice"
-                  required
-                  type="number"
-                  name="price"
-                  min={0}
-                  step="0.01"
-                  value={form.price}
-                  onChange={handleChange}
-                  className={inputClass}
+                <RichTextEditor
+                  value={form.description}
+                  onChange={handleDescriptionChange}
+                  compact
+                  ariaLabel="Event description"
                 />
-                <span className="text-xs text-gray-400">
-                  Use 0 for a free event.
-                </span>
               </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <label
+                      htmlFor="eventDatetime"
+                      className="text-lg font-bold"
+                    >
+                      Date &amp; Time
+                    </label>
+                    <RequiredChip />
+                  </div>
+                  <input
+                    id="eventDatetime"
+                    required
+                    type="datetime-local"
+                    name="datetime"
+                    value={form.datetime}
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="eventReleaseDatetime"
+                    className="text-lg font-bold"
+                  >
+                    Release Date &amp; Time
+                  </label>
+                  <input
+                    id="eventReleaseDatetime"
+                    type="datetime-local"
+                    name="releaseDatetime"
+                    value={form.releaseDatetime}
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                  <span className="text-xs text-gray-400">
+                    Leave blank to publish immediately.
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="eventCapacity" className="text-lg font-bold">
+                    Capacity
+                  </label>
+                  <input
+                    id="eventCapacity"
+                    type="number"
+                    name="capacity"
+                    min={1}
+                    placeholder="Number of participants (optional)"
+                    value={form.capacity}
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <label htmlFor="eventPrice" className="text-lg font-bold">
+                      Ticket Price (NZD)
+                    </label>
+                    <RequiredChip />
+                  </div>
+                  <input
+                    id="eventPrice"
+                    required
+                    type="number"
+                    name="price"
+                    min={0}
+                    step="0.01"
+                    value={form.price}
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                  <span className="text-xs text-gray-400">
+                    Use 0 for a free event.
+                  </span>
+                </div>
+              </div>
+
+              <label className="flex cursor-pointer items-center justify-between gap-4 py-1">
+                <span className="text-lg font-bold">
+                  Require sign-up through the website
+                </span>
+                <span className="relative inline-flex shrink-0">
+                  <input
+                    type="checkbox"
+                    name="registrationRequired"
+                    checked={form.registrationRequired}
+                    onChange={handleRegistrationToggle}
+                    className="peer sr-only"
+                  />
+                  <span className="h-7 w-12 rounded-full bg-gray-300 transition-colors peer-checked:bg-blue-medium peer-focus-visible:ring-2 peer-focus-visible:ring-blue-medium peer-focus-visible:ring-offset-2" />
+                  <span className="pointer-events-none absolute left-1 top-1 size-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
+                </span>
+              </label>
             </div>
-
-            <label className="flex cursor-pointer items-center justify-between gap-4 py-1">
-              <span className="text-lg font-bold">
-                Require sign-up through the website
-              </span>
-              <span className="relative inline-flex shrink-0">
-                <input
-                  type="checkbox"
-                  name="registrationRequired"
-                  checked={form.registrationRequired}
-                  onChange={handleRegistrationToggle}
-                  className="peer sr-only"
-                />
-                <span className="h-7 w-12 rounded-full bg-gray-300 transition-colors peer-checked:bg-blue-medium peer-focus-visible:ring-2 peer-focus-visible:ring-blue-medium peer-focus-visible:ring-offset-2" />
-                <span className="pointer-events-none absolute left-1 top-1 size-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
-              </span>
-            </label>
-
+            {activeTab === "details" && (
+              <section
+                className="flex flex-col gap-5"
+                aria-label="Registration questions"
+              >
+                <div>
+                  <h3 className="text-lg font-bold text-blue-medium">
+                    Registration questions
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Choose what members see in the Details step when signing up.
+                    Questions switched off are hidden from members.
+                  </p>
+                </div>
+                {(
+                  [
+                    ["groupBuddyEnabled", "Group Buddy"],
+                    ["dietaryRequirementsEnabled", "Dietary Requirements"],
+                  ] as const
+                ).map(([key, label]) => (
+                  <QuestionToggle
+                    key={key}
+                    label={label}
+                    checked={form[key]}
+                    onChange={(checked) =>
+                      setForm((previous) => ({ ...previous, [key]: checked }))
+                    }
+                  />
+                ))}
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-lg font-bold">Custom questions</h3>
+                  <button
+                    type="button"
+                    className="button w-auto!"
+                    disabled={form.customQuestions.length >= 30}
+                    onClick={() =>
+                      setForm((previous) => ({
+                        ...previous,
+                        customQuestions: [
+                          ...previous.customQuestions,
+                          {
+                            id: crypto.randomUUID(),
+                            label: "",
+                            enabled: true,
+                            required: false,
+                          },
+                        ],
+                      }))
+                    }
+                  >
+                    Add Question
+                  </button>
+                </div>
+                {form.customQuestions.length === 0 && (
+                  <p className="text-sm text-gray-500">
+                    Add a question for members to answer with text.
+                  </p>
+                )}
+                {form.customQuestions.map((question, index) => {
+                  const updateQuestion = (changes: Partial<EventQuestion>) =>
+                    setForm((previous) => ({
+                      ...previous,
+                      customQuestions: previous.customQuestions.map((item) =>
+                        item.id === question.id ? { ...item, ...changes } : item
+                      ),
+                    }));
+                  return (
+                    <div
+                      key={question.id}
+                      className="flex flex-col gap-3 rounded-2xl border-2 border-yellow-light p-4"
+                    >
+                      <label
+                        htmlFor={`question-${question.id}`}
+                        className="font-bold"
+                      >
+                        Question {index + 1}
+                      </label>
+                      <input
+                        id={`question-${question.id}`}
+                        type="text"
+                        maxLength={300}
+                        value={question.label}
+                        placeholder="e.g., What would you like to learn?"
+                        onChange={(e) =>
+                          updateQuestion({ label: e.target.value })
+                        }
+                        className={inputClass}
+                      />
+                      <QuestionToggle
+                        label={`Show question ${index + 1} to members`}
+                        checked={question.enabled}
+                        onChange={(enabled) => updateQuestion({ enabled })}
+                      />
+                      <QuestionToggle
+                        label={`Require an answer to question ${index + 1}`}
+                        checked={question.required}
+                        onChange={(required) => updateQuestion({ required })}
+                      />
+                      <button
+                        type="button"
+                        className="w-auto! self-end cursor-pointer text-red-600 hover:underline"
+                        onClick={() =>
+                          setForm((previous) => ({
+                            ...previous,
+                            customQuestions: previous.customQuestions.filter(
+                              (item) => item.id !== question.id
+                            ),
+                          }))
+                        }
+                      >
+                        Remove question {index + 1}
+                      </button>
+                    </div>
+                  );
+                })}
+              </section>
+            )}
             {error && (
-              <p className="text-red-600 text-sm font-alan-sans">{error}</p>
+              <p role="alert" className="text-red-600 text-sm font-alan-sans">
+                {error}
+              </p>
             )}
           </div>
 
-          <div className="flex shrink-0 items-center justify-end gap-4 border-t-2 border-yellow-light px-6 py-5 sm:px-10">
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-4 border-t-2 border-yellow-light px-6 py-5 sm:px-10">
+            <p className="font-alan-sans mr-auto basis-full text-xs text-gray-500 sm:basis-auto">
+              Saves Event Info and Details together.
+            </p>
             <button
               type="button"
               onClick={closeModal}

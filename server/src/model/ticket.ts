@@ -34,6 +34,19 @@ const ticketSchema = new mongoose.Schema(
     },
     groupBuddy: { type: String, default: "N/A" },
     dietaryRequirements: { type: String, default: "N/A" },
+    customAnswers: {
+      type: [
+        new mongoose.Schema(
+          {
+            questionId: { type: String, required: true },
+            label: { type: String, required: true },
+            answer: { type: String, default: "", maxlength: 2000 },
+          },
+          { _id: false }
+        ),
+      ],
+      default: [],
+    },
   },
   {
     timestamps: true,

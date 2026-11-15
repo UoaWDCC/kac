@@ -378,6 +378,12 @@ function EventRegistrations({ event }: { event: CreatedEvent }) {
               <dt>Buddy</dt>
               <dd>{row.original.groupBuddy}</dd>
             </div>
+            {row.original.customAnswers?.map((answer) => (
+              <div key={answer.questionId}>
+                <dt>{answer.label}</dt>
+                <dd>{answer.answer || "N/A"}</dd>
+              </div>
+            ))}
           </dl>
         ),
       },

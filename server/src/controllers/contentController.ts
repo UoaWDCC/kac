@@ -1,5 +1,7 @@
 import { RequestHandler } from "express";
 import { Content } from "../model/content";
+import { isAdminRequest } from "../middlewares/adminGuard";
+import { DIGITAL_CARD_LINK_CONTENT_ID } from "../util/digitalCard";
 
 const CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
 
@@ -8,6 +10,11 @@ let contentCache: Record<string, { data: any; ts: number }> = {};
 export const getContent: RequestHandler = async (req, res) => {
   try {
     const id = String(req.params.id);
+
+    if (id === DIGITAL_CARD_LINK_CONTENT_ID && !(await isAdminRequest(req))) {
+      res.status(403).json({ message: "Forbidden" });
+      return;
+    }
 
     const cached = contentCache[id];
     if (cached && Date.now() - cached.ts < CACHE_TTL_MS) {

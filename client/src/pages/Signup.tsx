@@ -12,6 +12,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { useAuth } from "../auth/useAuth";
 import api from "../api/index";
+import { getCurrentDigitalCardLink } from "../api/digitalCardApi";
 import { getMembershipPrice } from "../api/membershipPriceApi";
 import { FACULTIES } from "../constants/faculties";
 import {
@@ -91,6 +92,8 @@ const SignUpForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [membershipAmountCents, setMembershipAmountCents] = useState(500);
+  const [digitalCardLink, setDigitalCardLink] = useState<string | null>(null);
+  const [isDigitalCardLinkReady, setIsDigitalCardLinkReady] = useState(false);
 
   const [isFacultyDropdownOpen, setIsFacultyDropdownOpen] = useState(false);
   const facultyDropdownRef = useRef<HTMLDivElement>(null);
@@ -119,6 +122,27 @@ const SignUpForm = () => {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (currentStep !== 4) return;
+
+    let active = true;
+
+    getCurrentDigitalCardLink()
+      .then((link) => {
+        if (active) setDigitalCardLink(link);
+      })
+      .catch(() => {
+        if (active) setDigitalCardLink(null);
+      })
+      .finally(() => {
+        if (active) setIsDigitalCardLinkReady(true);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [currentStep]);
 
   useLayoutEffect(() => {
     if (currentStep === 4) {
@@ -1191,7 +1215,22 @@ const SignUpForm = () => {
                   <p className="signup-success-text">
                     Here is the link for your digital KAC card:
                   </p>
-                  <p className="signup-success-link">??????????????</p>
+                  <p className="signup-success-link">
+                    {!isDigitalCardLinkReady ? (
+                      "Loading your digital card link…"
+                    ) : digitalCardLink ? (
+                      <a
+                        className="underline underline-offset-2"
+                        href={digitalCardLink}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {digitalCardLink}
+                      </a>
+                    ) : (
+                      "Your digital card link will be available on your profile."
+                    )}
+                  </p>
                 </div>
 
                 <div className="signup-actions">

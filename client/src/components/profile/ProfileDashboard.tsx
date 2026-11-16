@@ -2,6 +2,7 @@ import type { ProfileSection } from "../../pages/Profile.tsx";
 import { CalendarDays, ChevronRight, Images } from "lucide-react";
 import { useEffect, useState } from "react";
 import { fetchCurrentMember, updateCurrentMember } from "../../api/usersApi";
+import { getCurrentDigitalCardLink } from "../../api/digitalCardApi";
 import { getTicketsByUserId } from "../../api/ticketsApi";
 import { FACULTIES } from "../../constants/faculties";
 import {
@@ -10,10 +11,6 @@ import {
   getMemberValidationErrors,
   normalizeMemberProfile,
 } from "../../util/memberValidation";
-
-// TODO: replace with dynamic link fetched from admin dashboard once implemented
-const PASS2U_LINK =
-  "https://www.pass2u.net/p/mZvjfJH6V37n?openExternalBrowser=1";
 
 type ProfileDashboardProps = {
   activeSection: ProfileSection;
@@ -169,6 +166,23 @@ export default function ProfileDashboard({
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [tickets, setTickets] = useState<UserTicket[]>([]);
   const [isTicketsLoading, setIsTicketsLoading] = useState(false);
+  const [digitalCardLink, setDigitalCardLink] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getCurrentDigitalCardLink()
+      .then((link) => {
+        if (isMounted) setDigitalCardLink(link);
+      })
+      .catch(() => {
+        if (isMounted) setDigitalCardLink(null);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -340,20 +354,23 @@ export default function ProfileDashboard({
                 />
               </label>
 
-              <label
-                className="flex flex-col gap-1 font-alan-sans text-[0.94rem] font-semibold text-grey-medium md:col-span-2"
-                htmlFor="member-since"
-              >
-                Digital Membership Card
-                <a
-                  href={PASS2U_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="button w-fit!"
+              {digitalCardLink ? (
+                <label
+                  className="flex flex-col gap-1 font-alan-sans text-[0.94rem] font-semibold text-grey-medium md:col-span-2"
+                  htmlFor="digital-card-link"
                 >
-                  Add to Wallet
-                </a>
-              </label>
+                  Digital Membership Card
+                  <a
+                    className="button w-fit!"
+                    href={digitalCardLink}
+                    id="digital-card-link"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Add to Wallet
+                  </a>
+                </label>
+              ) : null}
             </div>
 
             {error ? (

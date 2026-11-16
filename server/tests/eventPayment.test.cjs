@@ -19,10 +19,12 @@ const { Event } = require("../src/model/event");
 const { User } = require("../src/model/user");
 const { Ticket } = require("../src/model/ticket");
 const { Payment } = require("../src/model/payment");
+const { MembershipPrice } = require("../src/model/membershipPrice");
 const {
   getEventTicketAmount,
   verifyEventTicketPayment,
 } = require("../src/util/eventPayment");
+const { parseMembershipAmountCents } = require("../src/util/membershipPrice");
 
 afterEach(() => mock.restoreAll());
 
@@ -44,6 +46,7 @@ const intent = {
   metadata: { type: "event_ticket", eventId, googleUid: user.googleUid },
 };
 const query = (value) => ({
+  lean: async () => value,
   session: async () => value,
   sort: async () => value,
   then: (resolve, reject) => Promise.resolve(value).then(resolve, reject),
@@ -158,7 +161,34 @@ test("checkout reuses a successful unclaimed payment after a refresh", async () 
   assert.equal(create.mock.calls.length, 0);
 });
 
-test("membership checkout still charges $5 and does not require an event", async () => {
+test("membership prices are validated as positive whole cents", () => {
+  assert.equal(parseMembershipAmountCents(750), 750);
+  assert.equal(parseMembershipAmountCents("500"), 500);
+  for (const invalid of [0, -1, 1.5, "abc", null, undefined, Infinity]) {
+    assert.throws(() => parseMembershipAmountCents(invalid));
+  }
+});
+
+test("membership checkout uses the stored membership price", async () => {
+  mock.method(MembershipPrice, "findById", () => query({ amountCents: 750 }));
+  const create = mock.method(
+    stripe.paymentIntents,
+    "create",
+    async () => intent
+  );
+  mock.method(Payment, "findOneAndUpdate", async () => ({}));
+  const res = response();
+  await createPaymentIntent(request({ type: "membership" }), res);
+  assert.equal(res.statusCode, 201);
+  assert.equal(create.mock.calls[0].arguments[0].amount, 750);
+  assert.equal(
+    create.mock.calls[0].arguments[0].metadata.googleUid,
+    user.googleUid
+  );
+});
+
+test("membership checkout falls back to $5 when no price is stored", async () => {
+  mock.method(MembershipPrice, "findById", () => query(null));
   const create = mock.method(
     stripe.paymentIntents,
     "create",

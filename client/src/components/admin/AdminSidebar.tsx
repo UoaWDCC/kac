@@ -1,5 +1,11 @@
 import type { AdminSection } from "../../pages/Admin.tsx";
-import { CalendarDays, Inbox, UsersRound } from "lucide-react";
+import {
+  CalendarDays,
+  DollarSign,
+  Inbox,
+  Link2,
+  UsersRound,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type AdminSidebarProps = {
@@ -15,6 +21,8 @@ export default function AdminSidebar({
     { icon: UsersRound, label: "Members", value: "members" },
     { icon: Inbox, label: "Form Responses", value: "responses" },
     { icon: CalendarDays, label: "Events", value: "events" },
+    { icon: DollarSign, label: "Membership Price", value: "pricing" },
+    { icon: Link2, label: "Digital Card Link", value: "digital-card" },
   ];
 
   return (

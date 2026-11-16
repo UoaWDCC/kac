@@ -5,6 +5,7 @@ import { Payment } from "../model/payment";
 import { getMembershipYear } from "../util/date";
 import { deleteImagesByTag } from "../util/imageCleanup";
 import { validateUserInput } from "../util/userValidation";
+import { getDigitalCardLink } from "../util/digitalCard";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -215,6 +216,51 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     res.status(200).json(user);
   } catch (err) {
     console.error("Error fetching current user:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getCurrentDigitalCardLink = async (
+  req: Request,
+  res: Response
+) => {
+  if (!req.isAuthenticated()) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  const profile = req.user as { id?: string } | undefined;
+
+  if (!profile?.id) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  try {
+    const user = await User.findOne({ googleUid: profile.id });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    if (user.latestMembershipYear !== getMembershipYear()) {
+      res.status(403).json({
+        message: "A current membership is required to access the digital card.",
+      });
+      return;
+    }
+
+    const link = await getDigitalCardLink();
+
+    if (!link) {
+      res.status(404).json({ message: "Digital card link is not available." });
+      return;
+    }
+
+    res.status(200).json({ link });
+  } catch (err) {
+    console.error("Error fetching digital card link:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };

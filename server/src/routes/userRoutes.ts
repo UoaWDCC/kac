@@ -2,6 +2,7 @@ import express from "express";
 import {
   createUser,
   deleteUser,
+  getCurrentDigitalCardLink,
   getCurrentUser,
   getUsers,
   renewCurrentUser,
@@ -13,6 +14,7 @@ import { adminGuard } from "../middlewares/adminGuard";
 const router = express.Router();
 
 router.get("/me", getCurrentUser);
+router.get("/me/digital-card", getCurrentDigitalCardLink);
 router.put("/me", updateCurrentUser);
 router.post("/me/renew", renewCurrentUser);
 router.get("/", adminGuard, getUsers);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -11,9 +11,10 @@ import {
 } from "@stripe/react-stripe-js";
 
 import api from "../api";
+import { getMembershipPrice } from "../api/membershipPriceApi";
 import { renewCurrentMembership } from "../api/usersApi";
 import { useAuth } from "../auth/useAuth";
-import { getMembershipYear } from "../util/membership";
+import { formatMembershipPrice, getMembershipYear } from "../util/membership";
 import "../style/common.css";
 import "../style/signup.css";
 import "../style/renew.css";
@@ -42,8 +43,25 @@ const RenewForm = () => {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [membershipAmountCents, setMembershipAmountCents] = useState(500);
 
   const membershipYear = getMembershipYear();
+
+  useEffect(() => {
+    let active = true;
+
+    getMembershipPrice()
+      .then((price) => {
+        if (active) setMembershipAmountCents(price.amountCents);
+      })
+      .catch(() => {
+        // Keep the default price; the server still controls the charged amount.
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -169,7 +187,9 @@ const RenewForm = () => {
           </div>
         </div>
 
-        <div className="renew-total">Total: $5.00</div>
+        <div className="renew-total">
+          Total: {formatMembershipPrice(membershipAmountCents)}
+        </div>
 
         {error && (
           <p className="renew-error" role="alert">

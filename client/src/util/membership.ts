@@ -10,3 +10,9 @@ export const getMembershipYear = (): number => {
   const now = new Date();
   return now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
 };
+
+export const formatMembershipPrice = (amountCents: number): string =>
+  new Intl.NumberFormat("en-NZ", {
+    style: "currency",
+    currency: "NZD",
+  }).format(amountCents / 100);

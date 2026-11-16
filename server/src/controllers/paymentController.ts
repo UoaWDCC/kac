@@ -5,6 +5,7 @@ import { Event } from "../model/event";
 import { Ticket } from "../model/ticket";
 import { User } from "../model/user";
 import { EventPaymentError, getEventTicketAmount } from "../util/eventPayment";
+import { getMembershipAmountCents } from "../util/membershipPrice";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -27,7 +28,7 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
   }
 
   try {
-    let amount = 500;
+    let amount = 0;
     let userId = null;
     let idempotencyKey: string | undefined;
     const metadata: Record<string, string> = { type, googleUid };
@@ -72,6 +73,8 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
       metadata.eventId = event._id.toString();
       // One intent per registration attempt, including retries after a page refresh.
       idempotencyKey = `event-ticket:${event._id}:${user._id}:${existing?.updatedAt?.getTime() ?? "new"}:${amount}`;
+    } else {
+      amount = await getMembershipAmountCents();
     }
 
     const unusedPayment =

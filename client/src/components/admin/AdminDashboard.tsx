@@ -1,7 +1,15 @@
 import type { AdminSection } from "../../pages/Admin.tsx";
+import DigitalCardLinkSection from "./DigitalCardLinkSection.tsx";
 import MembersSection from "./MembersSection.tsx";
+import MembershipPriceSection from "./MembershipPriceSection.tsx";
 import ResponsesSection from "./ResponseSection.tsx";
-import { CalendarDays, Inbox, UserRoundCheck } from "lucide-react";
+import {
+  CalendarDays,
+  DollarSign,
+  Inbox,
+  Link2,
+  UserRoundCheck,
+} from "lucide-react";
 import EventSignupsSection from "./EventSignupsSection.tsx";
 
 type AdminDashboardProps = {
@@ -30,6 +38,20 @@ export default function AdminDashboard({ activeSection }: AdminDashboardProps) {
       icon: CalendarDays,
       label: "Events",
       title: "Event Sign Ups",
+    },
+    pricing: {
+      description:
+        "Set the amount charged for new memberships and annual renewals.",
+      icon: DollarSign,
+      label: "Pricing",
+      title: "Membership Price",
+    },
+    "digital-card": {
+      description:
+        "Set the wallet link members see after signing up and on their profile.",
+      icon: Link2,
+      label: "Digital Card",
+      title: "Digital Card Link",
     },
   };
 
@@ -77,6 +99,10 @@ export default function AdminDashboard({ activeSection }: AdminDashboardProps) {
       {activeSection === "responses" && <ResponsesSection />}
 
       {activeSection === "events" && <EventSignupsSection />}
+
+      {activeSection === "pricing" && <MembershipPriceSection />}
+
+      {activeSection === "digital-card" && <DigitalCardLinkSection />}
     </main>
   );
 }

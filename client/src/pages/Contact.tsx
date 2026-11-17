@@ -7,7 +7,7 @@ import "../style/contact.css";
 
 import { sendContact } from "../api/contactApi";
 import { useAuth } from "../auth/useAuth";
-import kaco from "../images/kaco-title.png";
+import { ImageBlock } from "../components/image_block/ImageBlock.tsx";
 
 /**
   Contact Page
@@ -82,14 +82,18 @@ const Contact = () => {
           Contact Us
         </h1>
 
-        <div className="flex flex-col items-center pb-12 lg:flex-row lg:pl-[clamp(1rem,4vw,6rem)] lg:pr-[clamp(1rem,6vw,9rem)] lg:pb-24">
-          <img
-            src={kaco}
-            alt="KAC Mascot"
-            className="w-[82%] max-w-[22rem] shrink-0 relative z-0 -mb-25 lg:w-[clamp(17rem,34vw,37rem)] lg:max-w-none lg:mb-0 lg:z-10 lg:-mr-[clamp(1rem,2.5vw,2.5rem)]"
-          />
+        <div className="flex flex-col items-center gap-6 lg:gap-10 pb-12 lg:flex-row lg:pl-[clamp(1rem,4vw,6rem)] lg:pr-[clamp(1rem,6vw,9rem)] lg:pb-24">
+          <div className="w-full max-w-[18rem] sm:max-w-[22rem] lg:w-1/3 lg:max-w-[28rem] shrink-0 flex justify-center items-center">
+            <ImageBlock
+              pageKey="title"
+              alt="Club Mascot"
+              editable={true}
+              className="w-full"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </div>
 
-          <div className="relative z-10 bg-white rounded-2xl px-10 py-8 shadow-[8px_8px] shadow-yellow-medium lg:px-[clamp(1.5rem,3.5vw,4rem)] lg:py-12 flex-1 grid lg:rounded-4xl lg:z-0">
+          <div className="relative z-10 bg-white rounded-2xl px-10 py-8 shadow-[8px_8px] shadow-yellow-medium lg:px-[clamp(1.5rem,3.5vw,4rem)] lg:py-12 flex-1 w-full grid lg:rounded-4xl lg:z-0">
             <div
               className={`col-start-1 row-start-1 font-alan-sans flex flex-col items-center justify-center gap-8 lg:gap-16 ${
                 status === "sent" ? "" : "invisible pointer-events-none"

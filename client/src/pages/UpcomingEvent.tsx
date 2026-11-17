@@ -10,7 +10,8 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { fetchCurrentMember } from "../api/usersApi";
 import { renderAnswerHtml } from "../util/htmlFormat";
 
 import {
@@ -73,6 +74,10 @@ const EventSignupForm = ({
     {}
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [memberRecord, setMemberRecord] = useState<{
+    accountId: string;
+    latestMembershipYear: number | null;
+  } | null>(null);
 
   const { hasAccount, user } = useAuth();
   const accountId = user?.id;
@@ -95,6 +100,31 @@ const EventSignupForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submissionInFlight = useRef(false);
   const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (!hasAccount || !accountId) return;
+    let active = true;
+    fetchCurrentMember()
+      .then((member) => {
+        if (active) {
+          setMemberRecord({
+            accountId,
+            latestMembershipYear:
+              typeof member?.latestMembershipYear === "number"
+                ? member.latestMembershipYear
+                : null,
+          });
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setMemberRecord({ accountId, latestMembershipYear: null });
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, [hasAccount, accountId]);
 
   useEffect(() => {
     if (!registrationRequired || !id || !hasAccount || !accountId) return;
@@ -150,6 +180,21 @@ const EventSignupForm = ({
   const ticketLoadError = currentRegistration?.error ?? null;
   const userSignedUp = ticket !== null;
   const requiresPayment = (sourceEvent.price ?? 0) > 0;
+  const eventDate = new Date(sourceEvent.datetime);
+  const eventYear = Number.isNaN(eventDate.getTime())
+    ? new Date().getFullYear()
+    : eventDate.getFullYear();
+  const currentMemberRecord =
+    hasAccount && accountId && memberRecord?.accountId === accountId
+      ? memberRecord
+      : null;
+  const memberLoading = Boolean(
+    hasAccount && accountId && !currentMemberRecord
+  );
+  const latestMembershipYear =
+    currentMemberRecord?.latestMembershipYear ?? null;
+  const hasValidMembership =
+    latestMembershipYear !== null && latestMembershipYear >= eventYear;
 
   const validateDetails = () => {
     if (dietaryRequirementsEnabled && !dietaryRequirements.trim()) {
@@ -233,6 +278,7 @@ const EventSignupForm = ({
       !ticketLoaded ||
       ticketLoadError ||
       userSignedUp ||
+      !hasValidMembership ||
       event.signUpStatus !== "Open" ||
       submissionInFlight.current
     ) {
@@ -744,6 +790,7 @@ const EventSignupForm = ({
                   )}
                   {/* Can Sign Up - Show form with continue button */}
                   {hasAccount &&
+                    hasValidMembership &&
                     ((currentStep === 4 && userSignedUp) ||
                       (event.signUpStatus === "Open" &&
                         !userSignedUp &&
@@ -826,6 +873,33 @@ const EventSignupForm = ({
                       </h2>
                     </div>
                   )}
+                  {/* Membership Expired / Not Current */}
+                  {hasAccount &&
+                    !memberLoading &&
+                    !hasValidMembership &&
+                    event.signUpStatus === "Open" &&
+                    !userSignedUp && (
+                      <div className="flex flex-col items-center gap-3 mt-10 text-center">
+                        <div className="flex flex-row gap-4 justify-center items-center">
+                          <LockKeyhole className="size-8" />
+                          <h2 className="uppercase text-2xl text-center">
+                            Current membership required to sign up
+                          </h2>
+                        </div>
+                        <p className="text-sm text-gray-600 max-w-md">
+                          This event requires active membership for {eventYear}.
+                          {latestMembershipYear !== null
+                            ? ` Your latest membership was for ${latestMembershipYear}.`
+                            : " You do not have an active membership."}
+                        </p>
+                        <Link
+                          to="/renew"
+                          className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-2! rounded-3xl text-blue-medium pointer-fine:hover:text-yellow-light active:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium px-6 py-2 font-bold"
+                        >
+                          Renew / Get Membership
+                        </Link>
+                      </div>
+                    )}
                   {/* Not Signed In */}
                   {!hasAccount && event.signUpStatus == "Open" && (
                     <div className="flex flex-row gap-4 justify-center items-center mt-10">

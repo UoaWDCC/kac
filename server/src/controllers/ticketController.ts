@@ -154,6 +154,14 @@ export const createTicket: RequestHandler = async (req, res) => {
         throw new TicketError(409, "Signups are not open for this event.");
       }
 
+      const eventYear = new Date(event.datetime).getFullYear();
+      if (!user.latestMembershipYear || user.latestMembershipYear < eventYear) {
+        throw new TicketError(
+          403,
+          "A current membership is required to sign up for this event."
+        );
+      }
+
       const existing = await Ticket.findOne({
         eventID: eventId,
         userID: user._id,

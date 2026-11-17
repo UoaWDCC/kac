@@ -188,8 +188,11 @@ const EventSignupForm = ({
     hasAccount && accountId && memberRecord?.accountId === accountId
       ? memberRecord
       : null;
-  const memberLoading = Boolean(hasAccount && accountId && !currentMemberRecord);
-  const latestMembershipYear = currentMemberRecord?.latestMembershipYear ?? null;
+  const memberLoading = Boolean(
+    hasAccount && accountId && !currentMemberRecord
+  );
+  const latestMembershipYear =
+    currentMemberRecord?.latestMembershipYear ?? null;
   const hasValidMembership =
     latestMembershipYear !== null && latestMembershipYear >= eventYear;
 
@@ -786,7 +789,8 @@ const EventSignupForm = ({
                     </div>
                   )}
                   {/* Can Sign Up - Show form with continue button */}
-                  {hasAccount && hasValidMembership &&
+                  {hasAccount &&
+                    hasValidMembership &&
                     ((currentStep === 4 && userSignedUp) ||
                       (event.signUpStatus === "Open" &&
                         !userSignedUp &&
@@ -870,28 +874,32 @@ const EventSignupForm = ({
                     </div>
                   )}
                   {/* Membership Expired / Not Current */}
-                  {hasAccount && !memberLoading && !hasValidMembership && event.signUpStatus === "Open" && !userSignedUp && (
-                    <div className="flex flex-col items-center gap-3 mt-10 text-center">
-                      <div className="flex flex-row gap-4 justify-center items-center">
-                        <LockKeyhole className="size-8" />
-                        <h2 className="uppercase text-2xl text-center">
-                          Current membership required to sign up
-                        </h2>
+                  {hasAccount &&
+                    !memberLoading &&
+                    !hasValidMembership &&
+                    event.signUpStatus === "Open" &&
+                    !userSignedUp && (
+                      <div className="flex flex-col items-center gap-3 mt-10 text-center">
+                        <div className="flex flex-row gap-4 justify-center items-center">
+                          <LockKeyhole className="size-8" />
+                          <h2 className="uppercase text-2xl text-center">
+                            Current membership required to sign up
+                          </h2>
+                        </div>
+                        <p className="text-sm text-gray-600 max-w-md">
+                          This event requires active membership for {eventYear}.
+                          {latestMembershipYear !== null
+                            ? ` Your latest membership was for ${latestMembershipYear}.`
+                            : " You do not have an active membership."}
+                        </p>
+                        <Link
+                          to="/renew"
+                          className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-2! rounded-3xl text-blue-medium pointer-fine:hover:text-yellow-light active:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium px-6 py-2 font-bold"
+                        >
+                          Renew / Get Membership
+                        </Link>
                       </div>
-                      <p className="text-sm text-gray-600 max-w-md">
-                        This event requires active membership for {eventYear}.
-                        {latestMembershipYear !== null
-                          ? ` Your latest membership was for ${latestMembershipYear}.`
-                          : " You do not have an active membership."}
-                      </p>
-                      <Link
-                        to="/renew"
-                        className="shadow-reveal-button cursor-pointer w-fit! h-10 mt-2! rounded-3xl text-blue-medium pointer-fine:hover:text-yellow-light active:text-yellow-light bg-yellow-dark! duration-200 shadow-[2px_4px] shadow-yellow-medium px-6 py-2 font-bold"
-                      >
-                        Renew / Get Membership
-                      </Link>
-                    </div>
-                  )}
+                    )}
                   {/* Not Signed In */}
                   {!hasAccount && event.signUpStatus == "Open" && (
                     <div className="flex flex-row gap-4 justify-center items-center mt-10">

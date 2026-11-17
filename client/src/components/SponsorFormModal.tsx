@@ -53,16 +53,16 @@ const renderTextField = (
 );
 
 export default function SponsorFormModal({
-                                           isOpen,
-                                           title,
-                                           submitLabel,
-                                           values,
-                                           onChange,
-                                           onImageChange,
-                                           onClose,
-                                           onSubmit,
-                                           isSubmitting = false,
-                                         }: Readonly<SponsorFormModalProps>) {
+  isOpen,
+  title,
+  submitLabel,
+  values,
+  onChange,
+  onImageChange,
+  onClose,
+  onSubmit,
+  isSubmitting = false,
+}: Readonly<SponsorFormModalProps>) {
   useEffect(() => {
     if (!isOpen) return;
 

@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import { useEffect, type MouseEvent } from "react";
 
 export interface SponsorFormValues {
   name: string;
@@ -53,16 +53,29 @@ const renderTextField = (
 );
 
 export default function SponsorFormModal({
-  isOpen,
-  title,
-  submitLabel,
-  values,
-  onChange,
-  onImageChange,
-  onClose,
-  onSubmit,
-  isSubmitting = false,
-}: Readonly<SponsorFormModalProps>) {
+                                           isOpen,
+                                           title,
+                                           submitLabel,
+                                           values,
+                                           onChange,
+                                           onImageChange,
+                                           onClose,
+                                           onSubmit,
+                                           isSubmitting = false,
+                                         }: Readonly<SponsorFormModalProps>) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !isSubmitting) {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, isSubmitting, onClose]);
+
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: MouseEvent<HTMLDivElement>): void => {
@@ -73,13 +86,16 @@ export default function SponsorFormModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 flex items-end justify-center sm:items-center z-10"
+      className="fixed inset-x-0 bottom-0 top-[81px] lg:top-[112px] bg-black/70 flex items-end justify-center sm:items-center p-3 sm:p-6 z-40 overflow-hidden"
       onClick={handleOverlayClick}
     >
-      <div className="font-alan-sans text-sm text-left bg-white rounded-t-2xl sm:rounded-2xl pr-6 pt-8 relative border-box min-w-screen sm:min-w-[48vw] h-fit max-h-[70vh] lg:max-h-[90vh] flex flex-col gap-6">
-        <div className="overflow-y-auto pl-12 pr-6">
-          <h2 className="text-2xl! font-bold pb-6">{title}</h2>
-          <form className="flex flex-col gap-8">
+      <div className="font-alan-sans text-sm text-left bg-white rounded-t-2xl sm:rounded-2xl relative w-full sm:w-auto sm:min-w-[48vw] max-w-2xl max-h-full flex flex-col overflow-hidden shadow-2xl">
+        <div className="shrink-0 px-6 pt-6 sm:px-10 sm:pt-8">
+          <h2 className="text-2xl! font-bold pb-2">{title}</h2>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4 sm:px-10">
+          <form className="flex flex-col gap-6 sm:gap-8">
             <div className="flex flex-col gap-1">
               <h3 className="text-lg font-bold">Add Image</h3>
               <input
@@ -106,7 +122,6 @@ export default function SponsorFormModal({
                     e.target.value as "cbd" | "newmarket" | "other"
                   )
                 }
-
                 className={inputClassName}
               >
                 <option value="" className="text-gray-500">
@@ -120,7 +135,7 @@ export default function SponsorFormModal({
           </form>
         </div>
 
-        <div className="flex justify-center py-8">
+        <div className="shrink-0 flex justify-center py-4 sm:py-6">
           <button
             className="cursor-pointer px-12 w-fit! h-10 rounded-3xl font-bold text-lg text-blue-medium hover:text-yellow-light bg-yellow-dark! hover:bg-blue-medium! duration-200 shadow-[2px_4px] shadow-yellow-medium hover:shadow-gray-400"
             type="button"
